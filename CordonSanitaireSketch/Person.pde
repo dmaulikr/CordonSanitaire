@@ -1,17 +1,16 @@
 class Person{
   
   State state;
-  int x, y;
+  PVector pos;
   
   Person(int xPos, int yPos){
-    x = xPos;
-    y = yPos;
+    pos = new PVector(xPos, yPos);
     state = State.BORDER;
   }
 
   void display(){
     
-    strokeWeight(5);
+    strokeWeight(1);
 
     switch(state) {
       case CONTAGIOUS:
@@ -35,6 +34,6 @@ class Person{
         break;
     }
     
-    ellipse(x,y,25,25);    
+    ellipse(pos.x,pos.y,10,10);    
   }
 }

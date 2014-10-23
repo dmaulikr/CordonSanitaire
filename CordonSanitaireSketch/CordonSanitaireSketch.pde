@@ -8,6 +8,7 @@
 ArrayList<Person> persons;
 int numPeople = 50;
 int startPerson = 0;
+int margin = 50;
 
 Border border;
 
@@ -16,7 +17,7 @@ void setup(){
   persons = new ArrayList<Person>();
   
   for(int i=0; i<numPeople; i++){
-    persons.add(new Person((int)random(0,width), (int)random(0,height)));
+    persons.add(new Person((int)random(margin,width-margin), (int)random(margin,height-margin)));
   }
   
   border = new Border(persons);
@@ -33,18 +34,27 @@ void drawOnce(){
     p.display();
   }
   
-  border.determineBestNearestNeighborPath();
-  //border.createNearestNeighborPath(persons.get(startPerson));
   border.display();
 }
 
 void keyPressed(){
+  
+  // start drawing with a different person
   if(key == ' ') {
     if(startPerson < numPeople - 1)
       startPerson++;
     else
       startPerson = 0;
-      
+    
+    border.determineBestNearestNeighborPath();
+    //border.createNearestNeighborPath(persons.get(startPerson));
+  
+    drawOnce();
+  }
+  
+  // remove intersections
+  else if(key == 'r') {
+    border.removeCrossedPaths();
     drawOnce();
   }
 }

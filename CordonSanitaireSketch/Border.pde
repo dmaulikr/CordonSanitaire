@@ -22,7 +22,7 @@ class Border{
       for(int j=0; j<personsInBorder.size(); j++){
         p1 = (Person)personsInBorder.get(j);
         p2 = (Person)personsInBorder.get(j==personsInBorder.size()-1 ? 0 : j+1);
-        dist += sqrt((p1.x-p2.x)*(p1.x-p2.x)+(p1.y-p2.y)*(p1.y-p2.y));
+        dist += p1.pos.dist(p2.pos);
       }
       
       if( dist < min ) {
@@ -46,7 +46,7 @@ class Border{
     while(personsInBorder.size() < persons.size()) {
       Person pnn = personsInBorder.get(personsInBorder.size()-1);
       personsInBorder.add(getNearestNeighbor(pnn));
-      println("people in border: " + personsInBorder.size());
+//      println("people in border: " + personsInBorder.size());
     }
     
 //    println("people in border: " + personsInBorder.size());
@@ -72,7 +72,7 @@ class Border{
      n = (Person)persons.get(i);
      if(n != p && !isPersonAlreadyInBorder(n)) {
        // check distance
-       float dist = sqrt((n.x-p.x)*(n.x-p.x)+(n.y-p.y)*(n.y-p.y));
+       float dist = p.pos.dist(n.pos);
        
        if(dist < min) {
          nn = n;
@@ -88,24 +88,84 @@ class Border{
   
   // function to look through the path to find intersections and remove them
   void removeCrossedPaths() {
+    // look for crossed paths
+    Person p1, p2, p3, p4;
+    
+    while( numberOfIntersections(personsInBorder) > 0 ) {
+      // compare each line segment with every other line segment. (avoid redundancy)
+      for(int i=0; i<personsInBorder.size(); i++) {
+        int p1_index = i;
+        int p2_index = i == personsInBorder.size()-1 ? 0 : i+1; // wrap around
+        p1 = (Person)personsInBorder.get(p1_index);
+        p2 = (Person)personsInBorder.get(p2_index);
+        
+        for(int j=i+2; j<personsInBorder.size(); j++) {
+          // check for intersection here
+          int p3_index = j;
+          int p4_index = j == personsInBorder.size()-1 ? 0 : j+1; // wrap around
+          p3 = (Person)personsInBorder.get(p3_index);
+          p4 = (Person)personsInBorder.get(p4_index);
+  
+          if(doIntersect(p1.pos, p2.pos, p3.pos, p4.pos)){
+            println("found intersection at " + p1_index + "," + p2_index + " and " + p3_index + "," + p4_index);
+            // determine the swap that doesn't create more intersections
+            if( numberOfIntersections(personsInBorder, p1_index, p4_index) < numberOfIntersections(personsInBorder, p1_index, p4_index))
+              Collections.swap(personsInBorder, p1_index, p4_index);
+            else
+              Collections.swap(personsInBorder, p2_index, p3_index);
+          }
+        }
+      }
+    }
   }
   
-  // function to determine whether the path intersects with these 4 points
-  bool areTheseTwoPathsCrossed(PVector p1, PVector p2, PVector p3, PVector p4) {
-    return false;
+  // return the number of intersections with a given swap
+  int numberOfIntersections(ArrayList list, int a, int b){    
+    Collections.swap(list, a, b);
+    return numberOfIntersections(list);
   }
-  
+
+  // return the number of intersections in an ordered list of people
+  int numberOfIntersections(ArrayList list){    
+    int count = 0;
+    Person p1, p2, p3, p4;
+        
+    // compare each line segment with every other line segment. (avoid redundancy)
+    for(int i=0; i<list.size(); i++) {
+      int p1_index = i;
+      int p2_index = i == list.size()-1 ? 0 : i+1; // wrap around
+      p1 = (Person)list.get(p1_index);
+      p2 = (Person)list.get(p2_index);
+      
+      for(int j=i+2; j<list.size(); j++) {
+        // check for intersection here
+        int p3_index = j;
+        int p4_index = j == list.size()-1 ? 0 : j+1; // wrap around
+        p3 = (Person)list.get(p3_index);
+        p4 = (Person)list.get(p4_index);
+
+        if(doIntersect(p1.pos, p2.pos, p3.pos, p4.pos)){
+          count++;
+        }
+      }
+    }
+    
+    return count;
+  }
+    
   //
   void display() {
     Person p1, p2;
     stroke(255,0,0);
-    strokeWeight(3);
+    strokeWeight(2);
     float dist = 0;
     for(int i=0; i<personsInBorder.size(); i++){
       p1 = (Person)personsInBorder.get(i);
       p2 = (Person)personsInBorder.get(i==personsInBorder.size()-1 ? 0 : i+1);
-      line(p1.x, p1.y, p2.x, p2.y);
-      dist += sqrt((p1.x-p2.x)*(p1.x-p2.x)+(p1.y-p2.y)*(p1.y-p2.y));
+      line(p1.pos.x, p1.pos.y, p2.pos.x, p2.pos.y);
+      fill(0);
+      text(i, p1.pos.x + 20, p1.pos.y);
+      dist += p1.pos.dist(p2.pos);
     }
     
     println("path distance: " + dist);
