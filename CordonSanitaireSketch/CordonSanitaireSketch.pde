@@ -6,7 +6,7 @@
   October 17, 2014
 */
 ArrayList<Person> persons;
-int numPeople = 50;
+int numPeople = 20;
 int startPerson = 0;
 int margin = 50;
 
@@ -16,6 +16,7 @@ void setup(){
   size(1000,600,P2D);
   persons = new ArrayList<Person>();
   
+  randomSeed(3);  // use a random seed to help with debugging (same results every run)
   for(int i=0; i<numPeople; i++){
     persons.add(new Person((int)random(margin,width-margin), (int)random(margin,height-margin)));
   }

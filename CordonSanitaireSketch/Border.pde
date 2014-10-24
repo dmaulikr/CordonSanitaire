@@ -91,9 +91,10 @@ class Border{
     // look for crossed paths
     Person p1, p2, p3, p4;
     
-    while( numberOfIntersections(personsInBorder) > 0 ) {
+    //while( numberOfIntersections(personsInBorder) > 0 ) {
       // compare each line segment with every other line segment. (avoid redundancy)
       for(int i=0; i<personsInBorder.size(); i++) {
+        boolean breakout = false;
         int p1_index = i;
         int p2_index = i == personsInBorder.size()-1 ? 0 : i+1; // wrap around
         p1 = (Person)personsInBorder.get(p1_index);
@@ -113,10 +114,17 @@ class Border{
               Collections.swap(personsInBorder, p1_index, p4_index);
             else
               Collections.swap(personsInBorder, p2_index, p3_index);
+              
+            // one intersection at a time
+            println("breakout");
+            breakout = true;
+            break;
           }
         }
+        if(breakout)
+          break;
       }
-    }
+    //}
   }
   
   // return the number of intersections with a given swap
