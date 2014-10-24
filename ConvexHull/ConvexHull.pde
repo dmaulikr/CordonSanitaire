@@ -12,6 +12,20 @@
 // liable for any real or imagined damage resulting from its use.
 // Users of this code must verify correctness for their application.
  
+ArrayList<PVector> nodes;
+ 
+void setup(){
+  size(1000,600,P2D);
+  nodes = new ArrayList<PVector>();
+  
+  randomSeed(2);  // use a random seed to help with debugging (same results every run)
+  for(int i=0; i<30; i++){
+    persons.add(new PVector((int)random(margin,width-margin), (int)random(margin,height-margin)));
+}
+ 
+void draw(){
+}
+ 
 
 // Assume that a class is already given for the object:
 //    Point with coordinates {float x, y;}
@@ -37,8 +51,7 @@ float isLeft( PVector P0, PVector P1, PVector P2 )
 //             n =  the number of points in P[]
 //     Output: H[] = an array of the convex hull vertices (max is n)
 //     Return: the number of points in H[]
-int
-chainHull_2D( ArrayList P, int n, ArrayList H )
+int chainHull_2D( ArrayList P, int n, ArrayList H )
 {
     // the output array H[] will be used as the stack
     int    bot=0, top=(-1);   // indices for bottom and top of the stack
@@ -48,7 +61,7 @@ chainHull_2D( ArrayList P, int n, ArrayList H )
     int minmin = 0, minmax;
     float xmin = P[0].x;
     for (i=1; i<n; i++)
-        if (P[i].x != xmin) break;
+        if (P.get(i).x != xmin) break;
     minmax = i-1;
     if (minmax == n-1) {       // degenerate case: all x-coords == xmin
         H[++top] = P[minmin];
