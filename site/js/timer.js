@@ -23,10 +23,18 @@ function timePassed() {
     }
     if (seconds == 0) {
         clearInterval(timePassed);
-        document.getElementById('countdown').innerHTML = "00:00:00 -- Patient Zero Contained";
+        document.getElementById('countdown').innerHTML = "00:00:00";
+
+        // call function to run end of game sequence
+
     } else {
         hundredths--;
     }
 }
- 
-var countdownTimer = setInterval('timePassed()', 10);
+
+var startTheClock = function() {
+    
+    // create a timer and set its interval
+    var countdownTimer = setInterval('timePassed()', 10);
+
+}

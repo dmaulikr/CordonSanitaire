@@ -6,11 +6,11 @@
  });
 
 // get the time
-pubnub.time(
-	function(time){
-    	console.log(time)
-	}
-);
+// pubnub.time(
+// 	function(time){
+//     	console.log(time)
+// 	}
+// );
 
 // Subscribe to a channel
  
@@ -23,18 +23,20 @@ pubnub.subscribe({
  
  pubnub.publish({
      channel: 'my_channel',        
-     message: 'Hello from the PubNub Javascript SDK'
+     message: 'Hello from the PubNub Javascript SDK. One. Two. One. Two'
  });
 
  // Get List of Occupants and Occupancy Count.
  
- pubnub.here_now({
-     channel : 'my_channel',
-     callback : function(m){console.log(m)}
- });
+ // pubnub.here_now({
+ //     channel : 'my_channel',
+ //     callback : function(m){console.log(m)}
+ // });
 
-  pubnub.subscribe({
+/*
+pubnub.subscribe({
      channel: "my_channel",
      presence: function(m){console.log(m)},
      message: function(m){console.log(m)}
  });
+ */
