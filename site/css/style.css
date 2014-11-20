@@ -68,19 +68,29 @@ label {
     line-height:50px;
 }
 .toggle-btn-grp div {
+    position: fixed;
+    bottom: 100px;
+    left:0px; 
+
     display:inline-block;
     margin:0px;
 }
 
 .toggle-btn-grp div label {
-    position:absolute;
     z-index:0;
     padding:0;
     text-align:center;
 }
 
+.toggle-btn-grp #button_1 {
+
+}
+
+.toggle-btn-grp #button_2 {
+    bottom: 50px;
+}
+
 .toggle-btn-grp div input {
-    position:absolute;
     z-index:1;
     cursor:pointer;
     opacity:0;

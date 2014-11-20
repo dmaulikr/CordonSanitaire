@@ -83,6 +83,29 @@ var setUserActive = function() {
 	sendUpdateMessage();
 }
 
+var setUserAbsent = function(uuid) {
+	
+	// something with parse to set the value inactive
+	console.log("setting user absent");
+
+	// var User = Parse.Object.extend("SimpleUser");
+	// var query = new Parse.Query(User);
+	// query.equalTo("playerID", uuid);
+	// query.find({
+	// 	success: function(result) {
+	// 		var object = result[0];
+	// 		object.set("present", false);
+	// 		object.save();
+	// 	},
+	// 	error: function(error) {
+	// 	    console.log("Error: " + error.code + " " + error.message);
+	// 	}
+
+	// });
+
+	// // then update pubnub
+	// sendUpdateMessage();
+}
 //----------------------------
 //			PubNub
 //----------------------------
@@ -96,6 +119,22 @@ var pubnub = PUBNUB.init({
 // Subscribe
 pubnub.subscribe({
 	channel: _channel,
+	presence: function(m){
+		//console.log(m)
+		switch(m.action){
+			case "join":
+				// set the UUID here
+				console.log("join - UUID - " + m.uuid);
+			break;
+
+			case "leave":
+				// set this user to no longer present
+				console.log("leave - UUID - " + m.uuid);
+			break;
+
+			default: console.log(m.action);	
+		}
+	},
 	message: function(m){
 		switch(m) {
 
