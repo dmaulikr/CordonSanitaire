@@ -5,7 +5,7 @@
  */
 
 var _channel = 'my_channel';
-var _userID = Math.round(1000000 * Math.random());
+var _uuid = PUBNUB.uuid();
 
 var updateFromParse = function() {
 
@@ -35,42 +35,53 @@ var updateFromParse = function() {
 //		General Actions
 //----------------------------
 
-var setUserInactive = function() {
+var setUserActiveState = function(isActive) {
 	
 	// something with parse to set the value inactive
 	console.log("setting user inactive");
 	
 	var User = Parse.Object.extend("SimpleUser");
 	var query = new Parse.Query(User);
-	query.equalTo("playerID", _userID);
-	query.find({
-		success: function(result) {
+	query.equalTo("playerID", _uuid);
+	query.find(
+	{
+		success: function(result) 
+		{
 			var object = result[0];
-			object.set("active", false);
-			object.save();
+			object.set("active", isActive);
+			object.save(null, 
+			{
+				success:function (object)
+				{
+					// then update pubnub
+					sendUpdateMessage();
+					//console.log("WOAAAAHHHH YEAH", object);
+				},
+				error:function(object)
+				{
+					console.log("WOAAAAHHHH NOOOOOOO!", object);
+				}
+			});
 		},
 		error: function(error) {
 		    console.log("Error: " + error.code + " " + error.message);
 		}
 
 	});
-
-	// then update pubnub
-	sendUpdateMessage();
 }
 
-var setUserActive = function() {
+var setUserPresent = function(uuid) {
 	
 	// something with parse to set the value inactive
-	console.log("setting user active");
+	console.log("setting user present");
 
 	var User = Parse.Object.extend("SimpleUser");
 	var query = new Parse.Query(User);
-	query.equalTo("playerID", _userID);
+	query.equalTo("playerID", uuid);
 	query.find({
 		success: function(result) {
 			var object = result[0];
-			object.set("active", true);
+			object.set("present", true);
 			object.save();
 		},
 		error: function(error) {
@@ -81,30 +92,6 @@ var setUserActive = function() {
 
 	// then update pubnub
 	sendUpdateMessage();
-}
-
-var setUserAbsent = function(uuid) {
-	
-	// something with parse to set the value inactive
-	console.log("setting user absent");
-
-	// var User = Parse.Object.extend("SimpleUser");
-	// var query = new Parse.Query(User);
-	// query.equalTo("playerID", uuid);
-	// query.find({
-	// 	success: function(result) {
-	// 		var object = result[0];
-	// 		object.set("present", false);
-	// 		object.save();
-	// 	},
-	// 	error: function(error) {
-	// 	    console.log("Error: " + error.code + " " + error.message);
-	// 	}
-
-	// });
-
-	// // then update pubnub
-	// sendUpdateMessage();
 }
 //----------------------------
 //			PubNub
@@ -112,8 +99,10 @@ var setUserAbsent = function(uuid) {
 
 // Init
 var pubnub = PUBNUB.init({
- publish_key: 'pub-c-f1d4a0b1-66e6-48ae-bd2b-72bcaac47884',
- subscribe_key: 'sub-c-37e7ca9a-54e6-11e4-a7f8-02ee2ddab7fe'
+	keepalive     : 30,
+	publish_key: 'pub-c-f1d4a0b1-66e6-48ae-bd2b-72bcaac47884',
+	subscribe_key: 'sub-c-37e7ca9a-54e6-11e4-a7f8-02ee2ddab7fe',
+	uuid: _uuid
 });
 
 // Subscribe
@@ -128,7 +117,7 @@ pubnub.subscribe({
 			break;
 
 			case "leave":
-				// set this user to no longer present
+				// set this user to no longer focussed...
 				console.log("leave - UUID - " + m.uuid);
 			break;
 
@@ -157,6 +146,19 @@ pubnub.subscribe({
 	}
 });
 
+// Unsubscribe when closing the window
+window.onbeforeunload = function() {
+    return pubnub.unsubscribe({
+    	channel : _channel
+ 		});
+}
+
+// window.onunload = function() {
+//     return pubnub.unsubscribe({
+//     	channel : _channel,
+//  		});
+// };
+
 // Publish
 var sendUpdateMessage = function() {
 	pubnub.publish({
@@ -177,7 +179,7 @@ var SimpleUser = Parse.Object.extend("SimpleUser");
 var simpleUser = new SimpleUser();
  
 simpleUser.save({
-  playerID: _userID,
+  playerID: _uuid,
   x: Math.random(0,1),
   y: Math.random(0,1),
   role: "citizen",
