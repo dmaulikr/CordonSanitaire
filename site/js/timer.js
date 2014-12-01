@@ -1,4 +1,5 @@
 var start_time;
+var countdownTimer;
 
 function timePassedSince(start_date) {
 
@@ -31,8 +32,13 @@ function timePassedSince(start_date) {
     var hundredths = Math.floor(millis_remaining/10);
     if(hundredths < 10) hundredths = '0' + hundredths;
 
+    if(minutes_remaining > 0 || seconds_remaining > 0 || hundredths > 0)
+        document.getElementById('countdown').innerHTML =  minutes_remaining+':'+seconds_remaining+'.'+hundredths;
+    else {
+        document.getElementById('countdown').innerHTML =  '00:00.00';
+        window.clearInterval(countdownTimer);
+    }
 
-    document.getElementById('countdown').innerHTML =  minutes_remaining+':'+seconds_remaining+'.'+hundredths;
 }
 
 // function updateClock() {
@@ -45,5 +51,5 @@ var startTheClock = function() {
     var cur_date = new Date();
 
     // create a timer and set its interval
-    var countdownTimer = setInterval(function () {timePassedSince(cur_date)}, 10);
+    countdownTimer = setInterval(function () {timePassedSince(cur_date)}, 10);
 }
