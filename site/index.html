@@ -14,6 +14,79 @@
 	<!-- my code -->
 	<script type="text/javascript" src="js/timer.js"></script>
 	<script type="text/javascript" src="js/app.js"></script>
+	<script type="text/javascript" src="js/paper-core.min.js"></script>
+	<script type="text/javascript" src="js/paper-full.min.js"></script>
+	<script type="text/paperscript" canvas="sample">
+
+	var people = [
+		new Person(200, 300),
+		new Person(10, 200),
+		new Person(250, 100),
+		new Person(90, 30),
+		new Person(140, 20)
+	];
+
+	function Person(x, y) {
+		this.x = x;
+		this.y = y;
+		this.loc = new Point(x,y);
+		//this.state = state;
+	}
+
+	Person.prototype = {
+		update: function() {
+
+		},
+
+		updateShape: function() {
+
+		},
+
+		isInside: function() {
+			return true;
+		}
+
+	};
+
+    createQuarantine();
+
+    function createQuarantine() {
+ 		var center = view.size * .5;
+        var path = new Path();
+        path.closed = true;
+        
+        for (var i = 0; i<people.length; i++) {
+        	path.add(people[i].loc);
+            var shape = new Shape.Circle(people[i].loc, 10);
+            shape.strokeWidth=5;
+            shape.strokeColor = 'black';
+            shape.fillColor = 'yellow';
+        }
+        // for (var i = 0; i < 36; i++) {
+        //     var delta = new Point({
+        //         length: (view.size.width * 0.25) + (Math.random() * view.size.width * 0.25),
+        //         angle: 10 * i
+        //     });
+        //     path.add(delta + center);
+        //     var shape = new Shape.Circle(delta+center, 10);
+        //     shape.strokeWidth=5;
+        //     shape.strokeColor = 'black';
+        //     shape.fillColor = 'yellow';
+        // }
+
+        path.smooth();
+        path.fillColor = 'white';
+        path.strokeWidth = 10;
+        path.strokeColor = 'black';
+    }
+    
+    // update loop
+    function onFrame() {
+    	// do stuff on each frame here
+    }
+
+    //var hitResult = project.hitTest(event.point, hitOptions);
+    </script>
 </head>
 
 <body>
@@ -32,10 +105,16 @@
 	<div id="countdown">
 	</div>
 	
+	<div id="draw">
+		<canvas id="sample" resize></canvas>
+	</div>
+
+	<!--
 	<div id="map">
 		<img id="map_image" src="img/manhattan.jpg"/>
-		<!--<canvas id="drawCanvas" width="300" height="300">Canvas is not supported on this browser!</canvas>-->
+		<canvas id="drawCanvas" width="300" height="300">Canvas is not supported on this browser!</canvas>
 	</div>
+	-->
 
 	<div class="toggle-btn-grp">
 		<div id="button_1"><input type="radio" name="status" id="inactive" onclick="setUserActiveState(false)" checked><label class="toggle-btn">inactive</label></div> 
