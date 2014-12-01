@@ -18,7 +18,9 @@
 	<script type="text/javascript" src="js/paper-full.min.js"></script>
 	<script type="text/paperscript" canvas="sample">
 
-	var people = [];
+	var people = [];	// entire population playing the game
+	var path;			// path that represents the rope held by the population
+	var center;			// point that represents the center of the population (holding)
 
 	function Person(x, y) {
 		this.x = x;
@@ -42,9 +44,6 @@
 
 	};
 
-	//load people
-	loadPeople();
-
     function loadPeople() {
     	var users = Parse.Object.extend("SimpleUser");
 		var query = new Parse.Query(users);
@@ -62,8 +61,10 @@
 			    	people.push(new Person(object.get('x'), object.get('y')));
 			    }
 
+			    findCenter();
 			    sortPeople();
 			    createQuarantine();
+			    drawPatientZero();
 		  	},
 			error: function(object, error) {
 			    // The object was not retrieved successfully.
@@ -73,15 +74,68 @@
 		});
     }
 
+    // find center
+    function findCenter() {
+
+	    var total = new Point(0,0);
+	    center = new Point(0,0);
+
+	    for(var i=0; i<people.length; i++) {
+	      total.x += people[i].x;
+	      total.y += people[i].y;
+	    }
+	    
+	    center.x = total.x / people.length;
+	    center.y = total.y / people.length;  
+    }
+
     // sort people
     function sortPeople() {
-    	
+    	var sortedPeople = [];
+
+    	var lastPerson = people[0];
+    	sortedPeople.push(lastPerson);
+
+    	for(var i=0; i<people.length; i++) {
+    		var nextPerson = getNextPersonCounterClockwise(lastPerson);
+    		sortedPeople.push(nextPerson);
+    		lastPerson = nextPerson;
+    	}
+
+    	people = sortedPeople;
     }
+
+    function getNextPersonCounterClockwise(p) {
+    
+	    var min = 2*Math.PI;	// max angle
+	    var index = 0;
+	    
+	    var start_theta = Math.atan2((p.y - center.y), (p.x - center.x));
+	    
+	    for(var i=0; i<people.length; i++) {
+	      
+	    	if(people[i] == p)
+	        	continue;
+	        
+	    	var p_theta = Math.atan2((people[i].y - center.y), (people[i].x - center.x));
+		    var diff = p_theta - start_theta;
+
+		    if(diff < 0)
+		    	diff += 2*Math.PI;
+		      
+		    if(diff < min) {
+		    	index = i;
+		    	min = diff;
+		    }  
+	    }
+   
+    	return people[index];
+	}
 
    	// draw people
     function createQuarantine() {
  		var center = view.size * .5;
-        var path = new Path();
+        path = new Path();
         path.closed = true;
         
         console.log("# of people: " + people.length);
@@ -101,10 +155,28 @@
         path.strokeJoin = 'round';
     }
 
+    function drawPatientZero() {
+	    var shape = new Shape.Circle(view.size * .5, 10);
+        shape.strokeWidth=5;
+        shape.strokeColor = 'black';
+        if(path.hitTest(view.size*.5))
+	        shape.fillColor = 'cyan';
+	    else
+	    	shape.fillColor = 'red';
+
+    }
     
+    //-----------------
+    //		MAIN
+    //-----------------
+
+    //load people
+	loadPeople();
+
     // update loop
     function onFrame() {
     	// do stuff on each frame here
+    	//loadPeople();
     }
 
     //var hitResult = project.hitTest(event.point, hitOptions);
