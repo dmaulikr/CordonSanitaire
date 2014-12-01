@@ -18,13 +18,7 @@
 	<script type="text/javascript" src="js/paper-full.min.js"></script>
 	<script type="text/paperscript" canvas="sample">
 
-	var people = [
-		new Person(200, 300),
-		new Person(10, 200),
-		new Person(250, 100),
-		new Person(90, 30),
-		new Person(140, 20)
-	];
+	var people = [];
 
 	function Person(x, y) {
 		this.x = x;
@@ -48,37 +42,65 @@
 
 	};
 
-    createQuarantine();
+	//load people
+	loadPeople();
 
+    function loadPeople() {
+    	var users = Parse.Object.extend("SimpleUser");
+		var query = new Parse.Query(users);
+		query.equalTo("present", true);
+		query.find({
+		  	success: function(results) {
+			    // list contains the present players.
+			    	console.log(results);
+			    	console.log("# of present: " + results.length);
+			    // draw this list of players across the screen.
+			    for (var i = 0; i < results.length; i++) { 
+			    	var object = results[i];
+			    	//console.log('paper - ' + object.get('playerID') + ' - ' + object.get('active'));
+
+			    	people.push(new Person(object.get('x'), object.get('y')));
+			    }
+
+			    sortPeople();
+			    createQuarantine();
+		  	},
+			error: function(object, error) {
+			    // The object was not retrieved successfully.
+			    // error is a Parse.Error with an error code and message.
+			    console.log("Error: " + error.code + " " + error.message);
+			}
+		});
+    }
+
+    // sort people
+    function sortPeople() {
+    	
+    }
+
+   	// draw people
     function createQuarantine() {
  		var center = view.size * .5;
         var path = new Path();
         path.closed = true;
         
+        console.log("# of people: " + people.length);
+
         for (var i = 0; i<people.length; i++) {
-        	path.add(people[i].loc);
-            var shape = new Shape.Circle(people[i].loc, 10);
+        	path.add(view.size * people[i].loc);
+            var shape = new Shape.Circle(view.size * people[i].loc, 10);
             shape.strokeWidth=5;
             shape.strokeColor = 'black';
             shape.fillColor = 'yellow';
         }
-        // for (var i = 0; i < 36; i++) {
-        //     var delta = new Point({
-        //         length: (view.size.width * 0.25) + (Math.random() * view.size.width * 0.25),
-        //         angle: 10 * i
-        //     });
-        //     path.add(delta + center);
-        //     var shape = new Shape.Circle(delta+center, 10);
-        //     shape.strokeWidth=5;
-        //     shape.strokeColor = 'black';
-        //     shape.fillColor = 'yellow';
-        // }
 
-        path.smooth();
+        // path.smooth();
         path.fillColor = 'white';
         path.strokeWidth = 10;
         path.strokeColor = 'black';
+        path.strokeJoin = 'round';
     }
+
     
     // update loop
     function onFrame() {
