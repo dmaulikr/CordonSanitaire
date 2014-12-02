@@ -6,181 +6,6 @@
 	<meta name="description" content="Cordon Sanitaire. Contain the outbreak.">
 	<meta name="author" content="Jonathan Bobrow  @jonathanbobrow">
 	<link rel="stylesheet" href="css/style.css">
-
-	<!-- dependencies -->
-	<script type="text/javascript" src="http://cdn.pubnub.com/pubnub-3.7.1.min.js"></script>
-	<script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.3.1.min.js"></script>
-
-	<!-- my code -->
-	<script type="text/javascript" src="js/timer.js"></script>
-	<script type="text/javascript" src="js/app.js"></script>
-	<script type="text/javascript" src="js/paper-core.min.js"></script>
-	<script type="text/javascript" src="js/paper-full.min.js"></script>
-	<script type="text/paperscript" canvas="sample">
-
-	var people = [];	// entire population playing the game
-	var path;			// path that represents the rope held by the population
-	var center;			// point that represents the center of the population (holding)
-
-	function Person(x, y) {
-		this.x = x;
-		this.y = y;
-		this.loc = new Point(x,y);
-		//this.state = state;
-	}
-
-	Person.prototype = {
-		update: function() {
-
-		},
-
-		updateShape: function() {
-
-		},
-
-		isInside: function() {
-			return true;
-		}
-
-	};
-
-    function loadPeople() {
-    	var users = Parse.Object.extend("SimpleUser");
-		var query = new Parse.Query(users);
-		query.equalTo("present", true);
-		query.find({
-		  	success: function(results) {
-			    // list contains the present players.
-			    	console.log(results);
-			    	console.log("# of present: " + results.length);
-			    // draw this list of players across the screen.
-			    for (var i = 0; i < results.length; i++) { 
-			    	var object = results[i];
-			    	//console.log('paper - ' + object.get('playerID') + ' - ' + object.get('active'));
-
-			    	people.push(new Person(object.get('x'), object.get('y')));
-			    }
-
-			    findCenter();
-			    sortPeople();
-			    createQuarantine();
-			    drawPatientZero();
-		  	},
-			error: function(object, error) {
-			    // The object was not retrieved successfully.
-			    // error is a Parse.Error with an error code and message.
-			    console.log("Error: " + error.code + " " + error.message);
-			}
-		});
-    }
-
-    // find center
-    function findCenter() {
-
-	    var total = new Point(0,0);
-	    center = new Point(0,0);
-
-	    for(var i=0; i<people.length; i++) {
-	      total.x += people[i].x;
-	      total.y += people[i].y;
-	    }
-	    
-	    center.x = total.x / people.length;
-	    center.y = total.y / people.length;  
-    }
-
-    // sort people
-    function sortPeople() {
-    	var sortedPeople = [];
-
-    	var lastPerson = people[0];
-    	sortedPeople.push(lastPerson);
-
-    	for(var i=0; i<people.length; i++) {
-    		var nextPerson = getNextPersonCounterClockwise(lastPerson);
-    		sortedPeople.push(nextPerson);
-    		lastPerson = nextPerson;
-    	}
-
-    	people = sortedPeople;
-    }
-
-    function getNextPersonCounterClockwise(p) {
-    
-	    var min = 2*Math.PI;	// max angle
-	    var index = 0;
-	    
-	    var start_theta = Math.atan2((p.y - center.y), (p.x - center.x));
-	    
-	    for(var i=0; i<people.length; i++) {
-	      
-	    	if(people[i] == p)
-	        	continue;
-	        
-	    	var p_theta = Math.atan2((people[i].y - center.y), (people[i].x - center.x));
-		    var diff = p_theta - start_theta;
-
-		    if(diff < 0)
-		    	diff += 2*Math.PI;
-		      
-		    if(diff < min) {
-		    	index = i;
-		    	min = diff;
-		    }  
-	    }
-   
-    	return people[index];
-	}
-
-   	// draw people
-    function createQuarantine() {
- 		var center = view.size * .5;
-        path = new Path();
-        path.closed = true;
-        
-        console.log("# of people: " + people.length);
-
-        for (var i = 0; i<people.length; i++) {
-        	path.add(view.size * people[i].loc);
-            var shape = new Shape.Circle(view.size * people[i].loc, 10);
-            shape.strokeWidth=5;
-            shape.strokeColor = 'black';
-            shape.fillColor = 'yellow';
-        }
-
-        // path.smooth();
-        path.fillColor = 'white';
-        path.strokeWidth = 10;
-        path.strokeColor = 'black';
-        path.strokeJoin = 'round';
-    }
-
-    function drawPatientZero() {
-	    var shape = new Shape.Circle(view.size * .5, 10);
-        shape.strokeWidth=5;
-        shape.strokeColor = 'black';
-        if(path.hitTest(view.size*.5))
-	        shape.fillColor = 'cyan';
-	    else
-	    	shape.fillColor = 'red';
-
-    }
-    
-    //-----------------
-    //		MAIN
-    //-----------------
-
-    //load people
-	loadPeople();
-
-    // update loop
-    function onFrame() {
-    	// do stuff on each frame here
-    	//loadPeople();
-    }
-
-    //var hitResult = project.hitTest(event.point, hitOptions);
-    </script>
 </head>
 
 <body>
@@ -194,11 +19,12 @@
 	<div id="sign_in">
 	</div>
 	
-	<input type="button" name="start" onclick="startTheClock()"><label>start</label>
-
 	<div id="countdown">
 	</div>
 	
+	<div id="debug_data">
+	</div>
+
 	<div id="draw">
 		<canvas id="sample" resize></canvas>
 	</div>
@@ -220,5 +46,18 @@
 
 	<footer>
 	</footer>	
+
+	<!-- dependencies -->
+	<script type="text/javascript" src="http://cdn.pubnub.com/pubnub-3.7.1.min.js"></script>
+	<script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.3.1.min.js"></script>
+
+	<!-- my code -->
+	<script type="text/javascript" src="js/dat.gui.min.js"></script>
+	<script type="text/javascript" src="js/control_panel.js"></script>
+	
+	<script type="text/javascript" src="js/Point.js"></script>
+	<script type="text/javascript" src="js/timer.js"></script>
+	<script type="text/javascript" src="js/app.js"></script>
+	<script type="text/javascript" src="js/gmaps.js"></script>
 </body>
 </html>

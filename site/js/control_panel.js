@@ -1,43 +1,72 @@
 var settings = new Settings();
 
 function Settings(){
-    this.timer = 120;
+    this.duration = 120;
     this.distance = 20;
-    this.color_patient = '#f02075';
-    this.color_active = '#1368e1';
-    this.color_passive = '#1368e1';
-    this.color_casualty = '#333333';
+    this.color_infectious = '#ff5555';
+    this.color_healed = '#55ffb9';
+    this.color_active = '#fff341';
+    this.color_passive = '#ffffff';
+    this.color_casualty = '#ffa352';
     this.chat = false;
+    this.gmaps = false;
+
+    this.start = function(){
+        startTheClock();
+    };
+
+    this.stop = function(){
+        stopTheClock();
+    };
+
+    this.refresh = function(){
+        resetTheClock();
+    };
 };
 
 var gui = new dat.GUI();
 
-var f1 = gui.addFolder('game');
-f1.add(settings, 'timer', 0, 180).step(1);
+var f0 = gui.addFolder('controls');
+f0.add(settings, 'start');
+f0.add(settings, 'stop');
+f0.add(settings, 'refresh');
+f0.closed = false;
+
+var f1 = gui.addFolder('settings');
+var duration = f1.add(settings, 'duration', 0, 180).step(1);
 f1.add(settings, 'distance', 0, 100).step(1);
-f1.closed = false;
+f1.closed = true;
 
 var f2 = gui.addFolder('color');
-var color_patient_control = f2.addColor(settings, 'color_patient');
+var color_infectious_control = f2.addColor(settings, 'color_infectious');
+var color_healed_control = f2.addColor(settings, 'color_healed');
 var color_active_control = f2.addColor(settings, 'color_active');
 var color_passive_control = f2.addColor(settings, 'color_passive');
 var color_casualty_control = f2.addColor(settings, 'color_casualty');
-f2.closed = false;
+f2.closed = true;
 
 var f3 = gui.addFolder('features');
 f3.add(settings, 'chat');
+f3.add(settings, 'gmaps')
 f3.closed = true;
 
-color_1_control.onChange(function(value) {
-    // Fires on every change, drag, keypress, etc.
-    for(var i=0; i<couples.length; i++){
-      couples[i].red.fill = settings.color_1;
-    }
+gui.closed = true;
+
+duration.onChange(function(value) {
+    //set the time when time changed
+    updateDuration(settings.duration);
 });
 
-color_2_control.onChange(function(value) {
+color_infectious_control.onChange(function(value) {
     // Fires on every change, drag, keypress, etc.
-    for(var i=0; i<couples.length; i++){
-      couples[i].blue.fill = settings.color_2;
-    }
+    // for(var i=0; i<couples.length; i++){
+    //   couples[i].red.fill = settings.color_1;
+    // }
+});
+
+color_healed_control.onChange(function(value) {
+    // Fires on every change, drag, keypress, etc.
+    // for(var i=0; i<couples.length; i++){
+    //   couples[i].blue.fill = settings.color_2;
+    // }
 });

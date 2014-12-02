@@ -1,7 +1,10 @@
 var start_time;
 var countdownTimer;
+var isRunning = false;
 
-function timePassedSince(start_date) {
+var duration = 120;
+
+var timePassedSince = function(start_date) {
 
     // grab the current UTC values
     var cur_date = new Date();
@@ -13,33 +16,45 @@ function timePassedSince(start_date) {
     var elapsed_time = new Date(difference);  
 
 
-    var minutes = Math.abs(elapsed_time.getMinutes());
+    var minutes = Math.round( Math.abs(elapsed_time.getMinutes()));
 
-    var seconds = Math.abs(elapsed_time.getSeconds());
+    var seconds = Math.round( Math.abs(elapsed_time.getSeconds()));
 
-    var millis = Math.abs(elapsed_time.getMilliseconds());
+    var millis = Math.round( Math.abs(elapsed_time.getMilliseconds()));
 
     // difference from time on timer (2 minutes)
-    var minutes_remaining = 1 - minutes;
-    var seconds_remaining = 59 - seconds;
+    var minutes_remaining = Math.floor((duration-1)/60) - minutes;
+    var seconds_remaining = Math.floor(duration - 1 - seconds) % 60;
     var millis_remaining = 999 - millis;
 
-    if(minutes_remaining < 10 ) minutes_remaining = '0' + minutes_remaining;
-    if(seconds_remaining < 10 ) seconds_remaining  = '0' + seconds_remaining;
-    if(millis_remaining < 100) millis_remaining = '0' + millis_remaining;
-    if(millis_remaining < 10) millis_remaining = '0' + millis_remaining;
-    var tenths = Math.floor(millis_remaining/100);
-    var hundredths = Math.floor(millis_remaining/10);
-    if(hundredths < 10) hundredths = '0' + hundredths;
+    var time_remaining = minutes_remaining * 60 * 1000 + seconds_remaining * 1000 + millis_remaining;
+    console.log("min: " + minutes_remaining);
+    console.log("sec: " + seconds_remaining);
+    console.log("mil: " + millis_remaining);
 
-    if(minutes_remaining > 0 || seconds_remaining > 0 || hundredths > 0)
-        document.getElementById('countdown').innerHTML =  minutes_remaining+':'+seconds_remaining+'.'+hundredths;
+    if(!(minutes_remaining <= 0 && seconds_remaining < 0))
+        document.getElementById('countdown').innerHTML =  getTimeInStringFormatFromMillis(time_remaining);
     else {
         document.getElementById('countdown').innerHTML =  '00:00.00';
         window.clearInterval(countdownTimer);
+        isRunning = false;
     }
 
 }
+
+var getTimeInStringFormatFromMillis = function(millis) {
+    var string = "";
+
+    var minutes = Math.floor(millis / (60 * 1000));
+    var seconds = Math.floor((millis / 1000) % 60);
+    var hundredths = Math.floor((millis % 1000) / 10);
+
+    if(minutes < 10 ) minutes = '0' + minutes;
+    if(seconds < 10 ) seconds  = '0' + seconds;
+    if(hundredths < 10) hundredths = '0' + hundredths;
+
+    return minutes + ':' + seconds + '.' + hundredths;
+} 
 
 // function updateClock() {
 //     document.getElementById('countdown').innerHTML =  minutes+':'+seconds+':'+millis;    
@@ -50,6 +65,32 @@ var startTheClock = function() {
     // grab the current UTC values
     var cur_date = new Date();
 
+    isRunning = true;
+
+    //make sure there isn't already an interval running
+    window.clearInterval(countdownTimer);
     // create a timer and set its interval
     countdownTimer = setInterval(function () {timePassedSince(cur_date)}, 10);
 }
+
+var stopTheClock = function() {    
+    window.clearInterval(countdownTimer);
+    isRunning = false;
+}
+
+var resetTheClock = function() {
+    
+
+    // document.getElementById('countdown').innerHTML =  '00:00.00';
+    document.getElementById('countdown').innerHTML =  getTimeInStringFormatFromMillis(duration*1000);
+
+    isRunning = false;
+}
+
+var updateDuration = function(seconds) {
+    if(!isRunning) {
+        duration = seconds;
+        resetTheClock();
+    }
+}
+
