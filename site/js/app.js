@@ -6,6 +6,8 @@
 
 var _channel = 'my_channel';
 var _uuid = PUBNUB.uuid();
+var people = [];
+var center;			// point that represents the center of the population (holding)
 
 var updateFromParse = function() {
 
@@ -29,6 +31,136 @@ var updateFromParse = function() {
 		    console.log("Error: " + error.code + " " + error.message);
 		}
 	});
+}
+
+//----------------------------
+// Map stuffs
+//----------------------------
+
+
+var updatePopulation = function(){
+	people.clear();
+
+	var users = Parse.Object.extend("SimpleUser");
+	var query = new Parse.Query(users);
+	query.equalTo("present", true);
+	query.find({
+	  	success: function(results) {
+		    // list contains the present players.
+		    	console.log(results);
+		    	console.log("# of present: " + results.length);
+		    // draw this list of players across the screen.
+		    for (var i = 0; i < results.length; i++) { 
+		    	var object = results[i];
+
+		    	// place useful data into a local object
+		    	var obj = {
+		    		x: object.get('x'),
+		    		y: object.get('y'),
+		    		id: object.get('playerID'),
+		    		active: object.get('active'),
+		    		present: object.get('present')
+		    	};
+
+		    	people.push(obj);
+		    }
+
+		    displayGameState();
+	  	},
+		error: function(object, error) {
+		    // The object was not retrieved successfully.
+		    // error is a Parse.Error with an error code and message.
+		    console.log("Error: " + error.code + " " + error.message);
+		}
+	});
+}
+
+var displayGameState = function() {
+	
+	findCenter();
+    
+    sortPeople();		// sort the people into the order to hold the rope
+
+    // draw border
+    // draw all people
+    createMap();
+    
+    // print debug info
+    printDebugData();
+
+    //paper.drawPeopleInBorder(people);
+    //paper.drawPatientZero();
+}
+
+// find center
+var findCenter = function() {
+
+    var total = {x:0, y:0};
+    center = {x:0, y:0};
+
+    for(var i=0; i<people.length; i++) {
+      total.x += people[i].x;
+      total.y += people[i].y;
+    }
+    
+    center.x = total.x / people.length;
+    center.y = total.y / people.length;  
+}
+
+// sort people
+var sortPeople = function() {
+	var sortedPeople = [];
+	sortedPeople.clear();
+
+	var lastPerson = people[0];
+	sortedPeople.push(lastPerson);
+
+	for(var i=0; i<people.length; i++) {
+		var nextPerson = getNextPersonCounterClockwise(lastPerson);
+		sortedPeople.push(nextPerson);
+		lastPerson = nextPerson;
+	}
+
+	people = sortedPeople;
+}
+
+var getNextPersonCounterClockwise = function(p) {
+
+    var min = 2*Math.PI;	// max angle
+    var index = 0;
+    
+    var start_theta = Math.atan2((p.y - center.y), (p.x - center.x));
+    
+    for(var i=0; i<people.length; i++) {
+      
+    	if(people[i] == p)
+        	continue;
+        
+    	var p_theta = Math.atan2((people[i].y - center.y), (people[i].x - center.x));
+	    var diff = p_theta - start_theta;
+
+	    if(diff < 0)
+	    	diff += 2*Math.PI;
+	      
+	    if(diff < min) {
+	    	index = i;
+	    	min = diff;
+	    }  
+    }
+
+	return people[index];
+}
+
+var printDebugData = function() {
+
+	var string = "<ol><li>center: " + center.x + ", " + center.y+"</li>";
+    
+    for(var i=0; i<people.length; i++) {
+    	string += "<li>person " + i + " location " + people[i].x + ", " + people[i].y + "</li>";
+    }
+    string += "</ol>";
+    document.getElementById("debug_data").innerHTML = string;
+
 }
 
 //----------------------------
@@ -114,11 +246,13 @@ pubnub.subscribe({
 			case "join":
 				// set the UUID here
 				console.log("join - UUID - " + m.uuid);
+				updatePopulation();
 			break;
 
 			case "leave":
 				// set this user to no longer focussed...
 				console.log("leave - UUID - " + m.uuid);
+				updatePopulation();
 			break;
 
 			default: console.log(m.action);	
@@ -130,6 +264,7 @@ pubnub.subscribe({
 			case "update":
 				console.log("update the page to the latest from parse db");
 				updateFromParse();
+				updatePopulation();
 			break;
 
 			case "start":
@@ -166,6 +301,15 @@ var sendUpdateMessage = function() {
 	 message: 'update'
 	});
 }
+
+//----------------------------
+//			Utility
+//----------------------------
+Array.prototype.clear = function() {
+  while (this.length > 0) {
+    this.pop();
+  }
+};
 
 //----------------------------
 //			Parse

@@ -40,70 +40,16 @@ footer {
 	padding: 20px;
 }
 
-/* Toggle Buttons */
-
-label { 
-    padding:0.4em 2em 0.4em 0; 
+#map-canvas {
+        height: 600px;
+        margin: 0px;
+        padding: 0px
 }
 
-.toggle-btn { 
-    text-align:centre; 
-	font-family: sans-serif;
-	font-weight: bolder;
-	font-size: 1.5em;
-    color:#000; 
-    background-color:#FFF; 
-    border-radius:0px; 
-    display:inline-block; 
-    border:solid 1px #CCC; 
-    cursor:pointer;
+#debug_data {
+    visibility: hidden;
 }
 
-.toggle-btn-grp * {
-	float: right;
-	margin-left: auto;
-	margin-right: auto;
-    height:50px;
-    width:100%;
-    line-height:50px;
+#draw {
+    visibility: hidden;
 }
-.toggle-btn-grp div {
-    position: fixed;
-    bottom: 100px;
-    left:0px; 
-
-    display:inline-block;
-    margin:0px;
-}
-
-.toggle-btn-grp div label {
-    z-index:0;
-    padding:0;
-    text-align:center;
-}
-
-.toggle-btn-grp #button_1 {
-
-}
-
-.toggle-btn-grp #button_2 {
-    bottom: 50px;
-}
-
-.toggle-btn-grp div input {
-    z-index:1;
-    cursor:pointer;
-    opacity:0;
-}
-
-.toggle-btn-grp div:hover label {
-    border:solid 1px #a0d5dc !important; 
-    background:#f1fdfe;
-}
-
-.toggle-btn-grp div input:checked + label {
-    background: black;
-    color: white;
-    border:solid 1px black !important; 
-}
-

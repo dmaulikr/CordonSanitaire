@@ -3,11 +3,17 @@ var settings = new Settings();
 function Settings(){
     this.duration = 120;
     this.distance = 20;
+
     this.color_infectious = '#ff5555';
     this.color_healed = '#55ffb9';
     this.color_active = '#fff341';
     this.color_passive = '#ffffff';
     this.color_casualty = '#ffa352';
+
+    this.color_border_stroke = '#000000';
+    this.color_border_fill = '#000000';
+    this.color_border_opacity = .2;
+
     this.chat = false;
     this.gmaps = false;
 
@@ -37,6 +43,12 @@ var duration = f1.add(settings, 'duration', 0, 180).step(1);
 f1.add(settings, 'distance', 0, 100).step(1);
 f1.closed = true;
 
+var f4 = gui.addFolder('border');
+var color_border_stroke_control = f4.addColor(settings, 'color_border_stroke');
+var color_border_fill_control = f4.addColor(settings, 'color_border_fill');
+var color_border_opacity_control = f4.add(settings, 'color_border_opacity', 0, 1);
+f4.closed = true;
+
 var f2 = gui.addFolder('color');
 var color_infectious_control = f2.addColor(settings, 'color_infectious');
 var color_healed_control = f2.addColor(settings, 'color_healed');
@@ -57,11 +69,24 @@ duration.onChange(function(value) {
     updateDuration(settings.duration);
 });
 
-color_infectious_control.onChange(function(value) {
+color_border_stroke_control.onChange(function(value) {
+    createMap();
+});
+
+color_border_fill_control.onChange(function(value) {
+    createMap();
+});
+
+color_border_opacity_control.onChange(function(value) {
+    createMap();
+});
+
+color_active_control.onChange(function(value) {
     // Fires on every change, drag, keypress, etc.
     // for(var i=0; i<couples.length; i++){
     //   couples[i].red.fill = settings.color_1;
     // }
+    createMap();
 });
 
 color_healed_control.onChange(function(value) {
