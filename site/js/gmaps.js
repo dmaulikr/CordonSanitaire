@@ -2,34 +2,6 @@
 // as the icon for a marker. The resulting icon is a star-shaped symbol
 // with a pale yellow fill and a thick yellow border.
 
-// function initialize() {
-//   var mapOptions = {
-//     zoom: 4,
-//     center: new google.maps.LatLng(-25.363882, 131.044922)
-//   };
-
-//   var map = new google.maps.Map(document.getElementById('map-canvas'),
-//       mapOptions);
-
-//   var goldStar = {
-//     path: 'M 125,5 155,90 245,90 175,145 200,230 125,180 50,230 75,145 5,90 95,90 z',
-//     fillColor: 'yellow',
-//     fillOpacity: 0.8,
-//     scale: 1,
-//     strokeColor: 'gold',
-//     strokeWeight: 14
-//   };
-
-//   var marker = new google.maps.Marker({
-//     position: map.getCenter(),
-//     icon: goldStar,
-//     map: map
-//   });
-
-// }
-
-// google.maps.event.addDomListener(window, 'load', initialize);
-
 var map;
 var infoWindow;
 
@@ -45,13 +17,6 @@ var createMap = function() {
   map = new google.maps.Map(document.getElementById('map-canvas'),
       mapOptions);
 
-  // Define the LatLng coordinates for the polygon.
-  var triangleCoords = [
-      new google.maps.LatLng(25.774252, -80.190262),
-      new google.maps.LatLng(18.466465, -66.118292),
-      new google.maps.LatLng(32.321384, -64.75737)
-  ];
-
   // Construct the polygon.
   quarantine = new google.maps.Polygon({
     paths: getPopulationAsGoogleCoords(),
@@ -64,6 +29,7 @@ var createMap = function() {
 
   quarantine.setMap(map);
 
+  drawPopulation();
   // Add a listener for the click event.
   //google.maps.event.addListener(bermudaTriangle, 'click', showArrays);
 
@@ -87,6 +53,70 @@ var getPopulationAsGoogleCoords = function() {
   }
 
   return coords;
+}
+
+var drawPopulation = function() {
+
+  var infectious = {
+    path: google.maps.SymbolPath.CIRCLE,
+    fillColor: settings.color_infectious,
+    fillOpacity: 1.0,
+    scale: 8,
+    strokeColor: settings.color_border_stroke,
+    strokeOpacity: 0.8,
+    strokeWeight: 4
+  };
+
+  var healed = {
+    path: google.maps.SymbolPath.CIRCLE,
+    fillColor: settings.color_healed,
+    fillOpacity: 1.0,
+    scale: 8,
+    strokeColor: settings.color_border_stroke,
+    strokeOpacity: 0.8,
+    strokeWeight: 4
+  };
+
+  var active = {
+    path: google.maps.SymbolPath.CIRCLE,
+    fillColor: settings.color_active,
+    fillOpacity: 1.0,
+    scale: 8,
+    strokeColor: settings.color_border_stroke,
+    strokeOpacity: 0.8,
+    strokeWeight: 4
+  };
+
+  var passive = {
+    path: google.maps.SymbolPath.CIRCLE,
+    fillColor: settings.color_passive,
+    fillOpacity: 1.0,
+    scale: 8,
+    strokeColor: settings.color_border_stroke,
+    strokeOpacity: 0.8,
+    strokeWeight: 4
+  };
+
+  var casuality = {
+    path: google.maps.SymbolPath.CIRCLE,
+    fillColor: settings.color_casualty,
+    fillOpacity: 1.0,
+    scale: 8,
+    strokeColor: settings.color_border_stroke,
+    strokeOpacity: 0.8,
+    strokeWeight: 4
+  };
+
+  var people_coords = getPopulationAsGoogleCoords();
+
+  for(var i=0; i<people.length; i++) {
+    
+    var marker = new google.maps.Marker({
+      position: people_coords[i],
+      icon: active,
+      map: map
+    });
+  }
 }
 
 /** @this {google.maps.Polygon} */

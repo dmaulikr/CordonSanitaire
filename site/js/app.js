@@ -84,9 +84,9 @@ var displayGameState = function() {
     // draw border
     // draw all people
     createMap();
-    
+
     // print debug info
-    printDebugData();
+    //printDebugData();
 
     //paper.drawPeopleInBorder(people);
     //paper.drawPatientZero();

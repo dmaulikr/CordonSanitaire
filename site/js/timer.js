@@ -4,6 +4,7 @@ var isRunning = false;
 
 var duration = 120;
 
+
 var timePassedSince = function(start_date) {
 
     // grab the current UTC values
@@ -93,4 +94,7 @@ var updateDuration = function(seconds) {
         resetTheClock();
     }
 }
+
+// start the clock refreshed
+resetTheClock();
 
