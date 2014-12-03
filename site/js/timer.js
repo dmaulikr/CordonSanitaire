@@ -33,7 +33,7 @@ var timePassedSince = function(start_date) {
     console.log("sec: " + seconds_remaining);
     console.log("mil: " + millis_remaining);
 
-    if(!(minutes_remaining <= 0 && seconds_remaining < 0))
+    if(!(minutes_remaining == 0 && seconds_remaining < 0))
         document.getElementById('countdown').innerHTML =  getTimeInStringFormatFromMillis(time_remaining);
     else {
         document.getElementById('countdown').innerHTML =  '00:00.00';
