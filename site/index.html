@@ -10,44 +10,34 @@
 
 <body>
 	<header>
-		<div>
+		<!--<div>
 			<h1>Cordon Sanitaire</h1>
 			<h2>Work together to contain the outbreak.</h2>
 		</div>
+		-->
+		<div id="countdown">
+		</div>
 	</header>
-
-	<div id="sign_in">
-	</div>
 	
-	<div id="countdown">
-	</div>
-	
+	<!-- This was a terrible idea for formatting. Very confusing. In future, just use the console
 	<div id="debug_data">
-	</div>
-
-	<div id="draw">
-		<canvas id="sample" resize></canvas>
-	</div>
-
-	<div id="map-canvas">
-	</div>
-
-	<!--
-	<div id="map">
-		<img id="map_image" src="img/manhattan.jpg"/>
-		<canvas id="drawCanvas" width="300" height="300">Canvas is not supported on this browser!</canvas>
 	</div>
 	-->
 
-	<div class="toggle-btn-grp">
-		<div id="button_1"><input type="radio" name="status" id="inactive" onclick="setUserActiveState(false)" checked><label class="toggle-btn">inactive</label></div> 
-		<div id="button_2"><input type="radio" name="status" id="active" onclick="setUserActiveState(true)"><label class="toggle-btn">active</label></div>  
+	<!-- paper
+	<div id="draw">
+		<canvas id="sample" resize></canvas>
+	</div>
+	-->
+	<div id="map-container">
+		<div id="map-canvas">
+		</div>
 	</div>
 
-	<div id="side_panel">
-	</div>
 
 	<footer>
+		<div id="button_1"><input type="radio" name="status" id="inactive" onclick="setUserActiveState(false)" checked><label class="toggle-btn">inactive</label></div> 
+		<div id="button_2"><input type="radio" name="status" id="active" onclick="setUserActiveState(true)"><label class="toggle-btn">active</label></div>  
 	</footer>	
 
 	<!-- dependencies -->
@@ -63,5 +53,17 @@
 
 	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
 	<script type="text/javascript" src="js/gmaps.js"></script>
+	<script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
+	<script type="text/javascript">
+	$(document).ready(function(e) {
+        var hheight = $(window).height() - 75;
+        $('#map-canvas').css('height', hheight);
+        $(window).resize(function(){
+            var hheight = $(window).height();
+            $('#map-canvas').css('height', hheight);
+            console.log("height " + hheight);
+        });
+    });
+    </script>
 </body>
 </html>
