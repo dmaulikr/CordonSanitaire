@@ -302,6 +302,15 @@ var sendUpdateMessage = function() {
 	});
 }
 
+// send start message
+var sendStartOfGame = function() {
+	pubnub.publish({
+	 channel: _channel,
+	 message: 'start'
+	});
+}
+
+
 //----------------------------
 //			Utility
 //----------------------------

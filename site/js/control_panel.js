@@ -18,7 +18,8 @@ function Settings(){
     this.gmaps = false;
 
     this.start = function(){
-        startTheClock();
+        //startTheClock();
+        sendStartOfGame();
     };
 
     this.stop = function(){
