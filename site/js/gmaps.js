@@ -23,6 +23,8 @@ var createMap = function() {
   drawQuarantine();
 
   drawPopulation();
+
+  updateScoreboard();
   // Add a listener for the click event.
   //google.maps.event.addListener(bermudaTriangle, 'click', showArrays);
 
@@ -103,25 +105,10 @@ var drawPopulation = function() {
   }
 }
 
-var getMarkerIconForPerson = function(person) {
-
-  // common options for icons
-  var _icon = {
-    path: google.maps.SymbolPath.CIRCLE,
-    fillColor: '#FFFFFF',
-    fillOpacity: 1.0,
-    scale: 8,
-    strokeColor: settings.color_border_stroke,
-    strokeOpacity: 0.8,
-    strokeWeight: 4
-  };
-
-  // make the person stand out so they know who they are
-  if(person.id == _uuid)
-    _icon.strokeColor = '#00FFFF';
-
-  // is passive or active
+var getPersonType = function(person) {
+  
   var type;
+  
   if(person.active)
     type = 'active';
   else
@@ -141,6 +128,28 @@ var getMarkerIconForPerson = function(person) {
       type = 'infectious';
   }
 
+  return type;
+}
+
+var getMarkerIconForPerson = function(person) {
+
+  // common options for icons
+  var _icon = {
+    path: google.maps.SymbolPath.CIRCLE,
+    fillColor: '#FFFFFF',
+    fillOpacity: 1.0,
+    scale: 8,
+    strokeColor: settings.color_border_stroke,
+    strokeOpacity: 0.8,
+    strokeWeight: 4
+  };
+
+  // make the person stand out so they know who they are
+  if(person.id == _uuid)
+    _icon.strokeColor = '#00FFFF';
+
+
+  var type = getPersonType(person);
 
   // set the colors now that we know what type we are
   switch(type){
@@ -164,10 +173,54 @@ var getMarkerIconForPerson = function(person) {
     case 'casuality': 
         _icon.fillColor = settings.color_casualty;
       break;
-
   }
 
   return _icon;
+}
+
+var updateScoreboard = function() {
+  //check status of patient zero
+  if(isPatientZeroContained())
+    document.getElementById('patient_status').innerHTML = 'contained';
+  else
+    document.getElementById('patient_status').innerHTML = 'infectious';
+
+  // update count of casualities
+  document.getElementById('casuality_count').innerHTML = countCasualities();  
+
+  // calculate the sq mi of quarantine...
+
+  // update count of people quarantining
+  document.getElementById('num_active').innerHTML = countActivePeople();
+
+
+}
+
+var isPatientZeroContained = function() {
+  for(var i=0; i<people.length; i++) {
+    if(people[i].isPatientZero){
+      if(getPersonType(people[i]) == 'healed')
+        return true;
+      else
+        return false;
+    } 
+  }
+}
+
+var countCasualities = function() {
+  var count = 0;
+
+  for(var i=0; i<people.length; i++) {
+    if(!people[i].isPatientZero){
+      if(getPersonType(people[i]) == 'casuality')
+        count++;
+    } 
+  }
+  return count;
+}
+
+var countActivePeople = function() {
+  return getActivePopulationAsNormalCoords().length;
 }
 
 //+ Jonas Raoni Soares Silva
