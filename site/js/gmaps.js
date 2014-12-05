@@ -18,16 +18,9 @@ var createMap = function() {
       mapOptions);
 
   // Construct the polygon.
-  quarantine = new google.maps.Polygon({
-    paths: getPopulationAsGoogleCoords(),
-    strokeColor: settings.color_border_stroke,
-    strokeOpacity: 0.8,
-    strokeWeight: 3,
-    fillColor: settings.color_border_fill,
-    fillOpacity: settings.color_border_opacity
-  });
+  // only connect those holding the border, or active
 
-  quarantine.setMap(map);
+  drawQuarantine();
 
   drawPopulation();
   // Add a listener for the click event.
@@ -36,9 +29,44 @@ var createMap = function() {
   //infoWindow = new google.maps.InfoWindow();
 }
 
+var drawQuarantine = function() {
+
+    quarantine = new google.maps.Polygon({
+    paths: getActivePopulationAsGoogleCoords(),
+    strokeColor: settings.color_border_stroke,
+    strokeOpacity: 0.8,
+    strokeWeight: 3,
+    fillColor: settings.color_border_fill,
+    fillOpacity: settings.color_border_opacity
+  });
+
+  quarantine.setMap(map);
+}
+
+var getActivePopulationAsGoogleCoords = function() {
+  var coords = [];
+
+  for(var i=0; i<people.length; i++) { 
+    if(people[i].active && people[i].present)
+      coords.push(getLatLngCoords(people[i].x, people[i].y));
+  }
+
+  return coords;
+}
+
 var getPopulationAsGoogleCoords = function() {
   var coords = [];
 
+  for(var i=0; i<people.length; i++) { 
+    if(people[i].present)
+      coords.push(getLatLngCoords(people[i].x, people[i].y));
+  }
+
+  return coords;
+}
+
+var getLatLngCoords = function(x,y) {
+  
   var begLat = 40.704204;
   var endLat = 40.829535;
   var begLng = -74.096729;
@@ -46,77 +74,72 @@ var getPopulationAsGoogleCoords = function() {
   var diffLat = endLat - begLat;
   var diffLng = endLng - begLng;
 
-  for(var i=0; i<people.length; i++) { 
+  var latlng = new google.maps.LatLng(begLat + diffLat*x, begLng + diffLng*y);
 
-    var latlng = new google.maps.LatLng(begLat + diffLat*people[i].x, begLng + diffLng*people[i].y);
-    coords.push(latlng);
-  }
-
-  return coords;
+  return latlng;
 }
 
 var drawPopulation = function() {
 
-  var infectious = {
-    path: google.maps.SymbolPath.CIRCLE,
-    fillColor: settings.color_infectious,
-    fillOpacity: 1.0,
-    scale: 8,
-    strokeColor: settings.color_border_stroke,
-    strokeOpacity: 0.8,
-    strokeWeight: 4
-  };
-
-  var healed = {
-    path: google.maps.SymbolPath.CIRCLE,
-    fillColor: settings.color_healed,
-    fillOpacity: 1.0,
-    scale: 8,
-    strokeColor: settings.color_border_stroke,
-    strokeOpacity: 0.8,
-    strokeWeight: 4
-  };
-
-  var active = {
-    path: google.maps.SymbolPath.CIRCLE,
-    fillColor: settings.color_active,
-    fillOpacity: 1.0,
-    scale: 8,
-    strokeColor: settings.color_border_stroke,
-    strokeOpacity: 0.8,
-    strokeWeight: 4
-  };
-
-  var passive = {
-    path: google.maps.SymbolPath.CIRCLE,
-    fillColor: settings.color_passive,
-    fillOpacity: 1.0,
-    scale: 8,
-    strokeColor: settings.color_border_stroke,
-    strokeOpacity: 0.8,
-    strokeWeight: 4
-  };
-
-  var casuality = {
-    path: google.maps.SymbolPath.CIRCLE,
-    fillColor: settings.color_casualty,
-    fillOpacity: 1.0,
-    scale: 8,
-    strokeColor: settings.color_border_stroke,
-    strokeOpacity: 0.8,
-    strokeWeight: 4
-  };
-
   var people_coords = getPopulationAsGoogleCoords();
 
   for(var i=0; i<people.length; i++) {
-    
+
     var marker = new google.maps.Marker({
       position: people_coords[i],
-      icon: active,
+      icon: getMarkerIconForPerson(people[i]),
       map: map
     });
   }
+}
+
+var getMarkerIconForPerson = function(person) {
+
+  //_uuid
+  var _icon = {
+    path: google.maps.SymbolPath.CIRCLE,
+    fillColor: '#FFFFFF',
+    fillOpacity: 1.0,
+    scale: 8,
+    strokeColor: settings.color_border_stroke,
+    strokeOpacity: 0.8,
+    strokeWeight: 4
+  };
+
+  if(person.id == _uuid)
+    _icon.strokeColor = '#00FFFF';
+
+  var type;
+  if(person.active)
+    type = 'active';
+  else
+    type = 'passive';
+
+  switch(type){
+    
+    case 'infectious': 
+        _icon.fillColor = settings.color_infectious;
+      break;
+    
+    case 'healed': 
+        _icon.fillColor = settings.color_healed;
+      break;
+    
+    case 'active': 
+        _icon.fillColor = settings.color_active;
+      break;
+    
+    case 'passive': 
+        _icon.fillColor = settings.color_passive;
+      break;
+    
+    case 'casuality': 
+        _icon.fillColor = settings.color_casualty;
+      break;
+
+  }
+
+  return _icon;
 }
 
 /** @this {google.maps.Polygon} */
