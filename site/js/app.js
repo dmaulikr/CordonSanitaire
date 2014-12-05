@@ -337,7 +337,8 @@ simpleUser.save({
   y: Math.random(0,1),
   role: "citizen",
   active: false,
-  present: true
+  present: true,
+  isPatientZero: false
 }, {
   success: function(simpleUser) {
     // The object was saved successfully.

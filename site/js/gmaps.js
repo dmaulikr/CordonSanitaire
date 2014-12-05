@@ -43,6 +43,17 @@ var drawQuarantine = function() {
   quarantine.setMap(map);
 }
 
+var getActivePopulationAsNormalCoords = function() {
+  var coords = [];
+
+  for(var i=0; i<people.length; i++) { 
+    if(people[i].active && people[i].present)
+      coords.push(people[i]);
+  }
+
+  return coords;
+}
+
 var getActivePopulationAsGoogleCoords = function() {
   var coords = [];
 
@@ -95,7 +106,7 @@ var drawPopulation = function() {
 
 var getMarkerIconForPerson = function(person) {
 
-  //_uuid
+  // common options for icons
   var _icon = {
     path: google.maps.SymbolPath.CIRCLE,
     fillColor: '#FFFFFF',
@@ -106,15 +117,24 @@ var getMarkerIconForPerson = function(person) {
     strokeWeight: 4
   };
 
+  // make the person stand out so they know who they are
   if(person.id == _uuid)
     _icon.strokeColor = '#00FFFF';
 
+  // is passive or active
   var type;
   if(person.active)
     type = 'active';
   else
     type = 'passive';
 
+  var poly = getActivePopulationAsNormalCoords();
+
+  // check for casuality
+  if(type == 'passive' && isPointInPoly(poly, person.x, person.y))
+    type = 'casuality';
+
+  // set the colors now that we know what type we are
   switch(type){
     
     case 'infectious': 
@@ -140,6 +160,17 @@ var getMarkerIconForPerson = function(person) {
   }
 
   return _icon;
+}
+
+//+ Jonas Raoni Soares Silva
+//@ http://jsfromhell.com/math/is-point-in-poly [rev. #0]
+
+function isPointInPoly(poly, x, y){
+    for(var c = false, i = -1, l = poly.length, j = l - 1; ++i < l; j = i)
+        ((poly[i].y <= y && y < poly[j].y) || (poly[j].y <= y && y < poly[i].y))
+        && (x < (poly[j].x - poly[i].x) * (y - poly[i].y) / (poly[j].y - poly[i].y) + poly[i].x)
+        && (c = !c);
+    return c;
 }
 
 /** @this {google.maps.Polygon} */
