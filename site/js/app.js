@@ -37,6 +37,41 @@ var updateFromParse = function() {
 // Map stuffs
 //----------------------------
 
+var pickPatientZero = function() {
+	// something with parse to set the value inactive
+	console.log("picking patient zero");
+
+	var uuid = people[Math.floor(Math.random() * people.length)].id;
+	console.log("picked" + uuid);
+
+	var users = Parse.Object.extend("SimpleUser");
+	var query = new Parse.Query(users);
+	query.equalTo("present", true);
+	query.find({
+	  	success: function(results) {
+	  		// look through all present people
+		    for (var i = 0; i < results.length; i++) { 
+		    	var object = results[i];
+		    	if(object.get('playerID') == uuid)
+		    		object.set('isPatientZero', true);
+		    	else
+		    		object.set('isPatientZero', false);
+				object.save();
+			}
+			
+			// let the others know we have picked a new patient zero
+			sendUpdateMessage();
+		},
+		error: function(error) {
+		    console.log("Error: " + error.code + " " + error.message);
+		}
+
+	});
+
+	// then update pubnub
+	sendUpdateMessage();
+}
+
 
 var updatePopulation = function(){
 	people.clear();
@@ -59,10 +94,11 @@ var updatePopulation = function(){
 		    		y: object.get('y'),
 		    		id: object.get('playerID'),
 		    		active: object.get('active'),
-		    		present: object.get('present')
+		    		role: object.get('role'),
+		    		isPatientZero: object.get('isPatientZero')
 		    	};
 
-		    	people.push(obj);
+			    people.push(obj);
 		    }
 
 		    displayGameState();

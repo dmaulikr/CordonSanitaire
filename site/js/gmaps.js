@@ -47,7 +47,7 @@ var getActivePopulationAsNormalCoords = function() {
   var coords = [];
 
   for(var i=0; i<people.length; i++) { 
-    if(people[i].active && people[i].present)
+    if(people[i].active && !people[i].isPatientZero)
       coords.push(people[i]);
   }
 
@@ -58,7 +58,7 @@ var getActivePopulationAsGoogleCoords = function() {
   var coords = [];
 
   for(var i=0; i<people.length; i++) { 
-    if(people[i].active && people[i].present)
+    if(people[i].active && !people[i].isPatientZero)
       coords.push(getLatLngCoords(people[i].x, people[i].y));
   }
 
@@ -69,7 +69,6 @@ var getPopulationAsGoogleCoords = function() {
   var coords = [];
 
   for(var i=0; i<people.length; i++) { 
-    if(people[i].present)
       coords.push(getLatLngCoords(people[i].x, people[i].y));
   }
 
@@ -133,6 +132,15 @@ var getMarkerIconForPerson = function(person) {
   // check for casuality
   if(type == 'passive' && isPointInPoly(poly, person.x, person.y))
     type = 'casuality';
+
+  // check for patient zero
+  if(person.isPatientZero) {
+    if(isPointInPoly(poly, person.x, person.y))
+      type = 'healed';
+    else
+      type = 'infectious';
+  }
+
 
   // set the colors now that we know what type we are
   switch(type){

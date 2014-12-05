@@ -17,6 +17,11 @@ function Settings(){
     this.chat = false;
     this.gmaps = false;
 
+    this.rollDice = function(){
+        //pick the patient zero
+        pickPatientZero();
+    };
+
     this.start = function(){
         //startTheClock();
         sendStartOfGame();
@@ -34,6 +39,7 @@ function Settings(){
 var gui = new dat.GUI();
 
 var f0 = gui.addFolder('controls');
+f0.add(settings, 'rollDice');
 f0.add(settings, 'start');
 f0.add(settings, 'stop');
 f0.add(settings, 'refresh');
