@@ -58,7 +58,7 @@ var pickPatientZero = function() {
 		    		object.set('isPatientZero', false);
 				object.save();
 			}
-			
+
 			// let the others know we have picked a new patient zero
 			sendUpdateMessage();
 		},
@@ -261,6 +261,29 @@ var setUserPresent = function(uuid) {
 	// then update pubnub
 	sendUpdateMessage();
 }
+
+// reset all of the players back to no-one playing
+var setAllUsersNotPresent = function() {
+	
+	var users = Parse.Object.extend("SimpleUser");
+	var query = new Parse.Query(users);
+	query.equalTo("present", true);
+	query.find({
+	  	success: function(results) {
+			for (var i = 0; i < results.length; i++) { 
+		    	var object = results[i];
+		    	object.set("present", false);
+				object.save();
+		    }
+	  	},
+		error: function(object, error) {
+		    // The object was not retrieved successfully.
+		    // error is a Parse.Error with an error code and message.
+		    console.log("Error: " + error.code + " " + error.message);
+		}
+	});
+}
+
 //----------------------------
 //			PubNub
 //----------------------------

@@ -34,16 +34,23 @@ function Settings(){
     this.refresh = function(){
         resetTheClock();
     };
+
+    this.resetPlayers = function(){
+        setAllUsersNotPresent();
+    };
 };
 
 var gui = new dat.GUI();
 
-var f0 = gui.addFolder('controls');
-f0.add(settings, 'rollDice');
+var f0 = gui.addFolder('countdown');
 f0.add(settings, 'start');
 f0.add(settings, 'stop');
 f0.add(settings, 'refresh');
 f0.closed = false;
+
+var f5 = gui.addFolder('advanced');
+f5.add(settings, 'rollDice');
+f5.add(settings, 'resetPlayers');
 
 var f1 = gui.addFolder('settings');
 var duration = f1.add(settings, 'duration', 0, 180).step(1);
@@ -88,17 +95,21 @@ color_border_opacity_control.onChange(function(value) {
     createMap();
 });
 
-color_active_control.onChange(function(value) {
-    // Fires on every change, drag, keypress, etc.
-    // for(var i=0; i<couples.length; i++){
-    //   couples[i].red.fill = settings.color_1;
-    // }
+color_infectious_control.onChange(function(value) {
+    createMap();
+});
+color_healed_control.onChange(function(value) {
     createMap();
 });
 
-color_healed_control.onChange(function(value) {
-    // Fires on every change, drag, keypress, etc.
-    // for(var i=0; i<couples.length; i++){
-    //   couples[i].blue.fill = settings.color_2;
-    // }
+color_active_control.onChange(function(value) {
+    createMap();
+});
+
+color_passive_control.onChange(function(value) {
+    createMap();
+});
+
+color_casualty_control.onChange(function(value) {
+    createMap();
 });
