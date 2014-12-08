@@ -17,6 +17,23 @@
 		-->
 		<div id="countdown">
 		</div>
+		<div id="buttons">
+			<div class="onoffswitch">
+			    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" onclick="flipUserActiveState()">
+			    <label class="onoffswitch-label" for="myonoffswitch">
+			        <span class="onoffswitch-inner"></span>
+			        <span class="onoffswitch-switch"></span>
+			    </label>
+			</div>
+		</div>
+		<!--
+		<div id="buttons">
+			<ul>
+				<li id="button_1"><input type="radio" name="status" id="inactive" onclick="setUserActiveState(false)" checked><label class="toggle-btn">inactive</label></li> 
+				<li id="button_2"><input type="radio" name="status" id="active" onclick="setUserActiveState(true)"><label class="toggle-btn">active</label></li>  
+			</ul>
+		</div>
+		-->
 		<div id="scoreboard">
 			<ul>
 			<li>patient zero is <span id="patient_status">contained</span></li>
@@ -44,8 +61,6 @@
 
 
 	<footer>
-		<div id="button_1"><input type="radio" name="status" id="inactive" onclick="setUserActiveState(false)" checked><label class="toggle-btn">inactive</label></div> 
-		<div id="button_2"><input type="radio" name="status" id="active" onclick="setUserActiveState(true)"><label class="toggle-btn">active</label></div>  
 	</footer>	
 
 	<!-- dependencies -->

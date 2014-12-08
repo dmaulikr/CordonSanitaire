@@ -206,7 +206,7 @@ var printDebugData = function() {
 var setUserActiveState = function(isActive) {
 	
 	// something with parse to set the value inactive
-	console.log("setting user inactive");
+	console.log("setting user state");
 	
 	var User = Parse.Object.extend("SimpleUser");
 	var query = new Parse.Query(User);
@@ -217,6 +217,43 @@ var setUserActiveState = function(isActive) {
 		{
 			var object = result[0];
 			object.set("active", isActive);
+			object.save(null, 
+			{
+				success:function (object)
+				{
+					// then update pubnub
+					sendUpdateMessage();
+					//console.log("WOAAAAHHHH YEAH", object);
+				},
+				error:function(object)
+				{
+					console.log("WOAAAAHHHH NOOOOOOO!", object);
+				}
+			});
+		},
+		error: function(error) {
+		    console.log("Error: " + error.code + " " + error.message);
+		}
+
+	});
+}
+
+var flipUserActiveState = function() {
+	
+	// something with parse to set the value inactive
+	console.log("flipping user state");
+	
+	var User = Parse.Object.extend("SimpleUser");
+	var query = new Parse.Query(User);
+	query.equalTo("playerID", _uuid);
+	query.find(
+	{
+		success: function(result) 
+		{
+			var object = result[0];
+			var state = object.get("active");
+			state = !state;
+			object.set("active", state);
 			object.save(null, 
 			{
 				success:function (object)
