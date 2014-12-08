@@ -3,6 +3,7 @@
 // with a pale yellow fill and a thick yellow border.
 
 var map;
+var markers = [];
 var infoWindow;
 
 var createMap = function() {
@@ -29,6 +30,17 @@ var createMap = function() {
   //google.maps.event.addListener(bermudaTriangle, 'click', showArrays);
 
   //infoWindow = new google.maps.InfoWindow();
+}
+
+var updateGameBoard = function() {
+	
+	// temporarily recall create map
+	// in the future, only redraw the board, only load map once
+	createMap();
+	
+	// draw quarantine
+	
+	// draw population
 }
 
 var drawQuarantine = function() {
@@ -116,9 +128,9 @@ var getPersonType = function(person) {
 
   var poly = getActivePopulationAsNormalCoords();
 
-  // check for casuality
+  // check for casualty
   if(type == 'passive' && isPointInPoly(poly, person.x, person.y))
-    type = 'casuality';
+    type = 'casualty';
 
   // check for patient zero
   if(person.isPatientZero) {
@@ -144,36 +156,43 @@ var getMarkerIconForPerson = function(person) {
     strokeWeight: 4
   };
 
-  // make the person stand out so they know who they are
-  if(person.id == _uuid)
-    _icon.strokeColor = '#00FFFF';
-
-
   var type = getPersonType(person);
 
   // set the colors now that we know what type we are
   switch(type){
     
     case 'infectious': 
-        _icon.fillColor = settings.color_infectious;
+        	_icon.fillColor = settings.color_infectious_fill;
+			_icon.strokeColor = settings.color_infectious_stroke;
       break;
     
     case 'healed': 
-        _icon.fillColor = settings.color_healed;
+    		_icon.fillColor = settings.color_healed_fill;
+    		_icon.strokeColor = settings.color_healed_stroke;
       break;
     
     case 'active': 
-        _icon.fillColor = settings.color_active;
+     	   _icon.fillColor = settings.color_active_fill;
+	 	   _icon.strokeColor = settings.color_active_stroke;
       break;
     
     case 'passive': 
-        _icon.fillColor = settings.color_passive;
+        	_icon.fillColor = settings.color_passive_fill;
+			_icon.strokeColor = settings.color_passive_stroke;
       break;
     
-    case 'casuality': 
-        _icon.fillColor = settings.color_casualty;
+    case 'casualty': 
+	        _icon.fillColor = settings.color_casualty_fill;
+			_icon.strokeColor = settings.color_casualty_stroke;				
       break;
   }
+  
+  // make the person stand out so they know who they are
+  if(person.id == _uuid) {
+	_icon.scale = 12;
+    _icon.strokeColor = '#00FFFF';
+  }
+
 
   return _icon;
 }
@@ -185,8 +204,8 @@ var updateScoreboard = function() {
   else
     document.getElementById('patient_status').innerHTML = 'infectious';
 
-  // update count of casualities
-  document.getElementById('casuality_count').innerHTML = countCasualities();  
+  // update count of casualties
+  document.getElementById('casualty_count').innerHTML = countCasuaities();  
 
   // calculate the sq mi of quarantine...
 

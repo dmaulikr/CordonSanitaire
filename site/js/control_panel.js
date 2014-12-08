@@ -4,11 +4,16 @@ function Settings(){
     this.duration = 120;
     this.distance = 20;
 
-    this.color_infectious = '#ff5555';
-    this.color_healed = '#55ffb9';
-    this.color_active = '#fff341';
-    this.color_passive = '#ffffff';
-    this.color_casualty = '#ffa352';
+    this.color_infectious_fill = '#ff5555';
+    this.color_infectious_stroke = '#550000';
+    this.color_healed_fill = '#55ffb9';
+    this.color_healed_stroke = '#005533';
+    this.color_active_fill = '#fff341';
+    this.color_active_stroke = '#000000';
+    this.color_passive_fill = '#ffffff';
+    this.color_passive_stroke = '#000000';
+    this.color_casualty_fill = '#ffa352';
+    this.color_casualty_stroke = '#000000';
 
     this.color_border_stroke = '#000000';
     this.color_border_fill = '#000000';
@@ -64,11 +69,16 @@ var color_border_opacity_control = f4.add(settings, 'color_border_opacity', 0, 1
 f4.closed = true;
 
 var f2 = gui.addFolder('color');
-var color_infectious_control = f2.addColor(settings, 'color_infectious');
-var color_healed_control = f2.addColor(settings, 'color_healed');
-var color_active_control = f2.addColor(settings, 'color_active');
-var color_passive_control = f2.addColor(settings, 'color_passive');
-var color_casualty_control = f2.addColor(settings, 'color_casualty');
+var color_infectious_fill_control = f2.addColor(settings, 'color_infectious_fill');
+var color_infectious_stroke_control = f2.addColor(settings, 'color_infectious_stroke');
+var color_healed_fill_control = f2.addColor(settings, 'color_healed_fill');
+var color_healed_stroke_control = f2.addColor(settings, 'color_healed_stroke');
+var color_active_fill_control = f2.addColor(settings, 'color_active_fill');
+var color_active_stroke_control = f2.addColor(settings, 'color_active_stroke');
+var color_passive_fill_control = f2.addColor(settings, 'color_passive_fill');
+var color_passive_stroke_control = f2.addColor(settings, 'color_passive_stroke');
+var color_casualty_fill_control = f2.addColor(settings, 'color_casualty_fill');
+var color_casualty_stroke_control = f2.addColor(settings, 'color_casualty_stroke');
 f2.closed = true;
 
 var f3 = gui.addFolder('features');
@@ -78,38 +88,68 @@ f3.closed = true;
 
 gui.closed = true;
 
+
+// change duration
 duration.onChange(function(value) {
     //set the time when time changed
     updateDuration(settings.duration);
 });
 
+
+// border
 color_border_stroke_control.onChange(function(value) {
-    createMap();
+    updateGameBoard();
 });
 
 color_border_fill_control.onChange(function(value) {
-    createMap();
+    updateGameBoard();
 });
 
 color_border_opacity_control.onChange(function(value) {
-    createMap();
+    updateGameBoard();
 });
 
-color_infectious_control.onChange(function(value) {
-    createMap();
+
+// infectious
+color_infectious_fill_control.onChange(function(value) {
+    updateGameBoard();
 });
-color_healed_control.onChange(function(value) {
-    createMap();
+color_infectious_stroke_control.onChange(function(value) {
+    updateGameBoard();
 });
 
-color_active_control.onChange(function(value) {
-    createMap();
+
+// healed
+color_healed_fill_control.onChange(function(value) {
+    updateGameBoard();
+});
+color_healed_stroke_control.onChange(function(value) {
+    updateGameBoard();
 });
 
-color_passive_control.onChange(function(value) {
-    createMap();
+
+// active
+color_active_fill_control.onChange(function(value) {
+    updateGameBoard();
+});
+color_active_stroke_control.onChange(function(value) {
+    updateGameBoard();
 });
 
-color_casualty_control.onChange(function(value) {
-    createMap();
+
+// passive
+color_passive_fill_control.onChange(function(value) {
+    updateGameBoard();
+});
+color_passive_stroke_control.onChange(function(value) {
+    updateGameBoard();
+});
+
+
+// casualty
+color_casualty_fill_control.onChange(function(value) {
+    updateGameBoard();
+});
+color_casualty_stroke_control.onChange(function(value) {
+    updateGameBoard();
 });
