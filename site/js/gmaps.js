@@ -162,11 +162,13 @@ var getMarkerIconForPerson = function(person) {
   switch(type){
     
     case 'infectious': 
+    		_icon.scale = 16;
         	_icon.fillColor = settings.color_infectious_fill;
 			_icon.strokeColor = settings.color_infectious_stroke;
       break;
     
     case 'healed': 
+    		_icon.scale = 16;
     		_icon.fillColor = settings.color_healed_fill;
     		_icon.strokeColor = settings.color_healed_stroke;
       break;
@@ -190,7 +192,7 @@ var getMarkerIconForPerson = function(person) {
   // make the person stand out so they know who they are
   if(person.id == _uuid) {
 	_icon.scale = 12;
-    _icon.strokeColor = '#00FFFF';
+    //_icon.fillColor = '#00FFFF';
   }
 
 
