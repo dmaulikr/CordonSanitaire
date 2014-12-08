@@ -7,6 +7,9 @@ var quarantine;
 var markers = [];
 var infoWindow;
 
+// center map on user
+//var usersCoords = getUserAsGoogleCoords();
+
 var createMap = function() {
   var mapOptions = {
     zoom: 12,
@@ -67,6 +70,7 @@ var getActivePopulationAsNormalCoords = function() {
   return coords;
 }
 
+
 var getActivePopulationAsGoogleCoords = function() {
   var coords = [];
 
@@ -78,6 +82,7 @@ var getActivePopulationAsGoogleCoords = function() {
   return coords;
 }
 
+
 var getPopulationAsGoogleCoords = function() {
   var coords = [];
 
@@ -87,6 +92,18 @@ var getPopulationAsGoogleCoords = function() {
 
   return coords;
 }
+
+
+var getUserAsGoogleCoords = function() {
+	
+	for(var i=0; i<people.length; i++) { 
+		if(isPersonMe(people[i])) {
+			return getLatLngCoords(people[i].x, people[i].y);
+		}
+	}
+
+}
+
 
 var getLatLngCoords = function(x,y) {
   
@@ -108,11 +125,41 @@ var drawPopulation = function() {
 
   for(var i=0; i<people.length; i++) {
 
-    var marker = new google.maps.Marker({
+  	var person = people[i];
+  	
+  	if(isPersonMe(person)) {
+	  	
+	  	var labelText = "YOU ARE HERE";
+
+		var myOptions = {
+			 content: labelText
+			,boxStyle: {
+			   textAlign: "center"
+			  ,fontSize: "8pt"
+			  ,fontWeight: "bold"
+			  ,width: "120px"
+			 }
+			,disableAutoPan: true
+			,pixelOffset: new google.maps.Size(-60, 20)
+			,position: people_coords[i]
+			,closeBoxURL: ""
+			,isHidden: false
+			,pane: "mapPane"
+			,enableEventPropagation: true
+		};
+
+		var ibLabel = new InfoBox(myOptions);
+		ibLabel.open(map);
+  	}
+    
+    var marker_obj = new google.maps.Marker({
       position: people_coords[i],
-      icon: getMarkerIconForPerson(people[i]),
-      map: map
+      icon: getMarkerIconForPerson(person),
+      map: map,
     });
+    
+    markers.push({marker: marker_obj,
+	    			id: i});
   }
 }
 
@@ -189,7 +236,7 @@ var getMarkerIconForPerson = function(person) {
   }
   
   // make the person stand out so they know who they are
-  if(person.id == _uuid) {
+  if(isPersonMe(person)) {
 	_icon.scale = 12;
     //_icon.fillColor = '#00FFFF';
   }
@@ -228,6 +275,10 @@ var updateScoreboard = function() {
   document.getElementById('num_active').innerHTML = countActivePeople();
 
 
+}
+
+var isPersonMe = function(person) {
+	return person.id == _uuid;
 }
 
 var isPatientZeroContained = function() {
