@@ -3,6 +3,7 @@
 // with a pale yellow fill and a thick yellow border.
 
 var map;
+var quarantine;
 var markers = [];
 var infoWindow;
 
@@ -12,8 +13,6 @@ var createMap = function() {
     center: new google.maps.LatLng(40.776779, -73.969699),
     mapTypeId: google.maps.MapTypeId.ROADMAP
   };
-
-  var quarantine;
 
   map = new google.maps.Map(document.getElementById('map-canvas'),
       mapOptions);
@@ -199,6 +198,19 @@ var getMarkerIconForPerson = function(person) {
   return _icon;
 }
 
+// animate Patient Zero
+var animatePatientZero = function(icon) {
+    var count = 0;
+    window.setInterval(function() {
+      count = (count + 1) % 200;
+ /*
+     icons[0].offset = (count / 2) + '%';
+      line.set('icons', icons);
+ 
+*/ }, 20);
+}
+
+//
 var updateScoreboard = function() {
   //check status of patient zero
   if(isPatientZeroContained())
@@ -207,9 +219,10 @@ var updateScoreboard = function() {
     document.getElementById('patient_status').innerHTML = 'infectious';
 
   // update count of casualties
-  document.getElementById('casualty_count').innerHTML = countCasuaities();  
+  document.getElementById('casualty_count').innerHTML = countCasualties();  
 
   // calculate the sq mi of quarantine...
+  document.getElementById('area_quarantined').innerHTML = getAreaQuarantined();
 
   // update count of people quarantining
   document.getElementById('num_active').innerHTML = countActivePeople();
@@ -228,12 +241,12 @@ var isPatientZeroContained = function() {
   }
 }
 
-var countCasualities = function() {
+var countCasualties = function() {
   var count = 0;
 
   for(var i=0; i<people.length; i++) {
     if(!people[i].isPatientZero){
-      if(getPersonType(people[i]) == 'casuality')
+      if(getPersonType(people[i]) == 'casualty')
         count++;
     } 
   }
@@ -242,6 +255,15 @@ var countCasualities = function() {
 
 var countActivePeople = function() {
   return getActivePopulationAsNormalCoords().length;
+}
+
+
+// calculate the total area quarantine off
+var getAreaQuarantined = function() {
+	var area = google.maps.geometry.spherical.computeArea(quarantine.getPath());
+	// convert from sq meters to sq miles
+	area = area * (0.000621371) * (0.000621371);
+	return area.toFixed(2);	
 }
 
 //+ Jonas Raoni Soares Silva
