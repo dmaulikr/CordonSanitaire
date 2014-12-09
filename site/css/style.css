@@ -102,7 +102,65 @@ footer {
     visibility: hidden;
 }
 
-// Radio button styling
+.float_right {
+	float: right;
+}
+
+.float_left {
+	float: left;
+}
+
+
+/* Dialog box */
+dialog {
+  border-radius: 30px;
+  padding: 30px;
+  background-color: rgba(255, 255, 255, 0.8);
+  max-width: 600px;
+  margin: 0 auto 0 auto;
+}
+
+dialog h1{
+	font-weight: lighter;
+	padding: 0 0 12px 0;
+	border-bottom: 1px solid rgba(0,0,0, 0.1)
+}
+
+dialog h2{
+	padding: 12px 0 12px 0;
+}
+
+dialog p{
+	padding: 0 0 12px 0;
+	font-size: .8em;
+	font-weight: lighter;
+	line-height: 1.5em;
+}
+
+dialog b{
+	font-weight: 500;
+}
+
+dialog::backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+#close {
+	padding: 10px;
+	font-weight: lighter;
+	font-size: 1.4em;
+	border-radius: 15px;
+	background-color: #FFD500;
+}
+
+button:focus {outline:0;}
+
+/* Radio button styling */
 .onoffswitch {
     position: absolute; 
     top: 80px;
@@ -131,13 +189,13 @@ footer {
     box-shadow: 0px 11.5px 0px rgba(0,0,0,0.08) inset;
 }
 .onoffswitch-inner:before {
-    content: "ACTIVE";
+    content: "RELEASE";
     padding: 0 0 0 50px;
     background-color: #FFD500; color: #FFFFFF;
     border-radius: 23px 0 0 23px;
 }
 .onoffswitch-inner:after {
-    content: "PASSIVE";
+    content: "JOIN";
     padding: 0 50px 0 0;
     background-color: #FFFFFF; color: #000000;
     text-align: right;

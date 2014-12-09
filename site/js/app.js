@@ -200,6 +200,17 @@ var printDebugData = function() {
 }
 
 //----------------------------
+//		Modal Window
+//----------------------------
+var dialog = document.querySelector('dialog');
+dialog.showModal();
+
+var close = document.querySelector('#close');
+close.onclick = function() {
+	dialog.close();
+};
+
+//----------------------------
 //		General Actions
 //----------------------------
 
