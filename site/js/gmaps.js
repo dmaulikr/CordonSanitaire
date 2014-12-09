@@ -23,11 +23,6 @@ var createMap = function() {
   // Construct the polygon.
   // only connect those holding the border, or active
 
-  drawQuarantine();
-
-  drawPopulation();
-
-  updateScoreboard();
   // Add a listener for the click event.
   //google.maps.event.addListener(bermudaTriangle, 'click', showArrays);
 
@@ -41,8 +36,13 @@ var updateGameBoard = function() {
 	createMap();
 	
 	// draw quarantine
+	drawQuarantine();
 	
 	// draw population
+	drawPopulation();
+
+	// update scoreboard
+	updateScoreboard();
 }
 
 var drawQuarantine = function() {

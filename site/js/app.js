@@ -120,6 +120,8 @@ var displayGameState = function() {
     // draw border
     // draw all people
     createMap();
+    
+    updateGameBoard();
 
     // print debug info
     //printDebugData();
