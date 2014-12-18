@@ -110,6 +110,19 @@ footer {
 	float: left;
 }
 
+/* End Game Message */
+#end_game {
+	visibility: hidden;
+	width: 200px;
+	margin: 200px;
+	position: absolute;
+	z-index: 10000;
+	color: white;
+	font-size: 2em;
+	background: black;
+	padding: 20px;
+}
+
 
 /* Dialog box */
 dialog {

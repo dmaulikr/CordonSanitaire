@@ -33,7 +33,7 @@ var timePassedSince = function(start_date) {
     console.log("sec: " + seconds_remaining);
     //console.log("mil: " + millis_remaining);
 
-    if(minutes_remaining > 0 || seconds_remaining >= 0) {
+    if(minutes_remaining >= 0 && seconds_remaining >= 0) {
         document.getElementById('countdown').innerHTML =  getTimeInStringFormatFromMillis(time_remaining);
         
         // blink the timer red when below 10 seconds
@@ -53,11 +53,14 @@ var timePassedSince = function(start_date) {
         }
     }
     else {
+	    
+	    // time is up
         document.getElementById('countdown').innerHTML =  '00:00.00';
         window.clearInterval(countdownTimer);
         isRunning = false;
         
         // send a message for game over and end of game state here
+        showEndGameMessage();
     }
 
 }

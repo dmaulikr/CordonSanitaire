@@ -121,8 +121,6 @@ var displayGameState = function() {
     // draw all people
     createMap();
     
-    updateGameBoard();
-
     // print debug info
     //printDebugData();
 
@@ -211,6 +209,10 @@ var close = document.querySelector('#close');
 close.onclick = function() {
 	dialog.close();
 };
+
+var showEndGameMessage = function() {
+	document.getElementById("end_game").style.visibility = "visible";
+}
 
 //----------------------------
 //		General Actions
