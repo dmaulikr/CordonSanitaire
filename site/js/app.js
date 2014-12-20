@@ -10,6 +10,7 @@ if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
  window.location = "http://playful.jonathanbobrow.com/prototypes/cordonsans/mobile/"
 }
 
+
 var _channel = 'my_channel';
 var _uuid = PUBNUB.uuid();
 var people = [];
@@ -28,8 +29,12 @@ var updateFromParse = function() {
 		    // draw this list of players across the screen.
 		    for (var i = 0; i < results.length; i++) { 
 		    	var object = results[i];
-		    	console.log(object.id + ' - ' + object.get('playerID') + ' - ' + object.get('active'));
+		    	//console.log(object.id + ' - ' + object.get('playerID') + ' - ' + object.get('active'));
 		    }
+		
+			// When done updating from parse, then we update the population
+			updatePopulation();
+		    
 	  	},
 		error: function(object, error) {
 		    // The object was not retrieved successfully.
@@ -57,25 +62,38 @@ var pickPatientZero = function() {
 	  	success: function(results) {
 	  		// look through all present people
 		    for (var i = 0; i < results.length; i++) { 
+			    
 		    	var object = results[i];
+		    	
 		    	if(object.get('playerID') == uuid)
 		    		object.set('isPatientZero', true);
 		    	else
 		    		object.set('isPatientZero', false);
-				object.save();
+		    	
+		    	if(i != results.length - 1)
+		    		object.save();
+		    	else
+					object.save(null, 	// update after the last one is saved
+					{
+						success:function (object)
+						{
+							// let the others know we have picked a new patient zero
+							sendUpdateMessage();
+							//console.log("WOAAAAHHHH YEAH", object);
+						},
+						error:function(object)
+						{
+							console.log("WOAAAAHHHH NOOOOOOO!", object);
+						}
+					});
 			}
 
-			// let the others know we have picked a new patient zero
-			sendUpdateMessage();
 		},
 		error: function(error) {
 		    console.log("Error: " + error.code + " " + error.message);
 		}
 
 	});
-
-	// then update pubnub
-	sendUpdateMessage();
 }
 
 
@@ -125,7 +143,7 @@ var displayGameState = function() {
 
     // draw border
     // draw all people
-    createMap();
+    updateGameBoard();
     
     // print debug info
     //printDebugData();
@@ -217,11 +235,13 @@ close.onclick = function() {
 };
 
 var showEndGameMessage = function() {
-	
-	if(isPatientZeroContained())
+
+	if(isPatientZeroContained()) {
 		document.getElementById("end_game").innerHTML = "Congratulations, you have successfully contained patient zero, providing safety to millions.";
-	else
+	}
+	else {
 		document.getElementById("end_game").innerHTML = "Warning! Patient zero is still on the loose, the emergency response team has failed to collaborate and contain. Can you work better and faster next time?";
+	}
 		
 	document.getElementById("end_game").style.visibility = "visible";
 }
@@ -314,16 +334,25 @@ var setUserPresent = function(uuid) {
 		success: function(result) {
 			var object = result[0];
 			object.set("present", true);
-			object.save();
+			object.save(null, 
+			{
+				success:function (object)
+				{
+					// then update pubnub
+					sendUpdateMessage();
+					//console.log("WOAAAAHHHH YEAH", object);
+				},
+				error:function(object)
+				{
+					console.log("WOAAAAHHHH NOOOOOOO!", object);
+				}
+			});
 		},
 		error: function(error) {
 		    console.log("Error: " + error.code + " " + error.message);
 		}
 
 	});
-
-	// then update pubnub
-	sendUpdateMessage();
 }
 
 // reset all of the players back to no-one playing
@@ -337,7 +366,23 @@ var setAllUsersNotPresent = function() {
 			for (var i = 0; i < results.length; i++) { 
 		    	var object = results[i];
 		    	object.set("present", false);
-				object.save();
+				
+				if(i != results.length - 1)
+		    		object.save();
+		    	else
+					object.save(null, 	// update after the last one is saved
+					{
+						success:function (object)
+						{
+							// let the others know we have picked a new patient zero
+							sendUpdateMessage();
+							//console.log("WOAAAAHHHH YEAH", object);
+						},
+						error:function(object)
+						{
+							console.log("WOAAAAHHHH NOOOOOOO!", object);
+						}
+					});
 		    }
 	  	},
 		error: function(object, error) {
@@ -387,7 +432,6 @@ pubnub.subscribe({
 			case "update":
 				console.log("update the page to the latest from parse db");
 				updateFromParse();
-				updatePopulation();
 			break;
 
 			case "start":
