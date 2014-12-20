@@ -29,8 +29,8 @@ var timePassedSince = function(start_date) {
     var millis_remaining = 999 - millis;
 
     var time_remaining = minutes_remaining * 60 * 1000 + seconds_remaining * 1000 + millis_remaining;
-    console.log("min: " + minutes_remaining);
-    console.log("sec: " + seconds_remaining);
+    //console.log("min: " + minutes_remaining);
+    //console.log("sec: " + seconds_remaining);
     //console.log("mil: " + millis_remaining);
 
     if(minutes_remaining >= 0 && seconds_remaining >= 0) {

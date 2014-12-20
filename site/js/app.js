@@ -4,6 +4,12 @@
  *
  */
 
+// MOBILE PHONE MESSAGE
+if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+ // Redirect to Mobile Phone message;
+ window.location = "http://playful.jonathanbobrow.com/prototypes/cordonsans/mobile/"
+}
+
 var _channel = 'my_channel';
 var _uuid = PUBNUB.uuid();
 var people = [];
@@ -211,6 +217,12 @@ close.onclick = function() {
 };
 
 var showEndGameMessage = function() {
+	
+	if(isPatientZeroContained())
+		document.getElementById("end_game").innerHTML = "Congratulations, you have successfully contained patient zero, providing safety to millions.";
+	else
+		document.getElementById("end_game").innerHTML = "Warning! Patient zero is still on the loose, the emergency response team has failed to collaborate and contain. Can you work better and faster next time?";
+		
 	document.getElementById("end_game").style.visibility = "visible";
 }
 
