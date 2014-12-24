@@ -55,14 +55,25 @@ var updateGameBoard = function() {
 }
 
 var drawQuarantine = function() {
+	
+	var q_stroke, q_fill;
+	
+	if(isPatientZeroContained()) {
+		q_stroke = settings.color_border_contained_stroke;
+		q_fill = settings.color_border_contained_fill;
+	}
+	else {
+		q_stroke = settings.color_border_not_contained_stroke;		
+		q_fill = settings.color_border_not_contained_fill;		
+	}
 
 	if(quarantine == null)
 	    quarantine = new google.maps.Polygon({
 		    paths: getActivePopulationAsGoogleCoords(),
-		    strokeColor: settings.color_border_stroke,
+		    strokeColor: q_stroke,
 		    strokeOpacity: 0.8,
 		    strokeWeight: 3,
-		    fillColor: settings.color_border_fill,
+		    fillColor: q_fill,
 		    fillOpacity: settings.color_border_opacity
 		});
 	else
