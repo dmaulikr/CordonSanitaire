@@ -141,10 +141,6 @@ var updatePopulation = function(){
 
 var displayGameState = function() {
 	
-	findCenter();
-    
-    sortPeople();		// sort the people into the order to hold the rope
-
     // draw border
     // draw all people
     updateGameBoard();
@@ -156,15 +152,17 @@ var displayGameState = function() {
     //paper.drawPatientZero();
 }
 
-// find center
+// find center of active people
 var findCenter = function() {
 
     var total = {x:0, y:0};
     center = {x:0, y:0};
 
     for(var i=0; i<people.length; i++) {
-      total.x += people[i].x;
-      total.y += people[i].y;
+	    if(people.isActive) {
+		    total.x += people[i].x;
+		    total.y += people[i].y;
+      	}
     }
     
     center.x = total.x / people.length;

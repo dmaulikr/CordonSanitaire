@@ -4,6 +4,25 @@ var isRunning = false;
 
 var duration = 120;
 
+// check start time from parse
+/*
+var game = Parse.Object.extend("Game");
+var query = new Parse.Query(game);
+query.equalTo("startTime", true);
+query.find({
+  	success: function(results) {
+	  	}
+	  	: function() {
+		  	
+	  	}
+	error: function(object, error) {
+	    // The object was not retrieved successfully.
+	    // error is a Parse.Error with an error code and message.
+	    console.log("Error: " + error.code + " " + error.message);
+	}
+});
+*/
+
 
 var timePassedSince = function(start_date) {
 

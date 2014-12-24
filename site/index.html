@@ -12,13 +12,12 @@
 		<dialog>
 		<h1>CORDON SANITAIRE</h1>
 		<h2>PLAYABLE PROTOTYPE v. 039</h2>
-		<p>This must be played in Chrome, or Safari, on a laptop/desktop. It will not work on your phone.</p>
-		<p>In NN seconds, you will begin playing a prototype of Cordon Sans, a game in development by Playful Systems at the Media Lab.</p>
-		<p><b>The game only lasts 120 seconds!</b> You’ll be playing with everyone else who jumps in, in these next NN seconds.</p>
-		<p>You will see yourself on the map. *In the real version* your position will be determined by your real-world location. For these purposes, we put you somewhere near NYC. In NN seconds, we will bring you into a world in which Patient Zero has an infectious disease. You -- and everyone -- will work together to try to contain the disease.</p>
-		<p>You can only take one action: become part of the quarantine line, or not, by pressing the button on the upper left (<b>JOIN</b> or <b>RELEASE</b>)</p>
-		<p>At the end of two minutes, whatever line we’ve all drawn will either contain Patient Zero, or not. It will either trap “healthy” players in the line with Patient Zero, or not. That’s up to you … all of you.</p>
-		<p>Again, this is <b>not</b> a mature game. It’s just a playable prototype, to test a few ideas, a sketch of a system. We’d welcome your feedback meanwhile, keeping all that in mind.</p>
+		<p>Game starts in <span class="countdown_til_start">100</span> seconds.</p>
+		<p><b>The game only lasts 120 seconds!</b> In the next <span class="countdown_til_start">100</span> seconds, it will start; you’ll be playing with everyone else who jumps in.</p>
+		<p>You will be on a map of a world in which Patient Zero  has a lethal infectious disease. You -- and everyone -- will work together to contain  by drawing a quarantine line around them.</p>
+		<p><b>You have one job: join the quarantine line, or not.</b> Just press the <b>JOIN/RELEASE</b> button on the upper right. You can do this as many times as you like.</p>
+		<p>At the end of the game, we will all have drawn a quarantine line. It will contain  (hopefully!) or not. It will trap “healthy” players inside with , or not. Hopefully not.</p>
+		<p>That’s up to you … all of you.</p>
 		<button class="float_right" id="close">Let's Go!</button>
 	</dialog>
 	<header>
@@ -49,10 +48,10 @@
 		<div id="scoreboard">
 			<ul>
 			<li>patient zero is <span id="patient_status">contained</span></li>
-			<li><span id="casualty_count">0</span> casualities</li>
+			<li><span id="casualty_count">0</span> trapped</li>
 			<li><span id="area_quarantined">0</span> sq mi. quarantined</li>
 			<li><span id="num_active">0</span> people maintaining the quarantine</li>
-			<li>score: Billionzzz!!!</li>
+			<!--<li>score: <span id="score">0</span></li>-->
 		</div>
 	</header>
 	

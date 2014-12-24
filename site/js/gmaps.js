@@ -15,7 +15,8 @@ var drawMap = function() {
   var mapOptions = {
     zoom: 12,
     center: new google.maps.LatLng(40.776779, -73.969699),
-    mapTypeId: google.maps.MapTypeId.ROADMAP
+    mapTypeId: google.maps.MapTypeId.ROADMAP,
+    disableDefaultUI: true
   };
 
   if(map == null) {
@@ -34,6 +35,10 @@ var drawMap = function() {
 }
 
 var updateGameBoard = function() {
+	
+	findCenter();
+    
+    sortPeople();		// sort the people into the order to hold the rope
 	
 	// temporarily recall create map
 	// in the future, only redraw the board, only load map once
@@ -305,7 +310,7 @@ var updateScoreboard = function() {
   if(isPatientZeroContained())
     document.getElementById('patient_status').innerHTML = 'contained';
   else
-    document.getElementById('patient_status').innerHTML = 'infectious';
+    document.getElementById('patient_status').innerHTML = 'not contained';
 
   // update count of casualties
   document.getElementById('casualty_count').innerHTML = countCasualties();  
