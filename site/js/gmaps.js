@@ -257,13 +257,13 @@ var getMarkerIconForPerson = function(person) {
     case 'infectious': 
     		_icon.scale = 16;
         	_icon.fillColor = settings.color_infectious_fill;
-			_icon.strokeColor = settings.color_infectious_stroke;
+			_icon.strokeColor = settings.color_infectious_fill;
       break;
     
     case 'healed': 
     		_icon.scale = 16;
-    		_icon.fillColor = settings.color_healed_fill;
-    		_icon.strokeColor = settings.color_healed_stroke;
+    		_icon.fillColor = settings.color_infectious_fill;		// don't change the color of patient zero
+    		_icon.strokeColor = settings.color_infectious_fill;		// instead change the color of the quarantine
       break;
     
     case 'active': 
