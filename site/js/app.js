@@ -9,6 +9,10 @@ if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
  // Redirect to Mobile Phone message;
  window.location = "http://playful.jonathanbobrow.com/prototypes/cordonsans/mobile/"
 }
+// Only on Chrome for now
+if (!window.chrome) {
+	window.location = "http://playful.jonathanbobrow.com/prototypes/cordonsans/unsupported/"
+}
 
 
 var _channel = 'my_channel';
