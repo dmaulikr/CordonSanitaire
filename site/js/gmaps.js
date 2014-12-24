@@ -320,7 +320,8 @@ var updateScoreboard = function() {
 
   // update count of people quarantining
   document.getElementById('num_active').innerHTML = countActivePeople();
-
+  
+  // update score
 
 }
 
@@ -374,30 +375,3 @@ function isPointInPoly(poly, x, y){
         && (c = !c);
     return c;
 }
-
-/** @this {google.maps.Polygon} */
-function showArrays(event) {
-
-  // Since this polygon has only one path, we can call getPath()
-  // to return the MVCArray of LatLngs.
-  var vertices = this.getPath();
-
-  var contentString = '<b>Bermuda Triangle polygon</b><br>' +
-      'Clicked location: <br>' + event.latLng.lat() + ',' + event.latLng.lng() +
-      '<br>';
-
-  // Iterate over the vertices.
-  for (var i =0; i < vertices.getLength(); i++) {
-    var xy = vertices.getAt(i);
-    contentString += '<br>' + 'Coordinate ' + i + ':<br>' + xy.lat() + ',' +
-        xy.lng();
-  }
-
-  // Replace the info window's content and position.
-  infoWindow.setContent(contentString);
-  infoWindow.setPosition(event.latLng);
-
-  infoWindow.open(map);
-}
-
-//google.maps.event.addDomListener(window, 'load', createMap);
