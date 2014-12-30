@@ -5,7 +5,14 @@
 var map = null;
 var quarantine = null;
 var markers = [];
+
+var myPerson;
+var myMarker;
+var patientZeroMarker;
 var infoWindow;
+
+var isAnimatingMyIcon = false;
+var isAnimatingPatientZero = false;
 
 // center map on user
 //var usersCoords = getUserAsGoogleCoords();
@@ -160,16 +167,28 @@ var drawPopulation = function() {
 	      map: map,
 	    });
     
+		if(isPersonMe(person)) {
+			myMarker = marker_obj;
+			myPerson = person;
+		}
+				
 	    markers.push({marker: marker_obj,
 		    			id: person.id});
 	}
 	else {
 		var marker_obj = getMarkerForPerson(person)
 		marker_obj.setIcon(getMarkerIconForPerson(person));
-	}
-	
 		
+		if(isPersonMe(person)) {	// update my status
+			myMarker = marker_obj;
+			myPerson = person;
+		}
+
+	}		
   }
+  
+  // start the recurring animations
+  startAnimations();
 }
 
 
@@ -300,14 +319,30 @@ var getMarkerIconForPerson = function(person) {
   }
   
   // make the person stand out so they know who they are
-  if(isPersonMe(person)) {
-	_icon.scale = 12;
-	//animateMe(_icon); // apply the animation for my icon
-    //_icon.fillColor = '#00FFFF';
-  }
-
+  // Now handled in the animation 
 
   return _icon;
+}
+
+// 
+var startAnimations = function() {
+	
+	if(isAnimatingMyIcon) return;
+	
+	var count = 0;
+	var period = 150;
+    
+    window.setInterval(function() {
+
+    	count = (count + 1) % period;
+		
+		// animate my icon so I know who I am
+		var icon = getMarkerIconForPerson(myPerson);
+		icon.scale = 12 + 4 * Math.sin(2 * Math.PI * count/period);
+		myMarker.setIcon(icon);
+    }, 20);
+    
+    isAnimatingMyIcon = true;
 }
 
 
