@@ -17,6 +17,9 @@ var isAnimatingPatientZero = false;
 var myType = 'passive';
 var myPrevType = 'passive';
 
+var my_animation_interval;
+var trapped_interval;
+ 
 // center map on user
 //var usersCoords = getUserAsGoogleCoords();
 
@@ -53,6 +56,9 @@ var updateGameBoard = function() {
 	// draw population
 	drawPopulation();
 
+	// simply pulse the trapped once to draw attention to them
+	animateTrapped();
+	
 	// update scoreboard
 	updateScoreboard();
 }
@@ -87,6 +93,17 @@ var drawQuarantine = function() {
 	quarantine.setMap(map);
 }
 
+var getTrappedPopulationMarkers = function() {
+	var trapped = [];
+	
+	for(var i=0; i<people.length; i++) { 
+    	var person = people[i];
+    	if(getPersonType(person) == 'casualty' && !isPersonMe(person))
+			trapped.push(person);
+	}
+
+  return trapped;
+}
 
 var getActivePopulationAsNormalCoords = function() {
   var coords = [];
@@ -351,7 +368,7 @@ var startAnimations = function() {
 	var count = 0;
 	var period = 150;
     
-    window.setInterval(function() {
+    my_animation_interval = window.setInterval(function() {
 
     	count = (count + 1) % period;
 		
@@ -368,13 +385,35 @@ var startAnimations = function() {
     isAnimatingMyIcon = true;
 }
 
+// pulse the trapped icons once all together. A sort of cry for help.
+var animateTrapped = function() {
+	var trapped = getTrappedPopulationMarkers();
+	console.log(trapped);
+	var count = 0;
+	var period = 20;
+    
+    trapped_interval = window.setInterval(function() {
+		
+    	count = (count + 1);
+		
+		if( count > period ) {
+			window.clearInterval(trapped_interval);
+		}
+		
+		var icon;
+		var marker;
+		
+		for( var i=0; i<trapped.length; i++ ) {
+			if(isPersonMe(trapped[i])) continue;	// skip my already animating icon
+			marker = getMarkerForPerson(trapped[i]);
+			icon = getMarkerIconForPerson(trapped[i]);
+			icon.scale = 8 + 2 * Math.sin( Math.PI * (count/period));
+			marker.setIcon(icon);
+		}
+    }, 20);
 
-// animate ME
-// create a function to make a simple looping animation for my icon
-// animating the scale will do just fine
-var animateMe = function(icon) {
-	//
 }
+
 
 // animate Patient Zero
 var animatePatientZero = function(icon) {
