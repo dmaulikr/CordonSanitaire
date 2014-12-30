@@ -1,29 +1,74 @@
-var start_time;
+var parse_start_date;
 var countdownTimer;
+var statusInterval;
 var isRunning = false;
 
 var duration = 120;
 
 // check start time from parse
-/*
 var game = Parse.Object.extend("Game");
 var query = new Parse.Query(game);
-query.equalTo("startTime", true);
 query.find({
   	success: function(results) {
-	  	}
-	  	: function() {
-		  	
-	  	}
+// 	  		console.log(results);
+			
+			// get the last time in the stack
+			// TODO: get the next time i.e. smallest positive difference from now and then use that time and the start time. This will allow setting up days worth of playtest start times, without having to change anything
+	  		var gameObject = results[results.length-1];
+	  		parse_start_date = gameObject.get('startTime');
+	  		console.log(parse_start_date);
+	  		
+	  		// create a timer status loop
+	  		timerStatusUpdate();		  	
+	  	},
 	error: function(object, error) {
 	    // The object was not retrieved successfully.
 	    // error is a Parse.Error with an error code and message.
 	    console.log("Error: " + error.code + " " + error.message);
 	}
 });
-*/
 
 
+//
+var timerStatusUpdate = function() {
+	
+	//
+	statusInterval = setInterval(function () {
+
+		var cur_date = new Date();
+		var cur_hour = cur_date.getUTCHours();
+		var cur_min = cur_date.getMinutes();
+		var cur_sec = cur_date.getSeconds();
+		
+		var start_hour = parse_start_date.getUTCHours();
+		var start_min = parse_start_date.getUTCMinutes();
+		var start_sec = parse_start_date.getUTCSeconds();
+				
+		console.log(cur_date);
+		console.log(parse_start_date);
+
+		// if there is time til the game, keep the user in a waiting room and display a countdown til the start of the game
+		
+		// if the time equals gametime, start the game
+		
+		// if the time is greater than gametime but less than end time (i.e. start time + duration, then display short message to be dismissed and enter directly into the game (starting the clock with a modified duration based on entrance time)
+		
+		// if the time is after the end game, display last game outcome (as stored in the database with a message about the game. Saying Join next time
+		
+		if( cur_hour == start_hour &&
+		 	cur_min == start_min &&
+		 	cur_sec == start_sec ) {
+
+			startTheClock();
+			console.log("going to start the clock");
+			window.clearInterval(statusInterval);
+		}
+	}, 100);
+ 
+}
+
+
+//
 var timePassedSince = function(start_date) {
 
     // grab the current UTC values
