@@ -1,5 +1,7 @@
 // curl -d 'User=winnie&Password=the-pooh&PhoneNumbers[]=2123456785&PhoneNumbers[]=2123456786&PhoneNumbers[]=2123456787&PhoneNumbers[]=2123456788&Groups[]=honey lovers&Subject=From Winnie&Message=I am a Bear of Very Little Brain, and long words bother me&StampToSend=1305582245' https://app.eztexting.com/sending/messages?format=xml
 
+// Information for using the RESTful API https://www.eztexting.com/developers/sms-api-documentation/rest#Sending
+
 function sendCurlRequest(){
 	
     var json_data = {
