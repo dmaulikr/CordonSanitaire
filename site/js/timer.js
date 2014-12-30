@@ -2,6 +2,9 @@ var parse_start_date;
 var countdownTimer;
 var statusInterval;
 var isRunning = false;
+var total_seconds = 1;
+
+var bUserAllowedToStart = false;
 
 var DEFAULT_DURATION = 120;
 
@@ -59,51 +62,64 @@ var timerStatusUpdate = function() {
 		
 		// if the time is after the end game, display last game outcome (as stored in the database with a message about the game. Saying Join next time
 		
-		if( cur_hour == start_hour &&
-		 	cur_min == start_min &&
-		 	cur_sec == start_sec ) {
+		var dif_hour = start_hour - cur_hour;
+		var dif_min = start_min - cur_min;
+		var dif_sec = start_sec - cur_sec;
+
+		total_seconds = dif_hour*60*60 + dif_min*60 + dif_sec;
+		
+		if( total_seconds == 0 ) {
 		 	
 		 	// user was present on time, let's start the game
+		 	bUserAllowedToStart = true;
+			document.getElementById("start_button").innerHTML = "Let's Go!";
+			var spans = document.getElementsByClassName("countdown_til_start");
+			for(var i=0; i<spans.length; i++){
+				spans[i].innerHTML = 0;
+			}
 			startTheClock();
 			console.log("On Time User - Start Game.");
 			window.clearInterval(statusInterval);
 		}
-		else if( cur_hour >= start_hour &&
-				 cur_min >= start_min + (duration / 60) &&
-				 cur_sec >= start_sec + (duration % 60)) {
+		else if( total_seconds + duration < 0) {
 			// user missed the game, display the end result of the game
-	        document.getElementById('countdown').innerHTML =  '00:00.00';
+// 	        document.getElementById('countdown').innerHTML =  '00:00.00';
 			console.log("Latest User - Show End Game.");
 			window.clearInterval(statusInterval);
-			showEndGameMessage();
+			
+			// possibly send to new page that notifies you missed the game
+			var dlog = document.querySelector('dialog');
+			dlog.close();
+			showMissedGameMessage();
 		}
-		else if( cur_hour >= start_hour &&
-				 cur_min >= start_min &&
-				 cur_sec >= start_sec ) {
+		else if( total_seconds < 0 ) {
 			// user showed up late, let's update the duration and start the game
-			var new_duration = DEFAULT_DURATION - (cur_min - start_min)*60 - (cur_sec - start_sec);
+			var new_duration = DEFAULT_DURATION + total_seconds;
+			bUserAllowedToStart = true;
 			updateDuration(new_duration);
 			startTheClock();
 			console.log("Late User - Update duration. Start Game.");
 			window.clearInterval(statusInterval);
 		}
 		else {
-			// user showed up early, let's keep them in the waiting room and display a countdown til the start of the game
-			var dif_hour = start_hour - cur_hour;
-			var dif_min = start_min - cur_min;
-			var dif_sec = start_sec - cur_sec;
-			
-			var total_seconds = dif_hour*60*60 + dif_min*60 + dif_sec;
-			
-			console.log("Early User - (" + dif_hour + ":" + dif_min + ":" + dif_sec + ") --- Seconds left: " + total_seconds);
+			// user showed up early, let's keep them in the waiting room and display a countdown til the start of the game			
+// 			console.log("Early User - (" + dif_hour + ":" + dif_min + ":" + dif_sec + ") --- Seconds left: " + total_seconds);
 			var spans = document.getElementsByClassName("countdown_til_start");
 			for(var i=0; i<spans.length; i++){
 				spans[i].innerHTML = total_seconds;
 			}
+			var start_button_text = "Wait ";
+			start_button_text += total_seconds;
+			start_button_text += " seconds";
+			document.getElementById("start_button").innerHTML = start_button_text;
 		}
 
 	}, 100);
  
+}
+
+var isUserAllowedToStart = function() {
+	return bUserAllowedToStart;
 }
 
 
