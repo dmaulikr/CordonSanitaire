@@ -24,15 +24,8 @@ var drawMap = function() {
 	  map = new google.maps.Map(document.getElementById('map-canvas'),
    	   mapOptions);
    }
-
-  // Construct the polygon.
-  // only connect those holding the border, or active
-
-  // Add a listener for the click event.
-  //google.maps.event.addListener(bermudaTriangle, 'click', showArrays);
-
-  //infoWindow = new google.maps.InfoWindow();
 }
+
 
 var updateGameBoard = function() {
 	
@@ -43,16 +36,17 @@ var updateGameBoard = function() {
 	// temporarily recall create map
 	// in the future, only redraw the board, only load map once
 	drawMap();
-	
+		
 	// draw quarantine
 	drawQuarantine();
-	
+
 	// draw population
 	drawPopulation();
 
 	// update scoreboard
 	updateScoreboard();
 }
+
 
 var drawQuarantine = function() {
 	
@@ -76,11 +70,13 @@ var drawQuarantine = function() {
 		    fillColor: q_fill,
 		    fillOpacity: settings.color_border_opacity
 		});
-	else
+	else {
+		quarantine.setOptions({strokeColor: q_stroke, fillColor: q_fill});
 		quarantine.setPaths(getActivePopulationAsGoogleCoords());
-		
+	}
 	quarantine.setMap(map);
 }
+
 
 var getActivePopulationAsNormalCoords = function() {
   var coords = [];
@@ -142,6 +138,7 @@ var getLatLngCoords = function(x,y) {
   return latlng;
 }
 
+
 var drawPopulation = function() {
 
   var people_coords = getPopulationAsGoogleCoords();
@@ -175,6 +172,7 @@ var drawPopulation = function() {
   }
 }
 
+
 var labelMeWithYouAreHere = function(coords) {
 		
 	var labelText = "YOU ARE HERE";
@@ -185,10 +183,14 @@ var labelMeWithYouAreHere = function(coords) {
 		   textAlign: "center"
 		  ,fontSize: "8pt"
 		  ,fontWeight: "bold"
-		  ,width: "120px"
+		  ,backgroundColor: "white"
+		  ,border: "4px solid rgba(0,0,0,.8)"
+		  ,borderRadius: "10px"
+		  ,padding: "5px 0 5px 0"
+		  ,width: "100px"
 		 }
 		,disableAutoPan: true
-		,pixelOffset: new google.maps.Size(-60, 20)
+		,pixelOffset: new google.maps.Size(-55, 20)
 		,position: coords
 		,closeBoxURL: ""
 		,isHidden: false
@@ -201,6 +203,7 @@ var labelMeWithYouAreHere = function(coords) {
 
 }
 
+
 var doesPersonHaveAMarkerYet = function(person) {
 	
 	for(var i=0; i<markers.length; i++) {
@@ -211,6 +214,7 @@ var doesPersonHaveAMarkerYet = function(person) {
 	return false;
 }
 
+
 var getMarkerForPerson = function(person) {
 	
 	for(var i=0; i<markers.length; i++) {
@@ -220,6 +224,7 @@ var getMarkerForPerson = function(person) {
 	
 	console.log("DID NOT FIND MARKER FOR PERSON");
 }
+
 
 var getPersonType = function(person) {
   
@@ -247,6 +252,7 @@ var getPersonType = function(person) {
   return type;
 }
 
+
 var getMarkerIconForPerson = function(person) {
 
   // common options for icons
@@ -268,13 +274,13 @@ var getMarkerIconForPerson = function(person) {
     case 'infectious': 
     		_icon.scale = 16;
         	_icon.fillColor = settings.color_infectious_fill;
-			_icon.strokeColor = settings.color_infectious_fill;
+			_icon.strokeColor = settings.color_infectious_stroke;
       break;
     
     case 'healed': 
     		_icon.scale = 16;
-    		_icon.fillColor = settings.color_infectious_fill;		// don't change the color of patient zero
-    		_icon.strokeColor = settings.color_infectious_fill;		// instead change the color of the quarantine
+    		_icon.fillColor = settings.color_healed_fill;		// don't change the color of patient zero
+    		_icon.strokeColor = settings.color_healed_stroke;	// instead change the color of the quarantine
       break;
     
     case 'active': 
@@ -296,11 +302,20 @@ var getMarkerIconForPerson = function(person) {
   // make the person stand out so they know who they are
   if(isPersonMe(person)) {
 	_icon.scale = 12;
+	//animateMe(_icon); // apply the animation for my icon
     //_icon.fillColor = '#00FFFF';
   }
 
 
   return _icon;
+}
+
+
+// animate ME
+// create a function to make a simple looping animation for my icon
+// animating the scale will do just fine
+var animateMe = function(icon) {
+	//
 }
 
 // animate Patient Zero
@@ -314,6 +329,7 @@ var animatePatientZero = function(icon) {
  
 */ }, 20);
 }
+
 
 //
 var updateScoreboard = function() {
@@ -336,20 +352,30 @@ var updateScoreboard = function() {
 
 }
 
+
 var isPersonMe = function(person) {
 	return person.id == _uuid;
 }
 
+
 var isPatientZeroContained = function() {
-  for(var i=0; i<people.length; i++) {
-    if(people[i].isPatientZero){
-      if(getPersonType(people[i]) == 'healed')
-        return true;
-      else
-        return false;
-    } 
-  }
+
+	var poly = getActivePopulationAsNormalCoords();
+	
+	if( poly.length < 3 )	// can't do it with less than 3
+		return false;
+
+	for(var i=0; i<people.length; i++) {
+		var person = people[i];
+	    if(person.isPatientZero){
+	    	if(isPointInPoly(poly, person.x, person.y))
+				return true;
+			else
+	        	return false;
+	    } 
+  	}
 }
+
 
 var countCasualties = function() {
   var count = 0;
@@ -363,17 +389,24 @@ var countCasualties = function() {
   return count;
 }
 
+
 var countActivePeople = function() {
   return getActivePopulationAsNormalCoords().length;
 }
 
 
-// calculate the total area quarantine off
+// calculate the total area quarantined
 var getAreaQuarantined = function() {
-	var area = google.maps.geometry.spherical.computeArea(quarantine.getPath());
-	// convert from sq meters to sq miles
-	area = area * (0.000621371) * (0.000621371);
-	return area.toFixed(2);	
+	if(quarantine.getPath()) {	// only compute quarantine area if a path exists (even of one point :)
+		var area = google.maps.geometry.spherical.computeArea(quarantine.getPath());
+		// convert from sq meters to sq miles
+		area = area * (0.000621371) * (0.000621371);
+		return area.toFixed(2);	
+	}
+	else {
+		var defaultArea = 0;  	
+		return defaultArea.toFixed(2);	
+	}
 }
 
 //+ Jonas Raoni Soares Silva
