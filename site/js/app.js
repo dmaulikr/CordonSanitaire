@@ -9,10 +9,11 @@ if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
  // Redirect to Mobile Phone message;
  window.location = "http://playful.jonathanbobrow.com/prototypes/cordonsans/mobile/"
 }
-// Only on Chrome for now
+// CHROME ONLY
 if (!window.chrome) {
 	window.location = "http://playful.jonathanbobrow.com/prototypes/cordonsans/unsupported/"
 }
+
 
 
 var _channel = 'my_channel';
@@ -139,45 +140,44 @@ var updatePopulation = function(){
 	});
 }
 
+
 var displayGameState = function() {
 	
-    // draw border
-    // draw all people
+	// draw all things necessary... This function should clearly go. Get on it Jon
     updateGameBoard();
-    
-    // print debug info
-    //printDebugData();
-
-    //paper.drawPeopleInBorder(people);
-    //paper.drawPatientZero();
 }
+
 
 // find center of active people
 var findCenter = function() {
 
+	var numPeopleHolding = 0;
     var total = {x:0, y:0};
     center = {x:0, y:0};
 
     for(var i=0; i<people.length; i++) {
-	    if(people.isActive) {
+	    if(people[i].active) {
 		    total.x += people[i].x;
 		    total.y += people[i].y;
+		    numPeopleHolding = numPeopleHolding + 1;
       	}
     }
     
-    center.x = total.x / people.length;
-    center.y = total.y / people.length;  
+    center.x = total.x / numPeopleHolding;
+    center.y = total.y / numPeopleHolding;  
 }
+
 
 // sort people
 var sortPeople = function() {
+	
 	var sortedPeople = [];
 	sortedPeople.clear();
 
 	var lastPerson = people[0];
 	sortedPeople.push(lastPerson);
 
-	for(var i=0; i<people.length; i++) {
+	for(var i=0; i<people.length - 1; i++) {
 		var nextPerson = getNextPersonCounterClockwise(lastPerson);
 		sortedPeople.push(nextPerson);
 		lastPerson = nextPerson;
@@ -185,6 +185,7 @@ var sortPeople = function() {
 
 	people = sortedPeople;
 }
+
 
 var getNextPersonCounterClockwise = function(p) {
 
@@ -213,6 +214,7 @@ var getNextPersonCounterClockwise = function(p) {
 	return people[index];
 }
 
+
 var printDebugData = function() {
 
 	var string = "<ol><li>center: " + center.x + ", " + center.y+"</li>";
@@ -225,16 +227,19 @@ var printDebugData = function() {
 
 }
 
+
 //----------------------------
 //		Modal Window
 //----------------------------
 var dialog = document.querySelector('dialog');
 dialog.showModal();
 
+
 var close = document.querySelector('#close');
 close.onclick = function() {
 	dialog.close();
 };
+
 
 var showEndGameMessage = function() {
 
@@ -247,6 +252,7 @@ var showEndGameMessage = function() {
 		
 	document.getElementById("end_game").style.visibility = "visible";
 }
+
 
 //----------------------------
 //		General Actions
@@ -287,6 +293,7 @@ var setUserActiveState = function(isActive) {
 	});
 }
 
+
 var flipUserActiveState = function() {
 	
 	// something with parse to set the value inactive
@@ -324,6 +331,7 @@ var flipUserActiveState = function() {
 	});
 }
 
+
 var setUserPresent = function(uuid) {
 	
 	// something with parse to set the value inactive
@@ -356,6 +364,7 @@ var setUserPresent = function(uuid) {
 
 	});
 }
+
 
 // reset all of the players back to no-one playing
 var setAllUsersNotPresent = function() {
@@ -394,6 +403,7 @@ var setAllUsersNotPresent = function() {
 		}
 	});
 }
+
 
 //----------------------------
 //			PubNub
@@ -463,6 +473,7 @@ window.onbeforeunload = function() {
 //  		});
 // };
 
+
 // Publish
 var sendUpdateMessage = function() {
 	pubnub.publish({
@@ -470,6 +481,7 @@ var sendUpdateMessage = function() {
 	 message: 'update'
 	});
 }
+
 
 // send start message
 var sendStartOfGame = function() {
@@ -488,6 +500,7 @@ Array.prototype.clear = function() {
     this.pop();
   }
 };
+
 
 //----------------------------
 //			Parse
