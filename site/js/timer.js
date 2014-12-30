@@ -3,7 +3,11 @@ var countdownTimer;
 var statusInterval;
 var isRunning = false;
 
-var duration = 120;
+var DEFAULT_DURATION = 120;
+
+var duration = DEFAULT_DURATION;
+
+// might not be a bad idea to look into using this http://keith-wood.name/countdown.html
 
 // check start time from parse
 var game = Parse.Object.extend("Game");
@@ -58,11 +62,46 @@ var timerStatusUpdate = function() {
 		if( cur_hour == start_hour &&
 		 	cur_min == start_min &&
 		 	cur_sec == start_sec ) {
-
+		 	
+		 	// user was present on time, let's start the game
 			startTheClock();
-			console.log("going to start the clock");
+			console.log("On Time User - Start Game.");
 			window.clearInterval(statusInterval);
 		}
+		else if( cur_hour >= start_hour &&
+				 cur_min >= start_min + (duration / 60) &&
+				 cur_sec >= start_sec + (duration % 60)) {
+			// user missed the game, display the end result of the game
+	        document.getElementById('countdown').innerHTML =  '00:00.00';
+			console.log("Latest User - Show End Game.");
+			window.clearInterval(statusInterval);
+			showEndGameMessage();
+		}
+		else if( cur_hour >= start_hour &&
+				 cur_min >= start_min &&
+				 cur_sec >= start_sec ) {
+			// user showed up late, let's update the duration and start the game
+			var new_duration = DEFAULT_DURATION - (cur_min - start_min)*60 - (cur_sec - start_sec);
+			updateDuration(new_duration);
+			startTheClock();
+			console.log("Late User - Update duration. Start Game.");
+			window.clearInterval(statusInterval);
+		}
+		else {
+			// user showed up early, let's keep them in the waiting room and display a countdown til the start of the game
+			var dif_hour = start_hour - cur_hour;
+			var dif_min = start_min - cur_min;
+			var dif_sec = start_sec - cur_sec;
+			
+			var total_seconds = dif_hour*60*60 + dif_min*60 + dif_sec;
+			
+			console.log("Early User - (" + dif_hour + ":" + dif_min + ":" + dif_sec + ") --- Seconds left: " + total_seconds);
+			var spans = document.getElementsByClassName("countdown_til_start");
+			for(var i=0; i<spans.length; i++){
+				spans[i].innerHTML = total_seconds;
+			}
+		}
+
 	}, 100);
  
 }
