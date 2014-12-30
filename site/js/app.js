@@ -417,8 +417,6 @@ pubnub.subscribe({
 				console.log("received LEAVE message - " + m.uuid);
 				updatePopulation();
 			break;
-
-			default: console.log(m.action);	
 		}
 	},
 	message: function(m){
