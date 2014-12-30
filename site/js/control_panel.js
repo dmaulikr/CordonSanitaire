@@ -6,8 +6,8 @@ function Settings(){
 
     this.color_infectious_fill = '#ff5555';
     this.color_infectious_stroke = '#550000';
-    this.color_healed_fill = '#55ffb9';
-    this.color_healed_stroke = '#005533';
+    this.color_healed_fill = '#ff7755'; //'#55ffb9';
+    this.color_healed_stroke = '#550000'; //'#005533';
     this.color_active_fill = '#fff341';
     this.color_active_stroke = '#000000';
     this.color_passive_fill = '#ffffff';
@@ -17,8 +17,8 @@ function Settings(){
 
     this.color_border_not_contained_stroke = '#000000';
     this.color_border_not_contained_fill = '#000000';
-    this.color_border_contained_stroke = '#000000';
-    this.color_border_contained_fill = '#000000';
+    this.color_border_contained_stroke = '#006666';
+    this.color_border_contained_fill = '#55ffb9';
     this.color_border_opacity = .2;
 
     this.chat = false;
@@ -101,19 +101,19 @@ duration.onChange(function(value) {
 
 
 // border
-color_border_stroke_not_contained_control.onChange(function(value) {
+color_border_not_contained_stroke_control.onChange(function(value) {
     updateGameBoard();
 });
 
-color_border_fill_not_contained_control.onChange(function(value) {
+color_border_not_contained_fill_control.onChange(function(value) {
     updateGameBoard();
 });
 
-color_border_stroke_contained_control.onChange(function(value) {
+color_border_contained_stroke_control.onChange(function(value) {
     updateGameBoard();
 });
 
-color_border_fill_contained_control.onChange(function(value) {
+color_border_contained_fill_control.onChange(function(value) {
     updateGameBoard();
 });
 
