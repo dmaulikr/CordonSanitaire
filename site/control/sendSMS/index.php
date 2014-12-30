@@ -22,6 +22,12 @@
 		    // Fallback behaviour goes here
 		}	
 		
+		/*
+		 *	A nice GitHub page with all EZ-Text PHP examples - source code
+		 *	
+		 *	https://github.com/EzTexting/php-code-samples/blob/master/send_message_json.php
+		 *
+		 */
 		
 		$data = array(
 		    'User'          => 'jbobrow',
