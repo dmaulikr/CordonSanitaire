@@ -44,8 +44,8 @@ var timerStatusUpdate = function() {
 		var start_min = parse_start_date.getUTCMinutes();
 		var start_sec = parse_start_date.getUTCSeconds();
 				
-		console.log(cur_date);
-		console.log(parse_start_date);
+// 		console.log(cur_date);
+// 		console.log(parse_start_date);
 
 		// if there is time til the game, keep the user in a waiting room and display a countdown til the start of the game
 		
