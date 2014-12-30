@@ -269,10 +269,10 @@ var showEndGameMessage = function() {
 			end_game_text += " You had the right idea, the fewer people on the front lines, the fewer in contact with patient zero.";				
 		}
 		else if(numJoined > 8) {
-			end_game_text += " Remember, you don't need that many people to contain the outbreak, <b>just the right ones!</b>";							
+			end_game_text += " Remember, you don't need that many people to contain the outbreak, just the right ones!";							
 		}
 		
-		end_game_text += "Can you do even better next time?";
+		end_game_text += " Can you do even better next time?";
 		  
 	}
 	else {
@@ -321,7 +321,7 @@ var showEndGameMessage = function() {
 		}
 */
 
-		end_game_text += "Can you work better and faster next time?";
+		end_game_text += " Can you work better and faster next time?";
 	}
 		
 	document.getElementById("end_game").innerHTML = end_game_text;

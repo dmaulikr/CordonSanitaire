@@ -61,6 +61,10 @@ var updateGameBoard = function() {
 	
 	// update scoreboard
 	updateScoreboard();
+	
+	//show missed game message after updating gameboard if need be
+	if(bShouldShowMissedGameMessage)
+		showMissedGameMessage();
 }
 
 

@@ -5,6 +5,7 @@ var isRunning = false;
 var total_seconds = 1;
 
 var bUserAllowedToStart = false;
+var bShouldShowMissedGameMessage = false;
 
 var DEFAULT_DURATION = 120;
 
@@ -90,7 +91,7 @@ var timerStatusUpdate = function() {
 			// possibly send to new page that notifies you missed the game
 			var dlog = document.querySelector('dialog');
 			dlog.close();
-			showMissedGameMessage();
+			bShouldShowMissedGameMessage = true;
 		}
 		else if( total_seconds < 0 ) {
 			// user showed up late, let's update the duration and start the game

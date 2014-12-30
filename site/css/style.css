@@ -35,6 +35,13 @@ footer {
     width: 100%;
 }
 
+#gui { 
+	visibility: hidden;
+	position: absolute; 
+	top: 2px; 
+	right: 2px 
+}
+
 #countdown {
     top: 0px;
     width: 100%;
