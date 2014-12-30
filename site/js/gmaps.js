@@ -8,11 +8,14 @@ var markers = [];
 
 var myPerson;
 var myMarker;
+var myIcon;
 var patientZeroMarker;
-var infoWindow;
 
 var isAnimatingMyIcon = false;
 var isAnimatingPatientZero = false;
+
+var myType = 'passive';
+var myPrevType = 'passive';
 
 // center map on user
 //var usersCoords = getUserAsGoogleCoords();
@@ -170,6 +173,7 @@ var drawPopulation = function() {
 		if(isPersonMe(person)) {
 			myMarker = marker_obj;
 			myPerson = person;
+			myIcon = marker_obj.icon;
 		}
 				
 	    markers.push({marker: marker_obj,
@@ -182,6 +186,7 @@ var drawPopulation = function() {
 		if(isPersonMe(person)) {	// update my status
 			myMarker = marker_obj;
 			myPerson = person;
+			myIcon = marker_obj.icon;
 		}
 
 	}		
@@ -267,6 +272,10 @@ var getPersonType = function(person) {
     else
       type = 'infectious';
   }
+  
+  // set if updated for self
+  if(isPersonMe(person))
+  	myType = type;
 
   return type;
 }
@@ -324,6 +333,16 @@ var getMarkerIconForPerson = function(person) {
   return _icon;
 }
 
+var isMyTypeDifferent = function() {
+	if( myType != myPrevType ) {
+		myPrevType = myType;
+		return true;
+	} 	
+	else {
+		return false;
+	}
+}
+
 // 
 var startAnimations = function() {
 	
@@ -336,8 +355,12 @@ var startAnimations = function() {
 
     	count = (count + 1) % period;
 		
+		var icon;
 		// animate my icon so I know who I am
-		var icon = getMarkerIconForPerson(myPerson);
+		if(isMyTypeDifferent())
+			icon = getMarkerIconForPerson(myPerson);
+		else
+			icon = myIcon;
 		icon.scale = 12 + 4 * Math.sin(2 * Math.PI * count/period);
 		myMarker.setIcon(icon);
     }, 20);
