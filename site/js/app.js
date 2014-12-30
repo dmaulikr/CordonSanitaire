@@ -18,36 +18,10 @@ if (!window.chrome) {
 
 var _channel = 'my_channel';
 var _uuid = PUBNUB.uuid();
+var hasReceivedJoinedMessage = false;
 var people = [];
 var center;			// point that represents the center of the population (holding)
 
-var updateFromParse = function() {
-
-	var users = Parse.Object.extend("SimpleUser");
-	var query = new Parse.Query(users);
-	query.equalTo("present", true);
-	query.find({
-	  	success: function(results) {
-		    // list contains the present players.
-		    	console.log(results);
-		    	console.log("# of present: " + results.length);
-		    // draw this list of players across the screen.
-		    for (var i = 0; i < results.length; i++) { 
-		    	var object = results[i];
-		    	//console.log(object.id + ' - ' + object.get('playerID') + ' - ' + object.get('active'));
-		    }
-		
-			// When done updating from parse, then we update the population
-			updatePopulation();
-		    
-	  	},
-		error: function(object, error) {
-		    // The object was not retrieved successfully.
-		    // error is a Parse.Error with an error code and message.
-		    console.log("Error: " + error.code + " " + error.message);
-		}
-	});
-}
 
 //----------------------------
 // Map stuffs
@@ -103,6 +77,9 @@ var pickPatientZero = function() {
 
 
 var updatePopulation = function(){
+	
+	if(!hasReceivedJoinedMessage) return; // only update after we have added ourselves to the population
+	
 	people.clear();
 
 	var users = Parse.Object.extend("SimpleUser");
@@ -110,9 +87,7 @@ var updatePopulation = function(){
 	query.equalTo("present", true);
 	query.find({
 	  	success: function(results) {
-		    // list contains the present players.
-		    	console.log(results);
-		    	console.log("# of present: " + results.length);
+		  	console.log("Success: Update population - get present");
 		    // draw this list of players across the screen.
 		    for (var i = 0; i < results.length; i++) { 
 		    	var object = results[i];
@@ -126,6 +101,8 @@ var updatePopulation = function(){
 		    		role: object.get('role'),
 		    		isPatientZero: object.get('isPatientZero')
 		    	};
+		    	
+// 		    	console.log("placing person at (" + obj.x + ", " + obj.y + ")");
 
 			    people.push(obj);
 		    }
@@ -154,17 +131,21 @@ var findCenter = function() {
 	var numPeopleHolding = 0;
     var total = {x:0, y:0};
     center = {x:0, y:0};
-
+        
     for(var i=0; i<people.length; i++) {
 	    if(people[i].active) {
 		    total.x += people[i].x;
 		    total.y += people[i].y;
-		    numPeopleHolding = numPeopleHolding + 1;
+		    numPeopleHolding++;
       	}
     }
+
+	if( numPeopleHolding > 0 ) {
+	    center.x = total.x / numPeopleHolding;
+	    center.y = total.y / numPeopleHolding;
+    }
     
-    center.x = total.x / numPeopleHolding;
-    center.y = total.y / numPeopleHolding;  
+//     console.log("Found center: (" + center.x + ", " + center.y + ")");  
 }
 
 
@@ -425,13 +406,15 @@ pubnub.subscribe({
 		switch(m.action){
 			case "join":
 				// set the UUID here
-				console.log("join - UUID - " + m.uuid);
+				console.log("received JOIN message - " + m.uuid);
+				if(m.uuid == _uuid)
+					hasReceivedJoinedMessage = true;
 				updatePopulation();
 			break;
 
 			case "leave":
 				// set this user to no longer focussed...
-				console.log("leave - UUID - " + m.uuid);
+				console.log("received LEAVE message - " + m.uuid);
 				updatePopulation();
 			break;
 
@@ -442,17 +425,17 @@ pubnub.subscribe({
 		switch(m) {
 
 			case "update":
-				console.log("update the page to the latest from parse db");
-				updateFromParse();
+				console.log("received UPDATE message");
+				updatePopulation();
 			break;
 
 			case "start":
-				console.log("start the game");
+				console.log("received START message");
 				startTheClock();
 			break;
 
 			case "end":
-				console.log("end the game");
+				console.log("received END message");
 			break;
 
 			default: console.log(m);
@@ -524,6 +507,7 @@ simpleUser.save({
 }, {
   success: function(simpleUser) {
     // The object was saved successfully.
+    console.log("Success: Added a new simple user");
   },
   error: function(simpleUser, error) {
     // The save failed.
