@@ -29,7 +29,11 @@ var drawMap = function() {
     zoom: 12,
     center: new google.maps.LatLng(40.776779, -73.969699),
     mapTypeId: google.maps.MapTypeId.ROADMAP,
-    disableDefaultUI: true
+    disableDefaultUI: true,
+    scrollwheel: false,
+    disableDoubleClickZoom: true,
+    panControl: false,
+    streetViewControl: false
   };
 
   if(map == null) {

@@ -47,8 +47,7 @@ function Settings(){
     };
 };
 
-var gui = new dat.GUI({ autoPlace: false });
-gui.domElement.id = 'gui';
+var gui = new dat.GUI();
 
 var f0 = gui.addFolder('countdown');
 f0.add(settings, 'start');
