@@ -233,24 +233,25 @@ var showEndGameMessage = function() {
 	
 	if(isPatientZeroContained()) {
 		
-		end_game_text = "Congratulations, you have successfully contained patient zero, ";
+		end_game_text = "Patient Zero has been contained";
 		
 		// update count of casualties
 		if(numTrapped == 0) {
-			end_game_text += "and managed to minimize trapping healthy people inside.";
+			end_game_text += "with only a few healthy people trapped inside the quarantine.";
 		}
 		else if(numTrapped > 0 && numTrapped < 5) {
-			end_game_text += "but you trapped ";
+			end_game_text += " (along with ";
 			end_game_text += numTrapped;
-			end_game_text += " healthy people inside." 
+			end_game_text += " heathy people, sadly.)" 
 		}
 		else if(numTrapped > 5) {
-			end_game_text += "but you trapped a shocking ";	
+			end_game_text += ", but ";	
 			end_game_text += numTrapped;
-			end_game_text += " healthy people inside." 
+			end_game_text += " healthy people are trapped inside the quarantine!" 
 		}
 		
 		// comment on quarantine total area
+/*
 		if(totalArea < 11) {
 			end_game_text += " You also managed to contain the patient in an area less than half the size of Manhattan.";	
 		}
@@ -260,40 +261,47 @@ var showEndGameMessage = function() {
 		else if(totalArea >= 22.7) {
 			end_game_text += " 9 million people could be affected, the quarantine amasses larger than the size of Manhattan.";							
 		}
+*/
 		
 		// comment on number of people quarantining
 		if(numJoined < 3) {
-			end_game_text += " You are going to need at least 3 people to build a successful quarantine. Next time, find anyone who can help.";	
+			end_game_text += " Looks like not enough poeple committed to quarantining Patient Zero.";	
 		}
-		else if(numJoined >= 3 && numJoined <= 8) {
-			end_game_text += " You had the right idea, the fewer people on the front lines, the fewer in contact with patient zero.";				
+		else if(numJoined >= 3 ) {
+			end_game_text += " ";
+			end_game_text += numJoined;
+			end_game_text += " people successfully formed the front line.";				
 		}
+/*
 		else if(numJoined > 8) {
 			end_game_text += " Remember, you don't need that many people to contain the outbreak, just the right ones!";							
 		}
+*/
 		
-		end_game_text += " Can you do even better next time?";
+		end_game_text += " Quarantines depend on everyone. The next outbreak is tomorrow.";
 		  
 	}
 	else {
-		end_game_text = "Warning! Patient zero is still on the loose, the emergency response team of ";
+		end_game_text = "";
 		end_game_text += people.lenth;
-		end_game_text += " has failed to collaborate and contain.";	// Can you work better and faster next time?";
+		end_game_text += "formed the quarantine line, but Patient Zero is outisde it! Everyone has failed to contain the infection (you all lose!)";	
 		
 		// update count of casualties
 		if(numTrapped == 0) {
 			end_game_text += "At least you didn't trap healthy people inside.";
 		}
-		else if(numTrapped > 0 && numTrapped < 5) {
-			end_game_text += "Somehow you managed to trap ";
+		else if(numTrapped > 0 ) {
+			end_game_text += "Not only is Patient Zero on the loose, but ";
 			end_game_text += numTrapped;
-			end_game_text += " healthy people inside." 
+			end_game_text += " people are trapped inside inside the quarantine." 
 		}
+/*
 		else if(numTrapped > 5) {
 			end_game_text += "With ";
 			end_game_text += numTrapped;
 			end_game_text += " healthy people trapped inside, the team needs to work better together." 
 		}
+*/
 		
 /*
 		// comment on quarantine total area
@@ -310,7 +318,7 @@ var showEndGameMessage = function() {
 		
 		// comment on number of people quarantining
 		if(numJoined < 3) {
-			end_game_text += " Remember, you are going to need at least 3 people to build a successful quarantine.";	
+			end_game_text += " Looks like a quarantine wasn’t formed. We need 3 people to form it.";	
 		}
 /*
 		else if(numJoined >= 3 && numJoined <= 8) {
@@ -321,7 +329,7 @@ var showEndGameMessage = function() {
 		}
 */
 
-		end_game_text += " Can you work better and faster next time?";
+		end_game_text += " This particular infection wasn’t contained. But there’s a new one tomorrow.";
 	}
 		
 	document.getElementById("end_game").innerHTML = end_game_text;
