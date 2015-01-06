@@ -230,6 +230,7 @@ var showEndGameMessage = function() {
 	var numTrapped = countCasualties();
 	var totalArea = getAreaQuarantined();
 	var numJoined = countActivePeople();
+	var numPresent = people.length;
 	
 	if(isPatientZeroContained()) {
 		
@@ -237,7 +238,7 @@ var showEndGameMessage = function() {
 		
 		// update count of casualties
 		if(numTrapped == 0) {
-			end_game_text += "with only a few healthy people trapped inside the quarantine.";
+			end_game_text += " with only a few healthy people trapped inside the quarantine.";
 		}
 		else if(numTrapped > 0 && numTrapped < 5) {
 			end_game_text += " (along with ";
@@ -278,20 +279,20 @@ var showEndGameMessage = function() {
 		}
 */
 		
-		end_game_text += " Quarantines depend on everyone. The next outbreak is tomorrow.";
+		end_game_text += " Quarantines depend on everyone... The next outbreak is tomorrow.";
 		  
 	}
 	else {
 		end_game_text = "";
-		end_game_text += people.lenth;
-		end_game_text += "formed the quarantine line, but Patient Zero is outisde it! Everyone has failed to contain the infection (you all lose!)";	
+		end_game_text += numPresent;
+		end_game_text += " formed the quarantine line, but Patient Zero is outside it! Everyone has failed to contain the infection (you all lose!)";	
 		
 		// update count of casualties
 		if(numTrapped == 0) {
-			end_game_text += "At least you didn't trap healthy people inside.";
+			//end_game_text += " At least you didn't trap healthy people inside.";
 		}
 		else if(numTrapped > 0 ) {
-			end_game_text += "Not only is Patient Zero on the loose, but ";
+			end_game_text += " Not only is Patient Zero on the loose, but ";
 			end_game_text += numTrapped;
 			end_game_text += " people are trapped inside inside the quarantine." 
 		}
@@ -342,10 +343,10 @@ var showMissedGameMessage = function() {
 	var missed_game_text = "";
 
 	if(isPatientZeroContained()) {
-		missed_game_text = "Too Late! Patient zero, has already been successfully quarantined, but you were not here to help reduce the number trapped inside. Keep an eye out for future outbreaks!";
+		missed_game_text = "Too Late! Quarantines depend on everyone... The next outbreak is tomorrow.";
 	}
 	else {
-		missed_game_text = "Too Late! The quarantine failed to contain patient zero. You could have been a critical link in stopping the contagion. Keep an eye out for future outbreaks!";
+		missed_game_text = "Too Late! This particular infection wasn’t contained... But there’s a new one tomorrow.";
 	}
 	document.getElementById("end_game").innerHTML = missed_game_text;
 	document.getElementById("end_game").style.visibility = "visible";

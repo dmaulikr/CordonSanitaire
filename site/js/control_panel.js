@@ -53,7 +53,7 @@ var f0 = gui.addFolder('countdown');
 f0.add(settings, 'start');
 f0.add(settings, 'stop');
 f0.add(settings, 'refresh');
-f0.closed = false;
+f0.closed = true;
 
 var f5 = gui.addFolder('advanced');
 f5.add(settings, 'rollDice');

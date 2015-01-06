@@ -12,12 +12,14 @@
 	<dialog id="intro">
 		<h1>CORDON SANITAIRE</h1>
 		<h2>PLAYABLE PROTOTYPE v. 082</h2>
-		<p>Game starts in <span class="countdown_til_start">0</span> seconds.</p>
-		<p><b>The game only lasts 120 seconds!</b> In the next <span class="countdown_til_start">0</span> seconds, it will start; you’ll be playing with everyone else who jumps in.</p>
-		<p>You will be on a map of a world in which Patient Zero(<b>P0</b>)  has a lethal infectious disease. You -- and everyone -- will work together to contain  by drawing a quarantine line around them.</p>
-		<p><b>You have one job: join the quarantine line, or not.</b> Just press the <b>JOIN/RELEASE</b> button on the upper right. You can do this as many times as you like.</p>
-		<p>At the end of the game, we will all have drawn a quarantine line. It will contain <b>P0</b> (hopefully!) or not. It will trap “healthy” players inside with <b>P0</b>, or not. Hopefully not.</p>
-		<p>That’s up to you … all of you.</p>
+		<div id="intro_message">
+			<p>Game starts in <span class="countdown_til_start">0</span> seconds.</p>
+			<p>Once the game starts <b>it will only last 120 seconds!</b> You’ll be playing with everyone else who jumps in.</p>
+			<p>You will be on a map of a world in which Patient Zero(<b>P0</b>)  has a lethal infectious disease. You -- and everyone -- will work together to contain  by drawing a quarantine line around them.</p>
+			<p><b>You have one job: join the quarantine line, or not.</b> Just press the <b>JOIN/RELEASE</b> button on the upper right. You can do this as many times as you like.</p>
+			<p>At the end of the game, we will all have drawn a quarantine line. It will contain <b>P0</b> (hopefully!) or not. It will trap “healthy” players inside with <b>P0</b>, or not. Hopefully not.</p>
+			<p>That’s up to you … all of you.</p>
+		</div>
 		<button class="float_right" id="close"><span id="start_button">Let's Go!</span></button>
 	</dialog>
 	<header>
@@ -56,8 +58,10 @@
 		</div>
 	</header>
 	
-	<!-- Container for End of game message -->	
-	<div id="end_game">
+	<!-- Container for End of game message -->
+	<div id="top_container">	
+		<div id="end_game">
+		</div>
 	</div>
 
 	<!-- Container for Google Map -->

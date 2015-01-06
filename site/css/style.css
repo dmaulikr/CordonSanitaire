@@ -118,12 +118,19 @@ footer {
 }
 
 /* End Game Message */
+#top_container {
+	width: 100%;
+	z-index: 10000;
+	background: black;
+}
+
 #end_game {
 	visibility: hidden;
-	max-width: 600px;
-	margin: 200px;
-	position: absolute;
 	z-index: 10000;
+	position: absolute;
+	max-width: 600px;
+	margin-left: auto;
+	margin-right: auto;
 	color: white;
 	font-size: 2em;
 	background: black;
