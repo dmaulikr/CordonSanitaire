@@ -120,13 +120,13 @@ footer {
 /* End Game Message */
 #top_container {
 	width: 100%;
-	z-index: 10000;
+	z-index: 99;
 	background: black;
 }
 
 #end_game {
 	visibility: hidden;
-	z-index: 10000;
+	z-index: 99;
 	position: absolute;
 	max-width: 600px;
 	margin-left: auto;
@@ -247,4 +247,61 @@ button:focus {outline:0;}
 }
 .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
     right: 0px; 
+}
+
+/* Oh Snap Notifications styling */
+/* ALERTS */
+/* inspired by Twitter Bootstrap */
+/* Oh Snap */
+
+#ohsnap {
+  position: fixed;
+  top: 120px;
+  left:5px;
+  margin-left: 5px;
+  z-index:99;
+}
+
+.alert {
+  text-align: left;
+  margin-top: 10px;
+  padding: 15px;
+  border: 4px solid white;
+  border-radius: 10px;
+  float: left;
+  clear: left;
+  box-shadow: 5px 5px 10px rgba(0,0,0,.5);
+}
+
+.alert-red {
+  color: black;
+  background-color: #ff5555;/*#DA4453;*/
+}
+.alert-green {
+  color: black;
+  background-color: #55ffb9; /*#37BC9B;*/
+}
+.alert-blue {
+  color: white;
+  background-color: #4A89DC;
+}
+.alert-yellow {
+  color: black;
+  background-color: #fff341; /*#F6BB42;*/
+}
+.alert-orange {
+  color:black;
+  background-color: #ffa352; /*#E9573F;*/
+}
+
+.alert-black {
+	color:white;
+	background-color: black;
+}
+
+#ohsnap { text-shadow: none; }
+@media (max-width: 450px) {
+  .buttons {
+    margin-bottom: 334px;
+  }
 }
