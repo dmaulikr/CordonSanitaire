@@ -8,6 +8,9 @@ var bUserAllowedToStart = false;
 var bShouldShowMissedGameMessage = false;
 var bUpdatedDialogText = false;
 
+var bShown10SecondMessage = false;
+var bShown30SecondMessage = false;
+
 var DEFAULT_DURATION = 120;
 
 var duration = DEFAULT_DURATION;
@@ -121,7 +124,7 @@ var timerStatusUpdate = function() {
 		else if( total_seconds > 120 ) {
 			
 			if(!bUpdatedDialogText) {
-				var intro_message = "<p>Game starts in <span class='countdown_til_start'>0</span> seconds.</p><p>Once the game starts <b>it will only last 120 seconds!</b> You’ll be playing with everyone else who jumps in.</p><p>You will be on a map of a world in which Patient Zero(<b>P0</b>)  has a lethal infectious disease. You -- and everyone -- will work together to contain  by drawing a quarantine line around them.</p><p><b>You have one job: join the quarantine line, or not.</b> Just press the <b>JOIN/RELEASE</b> button on the upper right. You can do this as many times as you like.</p><p>At the end of the game, we will all have drawn a quarantine line. It will contain <b>P0</b> (hopefully!) or not. It will trap 'healthy' players inside with <b>P0</b>, or not. Hopefully not.</p><p>That’s up to you … all of you.</p><p>Since you are here early, enjoy this video while you wait :)</p><iframe width='320' height='240' src='//www.youtube.com/embed/7Jgkm2pdWgY' frameborder='0' allowfullscreen></iframe>";
+				var intro_message = "<p>Game starts in <span class='countdown_til_start'>0</span> seconds.</p><p>Once the game starts <b>it will only last 120 seconds!</b> You’ll be playing with everyone else who jumps in.</p><p>You will be on a map of a world in which Patient Zero(<b>P0</b>)  has a lethal infectious disease. You -- and everyone -- will work together to contain  by drawing a quarantine line around them.</p><p><b>You have one job: join the quarantine line, or not.</b> Just press the <b>JOIN/RELEASE</b> button on the upper right. You can do this as many times as you like.</p><p>At the end of the game, we will all have drawn a quarantine line. It will contain <b>P0</b> (hopefully!) or not. It will trap 'healthy' players inside with <b>P0</b>, or not. Hopefully not.</p><p>That’s up to you … all of you.</p><p>Since you are here early, enjoy this video while you wait :)</p><iframe width='320' height='240' src='//www.youtube.com/embed/u1ZB_rGFyeU' frameborder='0' allowfullscreen></iframe>";
 				document.getElementById("intro_message").innerHTML = intro_message;
 				
 				bUpdatedDialogText = true;
@@ -190,6 +193,19 @@ var timePassedSince = function(start_date) {
 
     if(minutes_remaining >= 0 && seconds_remaining >= 0) {
         document.getElementById('countdown').innerHTML =  getTimeInStringFormatFromMillis(time_remaining);
+        
+        
+        // send message at 30 seconds remaining
+        if(!bShown30SecondMessage && minutes_remaining == 0 && seconds_remaining == 30) {
+			ohSnap('30 SECONDS REMAINING', 'black');
+			bShown30SecondMessage = true;
+		}
+
+        // send message at 10 seconds remaining
+        if(!bShown10SecondMessage && minutes_remaining == 0 && seconds_remaining == 10) {
+			ohSnap('10 SECONDS REMAINING!', 'black');
+			bShown10SecondMessage = true;
+		}
         
         // blink the timer red when below 10 seconds
         
