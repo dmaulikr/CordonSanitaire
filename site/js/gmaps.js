@@ -19,6 +19,17 @@ var myPrevType = 'passive';
 
 var my_animation_interval;
 var trapped_interval;
+
+// for notifications
+var _prevNumTrapped = 0;
+var _numTrapped = 0;
+
+var _prevPatientZeroContained = false;
+var _patientZeroContained = false;
+
+var _prevNumActive = 0;
+var _numActive = 0;
+
  
 // center map on user
 //var usersCoords = getUserAsGoogleCoords();
@@ -65,6 +76,9 @@ var updateGameBoard = function() {
 	
 	// update scoreboard
 	updateScoreboard();
+	
+	// update notifications
+	updateNotifications();
 	
 	//show missed game message after updating gameboard if need be
 	if(bShouldShowMissedGameMessage)
@@ -133,6 +147,8 @@ var getActivePopulationAsGoogleCoords = function() {
       coords.push(getLatLngCoords(people[i].x, people[i].y));
   }
 
+  _numActive = coords.length;	//update for notifications 
+  
   return coords;
 }
 
@@ -439,7 +455,7 @@ var animatePatientZero = function(icon) {
 //
 var updateScoreboard = function() {
   //check status of patient zero
-  if(isPatientZeroContained())
+  if(_patientZeroContained)
     document.getElementById('patient_status').innerHTML = 'contained';
   else
     document.getElementById('patient_status').innerHTML = 'not contained';
@@ -457,6 +473,70 @@ var updateScoreboard = function() {
 
 }
 
+var updateNotifications = function() {
+	
+	// IN ORDER OF PRIORITY
+	// Only a single message each action
+	
+	// if p0 is contained && prev state !contained
+	//PATIENT ZERO IS QUARANTINED
+	if(_patientZeroContained && !_prevPatientZeroContained) {
+		ohSnap('PATIENT ZERO IS QUARANTINED','green');
+	}
+	
+	// if p0 is not contained && prev state is contained
+	//PATIENT ZERO IS ON THE LOOSE
+	else if(!_patientZeroContained && _prevPatientZeroContained) {
+		ohSnap('PATIENT ZERO IS ON THE LOOSE','red');
+	}
+	
+	// if active count < 3 && prev active count >=3
+	//QUARANTINE FORMED
+	else if(_numActive >= 3 && _prevNumActive < 3) {
+		ohSnap('QUARANTINE FORMED!','yellow');
+		_prevNumActive = _numActive;
+	}	
+	
+	// if active count >= && prev active count < 3
+	//QUARANTINE BROKEN!
+	else if(_numActive < 3 && _prevNumActive >= 3) {
+		ohSnap('QUARANTINE BROKEN!','red');
+		_prevNumActive = _numActive;
+	}
+	
+	// if numTrapped == 1 &&  prev numTrapped == 0
+	//HEALTHY PEOPLE ARE INSIDE THE QUARANTINE 
+	else if(_numTrapped == 1 && _prevNumTrapped == 0) {
+		ohSnap('HEALTHY PEOPLE ARE INSIDE THE QUARANTINE', 'orange');
+		_prevNumTrapped = _numTrapped;	
+	}
+	
+	// else if numTrapped != prev numTrapped
+	//ANOTHER HEALTHY PERSON GOT TRAPPED! 
+	else if(_numTrapped > _prevNumTrapped) {
+		ohSnap('ANOTHER HEALTHY PERSON GOT TRAPPED!', 'orange');
+		_prevNumTrapped = _numTrapped;	
+	}
+
+	
+	// if active count is > prev active count
+	//ADDITIONAL PLAYER ON THE QUARANTINE LINE
+	else if(_numActive > _prevNumActive) {
+		ohSnap('ADDITIONAL PLAYER ON THE QUARANTINE LINE','yellow');
+		_prevNumActive = _numActive;
+	}
+	
+	// if active count < prev active count
+	//LOST A PLAYER FROM THE QUARANTINE LINE
+	else if(_numActive < _prevNumActive) {
+		ohSnap('LOST A PLAYER FROM THE QUARANTINE LINE','yellow');
+		_prevNumActive = _numActive;
+	}
+	
+	// update status of previous values	
+	_prevPatientZeroContained = _patientZeroContained;
+}
+
 
 var isPersonMe = function(person) {
 	return person.id == _uuid;
@@ -467,16 +547,22 @@ var isPatientZeroContained = function() {
 
 	var poly = getActivePopulationAsNormalCoords();
 	
-	if( poly.length < 3 )	// can't do it with less than 3
+	if( poly.length < 3 ) {	// can't do it with less than 3
+		_patientZeroContained = false;
 		return false;
+	}
 
 	for(var i=0; i<people.length; i++) {
 		var person = people[i];
 	    if(person.isPatientZero){
-	    	if(isPointInPoly(poly, person.x, person.y))
+	    	if(isPointInPoly(poly, person.x, person.y)) {
+				_patientZeroContained = true;
 				return true;
-			else
+			}
+			else {
+				_patientZeroContained = false;
 	        	return false;
+	        }
 	    } 
   	}
 }
@@ -491,6 +577,9 @@ var countCasualties = function() {
         count++;
     } 
   }
+  
+  _numTrapped = count;
+  
   return count;
 }
 

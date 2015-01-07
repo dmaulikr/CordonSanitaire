@@ -395,6 +395,7 @@ var setUserActiveState = function(isActive) {
 
 var flipUserActiveState = function() {
 	
+	
 	// something with parse to set the value inactive
 	console.log("flipping user state");
 	
@@ -408,6 +409,15 @@ var flipUserActiveState = function() {
 			var object = result[0];
 			var state = object.get("active");
 			state = !state;
+			
+			//show an alert notification, testing
+/*
+			if(state)
+				ohSnap('YOU HAVE JOINED THE QUARANTINE', 'yellow');
+			else
+				ohSnap('YOU ARE STANDING BY', 'black');
+*/
+				
 			object.set("active", state);
 			object.save(null, 
 			{
