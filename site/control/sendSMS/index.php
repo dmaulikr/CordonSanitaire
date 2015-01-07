@@ -5,6 +5,9 @@
 		<meta name="description" content="">
 		<meta name="keywords" content="" />
 		<meta name="author" content="">
+		<meta http-equiv='cache-control' content='no-cache'>
+		<meta http-equiv='expires' content='0'>
+		<meta http-equiv='pragma' content='no-cache'>
 		<!-- !CSS -->
 	</head>
 	<body>
@@ -14,7 +17,7 @@
 		// pass this page some values, such as group to message, message text, and time to send text
 		
 		$sms_group = 'Play Test 01';
-		$sms_time = '19:10';
+		$sms_time = '20:35';
 		
 		if (isset($_GET['group'])) {
 		     $sms_group = $_GET['group'];
