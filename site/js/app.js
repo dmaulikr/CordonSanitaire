@@ -230,7 +230,7 @@ var showEndGameMessage = function() {
 	var numTrapped = countCasualties();
 	var totalArea = getAreaQuarantined();
 	var numJoined = countActivePeople();
-	var numPresent = people.length;
+	var numPresent = people.length - 1;	// ignore the Patient Zero
 	
 	if(isPatientZeroContained()) {
 		
@@ -284,7 +284,7 @@ var showEndGameMessage = function() {
 	}
 	else {
 		end_game_text = "";
-		end_game_text += numPresent;
+		end_game_text += numJoined;
 		end_game_text += " formed the quarantine line, but Patient Zero is outside it! Everyone has failed to contain the infection (you all lose!)";	
 		
 		// update count of casualties
