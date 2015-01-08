@@ -16,7 +16,8 @@ if (!window.chrome) {
 
 
 
-var _channel = 'my_channel';
+var _channel = 'production';	// Dev Channel vs. Production Channel
+//var _channel = 'development';	// Dev Channel vs. Production Channel
 var _uuid = PUBNUB.uuid();
 var hasReceivedJoinedMessage = false;
 var people = [];
