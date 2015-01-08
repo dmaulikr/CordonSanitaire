@@ -17,7 +17,7 @@
 		// pass this page some values, such as group to message, message text, and time to send text
 		
 		$sms_group = 'Play Test 01';
-		$sms_time = '16:35';
+		$sms_time = '15:50';
 		
 		if (isset($_GET['group'])) {
 		     $sms_group = $_GET['group'];
