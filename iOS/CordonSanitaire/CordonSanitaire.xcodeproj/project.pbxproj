@@ -1,0 +1,429 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2B2C34AE1A5F376D007D6DC5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B2C34AD1A5F376D007D6DC5 /* main.m */; };
+		2B2C34B11A5F376D007D6DC5 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B2C34B01A5F376D007D6DC5 /* AppDelegate.m */; };
+		2B2C34B41A5F376D007D6DC5 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B2C34B31A5F376D007D6DC5 /* ViewController.m */; };
+		2B2C34B71A5F376D007D6DC5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2B2C34B51A5F376D007D6DC5 /* Main.storyboard */; };
+		2B2C34B91A5F376D007D6DC5 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2B2C34B81A5F376D007D6DC5 /* Images.xcassets */; };
+		2B2C34BC1A5F376D007D6DC5 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2B2C34BA1A5F376D007D6DC5 /* LaunchScreen.xib */; };
+		2B2C34C81A5F376D007D6DC5 /* CordonSanitaireTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B2C34C71A5F376D007D6DC5 /* CordonSanitaireTests.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		2B2C34C21A5F376D007D6DC5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2B2C34A01A5F376D007D6DC5 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2B2C34A71A5F376D007D6DC5;
+			remoteInfo = CordonSanitaire;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		2B2C34A81A5F376D007D6DC5 /* CordonSanitaire.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CordonSanitaire.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2B2C34AC1A5F376D007D6DC5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2B2C34AD1A5F376D007D6DC5 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		2B2C34AF1A5F376D007D6DC5 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		2B2C34B01A5F376D007D6DC5 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		2B2C34B21A5F376D007D6DC5 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		2B2C34B31A5F376D007D6DC5 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		2B2C34B61A5F376D007D6DC5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		2B2C34B81A5F376D007D6DC5 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		2B2C34BB1A5F376D007D6DC5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
+		2B2C34C11A5F376D007D6DC5 /* CordonSanitaireTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CordonSanitaireTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		2B2C34C61A5F376D007D6DC5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2B2C34C71A5F376D007D6DC5 /* CordonSanitaireTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CordonSanitaireTests.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		2B2C34A51A5F376D007D6DC5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2B2C34BE1A5F376D007D6DC5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2B2C349F1A5F376D007D6DC5 = {
+			isa = PBXGroup;
+			children = (
+				2B2C34AA1A5F376D007D6DC5 /* CordonSanitaire */,
+				2B2C34C41A5F376D007D6DC5 /* CordonSanitaireTests */,
+				2B2C34A91A5F376D007D6DC5 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		2B2C34A91A5F376D007D6DC5 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2B2C34A81A5F376D007D6DC5 /* CordonSanitaire.app */,
+				2B2C34C11A5F376D007D6DC5 /* CordonSanitaireTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		2B2C34AA1A5F376D007D6DC5 /* CordonSanitaire */ = {
+			isa = PBXGroup;
+			children = (
+				2B2C34AF1A5F376D007D6DC5 /* AppDelegate.h */,
+				2B2C34B01A5F376D007D6DC5 /* AppDelegate.m */,
+				2B2C34B21A5F376D007D6DC5 /* ViewController.h */,
+				2B2C34B31A5F376D007D6DC5 /* ViewController.m */,
+				2B2C34B51A5F376D007D6DC5 /* Main.storyboard */,
+				2B2C34B81A5F376D007D6DC5 /* Images.xcassets */,
+				2B2C34BA1A5F376D007D6DC5 /* LaunchScreen.xib */,
+				2B2C34AB1A5F376D007D6DC5 /* Supporting Files */,
+			);
+			path = CordonSanitaire;
+			sourceTree = "<group>";
+		};
+		2B2C34AB1A5F376D007D6DC5 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				2B2C34AC1A5F376D007D6DC5 /* Info.plist */,
+				2B2C34AD1A5F376D007D6DC5 /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		2B2C34C41A5F376D007D6DC5 /* CordonSanitaireTests */ = {
+			isa = PBXGroup;
+			children = (
+				2B2C34C71A5F376D007D6DC5 /* CordonSanitaireTests.m */,
+				2B2C34C51A5F376D007D6DC5 /* Supporting Files */,
+			);
+			path = CordonSanitaireTests;
+			sourceTree = "<group>";
+		};
+		2B2C34C51A5F376D007D6DC5 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				2B2C34C61A5F376D007D6DC5 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		2B2C34A71A5F376D007D6DC5 /* CordonSanitaire */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2B2C34CB1A5F376D007D6DC5 /* Build configuration list for PBXNativeTarget "CordonSanitaire" */;
+			buildPhases = (
+				2B2C34A41A5F376D007D6DC5 /* Sources */,
+				2B2C34A51A5F376D007D6DC5 /* Frameworks */,
+				2B2C34A61A5F376D007D6DC5 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CordonSanitaire;
+			productName = CordonSanitaire;
+			productReference = 2B2C34A81A5F376D007D6DC5 /* CordonSanitaire.app */;
+			productType = "com.apple.product-type.application";
+		};
+		2B2C34C01A5F376D007D6DC5 /* CordonSanitaireTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2B2C34CE1A5F376D007D6DC5 /* Build configuration list for PBXNativeTarget "CordonSanitaireTests" */;
+			buildPhases = (
+				2B2C34BD1A5F376D007D6DC5 /* Sources */,
+				2B2C34BE1A5F376D007D6DC5 /* Frameworks */,
+				2B2C34BF1A5F376D007D6DC5 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2B2C34C31A5F376D007D6DC5 /* PBXTargetDependency */,
+			);
+			name = CordonSanitaireTests;
+			productName = CordonSanitaireTests;
+			productReference = 2B2C34C11A5F376D007D6DC5 /* CordonSanitaireTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		2B2C34A01A5F376D007D6DC5 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0610;
+				ORGANIZATIONNAME = "Playful Systems";
+				TargetAttributes = {
+					2B2C34A71A5F376D007D6DC5 = {
+						CreatedOnToolsVersion = 6.1.1;
+					};
+					2B2C34C01A5F376D007D6DC5 = {
+						CreatedOnToolsVersion = 6.1.1;
+						TestTargetID = 2B2C34A71A5F376D007D6DC5;
+					};
+				};
+			};
+			buildConfigurationList = 2B2C34A31A5F376D007D6DC5 /* Build configuration list for PBXProject "CordonSanitaire" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 2B2C349F1A5F376D007D6DC5;
+			productRefGroup = 2B2C34A91A5F376D007D6DC5 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				2B2C34A71A5F376D007D6DC5 /* CordonSanitaire */,
+				2B2C34C01A5F376D007D6DC5 /* CordonSanitaireTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		2B2C34A61A5F376D007D6DC5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2B2C34B71A5F376D007D6DC5 /* Main.storyboard in Resources */,
+				2B2C34BC1A5F376D007D6DC5 /* LaunchScreen.xib in Resources */,
+				2B2C34B91A5F376D007D6DC5 /* Images.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2B2C34BF1A5F376D007D6DC5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2B2C34A41A5F376D007D6DC5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2B2C34B41A5F376D007D6DC5 /* ViewController.m in Sources */,
+				2B2C34B11A5F376D007D6DC5 /* AppDelegate.m in Sources */,
+				2B2C34AE1A5F376D007D6DC5 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2B2C34BD1A5F376D007D6DC5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2B2C34C81A5F376D007D6DC5 /* CordonSanitaireTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		2B2C34C31A5F376D007D6DC5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2B2C34A71A5F376D007D6DC5 /* CordonSanitaire */;
+			targetProxy = 2B2C34C21A5F376D007D6DC5 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		2B2C34B51A5F376D007D6DC5 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2B2C34B61A5F376D007D6DC5 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		2B2C34BA1A5F376D007D6DC5 /* LaunchScreen.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2B2C34BB1A5F376D007D6DC5 /* Base */,
+			);
+			name = LaunchScreen.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		2B2C34C91A5F376D007D6DC5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		2B2C34CA1A5F376D007D6DC5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		2B2C34CC1A5F376D007D6DC5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = CordonSanitaire/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		2B2C34CD1A5F376D007D6DC5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = CordonSanitaire/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		2B2C34CF1A5F376D007D6DC5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = CordonSanitaireTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CordonSanitaire.app/CordonSanitaire";
+			};
+			name = Debug;
+		};
+		2B2C34D01A5F376D007D6DC5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = CordonSanitaireTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CordonSanitaire.app/CordonSanitaire";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2B2C34A31A5F376D007D6DC5 /* Build configuration list for PBXProject "CordonSanitaire" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2B2C34C91A5F376D007D6DC5 /* Debug */,
+				2B2C34CA1A5F376D007D6DC5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2B2C34CB1A5F376D007D6DC5 /* Build configuration list for PBXNativeTarget "CordonSanitaire" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2B2C34CC1A5F376D007D6DC5 /* Debug */,
+				2B2C34CD1A5F376D007D6DC5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		2B2C34CE1A5F376D007D6DC5 /* Build configuration list for PBXNativeTarget "CordonSanitaireTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2B2C34CF1A5F376D007D6DC5 /* Debug */,
+				2B2C34D01A5F376D007D6DC5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 2B2C34A01A5F376D007D6DC5 /* Project object */;
+}
