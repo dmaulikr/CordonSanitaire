@@ -74,6 +74,9 @@ var updateGameBoard = function() {
     // simply pulse the trapped once to draw attention to them
     animateTrapped();
     
+    // update checkbox
+    hideJoinButton();
+
     // update scoreboard
     updateScoreboard();
     
@@ -473,11 +476,12 @@ var updateScoreboard = function() {
 
 }
 
-var updateCheckbox = function(){
+var hideJoinButton = function(){
+    console.log("updating join functionality");
     if(getPersonType(myPerson) == 'casualty')
-        document.getElementById('myonoffswitch').disabled = true;
+        document.getElementById('buttons').style.visibility = 'hidden';   
     else
-        document.getElementById('myonoffswitch').disabled = false;
+        document.getElementById('buttons').style.visibility = 'visible';
 }
 
 var updateNotifications = function() {
