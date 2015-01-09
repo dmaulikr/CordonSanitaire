@@ -22,5 +22,16 @@ var login = function(){
 }
 
 var signUp = function(){
-    Parse.User.signUp(getUsername(), getPassword());
+    var user = new Parse.User();
+    user.setUsername(getUsername());
+    user.setPassword(getPassword());
+    user.signUp(null, {
+      success: function(user) {
+        console.log("a new user signed up");
+      },
+      error: function(user, error) {
+        // Show the error message somewhere and let the user try again.
+        alert("Error: " + error.code + " " + error.message);
+      }
+    });
 }
