@@ -9,9 +9,9 @@ var bShouldShowMissedGameMessage = false;
 var bUpdatedDialogText = false;
 
 var bShown10SecondMessage = false;
-var bShown30SecondMessage = false;
+var bShown20SecondMessage = false;
 
-var DEFAULT_DURATION = 120;
+var DEFAULT_DURATION = 45;
 
 var duration = DEFAULT_DURATION;
 
@@ -195,10 +195,10 @@ var timePassedSince = function(start_date) {
         document.getElementById('countdown').innerHTML =  getTimeInStringFormatFromMillis(time_remaining);
         
         
-        // send message at 30 seconds remaining
-        if(!bShown30SecondMessage && minutes_remaining == 0 && seconds_remaining == 30) {
-			ohSnap('30 SECONDS REMAINING', 'black');
-			bShown30SecondMessage = true;
+        // send message at 20 seconds remaining
+        if(!bShown20SecondMessage && minutes_remaining == 0 && seconds_remaining == 20) {
+			ohSnap('20 SECONDS REMAINING', 'black');
+			bShown20SecondMessage = true;
 		}
 
         // send message at 10 seconds remaining
