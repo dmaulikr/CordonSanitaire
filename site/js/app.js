@@ -549,7 +549,7 @@ pubnub.subscribe({
 		}
 	},
 	message: function(m){
-		switch(m) {
+		switch(m.action) {
 
 			case "update":
 				console.log("received UPDATE message");
@@ -563,6 +563,11 @@ pubnub.subscribe({
 
 			case "end":
 				console.log("received END message");
+			break;
+
+			case "shout":
+				//console.log("received SHOUT message from " + m.uuid);
+				animateShout(m.uuid);
 			break;
 
 			default: console.log(m);
@@ -588,7 +593,7 @@ window.onbeforeunload = function() {
 var sendUpdateMessage = function() {
 	pubnub.publish({
 	 channel: _channel,
-	 message: 'update'
+	 message: {action: 'update'}
 	});
 }
 
@@ -597,10 +602,17 @@ var sendUpdateMessage = function() {
 var sendStartOfGame = function() {
 	pubnub.publish({
 	 channel: _channel,
-	 message: 'start'
+	 message: {action:'start'}
 	});
 }
 
+// send shout message
+var sendShout = function() {
+	pubnub.publish({
+	 channel: _channel,
+	 message: {action:'shout', uuid: _uuid}
+	});
+}
 
 //----------------------------
 //			Utility
@@ -621,8 +633,7 @@ Array.prototype.clear = function() {
 Parse.initialize("Og1SUamdseHSQXnX940SK3DrVVJHtb3efFyv4sqO", "f0R0Nv8JMxOrU5VoPnGrR43C5iFcJomeTIVnJi1J");
 
 // Development Database
-// Parse.initialize("se41N3nzbLBJ9oZFHrvhun7dGPK3tiLsj1mrey49", "KVhOztk5uviXDqaeQHzRa8GhgA0YjtPz9awX5gvC");
-// Javascript key: ptVDEW3c1A3rGCotPgbBswc8Z0GtYrYIjvxDpZLn
+// Parse.initialize("se41N3nzbLBJ9oZFHrvhun7dGPK3tiLsj1mrey49", "ptVDEW3c1A3rGCotPgbBswc8Z0GtYrYIjvxDpZLn");
 
 // Then add new user
 var SimpleUser = Parse.Object.extend("SimpleUser");

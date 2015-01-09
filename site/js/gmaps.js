@@ -20,6 +20,8 @@ var myPrevType = 'passive';
 var my_animation_interval;
 var trapped_interval;
 
+var shout_intervals = {};
+
 // for notifications
 var _prevNumTrapped = 0;
 var _numTrapped = 0;
@@ -279,6 +281,15 @@ var doesPersonHaveAMarkerYet = function(person) {
 	return false;
 }
 
+var getPersonForUUID = function(uuid) {
+	
+	for(var i=0; i<people.length; i++) {
+		if(people[i].id == uuid)
+			return people[i];
+	}
+	
+	console.log("DID NOT FIND PERSON FOR UUID");
+}
 
 var getMarkerForPerson = function(person) {
 	
@@ -407,6 +418,34 @@ var startAnimations = function() {
     }, 20);
     
     isAnimatingMyIcon = true;
+}
+
+// animate the person who is shouting
+var animateShout = function(uuid) {
+	var shoutPerson = getPersonForUUID(uuid)
+	var shoutMarker = getMarkerForPerson(shoutPerson);
+	var shoutMarkerIcon = getMarkerIconForPerson(shoutPerson);
+		
+	var count = 0;
+	var dur = 50;
+    
+	if(isPersonMe(shoutPerson))
+		window.clearInterval(my_animation_interval);
+    
+    window.clearInterval(shout_intervals[uuid]);
+    
+    shout_intervals[uuid] = window.setInterval(function() {
+		
+    	count = (count + 1);
+		
+		if( count > dur ) {
+			window.clearInterval(shout_intervals[uuid]);
+		}		
+		
+		shoutMarkerIcon.scale = 8 + 16 * Math.pow(.9, count);
+		shoutMarker.setIcon(shoutMarkerIcon);
+		
+    }, 20);	
 }
 
 // pulse the trapped icons once all together. A sort of cry for help.
