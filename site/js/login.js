@@ -17,15 +17,19 @@ var getPassword = function(){
 }
 
 var login = function(){
-    console.log("logging in");
-    Parse.User.logIn(getUsername(), getPassword());
+    Parse.User.logIn(getUsername(), getPassword(), {
+      success: function(user) {
+        console.log("a user logged in");
+      },
+      error: function(user, error) {
+        // The login failed. Check error to see why.
+        alert("Error: " + error.code + " " + error.message);
+      }
+    });
 }
 
 var signUp = function(){
-    var user = new Parse.User();
-    user.setUsername(getUsername());
-    user.setPassword(getPassword());
-    user.signUp(null, {
+    Parse.User.signUp(getUsername(), getPassword(), null, {
       success: function(user) {
         console.log("a new user signed up");
       },
