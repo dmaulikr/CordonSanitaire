@@ -30,6 +30,8 @@ var _patientZeroContained = false;
 var _prevNumActive = 0;
 var _numActive = 0;
 
+var _myPrevType = 'passive';
+
  
 // center map on user
 //var usersCoords = getUserAsGoogleCoords();
@@ -546,6 +548,18 @@ var updateNotifications = function() {
     
     // update status of previous values 
     _prevPatientZeroContained = _patientZeroContained;
+
+
+    // sends additional notifications about being trapped/free from a quarantine
+    if(myType == 'casualty' && _myPrevType != 'casualty'){
+        ohSnap('YOU ARE TRAPPED INSIDE THE QUARANTINE', 'red');
+        _myPrevType = myType;
+    }
+
+    else if (myType != 'casualty' && _myPrevType == 'casualty'){
+        ohSnap('YOU ARE OUT OF THE QUARANTINE', 'green');
+        _myPrevType = myType;
+    }
 }
 
 
