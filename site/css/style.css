@@ -191,7 +191,7 @@ button:focus {outline:0;}
 
 /* Shout button styling */
 .shoutButton {
-	/*visibility: hidden;*/
+	visibility: hidden;
     position: absolute;
     left: 650px; 
     top: 30px;
