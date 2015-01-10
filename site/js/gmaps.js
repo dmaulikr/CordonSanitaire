@@ -76,10 +76,10 @@ var updateGameBoard = function() {
     drawPopulation();
 
     // simply pulse the trapped once to draw attention to them
-    animateTrapped();
+    //animateTrapped(); // don't do this if people have the ability to shout
     
     // update checkbox
-    hideJoinButton();
+    updateButtonAvailable();
 
     // update scoreboard
     updateScoreboard();
@@ -205,6 +205,8 @@ var drawPopulation = function() {
 
     var person = people[i];
     
+    if(person.isPatientZero)
+    	continue;
     
     if(!doesPersonHaveAMarkerYet(person)) {
         
@@ -517,12 +519,16 @@ var updateScoreboard = function() {
 
 }
 
-var hideJoinButton = function(){
+var updateButtonAvailable = function(){
     console.log("updating join functionality");
-    if(getPersonType(myPerson) == 'casualty')
-        document.getElementById('buttons').style.visibility = 'hidden';   
-    else
+    if(getPersonType(myPerson) == 'casualty') {
+        document.getElementById('buttons').style.visibility = 'hidden';
+        document.getElementById('shoutButton').style.visibility = 'visible';
+    }
+    else {
+        document.getElementById('shoutButton').style.visibility = 'hidden';
         document.getElementById('buttons').style.visibility = 'visible';
+    }
 }
 
 var updateNotifications = function() {
@@ -538,13 +544,13 @@ var updateNotifications = function() {
     
     // if p0 is not contained && prev state is contained
     //PATIENT ZERO IS ON THE LOOSE
-    else if(!_patientZeroContained && _prevPatientZeroContained) {
+    else if(!_patientZeroContained ) { //{&& _prevPatientZeroContained) {
         ohSnap('PATIENT ZERO IS ON THE LOOSE','red');
     }
     
     // if active count < 3 && prev active count >=3
     //QUARANTINE FORMED
-    else if(_numActive >= 3 && _prevNumActive < 3) {
+    if(_numActive >= 3 && _prevNumActive < 3) {
         ohSnap('QUARANTINE FORMED!','yellow');
         _prevNumActive = _numActive;
     }   
