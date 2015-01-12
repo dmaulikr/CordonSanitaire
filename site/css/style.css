@@ -44,6 +44,58 @@ footer {
 	right: 2px 
 }
 
+#overlay {	
+	visibility: visible;
+	position: fixed;
+	z-index: 999;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: rgba(0, 0, 0, 0.85);
+}
+
+#intro {
+	z-index: 1000;
+	border-radius: 30px;
+	padding: 30px;
+	background-color: rgba(255, 255, 255, 0.95);
+	max-width: 600px;
+	margin: 100px auto 0 auto;	
+}
+
+#intro h1{
+	font-weight: lighter;
+	padding: 0 0 12px 0;
+	border-bottom: 1px solid rgba(0,0,0, 0.1)
+}
+
+#intro h2{
+	padding: 12px 0 12px 0;
+}
+
+#intro p{
+	padding: 0 0 12px 0;
+	font-size: .8em;
+	font-weight: lighter;
+	line-height: 1.5em;
+}
+
+#intro b{
+	font-weight: 500;
+}
+
+#close {
+	padding: 10px;
+	font-weight: lighter;
+	font-size: 1.4em;
+	border-radius: 15px;
+	background-color: #FFD500;
+}
+
+button:focus {outline:0;}
+
+
 #countdown {
     top: 0px;
     width: 100%;
@@ -138,56 +190,6 @@ footer {
 	background: black;
 	padding: 20px;
 }
-
-
-/* Dialog box */
-dialog {
-  border-radius: 30px;
-  padding: 30px;
-  background-color: rgba(255, 255, 255, 0.95);
-  max-width: 600px;
-  margin: 0 auto 0 auto;
-}
-
-dialog h1{
-	font-weight: lighter;
-	padding: 0 0 12px 0;
-	border-bottom: 1px solid rgba(0,0,0, 0.1)
-}
-
-dialog h2{
-	padding: 12px 0 12px 0;
-}
-
-dialog p{
-	padding: 0 0 12px 0;
-	font-size: .8em;
-	font-weight: lighter;
-	line-height: 1.5em;
-}
-
-dialog b{
-	font-weight: 500;
-}
-
-dialog::backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.85);
-}
-
-#close {
-	padding: 10px;
-	font-weight: lighter;
-	font-size: 1.4em;
-	border-radius: 15px;
-	background-color: #FFD500;
-}
-
-button:focus {outline:0;}
 
 /* Shout button styling */
 .shoutButton {

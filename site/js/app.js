@@ -7,11 +7,11 @@
 // MOBILE PHONE MESSAGE
 if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
  // Redirect to Mobile Phone message;
- window.location = "http://playful.jonathanbobrow.com/prototypes/cordonsans/mobile/"
+ //window.location = "http://playful.jonathanbobrow.com/prototypes/cordonsans/mobile/"
 }
 // CHROME ONLY
 if (!window.chrome) {
-	window.location = "http://playful.jonathanbobrow.com/prototypes/cordonsans/unsupported/"
+// 	window.location = "http://playful.jonathanbobrow.com/prototypes/cordonsans/unsupported/"
 }
 
 var isWindowInFocus = true;
@@ -253,14 +253,18 @@ var printDebugData = function() {
 //----------------------------
 //		Modal Window
 //----------------------------
+/*
 var dialog = document.querySelector('dialog');
 dialog.showModal();
+*/
 
 
 var close = document.querySelector('#close');
 close.onclick = function() {
-	if(isUserAllowedToStart())
-		dialog.close();
+	if(isUserAllowedToStart()) {
+		// hide intro view
+		document.getElementById("overlay").style.visibility = 'hidden';
+	}
 };
 
 
