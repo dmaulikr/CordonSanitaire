@@ -47,8 +47,17 @@ function Settings(){
     };
 };
 
+/* Comment out one of the following to have the control panel visible or not visible */
+
+/* visible control panel */
+// var gui = new dat.GUI();
+
+/* invisible control panel */
 var gui = new dat.GUI( { autoPlace: false } );
 gui.domElement.id = 'gui';
+
+/* -------------------------------------------------------------------------------- */
+
 
 var f0 = gui.addFolder('countdown');
 f0.add(settings, 'start');
