@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Cordon Sanitaire | Pre-Alpha</title>
+	<meta name="description" content="Cordon Sanitaire. Contain the outbreak.">
+	<meta name="author" content="Jonathan Bobrow  @jonathanbobrow">
+	<meta http-equiv='cache-control' content='no-cache'>
+	<meta http-equiv='expires' content='0'>
+	<meta http-equiv='pragma' content='no-cache'>
+	<meta name = "viewport" content = "width = device-width">
+	<link rel="stylesheet" type="text/css" media="only screen and (max-device-width: 480px)" href="css/mobile.css" />
+	<link rel="stylesheet" type="text/css" media="only screen and (min-device-width: 481px)" href="css/mobile.css" />
+</head>
+
+<body>
+	<div id="overlay">
+		<div id="intro">
+			<h1>CORDON SANITAIRE</h1>
+			<h2>PLAYABLE PROTOTYPE v. 092</h2>
+			<div id="intro_message">
+				<p>Game starts in <span class="countdown_til_start">0</span> seconds.</p>
+				<p>Once the game starts <b>it will only last 45 seconds!</b> You’ll be playing with everyone else who jumps in.</p>
+				<p>You will be on a map of a world in which Patient Zero(<b>P0</b>)  has a lethal infectious disease. You -- and everyone -- will work together to contain  by drawing a quarantine line around them.</p>
+				<p><b>You have one job: join the quarantine line, or not.</b> Just press the <b>JOIN/RELEASE</b> button on the upper right. You can do this as many times as you like.</p>
+				<p>At the end of the game, we will all have drawn a quarantine line. It will contain <b>P0</b> (hopefully!) or not. It will trap “healthy” players inside with <b>P0</b>, or not. Hopefully not.</p>
+				<p>That’s up to you … all of you.</p>
+			</div>
+			<button class="float_right" id="close"><span id="start_button">Let's Go!</span></button>
+		</div>
+	</div>
+
+	<!-- Container for End of game message -->
+	<div id="countdown">00:00.00</div>
+
+	<!-- Container for End of game message -->
+	<div id="scoreboard">
+		<ul>
+			<li class="no_border">patient zero is <span id="patient_status">contained</span></li>
+			<li><span id="casualty_count">0</span> people trapped</li>
+			<li><span id="area_quarantined">0</span> sq mi. quarantined</li>
+			<li><span id="num_active">0</span> people maintaining the quarantine</li>
+		</ul>
+	</div>
+
+	<!-- Container for End of game message -->
+	<div id="top_container">
+		<div id="end_game">
+			This is a test with text in the end game space.
+		</div>
+	</div>
+
+	<div id="bottom_container">
+		<div id="buttons">
+			<div class="onoffswitch">
+			    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" onclick="flipUserActiveState()">
+			    <label class="onoffswitch-label" for="myonoffswitch">
+			        <span class="onoffswitch-inner"></span>
+			        <span class="onoffswitch-switch"></span>
+			    </label>
+			</div>
+		</div>	
+		<a href="#" id="shoutButton" class="shoutButton" onclick="sendShout()">SHOUT!!!</a>
+	</div>
+	
+	<!-- container for pop up notifications -->	
+	<div id="ohsnap"></div>
+	
+	<!-- Container for Google Map -->
+	<div id="map-container">
+		<div id="map-canvas">
+		</div>
+	</div>
+
+	<!-- dependencies -->
+	<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=geometry&sensor=false"></script>
+	<script type="text/javascript" src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/infobox/src/infobox.js"></script>
+	<script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
+	<script type="text/javascript">
+
+	$(document).ready(function(e) {
+        var win = {
+	        width: $(window).width(),
+	        height: $(window).height() - 80
+        };
+        $('#map-canvas').css('height', win.height);
+        $('#map-canvas').css('width', win.width);
+
+        $(window).resize(function(){
+	        var win = {
+		        width: $(window).width(),
+		        height: $(window).height() - 80
+	        };
+	        $('#map-canvas').css('height', win.height);
+	        $('#map-canvas').css('width', win.width);
+            console.log("window size (" + win.width + ", " + win.height + ")");
+        });
+    });
+    
+    var mapOptions = {
+	    zoom: 12,
+	    center: new google.maps.LatLng(40.776779, -73.969699),
+	    mapTypeId: google.maps.MapTypeId.ROADMAP,
+	    disableDefaultUI: true,
+	    scrollwheel: false,
+	    disableDoubleClickZoom: true,
+	    panControl: false,
+	    streetViewControl: false
+	};
+      
+    map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+    </script>
+</body>
+</html>

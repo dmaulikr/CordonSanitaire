@@ -1,0 +1,274 @@
+* { 
+	margin: 0px;
+	padding: 0px;
+	font-family: sans-serif;
+}
+
+h1 {font-weight: lighter; font-size: 2em;}
+h2 {font-weight: lighter; font-size: 1em;}
+h3 {}
+
+p {}
+/*
+a:link { text-decoration:  none; color: #666 }
+a:hover { color: #333; }
+a:active { color: #F0F; }
+a:visited { color: #666; }
+*/
+
+ol {}
+ul {}
+li {}
+
+
+body {
+	background-color: black;
+}
+
+#gui { 
+	visibility: hidden;
+	position: absolute; 
+	top: 2px; 
+	right: 2px 
+}
+
+#overlay {	
+	visibility: visible;
+	position: fixed;
+	z-index: 999;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: rgba(0, 0, 0, 0.85);
+}
+
+#intro {
+	z-index: 1000;
+	border-radius: 30px;
+	padding: 30px;
+	background-color: rgba(255, 255, 255, 0.95);
+	max-width: 600px;
+	margin: 10px auto 0 auto;	
+}
+
+#intro h1{
+	font-size: 1.5em;
+	font-weight: lighter;
+	padding: 0 0 12px 0;
+	border-bottom: 1px solid rgba(0,0,0, 0.1)
+}
+
+#intro h2{
+	font-size: .8em;
+	padding: 12px 0 12px 0;
+}
+
+#intro p{
+	padding: 0 0 12px 0;
+	font-size: .8em;
+	line-height: 1.5em;
+}
+
+#intro b{
+	font-weight: 500;
+}
+
+#close {
+	padding: 10px;
+	font-weight: lighter;
+	font-size: 1.4em;
+	border-radius: 15px;
+	background-color: #FFD500;
+}
+
+#countdown {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 50%;
+    height: 80px;
+	line-height: 80px;
+	background: black;
+	color: white;
+	font-family: sans-serif;
+	font-size: 2.3em;
+	text-align: center;
+}
+
+#buttons {
+	z-index: 999;
+	background: black;
+}
+
+#buttons ul{
+	list-style: none;
+}
+
+#buttons ul li{
+	display: inline;
+	margin: 0;
+	padding: 10px;
+	background: white;
+	
+}
+
+#scoreboard {
+	position: absolute;
+	top: 0;
+	float: right;
+    width: 50%;
+    left: 50%;
+    height: 70px;
+    color:white;
+    background-color: black;
+    font-family: sans-serif;
+    font-size: .5em;
+    text-align: right;
+    padding: 5px 0 5px 0;
+}
+
+#scoreboard ul{
+    list-style: none;
+}
+
+#scoreboard li{
+    padding: 3px 6px 3px 6px;
+    border-top: white 1px solid;
+}
+
+.no_border {
+   border: none !important;
+}
+
+#map-canvas {
+	position: absolute;
+	top: 80px;
+    z-index:-1;
+}
+
+/* End Game Message */
+#top_container {
+	z-index: 99;
+	width: 100%;
+	position: absolute;
+	top: 80px;
+	background-color: rgba(0,0,0,.85);
+}
+
+#end_game {
+	visibility: visible;
+	color: white;
+	margin: 10px;
+	font-size: 1em;
+}
+
+#bottom_container {
+	z-index: 99;
+	width: 100%;    
+	height: 80px;
+	position: absolute;
+	bottom: 0px;
+}
+
+/* Shout button styling */
+.shoutButton {
+	visibility: hidden;
+    z-index: 99;
+    position: absolute;
+    bottom: 20px;
+    width: 40%;
+    height: 50px;
+    margin: 0 30% 0 30%;
+    -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
+
+	background-color:#ffa352;
+	-moz-border-radius:40px;
+	-webkit-border-radius:40px;
+	border-radius:40px;
+	border:3px solid #000000;
+	display:inline-block;
+	cursor:pointer;
+	font-size: 24px;
+	color: #000000; 
+	font-family: Trebuchet, Arial, sans-serif; 
+	font-weight: bold;	
+	padding:0px;
+	text-decoration:none;
+	text-align: center;
+	line-height: 50px;
+}
+.shoutButton:hover {
+	background-color:#ffbb54;
+}
+.shoutButton:active {
+	background-color:#000000;
+	color: #ffffff;
+	border:3px solid #ffa352;
+}
+
+
+
+/* Radio button styling */
+.onoffswitch {
+    position: fixed;
+    z-index: 99;
+    bottom: 20px;
+    width: 40%;
+    margin: 0 30% 0 30%;
+    -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
+}
+.onoffswitch-checkbox {
+    display: none;
+}
+.onoffswitch-label {
+    display: block; 
+    overflow: hidden;
+    cursor: pointer;
+    border: 3px solid #000; border-radius: 40px;
+}
+.onoffswitch-inner {
+    display: block; width: 200%; margin-left: -100%;
+    -moz-transition: margin 0.3s ease-in 0s; -webkit-transition: margin 0.3s ease-in 0s;
+    -o-transition: margin 0.3s ease-in 0s; transition: margin 0.3s ease-in 0s;
+}
+.onoffswitch-inner:before, .onoffswitch-inner:after {
+    display: block; float: left; width: 50%; height: 50px; padding: 0; line-height: 50px;
+    font-size: 24px; color: white; font-family: Trebuchet, Arial, sans-serif; font-weight: bold;
+    -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
+    border-radius: 40px;
+    box-shadow: 0px 11.5px 0px rgba(0,0,0,0.08) inset;
+}
+.onoffswitch-inner:before {
+    content: "RELEASE";
+    text-align: center;
+    padding: 0;
+    background-color: #FFD500; color: #FFFFFF;
+    border-radius: 23px 0 0 23px;
+}
+.onoffswitch-inner:after {
+    content: "JOIN";
+    text-align: center;
+    padding: 0;
+    background-color: #FFFFFF; color: #000000;
+    border-radius: 0 23px 23px 0;
+}
+.onoffswitch-switch {
+    display: none; width: 23px; margin: 0px;
+    background: #000000;
+    border: 2px solid #FFFFFF; border-radius: 23px;
+    position: absolute; top: 0; bottom: 0; right: 129px;
+    -moz-transition: all 0.3s ease-in 0s; -webkit-transition: all 0.3s ease-in 0s;
+    -o-transition: all 0.3s ease-in 0s; transition: all 0.3s ease-in 0s; 
+    background-image: -moz-linear-gradient(center top, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0) 80%); 
+    background-image: -webkit-linear-gradient(center top, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0) 80%); 
+    background-image: -o-linear-gradient(center top, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0) 80%); 
+    background-image: linear-gradient(center top, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0) 80%);
+    box-shadow: 0 1px 1px white inset;
+}
+.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
+    margin-left: 0px;
+}
+.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
+    right: 0px; 
+}
