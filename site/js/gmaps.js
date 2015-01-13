@@ -206,9 +206,9 @@ var drawNPCs = function() {
         var npc = npcs[i];
         var npc_coords = getLatLngCoords(npc.x, npc.y);
 
-        // if(npc.isPatientZero)
-            // console.log("theres a p0");
-            // continue;
+        // hides patient zero
+        if(npc.isPatientZero)
+            continue;
 
         if(npc.marker == null) {
 
@@ -676,9 +676,18 @@ var isPatientZeroContained = function() {
 var countCasualties = function() {
   var count = 0;
 
+  // count players casualities
   for(var i=0; i<people.length; i++) {
     if(!people[i].isPatientZero){
       if(getPersonType(people[i]) == 'casualty')
+        count++;
+    } 
+  }
+
+  // count npcs casualities
+  for(var i=0; i<npcs.length; i++) {
+    if(!npcs[i].isPatientZero){
+      if(getPersonType(npcs[i]) == 'casualty')
         count++;
     } 
   }
