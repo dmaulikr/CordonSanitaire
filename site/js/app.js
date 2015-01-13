@@ -615,7 +615,6 @@ simpleUser.save({
 
 
 function getNPCs() {
-    // Parse.initialize("R2T7ReO7LkHmM8ASf11pqjyNJcYXPdVqAD09wWvC", "VLVfcK4ttzTdPo7fwXtexEbA6VnZ8wShmVhodTpE");// CLONE
     var npcs = [];
     var npc = Parse.Object.extend("NPC");
     var query = new Parse.Query(npc);
@@ -689,6 +688,18 @@ var addNewNPCToLocalArray = function(id){
             console.log("Error: " + error.code + " " + error.message + ". ID " + id);
         }
     });
+}
+
+var removeNPCFromLocalArray = function(id){
+    for(var i = 0; i < npcs.length ; i++){
+        if (npcs[i].id == id){
+            if (npcs[i].marker != null)
+                npcs[i].marker.setMap(null);
+            npcs.splice(i, 1);
+            console.log("npc deleted");
+            updateGameBoard();
+        }
+    }
 }
 
 
