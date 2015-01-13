@@ -133,8 +133,7 @@ body {
 }
 
 #scoreboard li{
-    padding: 3px 6px 3px 6px;
-    border-top: white 1px solid;
+    padding: 4px 10px 4px 0px;
 }
 
 .no_border {
@@ -157,7 +156,7 @@ body {
 }
 
 #end_game {
-	visibility: visible;
+	visibility: hidden;
 	color: white;
 	margin: 10px;
 	font-size: 1em;
