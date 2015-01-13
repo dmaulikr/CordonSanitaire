@@ -799,48 +799,9 @@ var addNewNPCToLocalArray = function(id){
 
 // Helper Functions
 
-var setPatientZero = function(){
-    var rnd_users = [];
-    rnd_users.clear();
-    var user = Parse.Object.extend("SimpleUser");
-    var query = new Parse.Query(user);
-    // limits the numbers of results for the query
-    query.limit(3);
-    query.count({
-        success: function(number) {
-            var rnd = Math.floor((Math.random() * number/3) + 1);
-            query.skip = rnd;
-            query.find({
-                success: function(objects){
-                    for(var i = 0; i < objects.length; i++){
-                        var obj = {
-                            x: objects[i].get('x'),
-                            y: objects[i].get('y'),
-                            id: objects[i].id,
-                            active: objects[i].get('active'),
-                            role: objects[i].get('role'),
-                            isPatientZero: objects[i].get('isPatientZero')
-                        };
-                        rnd_users.push(obj);
-                    }
-                    pushPatientZeroToDatabase(pickRandomLoc(rnd_users));
-                },
-                error: function(error){
-                    console.log("Error: " + error.code + " " + error.message);
-                }
-            })
-        },
-        error: function(error) {
-            console.log("Error: " + error.code + " " + error.message);
-        }
-    });
-}
-
 var pickRandomLoc = function(rnd_users){
     var total = {x:0, y:0};
     var loc = {x:0 , y: 0};
-    // choose a random triangle of users
-    rnd_users
 
     for (var i = 0; i < rnd_users.length; i++){
         total.x += rnd_users[i].x;
