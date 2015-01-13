@@ -657,10 +657,26 @@ var isPatientZeroContained = function() {
         return false;
     }
 
+    // searches por patient zero among players
     for(var i=0; i<people.length; i++) {
         var person = people[i];
         if(person.isPatientZero){
             if(isPointInPoly(poly, person.x, person.y)) {
+                _patientZeroContained = true;
+                return true;
+            }
+            else {
+                _patientZeroContained = false;
+                return false;
+            }
+        } 
+    }
+
+    // searches for patient zero among npcs
+    for(var i=0; i<npcs.length; i++) {
+        var npc = npcs[i];
+        if(npc.isPatientZero){
+            if(isPointInPoly(poly, npc.x, npc.y)) {
                 _patientZeroContained = true;
                 return true;
             }
