@@ -128,6 +128,28 @@ var pickPatientZero = function() {
 	});
 }
 
+var addPlayerToQuarantine = function(id){
+    console.log("adding player to the quarantine");
+    var person = popPerson(id);
+    if (person.active == true)
+        console.log('person ' + id + ' was already part of the quarantine');
+    else{
+        person.active = true;
+        people.push(person);
+    }
+    displayGameState();
+}
+
+var removePlayerFromQuarantine = function(id){
+    var person = popPerson(id);
+    if (person.active == false)
+        console.log('person ' + id + ' was not part of the quarantine');
+    else{
+        person.active = false;
+        people.push(person);
+    }
+    displayGameState();
+}
 
 var updatePopulation = function(){
 	
@@ -480,13 +502,13 @@ var flipUserActiveState = function() {
 			{
 				success:function (object)
 				{
+                    var id = object.get('playerID');
 					// then update pubnub
 				    // sendUpdateMessage();
-                    // uses parse id instead of pubnub uuid
                     if(state)
-                        sendJoinQuarantineMessage(object.id)
+                        sendJoinQuarantineMessage(id);
                     else
-                        sendLeaveQuarantineMessage(object.id);
+                        sendLeaveQuarantineMessage(id);
 
 					//console.log("WOAAAAHHHH YEAH", object);
 				},
@@ -576,138 +598,6 @@ var setAllUsersNotPresent = function() {
 	});
 }
 
-
-//----------------------------
-//			PubNub
-//----------------------------
-
-// Init
-var pubnub = PUBNUB.init({
-	keepalive     : 30,
-	publish_key: 'pub-c-f1d4a0b1-66e6-48ae-bd2b-72bcaac47884',
-	subscribe_key: 'sub-c-37e7ca9a-54e6-11e4-a7f8-02ee2ddab7fe',
-	uuid: _uuid
-});
-
-// Subscribe
-pubnub.subscribe({
-	channel: _channel,
-	presence: function(m){
-		//console.log(m)
-		switch(m.action){
-			case "join":
-				// set the UUID here
-				console.log("received JOIN message - " + m.uuid);
-				if(m.uuid == _uuid)
-					hasReceivedJoinedMessage = true;
-				updatePopulation();
-			break;
-
-			case "leave":
-				// set this user to no longer focussed...
-				console.log("received LEAVE message - " + m.uuid);
-				updatePopulation();
-			break;
-		}
-	},
-	message: function(m){
-		switch(m.action) {
-
-			case "update":
-				console.log("received UPDATE message");
-				updatePopulation();
-			break;
-
-			case "start":
-				console.log("received START message");
-				startTheClock();
-			break;
-
-			case "end":
-				console.log("received END message");
-			break;
-
-			case "shout":
-				//console.log("received SHOUT message from " + m.uuid);
-				animateShout(m.uuid);
-			break;
-
-            case "newNPC":
-                addNewNPCToLocalArray(m.id);
-            break;
-
-            case "joinQuarantine":
-                addPlayerToQuarantine(m.id);
-            break;
-
-            case "leaveQuarantine":
-                removePlayerFromQuarantine(m.id);
-            break;
-            
-			default: console.log(m);
-		}
-	}
-});
-
-// Unsubscribe when closing the window
-window.onbeforeunload = function() {
-    return pubnub.unsubscribe({
-    	channel : _channel
- 		});
-}
-
-// window.onunload = function() {
-//     return pubnub.unsubscribe({
-//     	channel : _channel,
-//  		});
-// };
-
-
-// Publish
-var sendUpdateMessage = function() {
-	pubnub.publish({
-	 channel: _channel,
-	 message: {action: 'update'}
-	});
-}
-
-
-// send start message
-var sendStartOfGame = function() {
-	pubnub.publish({
-	 channel: _channel,
-	 message: {action:'start'}
-	});
-}
-
-// send shout message
-var sendShout = function() {
-	pubnub.publish({
-	 channel: _channel,
-	 message: {action:'shout', uuid: _uuid}
-	});
-}
-
-var sendAddNPCMessage = function(id){
-    pubnub.publish({
-        channel: _channel,
-        message: {action: 'newNPC', id: id}
-    });
-}
-
-var sendJoinQuarantineMessage = function(id){
-    pubnub.publish({
-        channel: _channel,
-        message: {action: 'joinQuarantine', id: id}
-    })
-}
-
-var sendLeaveQuarantineMessage = function(id){
-    pubnub.publish({
-        channel: _channel,
-        message: {action: 'leaveQuarantine', id: id}
-    })
-}
 //----------------------------
 //			Utility
 //----------------------------
@@ -875,4 +765,15 @@ var pushPatientZeroToDatabase = function(loc){
     });
 }
 
-
+var popPerson = function(uuid) {
+    
+    for(var i=0; i<people.length; i++) {
+        if(people[i].id == uuid){
+            var person = people[i]
+            people.splice(i, 1);
+            return person;
+        }
+    }
+    
+    console.log("DID NOT FIND PERSON");
+}
