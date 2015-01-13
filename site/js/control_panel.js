@@ -106,17 +106,23 @@ function Settings(){
             pushPatientZeroToDatabase(pickRandomLoc(rnd_users));
         }
 
+    }
+    
+    this.revealPatientZero = function(){
+	    revealPatientZero();
     }       
 };
 
 /* Comment out one of the following to have the control panel visible or not visible */
 
 /* visible control panel */
-// var gui = new dat.GUI();
+var gui = new dat.GUI();
 
 /* invisible control panel */
+/*
 var gui = new dat.GUI( { autoPlace: false } );
 gui.domElement.id = 'gui';
+*/
 
 /* -------------------------------------------------------------------------------- */
 
@@ -165,6 +171,7 @@ f3.closed = true;
 var f6 = gui.addFolder('NPCs');
 f6.add(settings, 'addNewNPC');
 f6.add(settings, 'addPatientZero');
+f6.add(settings, 'revealPatientZero');
 f6.closed = true;
 
 gui.closed = true;
