@@ -2,12 +2,16 @@
  * Set of helper functions.
  */
 
+/////////////
+// GENERAL //
+/////////////
+
 /**
  * Given a type, return the proper marker.
  * @param  {typeEnum}
  * @return {marker}
  */
-var getMarkerIcon = function(type) {
+function getMarkerIcon(type) {
 
   // common options for icons
   var _icon = {
@@ -22,37 +26,79 @@ var getMarkerIcon = function(type) {
 
   // set the colors now that we know what type we are
   switch(type){
-    
-    case TypeEnum.INFECTIOUS: 
+
+    case TypeEnum.INFECTIOUS:
             _icon.scale = 16;
             _icon.fillColor = settings.color_infectious_fill;
             _icon.strokeColor = settings.color_infectious_stroke;
       break;
-    
-    case TypeEnum.HEALED: 
+
+    case TypeEnum.HEALED:
             _icon.scale = 16;
             _icon.fillColor = settings.color_healed_fill;       // don't change the color of patient zero
             _icon.strokeColor = settings.color_healed_stroke;   // instead change the color of the quarantine
       break;
-    
-    case TypeEnum.ACTIVE: 
+
+    case TypeEnum.ACTIVE:
            _icon.fillColor = settings.color_active_fill;
            _icon.strokeColor = settings.color_active_stroke;
       break;
-    
-    case TypeEnum.PASSIVE: 
+
+    case TypeEnum.PASSIVE:
             _icon.fillColor = settings.color_passive_fill;
             _icon.strokeColor = settings.color_passive_stroke;
       break;
-    
-    case TypeEnum.TRAPPED: 
+
+    case TypeEnum.TRAPPED:
             _icon.fillColor = settings.color_casualty_fill;
-            _icon.strokeColor = settings.color_casualty_stroke;             
+            _icon.strokeColor = settings.color_casualty_stroke;
       break;
   }
-  
+
   // make the person stand out so they know who they are
-  // Now handled in the animation 
+  // Now handled in the animation
 
   return _icon;
 }
+
+/**
+ * Get the type of an object. Right now only works with npcs.
+ * @param  obj
+ * @return {TypeEnum} type
+ */
+function getType = function(obj) {
+
+  var type;
+
+  var poly = getActivePopulationAsNormalCoords();
+
+  // check for casualty
+  if(type == TypeEnum.PASSIVE && isPointInPoly(poly, obj.x, obj.y))
+    type = TypeEnum.CASUALTY;
+
+  // check for patient zero
+  if(obj.isPatientZero) {
+    if(isPointInPoly(poly, obj.x, obj.y))
+      type = TypeEnum.HEALED;
+    else
+      type = TypeEnum.INFECTIOUS;
+  }
+
+  return type;
+}
+
+/////////
+// NPC //
+/////////
+
+function isNPCIdPresent(){
+  for(var i=0; i<npcs.length; i++) {
+      if (npcs[i].id == obj.id){
+          return true;
+      }
+  }
+
+  return false;
+}
+
+

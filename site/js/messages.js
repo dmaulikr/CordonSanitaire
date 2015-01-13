@@ -54,7 +54,7 @@ pubnub.subscribe({
             break;
 
             case "addNPC":
-                addNewNPCToLocalArray(m.id);
+                addNewNPCToLocalArray(m.npc);
             break;
 
             case "removeNPC":
@@ -64,7 +64,7 @@ pubnub.subscribe({
             case "flipState":
                 flipPlayerState(m.id, m.state);
             break;
-            
+
             default: console.log(m);
         }
     }
@@ -109,10 +109,10 @@ var sendShout = function() {
     });
 }
 
-var sendAddNPCMessage = function(id){
+var sendAddNPCMessage = function(npc){
     pubnub.publish({
         channel: _channel,
-        message: {action: 'addNPC', id: id}
+        message: {action: 'addNPC', npc: npc}
     });
 }
 

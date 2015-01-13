@@ -47,7 +47,8 @@ NPC.prototype.erase = function() {
 }
 
 /**
- * Creates a new NPC in the database with the same info of this NPC. Also assigns the UUID from the database to this NPC.
+ * Creates a new NPC in the database with the same info of this NPC.
+ * Also assigns the UUID from the database to this NPC.
  */
 NPC.prototype.pushToDatabase = function() {
     var NPC = Parse.Object.extend("NPC");
@@ -77,4 +78,12 @@ NPC.prototype.pushToDatabase = function() {
         console.log("Error: " + error.code + " " + error.message);
       }
     });
+}
+
+/**
+ * Updates the type of this NPC
+ * @param  {TypeEnum} type
+ */
+NPC.prototype.updateType = function(type) {
+    this.type = type;
 }

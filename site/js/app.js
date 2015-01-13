@@ -18,8 +18,8 @@ var isWindowInFocus = true;
 
 // NOTIFY USER WITH AN ALERT IF THE GAME IS STARTING AND THEY NAVIGATE AWAY
 // Set the name of the hidden property and the change event for visibility
-var hidden, visibilityChange; 
-if (typeof document.hidden !== "undefined") { // Opera 12.10 and Firefox 18 and later support 
+var hidden, visibilityChange;
+if (typeof document.hidden !== "undefined") { // Opera 12.10 and Firefox 18 and later support
   hidden = "hidden";
   visibilityChange = "visibilitychange";
 } else if (typeof document.mozHidden !== "undefined") {
@@ -32,7 +32,7 @@ if (typeof document.hidden !== "undefined") { // Opera 12.10 and Firefox 18 and 
   hidden = "webkitHidden";
   visibilityChange = "webkitvisibilitychange";
 }
- 
+
 // If the page is hidden, pause the video;
 // if the page is shown, play the video
 function handleVisibilityChange() {
@@ -46,13 +46,13 @@ function handleVisibilityChange() {
 }
 
 // Warn if the browser doesn't support addEventListener or the Page Visibility API
-if (typeof document.addEventListener === "undefined" || 
+if (typeof document.addEventListener === "undefined" ||
   typeof document[hidden] === "undefined") {
   alert("This demo requires a browser, such as Google Chrome or Firefox, that supports the Page Visibility API.");
 } else {
-  // Handle page visibility change   
+  // Handle page visibility change
   document.addEventListener(visibilityChange, handleVisibilityChange, false);
-}    
+}
 
 
 //----------------------------
@@ -64,7 +64,7 @@ if (typeof document.addEventListener === "undefined" ||
 Parse.initialize("Og1SUamdseHSQXnX940SK3DrVVJHtb3efFyv4sqO", "f0R0Nv8JMxOrU5VoPnGrR43C5iFcJomeTIVnJi1J");
 
 // Development Database
-// Parse.initialize("se41N3nzbLBJ9oZFHrvhun7dGPK3tiLsj1mrey49", "ptVDEW3c1A3rGCotPgbBswc8Z0GtYrYIjvxDpZLn");// NOT IN USE 
+// Parse.initialize("se41N3nzbLBJ9oZFHrvhun7dGPK3tiLsj1mrey49", "ptVDEW3c1A3rGCotPgbBswc8Z0GtYrYIjvxDpZLn");// NOT IN USE
 // Parse.initialize("R2T7ReO7LkHmM8ASf11pqjyNJcYXPdVqAD09wWvC", "VLVfcK4ttzTdPo7fwXtexEbA6VnZ8wShmVhodTpE");// CLONE
 
 var _channel = 'production';	// Dev Channel vs. Production Channel
@@ -93,15 +93,15 @@ var pickPatientZero = function() {
 	query.find({
 	  	success: function(results) {
 	  		// look through all present people
-		    for (var i = 0; i < results.length; i++) { 
-			    
+		    for (var i = 0; i < results.length; i++) {
+
 		    	var object = results[i];
-		    	
+
 		    	if(object.get('playerID') == uuid)
 		    		object.set('isPatientZero', true);
 		    	else
 		    		object.set('isPatientZero', false);
-		    	
+
 		    	if(i != results.length - 1)
 		    		object.save();
 		    	else
@@ -142,9 +142,9 @@ var flipPlayerState = function(id, state){
 
 
 var updatePopulation = function(){
-	
+
 	if(!hasReceivedJoinedMessage) return; // only update after we have added ourselves to the population
-	
+
 	people.clear();
 
 	var users = Parse.Object.extend("SimpleUser");
@@ -154,7 +154,7 @@ var updatePopulation = function(){
 	  	success: function(results) {
 		  	console.log("Success: Update population - get present");
 		    // draw this list of players across the screen.
-		    for (var i = 0; i < results.length; i++) { 
+		    for (var i = 0; i < results.length; i++) {
 		    	var object = results[i];
 
 		    	// place useful data into a local object
@@ -166,7 +166,7 @@ var updatePopulation = function(){
 		    		role: object.get('role'),
 		    		isPatientZero: object.get('isPatientZero')
 		    	};
-		    	
+
 // 		    	console.log("placing person at (" + obj.x + ", " + obj.y + ")");
 
 			    people.push(obj);
@@ -188,7 +188,7 @@ var findCenter = function() {
 	var numPeopleHolding = 0;
     var total = {x:0, y:0};
     center = {x:0, y:0};
-        
+
     for(var i=0; i<people.length; i++) {
 	    if(people[i].active) {
 		    total.x += people[i].x;
@@ -201,14 +201,14 @@ var findCenter = function() {
 	    center.x = total.x / numPeopleHolding;
 	    center.y = total.y / numPeopleHolding;
     }
-    
-//     console.log("Found center: (" + center.x + ", " + center.y + ")");  
+
+//     console.log("Found center: (" + center.x + ", " + center.y + ")");
 }
 
 
 // sort people
 var sortPeople = function() {
-	
+
 	var sortedPeople = [];
 	sortedPeople.clear();
 
@@ -229,24 +229,24 @@ var getNextPersonCounterClockwise = function(p) {
 
     var min = 2*Math.PI;	// max angle
     var index = 0;
-    
+
     var start_theta = Math.atan2((p.y - center.y), (p.x - center.x));
-    
+
     for(var i=0; i<people.length; i++) {
-      
+
     	if(people[i] == p)
         	continue;
-        
+
     	var p_theta = Math.atan2((people[i].y - center.y), (people[i].x - center.x));
 	    var diff = p_theta - start_theta;
 
 	    if(diff < 0)
 	    	diff += 2*Math.PI;
-	      
+
 	    if(diff < min) {
 	    	index = i;
 	    	min = diff;
-	    }  
+	    }
     }
 
 	return people[index];
@@ -256,7 +256,7 @@ var getNextPersonCounterClockwise = function(p) {
 var printDebugData = function() {
 
 	var string = "<ol><li>center: " + center.x + ", " + center.y+"</li>";
-    
+
     for(var i=0; i<people.length; i++) {
     	string += "<li>person " + i + " location " + people[i].x + ", " + people[i].y + "</li>";
     }
@@ -292,11 +292,11 @@ var showEndGameMessage = function() {
 	var totalArea = getAreaQuarantined();
 	var numJoined = countActivePeople();
 	var numPresent = people.length - 1;	// ignore the Patient Zero
-	
+
 	if(isPatientZeroContained()) {
-		
+
 		end_game_text = "Patient Zero has been contained";
-		
+
 		// update count of casualties
 		if(numTrapped == 0) {
 			end_game_text += " with only a few healthy people trapped inside the quarantine.";
@@ -304,50 +304,50 @@ var showEndGameMessage = function() {
 		else if(numTrapped > 0 && numTrapped < 5) {
 			end_game_text += " (along with ";
 			end_game_text += numTrapped;
-			end_game_text += " heathy people, sadly.)" 
+			end_game_text += " heathy people, sadly.)"
 		}
 		else if(numTrapped > 5) {
-			end_game_text += ", but ";	
+			end_game_text += ", but ";
 			end_game_text += numTrapped;
-			end_game_text += " healthy people are trapped inside the quarantine!" 
+			end_game_text += " healthy people are trapped inside the quarantine!"
 		}
-		
+
 		// comment on quarantine total area
 /*
 		if(totalArea < 11) {
-			end_game_text += " You also managed to contain the patient in an area less than half the size of Manhattan.";	
+			end_game_text += " You also managed to contain the patient in an area less than half the size of Manhattan.";
 		}
 		else if(totalArea >= 11 && totalArea <= 22.7) {
-			end_game_text += " It took a quarantine nearly the size of Manhattan to contain patient zero.";				
+			end_game_text += " It took a quarantine nearly the size of Manhattan to contain patient zero.";
 		}
 		else if(totalArea >= 22.7) {
-			end_game_text += " 9 million people could be affected, the quarantine amasses larger than the size of Manhattan.";							
+			end_game_text += " 9 million people could be affected, the quarantine amasses larger than the size of Manhattan.";
 		}
 */
-		
+
 		// comment on number of people quarantining
 		if(numJoined < 3) {
-			end_game_text += " Looks like not enough poeple committed to quarantining Patient Zero.";	
+			end_game_text += " Looks like not enough poeple committed to quarantining Patient Zero.";
 		}
 		else if(numJoined >= 3 ) {
 			end_game_text += " ";
 			end_game_text += numJoined;
-			end_game_text += " people successfully formed the front line.";				
+			end_game_text += " people successfully formed the front line.";
 		}
 /*
 		else if(numJoined > 8) {
-			end_game_text += " Remember, you don't need that many people to contain the outbreak, just the right ones!";							
+			end_game_text += " Remember, you don't need that many people to contain the outbreak, just the right ones!";
 		}
 */
-		
+
 		end_game_text += " Quarantines depend on everyone... The next outbreak is tomorrow.";
-		  
+
 	}
 	else {
 		end_game_text = "";
 		end_game_text += numJoined;
-		end_game_text += " formed the quarantine line, but Patient Zero is outside it! Everyone has failed to contain the infection (you all lose!)";	
-		
+		end_game_text += " formed the quarantine line, but Patient Zero is outside it! Everyone has failed to contain the infection (you all lose!)";
+
 		// update count of casualties
 		if(numTrapped == 0) {
 			//end_game_text += " At least you didn't trap healthy people inside.";
@@ -355,52 +355,52 @@ var showEndGameMessage = function() {
 		else if(numTrapped > 0 ) {
 			end_game_text += " Not only is Patient Zero on the loose, but ";
 			end_game_text += numTrapped;
-			end_game_text += " people are trapped inside inside the quarantine." 
+			end_game_text += " people are trapped inside inside the quarantine."
 		}
 /*
 		else if(numTrapped > 5) {
 			end_game_text += "With ";
 			end_game_text += numTrapped;
-			end_game_text += " healthy people trapped inside, the team needs to work better together." 
+			end_game_text += " healthy people trapped inside, the team needs to work better together."
 		}
 */
-		
+
 /*
 		// comment on quarantine total area
 		if(totalArea < 11) {
-			end_game_text += " You also managed to contain the patient in an area less than half the size of Manhattan.";	
+			end_game_text += " You also managed to contain the patient in an area less than half the size of Manhattan.";
 		}
 		else if(totalArea >= 11 && totalArea <= 22.7) {
-			end_game_text += " It took a quarantine nearly the size of Manhattan to contain patient zero.";				
+			end_game_text += " It took a quarantine nearly the size of Manhattan to contain patient zero.";
 		}
 		else if(totalArea >= 22.7) {
-			end_game_text += " 9 million people could be affected, the quarantine amasses larger than the size of Manhattan.";							
+			end_game_text += " 9 million people could be affected, the quarantine amasses larger than the size of Manhattan.";
 		}
 */
-		
+
 		// comment on number of people quarantining
 		if(numJoined < 3) {
-			end_game_text += " Looks like a quarantine wasn’t formed. We need 3 people to form it.";	
+			end_game_text += " Looks like a quarantine wasn’t formed. We need 3 people to form it.";
 		}
 /*
 		else if(numJoined >= 3 && numJoined <= 8) {
-			end_game_text += " You had the right idea, the fewer people on the front lines, the fewer in contact with patient zero.";				
+			end_game_text += " You had the right idea, the fewer people on the front lines, the fewer in contact with patient zero.";
 		}
 		else if(numJoined > 8) {
-			end_game_text += " Remember, you don't need that many people to contain the outbreak, <b>just the right ones!</b>";							
+			end_game_text += " Remember, you don't need that many people to contain the outbreak, <b>just the right ones!</b>";
 		}
 */
 
 		end_game_text += " This particular infection wasn’t contained. But there’s a new one tomorrow.";
 	}
-		
+
 	document.getElementById("end_game").innerHTML = end_game_text;
 	document.getElementById("end_game").style.visibility = "visible";
 }
 
 // missed the game pop up
 var showMissedGameMessage = function() {
-	
+
 	var missed_game_text = "";
 
 	if(isPatientZeroContained()) {
@@ -419,20 +419,20 @@ var showMissedGameMessage = function() {
 //----------------------------
 
 var setUserActiveState = function(isActive) {
-	
+
 	// something with parse to set the value inactive
 	console.log("setting user state");
-	
+
 	var User = Parse.Object.extend("SimpleUser");
 	var query = new Parse.Query(User);
 	query.equalTo("playerID", _uuid);
 	query.find(
 	{
-		success: function(result) 
+		success: function(result)
 		{
 			var object = result[0];
 			object.set("active", isActive);
-			object.save(null, 
+			object.save(null,
 			{
 				success:function (object)
 				{
@@ -455,22 +455,22 @@ var setUserActiveState = function(isActive) {
 
 
 var flipUserActiveState = function() {
-	
-	
+
+
 	// something with parse to set the value inactive
 	console.log("flipping user state");
-	
+
 	var User = Parse.Object.extend("SimpleUser");
 	var query = new Parse.Query(User);
 	query.equalTo("playerID", _uuid);
 	query.find(
 	{
-		success: function(result) 
+		success: function(result)
 		{
 			var object = result[0];
 			var state = object.get("active");
 			state = !state;
-			
+
 			//show an alert notification, testing
 /*
 			if(state)
@@ -478,9 +478,9 @@ var flipUserActiveState = function() {
 			else
 				ohSnap('YOU ARE STANDING BY', 'black');
 */
-				
+
 			object.set("active", state);
-			object.save(null, 
+			object.save(null,
 			{
 				success:function (object)
 				{
@@ -505,7 +505,7 @@ var flipUserActiveState = function() {
 
 
 var setUserPresent = function(uuid) {
-	
+
 	// something with parse to set the value inactive
 	console.log("setting user present");
 
@@ -516,7 +516,7 @@ var setUserPresent = function(uuid) {
 		success: function(result) {
 			var object = result[0];
 			object.set("present", true);
-			object.save(null, 
+			object.save(null,
 			{
 				success:function (object)
 				{
@@ -540,16 +540,16 @@ var setUserPresent = function(uuid) {
 
 // reset all of the players back to no-one playing
 var setAllUsersNotPresent = function() {
-	
+
 	var users = Parse.Object.extend("SimpleUser");
 	var query = new Parse.Query(users);
 	query.equalTo("present", true);
 	query.find({
 	  	success: function(results) {
-			for (var i = 0; i < results.length; i++) { 
+			for (var i = 0; i < results.length; i++) {
 		    	var object = results[i];
 		    	object.set("present", false);
-				
+
 				if(i != results.length - 1)
 		    		object.save();
 		    	else
@@ -588,7 +588,7 @@ Array.prototype.clear = function() {
 // Then add new user
 var SimpleUser = Parse.Object.extend("SimpleUser");
 var simpleUser = new SimpleUser();
- 
+
 simpleUser.save({
   playerID: _uuid,
   x: Math.random(0,1),
@@ -622,7 +622,7 @@ function getNPCs() {
         success: function(results) {
             console.log("Success: Getting NPCs");
             // draw this list of players across the screen.
-            for (var i = 0; i < results.length; i++) { 
+            for (var i = 0; i < results.length; i++) {
                 var object = results[i];
 
                 // place useful data into a local object
@@ -634,7 +634,7 @@ function getNPCs() {
                     role: object.get('role'),
                     isPatientZero: object.get('isPatientZero')
                 };
-                
+
 
                 npcs.push(obj);
             }
@@ -650,44 +650,18 @@ function getNPCs() {
     return npcs;
 }
 
-var addNewNPCToLocalArray = function(id){
-    var npc = Parse.Object.extend("NPC");
-    var query = new Parse.Query(npc);
-    var isIdPresent = false;
-    query.get(id, {
-        success: function(npc) {
-            console.log("Success: adding new npc");
-            
-            var obj = {
-                x: npc.get('x'),
-                y: npc.get('y'),
-                id: npc.id,
-                active: npc.get('active'),
-                role: npc.get('role'),
-                isPatientZero: npc.get('isPatientZero'),
-                marker: null
-            };
-            
-            for(var i=0; i<npcs.length; i++) {
-                if (npcs[i].id == obj.id){
-                    isIdPresent = true;
-                }
-            }
-            if (!isIdPresent){
-                npcs.push(obj);
-                console.log("new npc added");
-                updateGameBoard();
-            }
-            else{
-                console.log("npc " + obj.id + " was already present in the local array");
-            }
-        },
-        error: function(object, error) {
-            // The object was not retrieved successfully.
-            // error is a Parse.Error with an error code and message.
-            console.log("Error: " + error.code + " " + error.message + ". ID " + id);
-        }
-    });
+var addNewNPCToLocalArray = function(npc){
+	if (!isNPCIdPresent(npc.id)){
+		// add to local array
+	    npcs.push(npc);
+	    // console.log("new npc added");
+	    // update game display
+	    updateGameBoard();
+	}
+	else{
+	    console.log("npc " + obj.id + " was already present in the local array");
+	}
+
 }
 
 var removeNPCFromLocalArray = function(id){
@@ -756,7 +730,7 @@ var pushPatientZeroToDatabase = function(loc){
 }
 
 var popPerson = function(uuid) {
-    
+
     for(var i=0; i<people.length; i++) {
         if(people[i].id == uuid){
             var person = people[i]
@@ -764,6 +738,6 @@ var popPerson = function(uuid) {
             return person;
         }
     }
-    
+
     console.log("DID NOT FIND PERSON");
 }
