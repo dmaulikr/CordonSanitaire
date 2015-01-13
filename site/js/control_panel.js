@@ -45,6 +45,57 @@ function Settings(){
     this.resetPlayers = function(){
         setAllUsersNotPresent();
     };
+
+    this.addNewNPC = function(){
+        var NPC = Parse.Object.extend("NPC");
+        var npc = new NPC();
+         
+        // save new npc to database
+        npc.save({
+          x: Math.random(0,1),
+          y: Math.random(0,1),
+          role: "citizen",
+          active: false,
+          present: true,
+          isPatientZero: false
+        }, {
+          success: function(npc) {
+            // The object was saved successfully.
+            console.log("Success: Added a new NPC");
+
+            // place useful data into a local object
+            var obj = {
+                x: npc.get('x'),
+                y: npc.get('y'),
+                id: npc.id,
+                active: npc.get('active'),
+                role: npc.get('role'),
+                isPatientZero: npc.get('isPatientZero')
+            };
+
+            // sends message so other players also add the npc
+            sendAddNPCMessage(obj.id);
+          },
+          error: function(npc, error) {
+            // The save failed.
+            // error is a Parse.Error with an error code and message.
+            console.log("Error: " + error.code + " " + error.message);
+          }
+        });
+    };
+
+    this.addPatientZero = function(){
+        // checks if there's already a patient zero
+        for(var i = 0; i < npcs.length ; i++){
+            if (npcs[i].isPatientZero){
+                console.log("there's already a patient zero");
+                return;
+            }
+        }
+
+        setPatientZero();
+    }
+       
 };
 
 /* Comment out one of the following to have the control panel visible or not visible */
@@ -99,6 +150,11 @@ var f3 = gui.addFolder('features');
 f3.add(settings, 'chat');
 f3.add(settings, 'gmaps')
 f3.closed = true;
+
+var f6 = gui.addFolder('NPCs');
+f6.add(settings, 'addNewNPC');
+f6.add(settings, 'addPatientZero');
+f6.closed = true;
 
 gui.closed = true;
 
