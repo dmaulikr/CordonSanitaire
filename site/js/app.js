@@ -128,24 +128,13 @@ var pickPatientZero = function() {
 	});
 }
 
-var addPlayerToQuarantine = function(id){
+var flipPlayerState = function(id, state){
     console.log("adding player to the quarantine");
     var person = popPerson(id);
-    if (person.active == true)
-        console.log('person ' + id + ' was already part of the quarantine');
+    if (person.active == state)
+        console.log('no changes were made to the player ' + id);
     else{
-        person.active = true;
-        people.push(person);
-    }
-    updateGameBoard();
-}
-
-var removePlayerFromQuarantine = function(id){
-    var person = popPerson(id);
-    if (person.active == false)
-        console.log('person ' + id + ' was not part of the quarantine');
-    else{
-        person.active = false;
+        person.active = state;
         people.push(person);
     }
     updateGameBoard();
@@ -497,11 +486,7 @@ var flipUserActiveState = function() {
 				{
                     var id = object.get('playerID');
 					// then update pubnub
-				    // sendUpdateMessage();
-                    if(state)
-                        sendJoinQuarantineMessage(id);
-                    else
-                        sendLeaveQuarantineMessage(id);
+                    sendFlipStateMessage(id, state);
 
 					//console.log("WOAAAAHHHH YEAH", object);
 				},

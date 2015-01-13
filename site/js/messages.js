@@ -57,12 +57,8 @@ pubnub.subscribe({
                 addNewNPCToLocalArray(m.id);
             break;
 
-            case "joinQuarantine":
-                addPlayerToQuarantine(m.id);
-            break;
-
-            case "leaveQuarantine":
-                removePlayerFromQuarantine(m.id);
+            case "flipState":
+                flipPlayerState(m.id, m.state);
             break;
             
             default: console.log(m);
@@ -116,16 +112,9 @@ var sendAddNPCMessage = function(id){
     });
 }
 
-var sendJoinQuarantineMessage = function(id){
+var sendFlipStateMessage = function(id, state){
     pubnub.publish({
         channel: _channel,
-        message: {action: 'joinQuarantine', id: id}
-    })
-}
-
-var sendLeaveQuarantineMessage = function(id){
-    pubnub.publish({
-        channel: _channel,
-        message: {action: 'leaveQuarantine', id: id}
+        message: {action: 'flipState', id: id, state: state}
     })
 }
