@@ -55,12 +55,24 @@ if (typeof document.addEventListener === "undefined" ||
 }    
 
 
+//----------------------------
+//          Parse
+//----------------------------
+
+// Init
+// Live Database
+Parse.initialize("Og1SUamdseHSQXnX940SK3DrVVJHtb3efFyv4sqO", "f0R0Nv8JMxOrU5VoPnGrR43C5iFcJomeTIVnJi1J");
+
+// Development Database
+// Parse.initialize("se41N3nzbLBJ9oZFHrvhun7dGPK3tiLsj1mrey49", "ptVDEW3c1A3rGCotPgbBswc8Z0GtYrYIjvxDpZLn");// NOT IN USE 
+// Parse.initialize("R2T7ReO7LkHmM8ASf11pqjyNJcYXPdVqAD09wWvC", "VLVfcK4ttzTdPo7fwXtexEbA6VnZ8wShmVhodTpE");// CLONE
 
 var _channel = 'production';	// Dev Channel vs. Production Channel
 // var _channel = 'development';	// Dev Channel vs. Production Channel
 var _uuid = PUBNUB.uuid();
 var hasReceivedJoinedMessage = false;
 var people = [];
+var npcs = getNPCs();
 var center;			// point that represents the center of the population (holding)
 
 
@@ -116,6 +128,18 @@ var pickPatientZero = function() {
 	});
 }
 
+var flipPlayerState = function(id, state){
+    console.log("adding player to the quarantine");
+    var person = popPerson(id);
+    if (person.active == state)
+        console.log('no changes were made to the player ' + id);
+    else{
+        person.active = state;
+        people.push(person);
+    }
+    updateGameBoard();
+}
+
 
 var updatePopulation = function(){
 	
@@ -148,7 +172,7 @@ var updatePopulation = function(){
 			    people.push(obj);
 		    }
 
-		    displayGameState();
+		    updateGameBoard();
 	  	},
 		error: function(object, error) {
 		    // The object was not retrieved successfully.
@@ -157,14 +181,6 @@ var updatePopulation = function(){
 		}
 	});
 }
-
-
-var displayGameState = function() {
-	
-	// draw all things necessary... This function should clearly go. Get on it Jon
-    updateGameBoard();
-}
-
 
 // find center of active people
 var findCenter = function() {
@@ -468,8 +484,10 @@ var flipUserActiveState = function() {
 			{
 				success:function (object)
 				{
+                    var id = object.get('playerID');
 					// then update pubnub
-					sendUpdateMessage();
+                    sendFlipStateMessage(id, state);
+
 					//console.log("WOAAAAHHHH YEAH", object);
 				},
 				error:function(object)
@@ -558,106 +576,6 @@ var setAllUsersNotPresent = function() {
 	});
 }
 
-
-//----------------------------
-//			PubNub
-//----------------------------
-
-// Init
-var pubnub = PUBNUB.init({
-	keepalive     : 30,
-	publish_key: 'pub-c-f1d4a0b1-66e6-48ae-bd2b-72bcaac47884',
-	subscribe_key: 'sub-c-37e7ca9a-54e6-11e4-a7f8-02ee2ddab7fe',
-	uuid: _uuid
-});
-
-// Subscribe
-pubnub.subscribe({
-	channel: _channel,
-	presence: function(m){
-		//console.log(m)
-		switch(m.action){
-			case "join":
-				// set the UUID here
-				console.log("received JOIN message - " + m.uuid);
-				if(m.uuid == _uuid)
-					hasReceivedJoinedMessage = true;
-				updatePopulation();
-			break;
-
-			case "leave":
-				// set this user to no longer focussed...
-				console.log("received LEAVE message - " + m.uuid);
-				updatePopulation();
-			break;
-		}
-	},
-	message: function(m){
-		switch(m.action) {
-
-			case "update":
-				console.log("received UPDATE message");
-				updatePopulation();
-			break;
-
-			case "start":
-				console.log("received START message");
-				startTheClock();
-			break;
-
-			case "end":
-				console.log("received END message");
-			break;
-
-			case "shout":
-				//console.log("received SHOUT message from " + m.uuid);
-				animateShout(m.uuid);
-			break;
-
-			default: console.log(m);
-		}
-	}
-});
-
-// Unsubscribe when closing the window
-window.onbeforeunload = function() {
-    return pubnub.unsubscribe({
-    	channel : _channel
- 		});
-}
-
-// window.onunload = function() {
-//     return pubnub.unsubscribe({
-//     	channel : _channel,
-//  		});
-// };
-
-
-// Publish
-var sendUpdateMessage = function() {
-	pubnub.publish({
-	 channel: _channel,
-	 message: {action: 'update'}
-	});
-}
-
-
-// send start message
-var sendStartOfGame = function() {
-	pubnub.publish({
-	 channel: _channel,
-	 message: {action:'start'}
-	});
-}
-
-// send shout message
-var sendShout = function() {
-	pubnub.publish({
-	 channel: _channel,
-	 message: {action:'shout', uuid: _uuid}
-	});
-}
-
 //----------------------------
 //			Utility
 //----------------------------
@@ -666,19 +584,6 @@ Array.prototype.clear = function() {
     this.pop();
   }
 };
-
-
-//----------------------------
-//			Parse
-//----------------------------
-
-// Init
-// Live Database
-Parse.initialize("Og1SUamdseHSQXnX940SK3DrVVJHtb3efFyv4sqO", "f0R0Nv8JMxOrU5VoPnGrR43C5iFcJomeTIVnJi1J");
-
-// Development Database
-// Parse.initialize("se41N3nzbLBJ9oZFHrvhun7dGPK3tiLsj1mrey49", "ptVDEW3c1A3rGCotPgbBswc8Z0GtYrYIjvxDpZLn");// NOT IN USE 
-// Parse.initialize("R2T7ReO7LkHmM8ASf11pqjyNJcYXPdVqAD09wWvC", "VLVfcK4ttzTdPo7fwXtexEbA6VnZ8wShmVhodTpE");// CLONE
 
 // Then add new user
 var SimpleUser = Parse.Object.extend("SimpleUser");
@@ -702,3 +607,151 @@ simpleUser.save({
     // error is a Parse.Error with an error code and message.
   }
 });
+
+
+//----------------------------
+//          NPCs
+//----------------------------
+
+
+function getNPCs() {
+    // Parse.initialize("R2T7ReO7LkHmM8ASf11pqjyNJcYXPdVqAD09wWvC", "VLVfcK4ttzTdPo7fwXtexEbA6VnZ8wShmVhodTpE");// CLONE
+    var npcs = [];
+    var npc = Parse.Object.extend("NPC");
+    var query = new Parse.Query(npc);
+    query.find({
+        success: function(results) {
+            console.log("Success: Getting NPCs");
+            // draw this list of players across the screen.
+            for (var i = 0; i < results.length; i++) { 
+                var object = results[i];
+
+                // place useful data into a local object
+                var obj = {
+                    x: object.get('x'),
+                    y: object.get('y'),
+                    id: object.get('objectId'),
+                    active: object.get('active'),
+                    role: object.get('role'),
+                    isPatientZero: object.get('isPatientZero')
+                };
+                
+
+                npcs.push(obj);
+            }
+            console.log("synchronized npcs array with database");
+        },
+        error: function(object, error) {
+            // The object was not retrieved successfully.
+            // error is a Parse.Error with an error code and message.
+            console.log("Error: " + error.code + " " + error.message);
+        }
+    });
+
+    return npcs;
+}
+
+var addNewNPCToLocalArray = function(id){
+    var npc = Parse.Object.extend("NPC");
+    var query = new Parse.Query(npc);
+    var isIdPresent = false;
+    query.get(id, {
+        success: function(npc) {
+            console.log("Success: adding new npc");
+            
+            var obj = {
+                x: npc.get('x'),
+                y: npc.get('y'),
+                id: npc.id,
+                active: npc.get('active'),
+                role: npc.get('role'),
+                isPatientZero: npc.get('isPatientZero'),
+                marker: null
+            };
+            
+            for(var i=0; i<npcs.length; i++) {
+                if (npcs[i].id == obj.id){
+                    isIdPresent = true;
+                }
+            }
+            if (!isIdPresent){
+                npcs.push(obj);
+                console.log("new npc added");
+                drawNPCs();
+            }
+            else{
+                console.log("npc " + obj.id + " was already present in the local array");
+            }
+        },
+        error: function(object, error) {
+            // The object was not retrieved successfully.
+            // error is a Parse.Error with an error code and message.
+            console.log("Error: " + error.code + " " + error.message + ". ID " + id);
+        }
+    });
+}
+
+
+// Helper Functions
+
+var pickRandomLoc = function(rnd_users){
+    var total = {x:0, y:0};
+    var loc = {x:0 , y: 0};
+
+    for (var i = 0; i < rnd_users.length; i++){
+        total.x += rnd_users[i].x;
+        total.y += rnd_users[i].y;
+    }
+    loc.x = total.x/rnd_users.length;
+    loc.y = total.y/rnd_users.length;
+    return loc;
+}
+
+var pushPatientZeroToDatabase = function(loc){
+    var NPC = Parse.Object.extend("NPC");
+    var npc = new NPC();
+    npc.save({
+          x: loc.x,
+          y: loc.y,
+          role: "citizen",
+          active: false,
+          present: true,
+          isPatientZero: true
+        }, {
+          success: function(npc) {
+            // The object was saved successfully.
+
+            // place useful data into a local object
+            var obj = {
+                x: npc.get('x'),
+                y: npc.get('y'),
+                id: npc.id,
+                active: npc.get('active'),
+                role: npc.get('role'),
+                isPatientZero: npc.get('isPatientZero')
+            };
+
+            // sends message so other players also add the npc
+            sendAddNPCMessage(obj.id);
+            console.log("Success: Added a new Patient Zero");
+          },
+          error: function(npc, error) {
+            // The save failed.
+            // error is a Parse.Error with an error code and message.
+            console.log("Error: " + error.code + " " + error.message);
+          }
+    });
+}
+
+var popPerson = function(uuid) {
+    
+    for(var i=0; i<people.length; i++) {
+        if(people[i].id == uuid){
+            var person = people[i]
+            people.splice(i, 1);
+            return person;
+        }
+    }
+    
+    console.log("DID NOT FIND PERSON");
+}

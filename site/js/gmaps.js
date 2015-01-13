@@ -75,6 +75,9 @@ var updateGameBoard = function() {
     // draw population
     drawPopulation();
 
+    // draw npcs
+    drawNPCs();
+
     // simply pulse the trapped once to draw attention to them
     //animateTrapped(); // don't do this if people have the ability to shout
     
@@ -194,6 +197,38 @@ var getLatLngCoords = function(x,y) {
   var latlng = new google.maps.LatLng(begLat + diffLat*x, begLng + diffLng*y);
 
   return latlng;
+}
+
+var drawNPCs = function() {
+    console.log("drawing NPCs");
+    for(var i=0; i<npcs.length; i++) {
+
+        var npc = npcs[i];
+        var npc_coords = getLatLngCoords(npc.x, npc.y);
+
+        // if(npc.isPatientZero)
+            // console.log("theres a p0");
+            // continue;
+
+        if(npc.marker == null) {
+
+            // creates a new marker for the npc and adds it to the map
+            var marker_obj = new google.maps.Marker({
+              position: npc_coords,
+              icon: getMarkerIconForPerson(npc), // depends on the type of the npc
+              map: map,
+            });
+
+            // sets the npc marker to the created marker
+            npc.marker = marker_obj;
+                    
+        }
+        else {
+            // correctly sets the icon of the marker
+            npc.marker.setIcon(getMarkerIconForPerson(npc));
+
+        } 
+    }  
 }
 
 
