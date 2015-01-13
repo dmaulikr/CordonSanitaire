@@ -481,7 +481,13 @@ var flipUserActiveState = function() {
 				success:function (object)
 				{
 					// then update pubnub
-					sendUpdateMessage();
+				    // sendUpdateMessage();
+                    // uses parse id instead of pubnub uuid
+                    if(state)
+                        sendJoinQuarantineMessage(object.id)
+                    else
+                        sendLeaveQuarantineMessage(object.id);
+
 					//console.log("WOAAAAHHHH YEAH", object);
 				},
 				error:function(object)
@@ -630,6 +636,14 @@ pubnub.subscribe({
                 addNewNPCToLocalArray(m.id);
             break;
 
+            case "joinQuarantine":
+                addPlayerToQuarantine(m.id);
+            break;
+
+            case "leaveQuarantine":
+                removePlayerFromQuarantine(m.id);
+            break;
+            
 			default: console.log(m);
 		}
 	}
@@ -681,6 +695,19 @@ var sendAddNPCMessage = function(id){
     });
 }
 
+var sendJoinQuarantineMessage = function(id){
+    pubnub.publish({
+        channel: _channel,
+        message: {action: 'joinQuarantine', id: id}
+    })
+}
+
+var sendLeaveQuarantineMessage = function(id){
+    pubnub.publish({
+        channel: _channel,
+        message: {action: 'leaveQuarantine', id: id}
+    })
+}
 //----------------------------
 //			Utility
 //----------------------------
