@@ -733,6 +733,27 @@ var getAreaQuarantined = function() {
     }
 }
 
+var revealPatientZero = function(){
+    console.log("revealing patient zero");
+    for(var i=0; i<npcs.length; i++) {
+        var npc = npcs[i];
+        var npc_coords = getLatLngCoords(npc.x, npc.y);
+
+        if(npc.isPatientZero){
+            // creates a new marker for the npc and adds it to the map
+            var marker_obj = new google.maps.Marker({
+              position: npc_coords,
+              icon: getMarkerIconForPerson(npc), // depends on the type of the npc
+              map: map,
+            });
+
+            // sets the npc marker to the created marker
+            npc.marker = marker_obj;
+            break;
+        }  
+    }
+}
+
 //+ Jonas Raoni Soares Silva
 //@ http://jsfromhell.com/math/is-point-in-poly [rev. #0]
 

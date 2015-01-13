@@ -250,6 +250,7 @@ var timePassedSince = function(start_date) {
         
         // send a message for game over and end of game state here
         showEndGameMessage();
+        revealPatientZero();
     }
 
 }
