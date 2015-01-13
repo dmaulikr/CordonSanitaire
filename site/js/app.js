@@ -137,7 +137,7 @@ var addPlayerToQuarantine = function(id){
         person.active = true;
         people.push(person);
     }
-    displayGameState();
+    updateGameBoard();
 }
 
 var removePlayerFromQuarantine = function(id){
@@ -148,8 +148,9 @@ var removePlayerFromQuarantine = function(id){
         person.active = false;
         people.push(person);
     }
-    displayGameState();
+    updateGameBoard();
 }
+
 
 var updatePopulation = function(){
 	
@@ -182,7 +183,7 @@ var updatePopulation = function(){
 			    people.push(obj);
 		    }
 
-		    displayGameState();
+		    updateGameBoard();
 	  	},
 		error: function(object, error) {
 		    // The object was not retrieved successfully.
@@ -191,14 +192,6 @@ var updatePopulation = function(){
 		}
 	});
 }
-
-
-var displayGameState = function() {
-	
-	// draw all things necessary... This function should clearly go. Get on it Jon
-    updateGameBoard();
-}
-
 
 // find center of active people
 var findCenter = function() {
