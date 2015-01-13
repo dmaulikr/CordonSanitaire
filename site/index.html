@@ -8,6 +8,7 @@
 	<meta http-equiv='cache-control' content='no-cache'>
 	<meta http-equiv='expires' content='0'>
 	<meta http-equiv='pragma' content='no-cache'>
+	<meta name = "viewport" content = "width = device-width">
 	<link rel="stylesheet" type="text/css" media="only screen and (max-device-width: 480px)" href="css/mobile.css" />
 	<link rel="stylesheet" type="text/css" media="only screen and (min-device-width: 481px)" href="css/style.css" />
 </head>
@@ -28,14 +29,27 @@
 			<button class="float_right" id="close"><span id="start_button">Let's Go!</span></button>
 		</div>
 	</div>
-	<header>
-		<!--<div>
-			<h1>Cordon Sanitaire</h1>
-			<h2>Work together to contain the outbreak.</h2>
+	
+	<!-- Container for countdown -->
+	<div id="countdown">00:00.00</div>
+
+	<!-- Container for scoreboard -->
+	<div id="scoreboard">
+		<ul>
+			<li class="no_border">patient zero is <span id="patient_status">contained</span></li>
+			<li><span id="casualty_count">0</span> people trapped</li>
+			<li><span id="area_quarantined">0</span> sq mi. quarantined</li>
+			<li><span id="num_active">0</span> people maintaining the quarantine</li>
+		</ul>
+	</div>
+
+	<!-- Container for End of game message -->
+	<div id="top_container">
+		<div id="end_game">
 		</div>
-		-->
-		<div id="countdown">
-		</div>
+	</div>
+
+	<div id="bottom_container">
 		<div id="buttons">
 			<div class="onoffswitch">
 			    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" onclick="flipUserActiveState()">
@@ -44,35 +58,12 @@
 			        <span class="onoffswitch-switch"></span>
 			    </label>
 			</div>
-		</div>
+		</div>	
 		<a href="#" id="shoutButton" class="shoutButton" onclick="sendShout()">SHOUT!!!</a>
-		<!--
-		<div id="buttons">
-			<ul>
-				<li id="button_1"><input type="radio" name="status" id="inactive" onclick="setUserActiveState(false)" checked><label class="toggle-btn">inactive</label></li> 
-				<li id="button_2"><input type="radio" name="status" id="active" onclick="setUserActiveState(true)"><label class="toggle-btn">active</label></li>  
-			</ul>
-		</div>
-		-->
-		<div id="scoreboard">
-			<ul>
-				<li>patient zero is <span id="patient_status">contained</span></li>
-				<li><span id="casualty_count">0</span> people trapped</li>
-				<li><span id="area_quarantined">0</span> sq mi. quarantined</li>
-				<li><span id="num_active">0</span> people maintaining the quarantine</li>
-				<!--<li>score: <span id="score">0</span></li>-->
-			</ul>
-		</div>
-	</header>
+	</div>
 	
 	<!-- container for pop up notifications -->	
 	<div id="ohsnap"></div>
-
-	<!-- Container for End of game message -->
-	<div id="top_container">
-		<div id="end_game">
-		</div>
-	</div>
 	
 	<!-- Container for Google Map -->
 	<div id="map-container">
@@ -80,8 +71,6 @@
 		</div>
 	</div>
 
-	<footer>
-	</footer>	
 
 	<!-- dependencies -->
 	<script type="text/javascript" src="http://cdn.pubnub.com/pubnub-3.7.1.min.js"></script>
@@ -103,12 +92,21 @@
 	<script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
 	<script type="text/javascript">
 	$(document).ready(function(e) {
-        var hheight = $(window).height() - 75;
-        $('#map-canvas').css('height', hheight);
+        var win = {
+	        width: $(window).width(),
+	        height: $(window).height() - 80
+        };
+        $('#map-canvas').css('height', win.height);
+        $('#map-canvas').css('width', win.width);
+
         $(window).resize(function(){
-            var hheight = $(window).height();
-            $('#map-canvas').css('height', hheight);
-            console.log("height " + hheight);
+	        var win = {
+		        width: $(window).width(),
+		        height: $(window).height() - 80
+	        };
+	        $('#map-canvas').css('height', win.height);
+	        $('#map-canvas').css('width', win.width);
+            console.log("window size (" + win.width + ", " + win.height + ")");
         });
     });
     </script>
