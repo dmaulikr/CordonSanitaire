@@ -91,10 +91,11 @@ var timerStatusUpdate = function() {
 			for(var i=0; i<spans.length; i++){
 				spans[i].innerHTML = 0;
 			}
-			var dlog = document.querySelector('dialog');
-			dlog.close();
+			// close the intro screen
+			document.getElementById("overlay").style.visibility = 'hidden';
+
+			// start the clock
 			startTheClock();
-			// close the dialog to jump into the game automatically
 			console.log("On Time User - Start Game.");
 			window.clearInterval(statusInterval);
 		}
@@ -105,8 +106,9 @@ var timerStatusUpdate = function() {
 			window.clearInterval(statusInterval);
 			
 			// possibly send to new page that notifies you missed the game
-			var dlog = document.querySelector('dialog');
-			dlog.close();
+			// close the intro screen
+			document.getElementById("overlay").style.visibility = 'hidden';
+
 			bShouldShowMissedGameMessage = true;
 		}
 		else if( total_seconds < 0 ) {
@@ -128,7 +130,7 @@ var timerStatusUpdate = function() {
 		else if( total_seconds > 20 ) {
 			
 			if(!bUpdatedDialogText) {
-				var intro_message = "<p>Game starts in <span class='countdown_til_start'>0</span> seconds.</p><p>Once the game starts <b>it will only last 45 seconds!</b> You’ll be playing with everyone else who jumps in.</p><p>You will be on a map of a world in which Patient Zero(<b>P0</b>)  has a lethal infectious disease. You -- and everyone -- will work together to contain  by drawing a quarantine line around them.</p><p><b>You have one job: join the quarantine line, or not.</b> Just press the <b>JOIN/RELEASE</b> button on the upper right. You can do this as many times as you like.</p><p>At the end of the game, we will all have drawn a quarantine line. It will contain <b>P0</b> (hopefully!) or not. It will trap 'healthy' players inside with <b>P0</b>, or not. Hopefully not.</p><p>That’s up to you … all of you.</p><p>Since you are here early, enjoy this video while you wait :)</p><iframe width='320' height='240' src='//www.youtube.com/embed/X76ZIGQgBWg' frameborder='0' allowfullscreen></iframe>";
+				var intro_message = "<p>Game starts in <span class='countdown_til_start'>0</span> seconds.</p><p>Once the game starts <b>it will only last 45 seconds!</b> You’ll be playing with everyone else who jumps in.</p><p>You will be on a map of a world in which Patient Zero(<b>P0</b>)  has a lethal infectious disease. You -- and everyone -- will work together to contain  by drawing a quarantine line around them.</p><p><b>You have one job: join the quarantine line, or not.</b> Just press the <b>JOIN/RELEASE</b> button on the upper right. You can do this as many times as you like.</p><p>At the end of the game, we will all have drawn a quarantine line. It will contain <b>P0</b> (hopefully!) or not. It will trap 'healthy' players inside with <b>P0</b>, or not. Hopefully not.</p><p>That’s up to you … all of you.</p>";
 				document.getElementById("intro_message").innerHTML = intro_message;
 				
 				bUpdatedDialogText = true;
