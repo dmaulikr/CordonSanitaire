@@ -46,85 +46,56 @@ function Settings(){
         setAllUsersNotPresent();
     };
 
-    this.addNewNPC = function(){
-        var NPC = Parse.Object.extend("NPC");
-        var npc = new NPC();
-         
-        // save new npc to database
-        npc.save({
-          x: Math.random(0,1),
-          y: Math.random(0,1),
-          role: "citizen",
-          active: false,
-          present: true,
-          isPatientZero: false
-        }, {
-          success: function(npc) {
-            // The object was saved successfully.
-            console.log("Success: Added a new NPC");
+    this.addNPC = function(){
+        var npc = new NPC(
+            Math.random(0,1),
+            Math.random(0,1),
+            "citizen",
+            TypeEnum.PASSIVE,
+            false
+        );
 
-            // place useful data into a local object
-            var obj = {
-                x: npc.get('x'),
-                y: npc.get('y'),
-                id: npc.id,
-                active: npc.get('active'),
-                role: npc.get('role'),
-                isPatientZero: npc.get('isPatientZero')
-            };
-
-            // sends message so other players also add the npc
-            sendAddNPCMessage(obj.id);
-          },
-          error: function(npc, error) {
-            // The save failed.
-            // error is a Parse.Error with an error code and message.
-            console.log("Error: " + error.code + " " + error.message);
-          }
-        });
+        npc.pushToDatabase();
     };
 
     this.addPatientZero = function(){
         // checks if there's already a patient zero
-        for(var i = 0; i < npcs.length ; i++){
-            if (npcs[i].isPatientZero){
-                console.log("there's already a patient zero");
-                sendRemoveNPCMessage(npcs[i].id);
-
-                var npc = Parse.Object.extend("NPC");
-                var query = new Parse.Query(npc);
-                var isIdPresent = false;
-                query.get(npcs[i].id, {
-                    success: function(npc) {
-                        npc.destroy();
-                    },
-                    error: function(object, error) {
-                        // The object was not retrieved successfully.
-                        // error is a Parse.Error with an error code and message.
-                        console.log("Error: " + error.code + " " + error.message + ". ID " + npc.id);
-                    }
-                });
-            }
-        }
+        var index = NPC.getPatientZeroIndex();
+        var npc = npcs[index];
         // if not, picks 3 random users and place p0 in the middle of them
-        var rnd_users = [];
-
-        if (people.length <= 3){
-            pushPatientZeroToDatabase(pickRandomLoc(people));
+        if (npc != undefined){
+            console.log("there's already a patient zero");
+            npc.removeFromDatabase();
+            sendRemoveNPCMessage(npc.id);
         }
-        else{   
+
+        var rnd_users = [];
+        var loc;
+        if (people.length <= 3){
+            loc = getCenter(people);
+        }
+        else{
+            // pick 3 random users
             for (var i = 0; i < 3; i++){
                 var rnd = Math.floor(Math.random()*people.length);
-                rnd_users.push(people[rnd]);        
+                rnd_users.push(people[rnd]);
             }
-            pushPatientZeroToDatabase(pickRandomLoc(rnd_users));
+            // find the center of these users
+            loc = getCenter(rnd_users);
         }
 
+        npc = new NPC(
+            loc.x,
+            loc.y,
+            "citizen",
+            TypeEnum.INFECTIOUS,
+            true);
+        npc.pushToDatabase();
     }
-    
+
     this.revealPatientZero = function(){
 	    revealPatientZero();
-    }       
+    }
 };
 
 /* Comment out one of the following to have the control panel visible or not visible */
@@ -183,7 +154,7 @@ f3.add(settings, 'gmaps')
 f3.closed = true;
 
 var f6 = gui.addFolder('NPCs');
-f6.add(settings, 'addNewNPC');
+f6.add(settings, 'addNPC');
 f6.add(settings, 'addPatientZero');
 f6.add(settings, 'revealPatientZero');
 f6.closed = true;

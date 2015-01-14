@@ -55,17 +55,22 @@ pubnub.subscribe({
             break;
 
             case "addNPC":
-                addNewNPCToLocalArray(m.id);
+                if (!NPC.isIdPresent(m.id)){
+                    NPC.addToLocalArray(m.id);
+                }
+                else{
+                    console.log("npc " + m.id + " was already present in the local array");
+                }
             break;
 
             case "removeNPC":
-                removeNPCFromLocalArray(m.id);
+                NPC.removeFromLocalArray(m.id);
             break;
 
             case "flipState":
                 flipPlayerState(m.id, m.state);
             break;
-            
+
             default: console.log(m);
         }
     }
