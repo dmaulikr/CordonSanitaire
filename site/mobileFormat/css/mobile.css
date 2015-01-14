@@ -20,21 +20,9 @@ ol {}
 ul {}
 li {}
 
-header {
-    /*position: absolute;
-    top: 0px;
-	padding: 10px 100px;
-    height:50px;
-	width: 100%;
-    z-index:1;*/
-}
 
-footer {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    height: 50px;
-    width: 100%;
+body {
+	background-color: black;
 }
 
 #gui { 
@@ -61,23 +49,24 @@ footer {
 	padding: 30px;
 	background-color: rgba(255, 255, 255, 0.95);
 	max-width: 600px;
-	margin: 100px auto 0 auto;	
+	margin: 10px auto 0 auto;	
 }
 
 #intro h1{
+	font-size: 1.5em;
 	font-weight: lighter;
 	padding: 0 0 12px 0;
 	border-bottom: 1px solid rgba(0,0,0, 0.1)
 }
 
 #intro h2{
+	font-size: .8em;
 	padding: 12px 0 12px 0;
 }
 
 #intro p{
 	padding: 0 0 12px 0;
 	font-size: .8em;
-	font-weight: lighter;
 	line-height: 1.5em;
 }
 
@@ -93,24 +82,22 @@ footer {
 	background-color: #FFD500;
 }
 
-button:focus {outline:0;}
-
-
 #countdown {
-    top: 0px;
-    width: 100%;
-    height: 40px;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 50%;
+    height: 80px;
+	line-height: 80px;
 	background: black;
 	color: white;
 	font-family: sans-serif;
-	font-size: 3em;
-	padding: 30px;
+	font-size: 2.3em;
+	text-align: center;
 }
 
 #buttons {
-	top: 80px;
-	position: absolute;
-	padding: 0px;
+	z-index: 999;
 	background: black;
 }
 
@@ -127,15 +114,18 @@ button:focus {outline:0;}
 }
 
 #scoreboard {
-    position: absolute;
-    top: 10px;
-    left: 350px;
-    height: 75px;
+	position: absolute;
+	top: 0;
+	float: right;
+    width: 50%;
+    left: 50%;
+    height: 70px;
     color:white;
     background-color: black;
     font-family: sans-serif;
-    font-size: .75em;
-    padding: 5px;
+    font-size: .5em;
+    text-align: right;
+    padding: 5px 0 5px 0;
 }
 
 #scoreboard ul{
@@ -143,7 +133,7 @@ button:focus {outline:0;}
 }
 
 #scoreboard li{
-    padding: 3px;
+    padding: 3px 6px 3px 6px;
     border-top: white 1px solid;
 }
 
@@ -152,69 +142,45 @@ button:focus {outline:0;}
 }
 
 #map-canvas {
-    width: 100%;
-    height: 600px;
-    margin: 0px;
-    padding: 0px
+	position: absolute;
+	top: 80px;
     z-index:-1;
-}
-
-#debug_data {
-    visibility: hidden;
-}
-
-#draw {
-    visibility: hidden;
-}
-
-.float_right {
-	float: right;
-}
-
-.float_left {
-	float: left;
 }
 
 /* End Game Message */
 #top_container {
+	z-index: 99;
 	width: 100%;
-	z-index: 99;
-	background: black;
-}
-
-#patient_zero {
-	z-index: 99;
-	visibility: visible;
 	position: absolute;
-	right: 0;
-	max-width: 600px;
-	color: white;
-	font-size: 2em;
-	background: black;
-	padding: 20px;
+	top: 80px;
+	background-color: rgba(0,0,0,.85);
 }
 
 #end_game {
-	visibility: hidden;
-	z-index: 99;
-	position: absolute;
-	max-width: 600px;
-	margin-left: auto;
-	margin-right: auto;
+	visibility: visible;
 	color: white;
-	font-size: 2em;
-	background: black;
-	padding: 20px;
+	margin: 10px;
+	font-size: 1em;
+	line-height: 1.5em;
+}
+
+#bottom_container {
+	z-index: 99;
+	width: 100%;    
+	height: 80px;
+	position: absolute;
+	bottom: 0px;
 }
 
 /* Shout button styling */
 .shoutButton {
 	visibility: hidden;
+    z-index: 99;
     position: absolute;
-    left: 650px; 
-    top: 30px;
-    width: 156px;
+    bottom: 20px;
+    width: 40%;
     height: 50px;
+    margin: 0 30% 0 30%;
     -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
 
 	background-color:#ffa352;
@@ -246,10 +212,11 @@ button:focus {outline:0;}
 
 /* Radio button styling */
 .onoffswitch {
-    position: absolute;
-    left: 650px; 
-    top: -50px;
-    width: 156px;
+    position: fixed;
+    z-index: 99;
+    bottom: 20px;
+    width: 40%;
+    margin: 0 30% 0 30%;
     -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
 }
 .onoffswitch-checkbox {
@@ -259,7 +226,7 @@ button:focus {outline:0;}
     display: block; 
     overflow: hidden;
     cursor: pointer;
-    border: 2px solid #000; border-radius: 40px;
+    border: 3px solid #000; border-radius: 40px;
 }
 .onoffswitch-inner {
     display: block; width: 200%; margin-left: -100%;
@@ -275,15 +242,16 @@ button:focus {outline:0;}
 }
 .onoffswitch-inner:before {
     content: "RELEASE";
-    padding: 0 0 0 20px;
+    text-align: center;
+    padding: 0;
     background-color: #FFD500; color: #FFFFFF;
     border-radius: 23px 0 0 23px;
 }
 .onoffswitch-inner:after {
     content: "JOIN";
-    padding: 0 50px 0 0;
+    text-align: center;
+    padding: 0;
     background-color: #FFFFFF; color: #000000;
-    text-align: right;
     border-radius: 0 23px 23px 0;
 }
 .onoffswitch-switch {
@@ -300,11 +268,12 @@ button:focus {outline:0;}
     box-shadow: 0 1px 1px white inset;
 }
 .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
-    margin-left: 0;
+    margin-left: 0px;
 }
 .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
     right: 0px; 
 }
+
 
 /* Oh Snap Notifications styling */
 /* ALERTS */
@@ -315,7 +284,8 @@ button:focus {outline:0;}
   position: fixed;
   top: 120px;
   left:5px;
-  margin-left: 5px;
+  margin-left: 5px;  
+  margin-right: 10px;
   z-index:99;
 }
 

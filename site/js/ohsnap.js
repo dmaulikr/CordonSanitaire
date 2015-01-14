@@ -12,6 +12,12 @@ function ohSnap(text, color, icon) {
   // text : message to show (HTML tag allowed)
   // Available colors : red, green, blue, orange, yellow --- add your own!
   
+  // if mobile, only display a single notification at a time
+  if( $(window).width() < 480 ) {///Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+	  ohSnapX();
+	  clearTimeout(alertTimeout);
+  }
+  
   // Set some variables
   var time = '3000';
   var $container = $('#ohsnap');
@@ -32,7 +38,7 @@ function ohSnap(text, color, icon) {
   html.on('click', function () { ohSnapX($(this)); });
   
   // After 'time' seconds, the animation fades out
-  setTimeout(function () {
+  var alertTimeout = setTimeout(function () {
     ohSnapX($container.children('.alert').first());
   }, time);
 }

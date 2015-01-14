@@ -45,10 +45,72 @@ function Settings(){
     this.resetPlayers = function(){
         setAllUsersNotPresent();
     };
+
+    this.addNPC = function(){
+        var npc = new NPC(
+            Math.random(0,1),
+            Math.random(0,1),
+            "citizen",
+            TypeEnum.PASSIVE,
+            false
+        );
+
+        npc.pushToDatabase();
+    };
+
+    this.addPatientZero = function(){
+        // checks if there's already a patient zero
+        var index = NPC.getPatientZeroIndex();
+        var npc = npcs[index];
+        // if not, picks 3 random users and place p0 in the middle of them
+        if (npc != undefined){
+            console.log("there's already a patient zero");
+            npc.removeFromDatabase();
+            sendRemoveNPCMessage(npc.id);
+        }
+
+        var rnd_users = [];
+        var loc;
+        if (people.length <= 3){
+            loc = getCenter(people);
+        }
+        else{
+            // pick 3 random users
+            for (var i = 0; i < 3; i++){
+                var rnd = Math.floor(Math.random()*people.length);
+                rnd_users.push(people[rnd]);
+            }
+            // find the center of these users
+            loc = getCenter(rnd_users);
+        }
+
+        npc = new NPC(
+            loc.x,
+            loc.y,
+            "citizen",
+            TypeEnum.INFECTIOUS,
+            true);
+        npc.pushToDatabase();
+    }
+
+    this.revealPatientZero = function(){
+	    revealPatientZero();
+    }
 };
 
+/* Comment out one of the following to have the control panel visible or not visible */
+
+/* visible control panel */
+var gui = new dat.GUI();
+
+/* invisible control panel */
+/*
 var gui = new dat.GUI( { autoPlace: false } );
 gui.domElement.id = 'gui';
+*/
+
+/* -------------------------------------------------------------------------------- */
+
 
 var f0 = gui.addFolder('countdown');
 f0.add(settings, 'start');
@@ -90,6 +152,12 @@ var f3 = gui.addFolder('features');
 f3.add(settings, 'chat');
 f3.add(settings, 'gmaps')
 f3.closed = true;
+
+var f6 = gui.addFolder('NPCs');
+f6.add(settings, 'addNPC');
+f6.add(settings, 'addPatientZero');
+f6.add(settings, 'revealPatientZero');
+f6.closed = true;
 
 gui.closed = true;
 
