@@ -88,19 +88,3 @@ function getType(obj) {
 
   return type;
 }
-
-/////////
-// NPC //
-/////////
-
-function isNPCIdPresent(id){
-  for(var i=0; i<npcs.length; i++) {
-      if (npcs[i].id == id){
-          return true;
-      }
-  }
-
-  return false;
-}
-
-
