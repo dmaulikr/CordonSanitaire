@@ -752,6 +752,10 @@ var revealPatientZero = function(){
 
             // sets the npc marker to the created marker
             npc.marker = marker_obj;
+            
+            // pan to show the patient zero centered in the screen
+			map.panTo(npc_coords);
+
             break;
         }  
     }
