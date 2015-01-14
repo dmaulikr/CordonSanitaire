@@ -17,7 +17,6 @@ var NPC = function(x, y, role, type, isPatientZero){
  * Draws a NPC into the map
  */
 NPC.prototype.draw = function() {
-    console.log("type when drawing " + this.type);
     var coords = getLatLngCoords(this.x, this.y);
 
     // if there's no marker, create one.
@@ -84,10 +83,11 @@ NPC.prototype.removeFromDatabase = function(){
   var npc = Parse.Object.extend("NPC");
   var query = new Parse.Query(npc);
   query.get(this.id, {
-    success: function(npc) {
-        npc.destroy();
+    success: function(obj) {
+      console.log("npc removed from database");
+      obj.destroy();
     },
-    error: function(object, error) {
+    error: function(obj, error) {
         // The object was not retrieved successfully.
         // error is a Parse.Error with an error code and message.
         console.log("Error: " + error.code + " " + error.message + ". ID " + npc.id);
@@ -185,7 +185,7 @@ NPC.removeFromLocalArray = function(id){
     for(var i = 0; i < npcs.length ; i++){
         if (npcs[i].id == id){
             if (npcs[i].marker != null)
-                npcs[i].marker.setMap(null);
+              npcs[i].marker.setMap(null);
             npcs.splice(i, 1);
             console.log("npc deleted");
             updateGameBoard();
@@ -207,6 +207,10 @@ NPC.isIdPresent = function(id){
   return false;
 }
 
+/**
+ * Looks for patient zero in the local array of NPC. If found, returns patient zero, if not returns undefined.
+ * @return patient zero [if patient zero is found returns it, else returns undefined]
+ */
 NPC.getPatientZero = function(){
   for(var i = 0; i < npcs.length ; i++){
     if (npcs[i].isPatientZero){

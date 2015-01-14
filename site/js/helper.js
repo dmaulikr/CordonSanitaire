@@ -88,3 +88,21 @@ function getType(obj) {
 
   return type;
 }
+
+/**
+ * Given an array of users, returns the center locations of those users.
+ * @param  users [users]
+ * @return loc   [the center of the coordinates of the users]
+ */
+var getCenter = function(users){
+    var total = {x:0, y:0};
+    var loc = {x:0 , y: 0};
+
+    for (var i = 0; i < users.length; i++){
+        total.x += users[i].x;
+        total.y += users[i].y;
+    }
+    loc.x = total.x/users.length;
+    loc.y = total.y/users.length;
+    return loc;
+}

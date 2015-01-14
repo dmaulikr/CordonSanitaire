@@ -55,7 +55,7 @@ pubnub.subscribe({
             break;
 
             case "addNPC":
-                if (NPC.isIdPresent(m.id)){
+                if (!NPC.isIdPresent(m.id)){
                     NPC.addToLocalArray(m.id);
                 }
                 else{
@@ -64,7 +64,7 @@ pubnub.subscribe({
             break;
 
             case "removeNPC":
-                removeNPCFromLocalArray(m.id);
+                NPC.removeFromLocalArray(m.id);
             break;
 
             case "flipState":

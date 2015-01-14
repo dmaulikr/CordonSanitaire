@@ -630,43 +630,6 @@ var pickRandomLoc = function(rnd_users){
     return loc;
 }
 
-var pushPatientZeroToDatabase = function(loc){
-    var NPC = Parse.Object.extend("NPC");
-    var npc = new NPC();
-    npc.save({
-          x: loc.x,
-          y: loc.y,
-          role: "citizen",
-          active: false,
-          present: true,
-          isPatientZero: true
-        }, {
-          success: function(npc) {
-            // The object was saved successfully.
-
-            // place useful data into a local object
-            var obj = {
-                x: npc.get('x'),
-                y: npc.get('y'),
-                id: npc.id,
-                active: npc.get('active'),
-                role: npc.get('role'),
-                isPatientZero: npc.get('isPatientZero'),
-                marker: null
-            };
-
-            // sends message so other players also add the npc
-            sendAddNPCMessage(obj.id);
-            console.log("Success: Added a new Patient Zero");
-          },
-          error: function(npc, error) {
-            // The save failed.
-            // error is a Parse.Error with an error code and message.
-            console.log("Error: " + error.code + " " + error.message);
-          }
-    });
-}
-
 var popPerson = function(uuid) {
 
     for(var i=0; i<people.length; i++) {

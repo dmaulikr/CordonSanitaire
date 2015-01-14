@@ -63,6 +63,7 @@ function Settings(){
         var npc = NPC.getPatientZero();
         // if not, picks 3 random users and place p0 in the middle of them
         if (npc != undefined){
+            console.log("there's already a patient zero");
             npc.removeFromDatabase();
             sendRemoveNPCMessage(npc.id);
         }
@@ -70,7 +71,7 @@ function Settings(){
         var rnd_users = [];
         var loc;
         if (people.length <= 3){
-            loc = pickRandomLoc(people);
+            loc = getCenter(people);
         }
         else{
             // pick 3 random users
@@ -78,7 +79,8 @@ function Settings(){
                 var rnd = Math.floor(Math.random()*people.length);
                 rnd_users.push(people[rnd]);
             }
-            loc = pickRandomLoc(rnd_users);
+            // find the center of these users
+            loc = getCenter(rnd_users);
         }
 
         npc = new NPC(
