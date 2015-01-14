@@ -185,11 +185,9 @@ button:focus {outline:0;}
 #patient_zero {
 	z-index: 99;
 	visibility: visible;
-	position: relative;
-	float:right;
+	position: absolute;
+	right: 0;
 	max-width: 600px;
-	margin-left: auto;
-	margin-right: auto;
 	color: white;
 	font-size: 2em;
 	background: black;

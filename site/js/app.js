@@ -412,6 +412,7 @@ var showMissedGameMessage = function() {
 	}
 	document.getElementById("end_game").innerHTML = missed_game_text;
 	document.getElementById("end_game").style.visibility = "visible";
+	document.getElementById("patient_zero").style.visibility = 'hidden';
 }
 
 

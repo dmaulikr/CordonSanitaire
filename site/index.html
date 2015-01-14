@@ -17,7 +17,7 @@
 	<div id="overlay">
 		<div id="intro">
 			<h1>CORDON SANITAIRE</h1>
-			<h2>PLAYABLE PROTOTYPE v. 149</h2>
+			<h2>PLAYABLE PROTOTYPE v. 152</h2>
 			<div id="intro_message">
 				<p>Game starts in <span class="countdown_til_start">0</span> seconds.</p>
 				<p>Once the game starts <b>it will only last 45 seconds!</b> You’ll be playing with everyone else who jumps in.</p>
@@ -108,6 +108,8 @@
 	        $('#map-canvas').css('width', win.width);
             console.log("window size (" + win.width + ", " + win.height + ")");
         });
+        
+        $(window).scrollTo(0, 1);
     });
     </script>
 </body>
