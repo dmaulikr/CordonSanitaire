@@ -54,8 +54,12 @@ pubnub.subscribe({
                 animateShout(m.uuid);
             break;
 
-            case "newNPC":
+            case "addNPC":
                 addNewNPCToLocalArray(m.id);
+            break;
+
+            case "removeNPC":
+                removeNPCFromLocalArray(m.id);
             break;
 
             case "flipState":
@@ -109,7 +113,14 @@ var sendShout = function() {
 var sendAddNPCMessage = function(id) {
     pubnub.publish({
         channel: _channel,
-        message: {action: 'newNPC', id: id}
+        message: {action: 'addNPC', id: id}
+    });
+}
+
+var sendRemoveNPCMessage = function(id){
+    pubnub.publish({
+        channel: _channel,
+        message: {action: 'removeNPC', id: id}
     });
 }
 
