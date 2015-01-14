@@ -11,7 +11,7 @@ if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
 }
 // CHROME ONLY
 if (!window.chrome) {
-// 	window.location = "http://playful.jonathanbobrow.com/prototypes/cordonsans/unsupported/"
+//  window.location = "http://playful.jonathanbobrow.com/prototypes/cordonsans/unsupported/"
 }
 
 var isWindowInFocus = true;
@@ -36,13 +36,13 @@ if (typeof document.hidden !== "undefined") { // Opera 12.10 and Firefox 18 and 
 // If the page is hidden, pause the video;
 // if the page is shown, play the video
 function handleVisibilityChange() {
-	if (document[hidden]) {
-		isWindowInFocus = false;
-		console.log("window out of focus");
-	} else {
-		isWindowInFocus = true;
-		console.log("window in focus");
-	}
+    if (document[hidden]) {
+        isWindowInFocus = false;
+        console.log("window out of focus");
+    } else {
+        isWindowInFocus = true;
+        console.log("window in focus");
+    }
 }
 
 // Warn if the browser doesn't support addEventListener or the Page Visibility API
@@ -61,71 +61,72 @@ if (typeof document.addEventListener === "undefined" ||
 
 // Init
 // Live Database
-Parse.initialize("Og1SUamdseHSQXnX940SK3DrVVJHtb3efFyv4sqO", "f0R0Nv8JMxOrU5VoPnGrR43C5iFcJomeTIVnJi1J");
+// Parse.initialize("Og1SUamdseHSQXnX940SK3DrVVJHtb3efFyv4sqO", "f0R0Nv8JMxOrU5VoPnGrR43C5iFcJomeTIVnJi1J");
 
 // Development Database
 // Parse.initialize("se41N3nzbLBJ9oZFHrvhun7dGPK3tiLsj1mrey49", "ptVDEW3c1A3rGCotPgbBswc8Z0GtYrYIjvxDpZLn");// NOT IN USE
-// Parse.initialize("R2T7ReO7LkHmM8ASf11pqjyNJcYXPdVqAD09wWvC", "VLVfcK4ttzTdPo7fwXtexEbA6VnZ8wShmVhodTpE");// CLONE
+Parse.initialize("R2T7ReO7LkHmM8ASf11pqjyNJcYXPdVqAD09wWvC", "VLVfcK4ttzTdPo7fwXtexEbA6VnZ8wShmVhodTpE");// CLONE
 
-var _channel = 'production';	// Dev Channel vs. Production Channel
-// var _channel = 'development';	// Dev Channel vs. Production Channel
+// var _channel = 'production'; // Dev Channel vs. Production Channel
+var _channel = 'development';   // Dev Channel vs. Production Channel
 var _uuid = PUBNUB.uuid();
 var hasReceivedJoinedMessage = false;
 var people = [];
-var npcs = getNPCs();
-var center;			// point that represents the center of the population (holding)
+var npcs = [];
+var center;         // point that represents the center of the population (holding)
 
+NPC.getAllFromDatabase();
 
 //----------------------------
 // Map stuffs
 //----------------------------
 
 var pickPatientZero = function() {
-	// something with parse to set the value inactive
-	console.log("picking patient zero");
+    // something with parse to set the value inactive
+    console.log("picking patient zero");
 
-	var uuid = people[Math.floor(Math.random() * people.length)].id;
-	console.log("picked" + uuid);
+    var uuid = people[Math.floor(Math.random() * people.length)].id;
+    console.log("picked" + uuid);
 
-	var users = Parse.Object.extend("SimpleUser");
-	var query = new Parse.Query(users);
-	query.equalTo("present", true);
-	query.find({
-	  	success: function(results) {
-	  		// look through all present people
-		    for (var i = 0; i < results.length; i++) {
+    var users = Parse.Object.extend("SimpleUser");
+    var query = new Parse.Query(users);
+    query.equalTo("present", true);
+    query.find({
+        success: function(results) {
+            // look through all present people
+            for (var i = 0; i < results.length; i++) {
 
-		    	var object = results[i];
+                var object = results[i];
 
-		    	if(object.get('playerID') == uuid)
-		    		object.set('isPatientZero', true);
-		    	else
-		    		object.set('isPatientZero', false);
+                if(object.get('playerID') == uuid)
+                    object.set('isPatientZero', true);
+                else
+                    object.set('isPatientZero', false);
 
-		    	if(i != results.length - 1)
-		    		object.save();
-		    	else
-					object.save(null, 	// update after the last one is saved
-					{
-						success:function (object)
-						{
-							// let the others know we have picked a new patient zero
-							sendUpdateMessage();
-							//console.log("WOAAAAHHHH YEAH", object);
-						},
-						error:function(object)
-						{
-							console.log("WOAAAAHHHH NOOOOOOO!", object);
-						}
-					});
-			}
+                if(i != results.length - 1)
+                    object.save();
+                else
+                    object.save(null,   // update after the last one is saved
+                    {
+                        success:function (object)
+                        {
+                            // let the others know we have picked a new patient zero
+                            sendUpdateMessage();
+                            //console.log("WOAAAAHHHH YEAH", object);
+                        },
+                        error:function(object)
+                        {
+                            console.log("WOAAAAHHHH NOOOOOOO!", object);
+                        }
+                    });
+            }
 
-		},
-		error: function(error) {
-		    console.log("Error: " + error.code + " " + error.message);
-		}
+        },
+        error: function(error) {
+            console.log("Error: " + error.code + " " + error.message);
+        }
 
-	});
+    });
 }
 
 var flipPlayerState = function(id, state){
@@ -143,63 +144,63 @@ var flipPlayerState = function(id, state){
 
 var updatePopulation = function(){
 
-	if(!hasReceivedJoinedMessage) return; // only update after we have added ourselves to the population
+    if(!hasReceivedJoinedMessage) return; // only update after we have added ourselves to the population
 
-	people.clear();
+    people.clear();
 
-	var users = Parse.Object.extend("SimpleUser");
-	var query = new Parse.Query(users);
-	query.equalTo("present", true);
-	query.find({
-	  	success: function(results) {
-		  	console.log("Success: Update population - get present");
-		    // draw this list of players across the screen.
-		    for (var i = 0; i < results.length; i++) {
-		    	var object = results[i];
+    var users = Parse.Object.extend("SimpleUser");
+    var query = new Parse.Query(users);
+    query.equalTo("present", true);
+    query.find({
+        success: function(results) {
+            console.log("Success: Update population - get present");
+            // draw this list of players across the screen.
+            for (var i = 0; i < results.length; i++) {
+                var object = results[i];
 
-		    	// place useful data into a local object
-		    	var obj = {
-		    		x: object.get('x'),
-		    		y: object.get('y'),
-		    		id: object.get('playerID'),
-		    		active: object.get('active'),
-		    		role: object.get('role'),
-		    		isPatientZero: object.get('isPatientZero')
-		    	};
+                // place useful data into a local object
+                var obj = {
+                    x: object.get('x'),
+                    y: object.get('y'),
+                    id: object.get('playerID'),
+                    active: object.get('active'),
+                    role: object.get('role'),
+                    isPatientZero: object.get('isPatientZero')
+                };
 
-// 		    	console.log("placing person at (" + obj.x + ", " + obj.y + ")");
+//              console.log("placing person at (" + obj.x + ", " + obj.y + ")");
 
-			    people.push(obj);
-		    }
+                people.push(obj);
+            }
 
-		    updateGameBoard();
-	  	},
-		error: function(object, error) {
-		    // The object was not retrieved successfully.
-		    // error is a Parse.Error with an error code and message.
-		    console.log("Error: " + error.code + " " + error.message);
-		}
-	});
+            updateGameBoard();
+        },
+        error: function(object, error) {
+            // The object was not retrieved successfully.
+            // error is a Parse.Error with an error code and message.
+            console.log("Error: " + error.code + " " + error.message);
+        }
+    });
 }
 
 // find center of active people
 var findCenter = function() {
 
-	var numPeopleHolding = 0;
+    var numPeopleHolding = 0;
     var total = {x:0, y:0};
     center = {x:0, y:0};
 
     for(var i=0; i<people.length; i++) {
-	    if(people[i].active) {
-		    total.x += people[i].x;
-		    total.y += people[i].y;
-		    numPeopleHolding++;
-      	}
+        if(people[i].active) {
+            total.x += people[i].x;
+            total.y += people[i].y;
+            numPeopleHolding++;
+        }
     }
 
-	if( numPeopleHolding > 0 ) {
-	    center.x = total.x / numPeopleHolding;
-	    center.y = total.y / numPeopleHolding;
+    if( numPeopleHolding > 0 ) {
+        center.x = total.x / numPeopleHolding;
+        center.y = total.y / numPeopleHolding;
     }
 
 //     console.log("Found center: (" + center.x + ", " + center.y + ")");
@@ -209,56 +210,56 @@ var findCenter = function() {
 // sort people
 var sortPeople = function() {
 
-	var sortedPeople = [];
-	sortedPeople.clear();
+    var sortedPeople = [];
+    sortedPeople.clear();
 
-	var lastPerson = people[0];
-	sortedPeople.push(lastPerson);
+    var lastPerson = people[0];
+    sortedPeople.push(lastPerson);
 
-	for(var i=0; i<people.length - 1; i++) {
-		var nextPerson = getNextPersonCounterClockwise(lastPerson);
-		sortedPeople.push(nextPerson);
-		lastPerson = nextPerson;
-	}
+    for(var i=0; i<people.length - 1; i++) {
+        var nextPerson = getNextPersonCounterClockwise(lastPerson);
+        sortedPeople.push(nextPerson);
+        lastPerson = nextPerson;
+    }
 
-	people = sortedPeople;
+    people = sortedPeople;
 }
 
 
 var getNextPersonCounterClockwise = function(p) {
 
-    var min = 2*Math.PI;	// max angle
+    var min = 2*Math.PI;    // max angle
     var index = 0;
 
     var start_theta = Math.atan2((p.y - center.y), (p.x - center.x));
 
     for(var i=0; i<people.length; i++) {
 
-    	if(people[i] == p)
-        	continue;
+        if(people[i] == p)
+            continue;
 
-    	var p_theta = Math.atan2((people[i].y - center.y), (people[i].x - center.x));
-	    var diff = p_theta - start_theta;
+        var p_theta = Math.atan2((people[i].y - center.y), (people[i].x - center.x));
+        var diff = p_theta - start_theta;
 
-	    if(diff < 0)
-	    	diff += 2*Math.PI;
+        if(diff < 0)
+            diff += 2*Math.PI;
 
-	    if(diff < min) {
-	    	index = i;
-	    	min = diff;
-	    }
+        if(diff < min) {
+            index = i;
+            min = diff;
+        }
     }
 
-	return people[index];
+    return people[index];
 }
 
 
 var printDebugData = function() {
 
-	var string = "<ol><li>center: " + center.x + ", " + center.y+"</li>";
+    var string = "<ol><li>center: " + center.x + ", " + center.y+"</li>";
 
     for(var i=0; i<people.length; i++) {
-    	string += "<li>person " + i + " location " + people[i].x + ", " + people[i].y + "</li>";
+        string += "<li>person " + i + " location " + people[i].x + ", " + people[i].y + "</li>";
     }
     string += "</ol>";
     document.getElementById("debug_data").innerHTML = string;
@@ -267,7 +268,7 @@ var printDebugData = function() {
 
 
 //----------------------------
-//		Modal Window
+//      Modal Window
 //----------------------------
 /*
 var dialog = document.querySelector('dialog');
@@ -277,307 +278,305 @@ dialog.showModal();
 
 var close = document.querySelector('#close');
 close.onclick = function() {
-	if(isUserAllowedToStart()) {
-		// hide intro view
-		document.getElementById("overlay").style.visibility = 'hidden';
-	}
+    if(isUserAllowedToStart()) {
+        // hide intro view
+        document.getElementById("overlay").style.visibility = 'hidden';
+    }
 };
 
 
 // end of game pop up
 var showEndGameMessage = function() {
 
-	var end_game_text = "";
-	var numTrapped = countCasualties();
-	var totalArea = getAreaQuarantined();
-	var numJoined = countActivePeople();
-	var numPresent = people.length - 1;	// ignore the Patient Zero
+    var end_game_text = "";
+    var numTrapped = countCasualties();
+    var totalArea = getAreaQuarantined();
+    var numJoined = countActivePeople();
+    var numPresent = people.length - 1; // ignore the Patient Zero
 
-	if(isPatientZeroContained()) {
+    if(isPatientZeroContained()) {
 
-		end_game_text = "Patient Zero has been contained";
+        end_game_text = "Patient Zero has been contained";
 
-		// update count of casualties
-		if(numTrapped == 0) {
-			end_game_text += " with only a few healthy people trapped inside the quarantine.";
-		}
-		else if(numTrapped > 0 && numTrapped < 5) {
-			end_game_text += " (along with ";
-			end_game_text += numTrapped;
-			end_game_text += " heathy people, sadly.)"
-		}
-		else if(numTrapped > 5) {
-			end_game_text += ", but ";
-			end_game_text += numTrapped;
-			end_game_text += " healthy people are trapped inside the quarantine!"
-		}
+        // update count of casualties
+        if(numTrapped == 0) {
+            end_game_text += " with only a few healthy people trapped inside the quarantine.";
+        }
+        else if(numTrapped > 0 && numTrapped < 5) {
+            end_game_text += " (along with ";
+            end_game_text += numTrapped;
+            end_game_text += " heathy people, sadly.)"
+        }
+        else if(numTrapped > 5) {
+            end_game_text += ", but ";
+            end_game_text += numTrapped;
+            end_game_text += " healthy people are trapped inside the quarantine!"
+        }
 
-		// comment on quarantine total area
+        // comment on quarantine total area
 /*
-		if(totalArea < 11) {
-			end_game_text += " You also managed to contain the patient in an area less than half the size of Manhattan.";
-		}
-		else if(totalArea >= 11 && totalArea <= 22.7) {
-			end_game_text += " It took a quarantine nearly the size of Manhattan to contain patient zero.";
-		}
-		else if(totalArea >= 22.7) {
-			end_game_text += " 9 million people could be affected, the quarantine amasses larger than the size of Manhattan.";
-		}
+        if(totalArea < 11) {
+            end_game_text += " You also managed to contain the patient in an area less than half the size of Manhattan.";
+        }
+        else if(totalArea >= 11 && totalArea <= 22.7) {
+            end_game_text += " It took a quarantine nearly the size of Manhattan to contain patient zero.";
+        }
+        else if(totalArea >= 22.7) {
+            end_game_text += " 9 million people could be affected, the quarantine amasses larger than the size of Manhattan.";
+        }
 */
 
-		// comment on number of people quarantining
-		if(numJoined < 3) {
-			end_game_text += " Looks like not enough poeple committed to quarantining Patient Zero.";
-		}
-		else if(numJoined >= 3 ) {
-			end_game_text += " ";
-			end_game_text += numJoined;
-			end_game_text += " people successfully formed the front line.";
-		}
+        // comment on number of people quarantining
+        if(numJoined < 3) {
+            end_game_text += " Looks like not enough poeple committed to quarantining Patient Zero.";
+        }
+        else if(numJoined >= 3 ) {
+            end_game_text += " ";
+            end_game_text += numJoined;
+            end_game_text += " people successfully formed the front line.";
+        }
 /*
-		else if(numJoined > 8) {
-			end_game_text += " Remember, you don't need that many people to contain the outbreak, just the right ones!";
-		}
+        else if(numJoined > 8) {
+            end_game_text += " Remember, you don't need that many people to contain the outbreak, just the right ones!";
+        }
 */
 
-		end_game_text += " Quarantines depend on everyone... The next outbreak is tomorrow.";
+        end_game_text += " Quarantines depend on everyone... The next outbreak is tomorrow.";
 
-	}
-	else {
-		end_game_text = "";
-		end_game_text += numJoined;
-		end_game_text += " formed the quarantine line, but Patient Zero is outside it! Everyone has failed to contain the infection (you all lose!)";
+    }
+    else {
+        end_game_text = "";
+        end_game_text += numJoined;
+        end_game_text += " formed the quarantine line, but Patient Zero is outside it! Everyone has failed to contain the infection (you all lose!)";
 
-		// update count of casualties
-		if(numTrapped == 0) {
-			//end_game_text += " At least you didn't trap healthy people inside.";
-		}
-		else if(numTrapped > 0 ) {
-			end_game_text += " Not only is Patient Zero on the loose, but ";
-			end_game_text += numTrapped;
-			end_game_text += " people are trapped inside inside the quarantine."
-		}
+        // update count of casualties
+        if(numTrapped == 0) {
+            //end_game_text += " At least you didn't trap healthy people inside.";
+        }
+        else if(numTrapped > 0 ) {
+            end_game_text += " Not only is Patient Zero on the loose, but ";
+            end_game_text += numTrapped;
+            end_game_text += " people are trapped inside inside the quarantine."
+        }
 /*
-		else if(numTrapped > 5) {
-			end_game_text += "With ";
-			end_game_text += numTrapped;
-			end_game_text += " healthy people trapped inside, the team needs to work better together."
-		}
+        else if(numTrapped > 5) {
+            end_game_text += "With ";
+            end_game_text += numTrapped;
+            end_game_text += " healthy people trapped inside, the team needs to work better together."
+        }
 */
 
 /*
-		// comment on quarantine total area
-		if(totalArea < 11) {
-			end_game_text += " You also managed to contain the patient in an area less than half the size of Manhattan.";
-		}
-		else if(totalArea >= 11 && totalArea <= 22.7) {
-			end_game_text += " It took a quarantine nearly the size of Manhattan to contain patient zero.";
-		}
-		else if(totalArea >= 22.7) {
-			end_game_text += " 9 million people could be affected, the quarantine amasses larger than the size of Manhattan.";
-		}
+        // comment on quarantine total area
+        if(totalArea < 11) {
+            end_game_text += " You also managed to contain the patient in an area less than half the size of Manhattan.";
+        }
+        else if(totalArea >= 11 && totalArea <= 22.7) {
+            end_game_text += " It took a quarantine nearly the size of Manhattan to contain patient zero.";
+        }
+        else if(totalArea >= 22.7) {
+            end_game_text += " 9 million people could be affected, the quarantine amasses larger than the size of Manhattan.";
+        }
 */
 
-		// comment on number of people quarantining
-		if(numJoined < 3) {
-			end_game_text += " Looks like a quarantine wasn’t formed. We need 3 people to form it.";
-		}
+        // comment on number of people quarantining
+        if(numJoined < 3) {
+            end_game_text += " Looks like a quarantine wasn’t formed. We need 3 people to form it.";
+        }
 /*
-		else if(numJoined >= 3 && numJoined <= 8) {
-			end_game_text += " You had the right idea, the fewer people on the front lines, the fewer in contact with patient zero.";
-		}
-		else if(numJoined > 8) {
-			end_game_text += " Remember, you don't need that many people to contain the outbreak, <b>just the right ones!</b>";
-		}
+        else if(numJoined >= 3 && numJoined <= 8) {
+            end_game_text += " You had the right idea, the fewer people on the front lines, the fewer in contact with patient zero.";
+        }
+        else if(numJoined > 8) {
+            end_game_text += " Remember, you don't need that many people to contain the outbreak, <b>just the right ones!</b>";
+        }
 */
 
-		end_game_text += " This particular infection wasn’t contained. But there’s a new one tomorrow.";
-	}
+        end_game_text += " This particular infection wasn’t contained. But there’s a new one tomorrow.";
+    }
 
-	document.getElementById("end_game").innerHTML = end_game_text;
-	document.getElementById("end_game").style.visibility = "visible";
+    document.getElementById("end_game").innerHTML = end_game_text;
+    document.getElementById("end_game").style.visibility = "visible";
 }
 
 // missed the game pop up
 var showMissedGameMessage = function() {
 
-	var missed_game_text = "";
+    var missed_game_text = "";
 
-	if(isPatientZeroContained()) {
-		missed_game_text = "Too Late! Quarantines depend on everyone... The next outbreak is tomorrow.";
-	}
-	else {
-		missed_game_text = "Too Late! This particular infection wasn’t contained... But there’s a new one tomorrow.";
-	}
-	document.getElementById("end_game").innerHTML = missed_game_text;
-	document.getElementById("end_game").style.visibility = "visible";
+    if(isPatientZeroContained()) {
+        missed_game_text = "Too Late! Quarantines depend on everyone... The next outbreak is tomorrow.";
+    }
+    else {
+        missed_game_text = "Too Late! This particular infection wasn’t contained... But there’s a new one tomorrow.";
+    }
+    document.getElementById("end_game").innerHTML = missed_game_text;
+    document.getElementById("end_game").style.visibility = "visible";
 }
 
 
 //----------------------------
-//		General Actions
+//      General Actions
 //----------------------------
 
 var setUserActiveState = function(isActive) {
 
-	// something with parse to set the value inactive
-	console.log("setting user state");
+    // something with parse to set the value inactive
+    console.log("setting user state");
 
-	var User = Parse.Object.extend("SimpleUser");
-	var query = new Parse.Query(User);
-	query.equalTo("playerID", _uuid);
-	query.find(
-	{
-		success: function(result)
-		{
-			var object = result[0];
-			object.set("active", isActive);
-			object.save(null,
-			{
-				success:function (object)
-				{
-					// then update pubnub
-					sendUpdateMessage();
-					//console.log("WOAAAAHHHH YEAH", object);
-				},
-				error:function(object)
-				{
-					console.log("WOAAAAHHHH NOOOOOOO!", object);
-				}
-			});
-		},
-		error: function(error) {
-		    console.log("Error: " + error.code + " " + error.message);
-		}
+    var User = Parse.Object.extend("SimpleUser");
+    var query = new Parse.Query(User);
+    query.equalTo("playerID", _uuid);
+    query.find(
+    {
+        success: function(result)
+        {
+            var object = result[0];
+            object.set("active", isActive);
+            object.save(null,
+            {
+                success:function (object)
+                {
+                    // then update pubnub
+                    sendUpdateMessage();
+                    //console.log("WOAAAAHHHH YEAH", object);
+                },
+                error:function(object)
+                {
+                    console.log("WOAAAAHHHH NOOOOOOO!", object);
+                }
+            });
+        },
+        error: function(error) {
+            console.log("Error: " + error.code + " " + error.message);
+        }
 
-	});
+    });
 }
 
 
 var flipUserActiveState = function() {
+    // something with parse to set the value inactive
+    console.log("flipping user state");
 
+    var User = Parse.Object.extend("SimpleUser");
+    var query = new Parse.Query(User);
+    query.equalTo("playerID", _uuid);
+    query.find(
+    {
+        success: function(result)
+        {
+            var object = result[0];
+            var state = object.get("active");
+            state = !state;
 
-	// something with parse to set the value inactive
-	console.log("flipping user state");
-
-	var User = Parse.Object.extend("SimpleUser");
-	var query = new Parse.Query(User);
-	query.equalTo("playerID", _uuid);
-	query.find(
-	{
-		success: function(result)
-		{
-			var object = result[0];
-			var state = object.get("active");
-			state = !state;
-
-			//show an alert notification, testing
+            //show an alert notification, testing
 /*
-			if(state)
-				ohSnap('YOU HAVE JOINED THE QUARANTINE', 'yellow');
-			else
-				ohSnap('YOU ARE STANDING BY', 'black');
+            if(state)
+                ohSnap('YOU HAVE JOINED THE QUARANTINE', 'yellow');
+            else
+                ohSnap('YOU ARE STANDING BY', 'black');
 */
 
-			object.set("active", state);
-			object.save(null,
-			{
-				success:function (object)
-				{
+            object.set("active", state);
+            object.save(null,
+            {
+                success:function (object)
+                {
                     var id = object.get('playerID');
-					// then update pubnub
+                    // then update pubnub
                     sendFlipStateMessage(id, state);
 
-					//console.log("WOAAAAHHHH YEAH", object);
-				},
-				error:function(object)
-				{
-					console.log("WOAAAAHHHH NOOOOOOO!", object);
-				}
-			});
-		},
-		error: function(error) {
-		    console.log("Error: " + error.code + " " + error.message);
-		}
+                    //console.log("WOAAAAHHHH YEAH", object);
+                },
+                error:function(object)
+                {
+                    console.log("WOAAAAHHHH NOOOOOOO!", object);
+                }
+            });
+        },
+        error: function(error) {
+            console.log("Error: " + error.code + " " + error.message);
+        }
 
-	});
+    });
 }
 
 
 var setUserPresent = function(uuid) {
 
-	// something with parse to set the value inactive
-	console.log("setting user present");
+    // something with parse to set the value inactive
+    console.log("setting user present");
 
-	var User = Parse.Object.extend("SimpleUser");
-	var query = new Parse.Query(User);
-	query.equalTo("playerID", uuid);
-	query.find({
-		success: function(result) {
-			var object = result[0];
-			object.set("present", true);
-			object.save(null,
-			{
-				success:function (object)
-				{
-					// then update pubnub
-					sendUpdateMessage();
-					//console.log("WOAAAAHHHH YEAH", object);
-				},
-				error:function(object)
-				{
-					console.log("WOAAAAHHHH NOOOOOOO!", object);
-				}
-			});
-		},
-		error: function(error) {
-		    console.log("Error: " + error.code + " " + error.message);
-		}
+    var User = Parse.Object.extend("SimpleUser");
+    var query = new Parse.Query(User);
+    query.equalTo("playerID", uuid);
+    query.find({
+        success: function(result) {
+            var object = result[0];
+            object.set("present", true);
+            object.save(null,
+            {
+                success:function (object)
+                {
+                    // then update pubnub
+                    sendUpdateMessage();
+                    //console.log("WOAAAAHHHH YEAH", object);
+                },
+                error:function(object)
+                {
+                    console.log("WOAAAAHHHH NOOOOOOO!", object);
+                }
+            });
+        },
+        error: function(error) {
+            console.log("Error: " + error.code + " " + error.message);
+        }
 
-	});
+    });
 }
 
 
 // reset all of the players back to no-one playing
 var setAllUsersNotPresent = function() {
 
-	var users = Parse.Object.extend("SimpleUser");
-	var query = new Parse.Query(users);
-	query.equalTo("present", true);
-	query.find({
-	  	success: function(results) {
-			for (var i = 0; i < results.length; i++) {
-		    	var object = results[i];
-		    	object.set("present", false);
+    var users = Parse.Object.extend("SimpleUser");
+    var query = new Parse.Query(users);
+    query.equalTo("present", true);
+    query.find({
+        success: function(results) {
+            for (var i = 0; i < results.length; i++) {
+                var object = results[i];
+                object.set("present", false);
 
-				if(i != results.length - 1)
-		    		object.save();
-		    	else
-					object.save(null, 	// update after the last one is saved
-					{
-						success:function (object)
-						{
-							// let the others know we have picked a new patient zero
-							sendUpdateMessage();
-							//console.log("WOAAAAHHHH YEAH", object);
-						},
-						error:function(object)
-						{
-							console.log("WOAAAAHHHH NOOOOOOO!", object);
-						}
-					});
-		    }
-	  	},
-		error: function(object, error) {
-		    // The object was not retrieved successfully.
-		    // error is a Parse.Error with an error code and message.
-		    console.log("Error: " + error.code + " " + error.message);
-		}
-	});
+                if(i != results.length - 1)
+                    object.save();
+                else
+                    object.save(null,   // update after the last one is saved
+                    {
+                        success:function (object)
+                        {
+                            // let the others know we have picked a new patient zero
+                            sendUpdateMessage();
+                            //console.log("WOAAAAHHHH YEAH", object);
+                        },
+                        error:function(object)
+                        {
+                            console.log("WOAAAAHHHH NOOOOOOO!", object);
+                        }
+                    });
+            }
+        },
+        error: function(object, error) {
+            // The object was not retrieved successfully.
+            // error is a Parse.Error with an error code and message.
+            console.log("Error: " + error.code + " " + error.message);
+        }
+    });
 }
 
 //----------------------------
-//			Utility
+//          Utility
 //----------------------------
 Array.prototype.clear = function() {
   while (this.length > 0) {
@@ -612,57 +611,6 @@ simpleUser.save({
 //----------------------------
 //          NPCs
 //----------------------------
-
-
-function getNPCs() {
-    var npcs = [];
-    var npc = Parse.Object.extend("NPC");
-    var query = new Parse.Query(npc);
-    query.find({
-        success: function(results) {
-            console.log("Success: Getting NPCs");
-            // draw this list of players across the screen.
-            for (var i = 0; i < results.length; i++) {
-                var object = results[i];
-
-                // place useful data into a local object
-                var obj = {
-                    x: object.get('x'),
-                    y: object.get('y'),
-                    id: object.get('objectId'),
-                    active: object.get('active'),
-                    role: object.get('role'),
-                    isPatientZero: object.get('isPatientZero')
-                };
-
-
-                npcs.push(obj);
-            }
-            console.log("synchronized npcs array with database");
-        },
-        error: function(object, error) {
-            // The object was not retrieved successfully.
-            // error is a Parse.Error with an error code and message.
-            console.log("Error: " + error.code + " " + error.message);
-        }
-    });
-
-    return npcs;
-}
-
-var addNewNPCToLocalArray = function(npc){
-	if (!isNPCIdPresent(npc.id)){
-		// add to local array
-	    npcs.push(npc);
-	    // console.log("new npc added");
-	    // update game display
-	    updateGameBoard();
-	}
-	else{
-	    console.log("npc " + obj.id + " was already present in the local array");
-	}
-
-}
 
 var removeNPCFromLocalArray = function(id){
     for(var i = 0; i < npcs.length ; i++){

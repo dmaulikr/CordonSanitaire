@@ -66,15 +66,17 @@ function getMarkerIcon(type) {
  * @param  obj
  * @return {TypeEnum} type
  */
-function getType = function(obj) {
+function getType(obj) {
 
-  var type;
+  var type = obj.type;
 
   var poly = getActivePopulationAsNormalCoords();
 
   // check for casualty
-  if(type == TypeEnum.PASSIVE && isPointInPoly(poly, obj.x, obj.y))
-    type = TypeEnum.CASUALTY;
+  if(isPointInPoly(poly, obj.x, obj.y))
+    type = TypeEnum.TRAPPED;
+  else
+    type = TypeEnum.PASSIVE;
 
   // check for patient zero
   if(obj.isPatientZero) {
@@ -91,9 +93,9 @@ function getType = function(obj) {
 // NPC //
 /////////
 
-function isNPCIdPresent(){
+function isNPCIdPresent(id){
   for(var i=0; i<npcs.length; i++) {
-      if (npcs[i].id == obj.id){
+      if (npcs[i].id == id){
           return true;
       }
   }

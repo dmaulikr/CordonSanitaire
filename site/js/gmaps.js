@@ -199,8 +199,18 @@ var getLatLngCoords = function(x,y) {
   return latlng;
 }
 
+var updateNPCs = function() {
+    for(var i=0; i<npcs.length; i++) {
+        var npc = npcs[i];
+        npc.updateType(getType(npc));
+    }
+}
+
 var drawNPCs = function() {
-    console.log("drawing NPCs");
+    // update before start drawing
+    updateNPCs();
+
+    // draw npcs one by one
     for(var i=0; i<npcs.length; i++) {
         var npc = npcs[i];
         // hides patient zero

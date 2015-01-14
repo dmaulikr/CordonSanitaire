@@ -11,13 +11,14 @@ var NPC = function(x, y, role, type, isPatientZero){
     this.type = type;
     this.isPatientZero = isPatientZero;
     this.marker = null;
-}
+};
 
 /**
  * Draws a NPC into the map
  */
 NPC.prototype.draw = function() {
-    var coords = getLatLngCoords(npc.x, npc.y);
+    console.log("type when drawing " + this.type);
+    var coords = getLatLngCoords(this.x, this.y);
 
     // if there's no marker, create one.
     if(this.marker == null) {
@@ -35,16 +36,14 @@ NPC.prototype.draw = function() {
     // if there's a marker just change the icon
     else
         this.marker.setIcon(getMarkerIcon(this.type));
-
-    }
-}
+};
 
 /**
  * Erases an NPC from the map
  */
 NPC.prototype.erase = function() {
     this.marker.setMap(null);
-}
+};
 
 /**
  * Creates a new NPC in the database with the same info of this NPC.
@@ -64,12 +63,13 @@ NPC.prototype.pushToDatabase = function() {
     }, {
       success: function(npc) {
         // The object was saved successfully.
-        console.log("Success: a new NPC was addes to the database");
+        console.log("Success: a new NPC was added to the database");
 
         // once the object is pushed to the database give it its id
         this.id = npc.id;
 
         // sends message so other players also add the npc locally
+        console.log(this.id);
         sendAddNPCMessage(this.id);
       },
       error: function(npc, error) {
@@ -78,7 +78,7 @@ NPC.prototype.pushToDatabase = function() {
         console.log("Error: " + error.code + " " + error.message);
       }
     });
-}
+};
 
 /**
  * Updates the type of this NPC
@@ -86,4 +86,92 @@ NPC.prototype.pushToDatabase = function() {
  */
 NPC.prototype.updateType = function(type) {
     this.type = type;
+};
+
+/**
+ * Repopulates the local array of NPCs with all the entries from the database.
+ */
+NPC.getAllFromDatabase = function(){
+  npcs.clear;
+  var npc = Parse.Object.extend("NPC");
+  var query = new Parse.Query(npc);
+  query.find({
+      success: function(results) {
+          console.log("Success: Getting NPCs");
+          // draw this list of players across the screen.
+          for (var i = 0; i < results.length; i++) {
+              var object = results[i];
+
+              // create a local NPC
+              var npc = new NPC (
+                  object.get('x'),
+                  object.get('y'),
+                  object.get('role'),
+                  object.get('type'),
+                  object.get('isPatientZero')
+              );
+              // set id according to the database
+              npc.id = object.id;
+
+
+              npcs.push(npc);
+          }
+          console.log("synchronized npcs array with database");
+      },
+      error: function(object, error) {
+          // The object was not retrieved successfully.
+          // error is a Parse.Error with an error code and message.
+          console.log("Error: " + error.code + " " + error.message);
+      }
+  });
+}
+
+/**
+ * Adds an NPC to the local array of NPCs.
+ * @param id [id of the NPC in the database]
+ */
+NPC.addToLocalArray = function(id){
+  var npc = Parse.Object.extend("NPC");
+  var query = new Parse.Query(npc);
+  query.get(id, {
+      success: function(object) {
+        console.log("Success: Getting NPC");
+
+        // create a local NPC
+        var npc = new NPC (
+          object.get('x'),
+          object.get('y'),
+          object.get('role'),
+          object.get('type'),
+          object.get('isPatientZero')
+        );
+
+        // set id according to the database
+        npc.id = object.id;
+
+        npcs.push(npc);
+        console.log(npcs.length);
+        updateGameBoard();
+
+      },
+      error: function(object, error) {
+          // The object was not retrieved successfully.
+          // error is a Parse.Error with an error code and message.
+          console.log("Error: " + error.code + " " + error.message);
+      }
+    });
+}
+
+/**
+ * Checks wheter an certain ID exists in the local array of NPCs.
+ * @param  id [the id to be found]
+ * @return boolean [wheter the id exist or not]
+ */
+NPC.isIdPresent = function(id){
+  for(var i=0; i<npcs.length; i++) {
+      if (npcs[i].id == id){
+          return true;
+      }
+  }
+  return false;
 }

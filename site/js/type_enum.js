@@ -3,6 +3,6 @@ var TypeEnum = {
   HEALED:     "healed",
   ACTIVE:     "active",
   PASSIVE:    "passive",
-  TRAPPED:    "trapped" // older naming:  casualty
+  TRAPPED:    "casualty" // older naming:  casualty
 }
 

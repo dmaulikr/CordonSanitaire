@@ -54,7 +54,12 @@ pubnub.subscribe({
             break;
 
             case "addNPC":
-                addNewNPCToLocalArray(m.npc);
+                if (NPC.isIdPresent(m.id)){
+                    NPC.addToLocalArray(m.id);
+                }
+                else{
+                    console.log("npc " + m.id + " was already present in the local array");
+                }
             break;
 
             case "removeNPC":
@@ -109,10 +114,10 @@ var sendShout = function() {
     });
 }
 
-var sendAddNPCMessage = function(npc){
+var sendAddNPCMessage = function(id){
     pubnub.publish({
         channel: _channel,
-        message: {action: 'addNPC', npc: npc}
+        message: {action: 'addNPC', id: id}
     });
 }
 
