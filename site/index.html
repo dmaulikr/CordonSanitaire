@@ -9,15 +9,15 @@
 	<meta http-equiv='expires' content='0'>
 	<meta http-equiv='pragma' content='no-cache'>
 	<meta name = "viewport" content = "width = device-width">
-	<link rel="stylesheet" type="text/css" media="only screen and (max-device-width: 480px)" href="css/mobile.css?v138" />
-	<link rel="stylesheet" type="text/css" media="only screen and (min-device-width: 481px)" href="css/style.css?v138" />
+	<link rel="stylesheet" type="text/css" media="only screen and (max-device-width: 480px)" href="css/mobile.css?v152" />
+	<link rel="stylesheet" type="text/css" media="only screen and (min-device-width: 481px)" href="css/style.css?v152" />
 </head>
 
 <body>
 	<div id="overlay">
 		<div id="intro">
 			<h1>CORDON SANITAIRE</h1>
-			<h2>PLAYABLE PROTOTYPE v. 138</h2>
+			<h2>PLAYABLE PROTOTYPE v. 152</h2>
 			<div id="intro_message">
 				<p>Game starts in <span class="countdown_til_start">0</span> seconds.</p>
 				<p>Once the game starts <b>it will only last 45 seconds!</b> You’ll be playing with everyone else who jumps in.</p>
@@ -36,15 +36,15 @@
 	<!-- Container for scoreboard -->
 	<div id="scoreboard">
 		<ul>
-			<li class="no_border">patient zero is <span id="patient_status">contained</span></li>
+			<li class="no_border"><span id="num_active">0</span> people maintaining the quarantine</li>
 			<li><span id="casualty_count">0</span> people trapped</li>
 			<li><span id="area_quarantined">0</span> sq mi. quarantined</li>
-			<li><span id="num_active">0</span> people maintaining the quarantine</li>
 		</ul>
 	</div>
 
 	<!-- Container for End of game message -->
 	<div id="top_container">
+		<div id="patient_zero">patient zero is <span id="patient_status">contained</span></div>
 		<div id="end_game">
 		</div>
 	</div>
@@ -84,14 +84,21 @@
 	<script type="text/javascript" src="js/helper.js"></script>
 	<script type="text/javascript" src="js/dat.gui.min.js"></script>
 	<script type="text/javascript" src="js/control_panel.js"></script>
+<<<<<<< HEAD
 
 	<script type="text/javascript" src="js/app.js?v138"></script>
 	<script type="text/javascript" src="js/messages.js?v138"></script>
 	<script type="text/javascript" src="js/timer.js?v138"></script>
+=======
+	
+	<script type="text/javascript" src="js/app.js?v152"></script>
+	<script type="text/javascript" src="js/messages.js?v152"></script>
+	<script type="text/javascript" src="js/timer.js?v152"></script>
+>>>>>>> master
 
 	<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=geometry&sensor=false"></script>
 	<script type="text/javascript" src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/infobox/src/infobox.js"></script>
-	<script type="text/javascript" src="js/gmaps.js?v138"></script>
+	<script type="text/javascript" src="js/gmaps.js?v152"></script>
 	<script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
 	<script type="text/javascript">
 	$(document).ready(function(e) {
@@ -111,6 +118,8 @@
 	        $('#map-canvas').css('width', win.width);
             console.log("window size (" + win.width + ", " + win.height + ")");
         });
+        
+        $(window).scrollTo(0, 1);
     });
     </script>
 </body>

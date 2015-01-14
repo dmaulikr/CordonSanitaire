@@ -155,6 +155,18 @@ body {
 	background-color: rgba(0,0,0,.85);
 }
 
+#patient_zero {
+	z-index: 99;
+	visibility: visible;
+	position: absolute;
+	width: 100%;
+	color: white;
+	text-align: center;
+	font-size: 1.2em;
+	background: black;
+	padding: 0 0 10px 0;
+}
+
 #end_game {
 	visibility: hidden;
 	color: white;

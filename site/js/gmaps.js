@@ -39,23 +39,25 @@ var _myPrevType = 'passive';
 //var usersCoords = getUserAsGoogleCoords();
 
 var drawMap = function() {
+	var centerMap = new google.maps.LatLng(40.776779, -73.969699);
 
-  var mapOptions = {
-    zoom: 12,
-    center: new google.maps.LatLng(40.776779, -73.969699),
-    mapTypeId: google.maps.MapTypeId.ROADMAP,
-    disableDefaultUI: true,
-    scrollwheel: false,
-    disableDoubleClickZoom: true,
-    panControl: false,
-    streetViewControl: false
-  };
+	if($(window).width() < 480)
+		centerMap = getUserAsGoogleCoords();
 
-  if(map == null) {
+	var mapOptions = {
+	    zoom: 12,
+	    center: centerMap,
+	    mapTypeId: google.maps.MapTypeId.ROADMAP,
+	    disableDefaultUI: true,
+	    scrollwheel: false,
+	    disableDoubleClickZoom: true,
+	    panControl: false,
+	    streetViewControl: false
+	};
 
-      map = new google.maps.Map(document.getElementById('map-canvas'),
-       mapOptions);
-   }
+	if(map == null) {
+    	map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+    }
 }
 
 
@@ -543,7 +545,7 @@ var updateScoreboard = function() {
 }
 
 var updateButtonAvailable = function(){
-    console.log("updating join functionality");
+    //console.log("updating join functionality");
     if(getPersonType(myPerson) == 'casualty') {
         document.getElementById('buttons').style.visibility = 'hidden';
         document.getElementById('shoutButton').style.visibility = 'visible';
@@ -737,6 +739,10 @@ var revealPatientZero = function(){
 
             // sets the npc marker to the created marker
             npc.marker = marker_obj;
+
+            // pan to show the patient zero centered in the screen
+			map.panTo(npc_coords);
+
             break;
         }
     }

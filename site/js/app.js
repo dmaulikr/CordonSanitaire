@@ -392,26 +392,29 @@ var showEndGameMessage = function() {
         }
 */
 
-        end_game_text += " This particular infection wasn’t contained. But there’s a new one tomorrow.";
-    }
 
-    document.getElementById("end_game").innerHTML = end_game_text;
-    document.getElementById("end_game").style.visibility = "visible";
+		end_game_text += " This particular infection wasn’t contained. But there’s a new one tomorrow.";
+	}
+
+	document.getElementById("end_game").innerHTML = end_game_text;
+	document.getElementById("end_game").style.visibility = "visible";
+	document.getElementById("patient_zero").style.visibility = 'hidden';
+
 }
 
 // missed the game pop up
 var showMissedGameMessage = function() {
+	var missed_game_text = "";
 
-    var missed_game_text = "";
-
-    if(isPatientZeroContained()) {
-        missed_game_text = "Too Late! Quarantines depend on everyone... The next outbreak is tomorrow.";
-    }
-    else {
-        missed_game_text = "Too Late! This particular infection wasn’t contained... But there’s a new one tomorrow.";
-    }
-    document.getElementById("end_game").innerHTML = missed_game_text;
-    document.getElementById("end_game").style.visibility = "visible";
+	if(isPatientZeroContained()) {
+		missed_game_text = "Too Late! Quarantines depend on everyone... The next outbreak is tomorrow.";
+	}
+	else {
+		missed_game_text = "Too Late! This particular infection wasn’t contained... But there’s a new one tomorrow.";
+	}
+	document.getElementById("end_game").innerHTML = missed_game_text;
+	document.getElementById("end_game").style.visibility = "visible";
+	document.getElementById("patient_zero").style.visibility = 'hidden';
 }
 
 
