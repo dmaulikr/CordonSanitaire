@@ -19,8 +19,9 @@ pubnub.subscribe({
             case "join":
                 // set the UUID here
                 console.log("received JOIN message - " + m.uuid);
-                if(m.uuid == _uuid)
+                if(m.uuid == _uuid) {
                     hasReceivedJoinedMessage = true;
+                }
                 updatePopulation();
             break;
 
@@ -105,14 +106,14 @@ var sendShout = function() {
     });
 }
 
-var sendAddNPCMessage = function(id){
+var sendAddNPCMessage = function(id) {
     pubnub.publish({
         channel: _channel,
         message: {action: 'newNPC', id: id}
     });
 }
 
-var sendFlipStateMessage = function(id, state){
+var sendFlipStateMessage = function(id, state) {
     pubnub.publish({
         channel: _channel,
         message: {action: 'flipState', id: id, state: state}

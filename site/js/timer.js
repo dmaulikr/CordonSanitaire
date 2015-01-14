@@ -1,4 +1,6 @@
 var parse_start_date;
+var offset_system_date = new Date() - new Date();
+
 var countdownTimer;
 var statusInterval;
 var isRunning = false;
@@ -17,6 +19,28 @@ var DEFAULT_DURATION = 45;
 var duration = DEFAULT_DURATION;
 
 // might not be a bad idea to look into using this http://keith-wood.name/countdown.html
+
+// keep different devices in sync
+var calculateClockOffset = function() {
+	pubnub.time(
+	   function(time){
+
+	      var pubnub_time = new Date(Math.ceil(time / 10000));
+	      console.log("pub nub time: " + pubnub_time);
+	      
+	      var system_time = new Date();
+	      console.log("system time: " + system_time);
+
+	      offset_system_date = system_time - pubnub_time;
+  	      console.log("offset amount: " + offset_system_date);
+  	   }
+	);
+}
+
+
+// get the clock offset from system to pubnub clock
+calculateClockOffset();
+
 
 // check start time from parse
 var game = Parse.Object.extend("Game");
@@ -47,27 +71,17 @@ var timerStatusUpdate = function() {
 	
 	//
 	statusInterval = setInterval(function () {
-
-		var cur_date = new Date();
-		var cur_hour = cur_date.getUTCHours();
-		var cur_min = cur_date.getMinutes();
-		var cur_sec = cur_date.getSeconds();
+		
+	    var cur_date = new Date();
+		var synchedTime = new Date(cur_date.getTime() - offset_system_date);
+		var cur_hour = synchedTime.getUTCHours();
+		var cur_min = synchedTime.getUTCMinutes();
+		var cur_sec = synchedTime.getUTCSeconds();
 		
 		var start_hour = parse_start_date.getUTCHours();
 		var start_min = parse_start_date.getUTCMinutes();
 		var start_sec = parse_start_date.getUTCSeconds();
-				
-// 		console.log(cur_date);
-// 		console.log(parse_start_date);
-
-		// if there is time til the game, keep the user in a waiting room and display a countdown til the start of the game
-		
-		// if the time equals gametime, start the game
-		
-		// if the time is greater than gametime but less than end time (i.e. start time + duration, then display short message to be dismissed and enter directly into the game (starting the clock with a modified duration based on entrance time)
-		
-		// if the time is after the end game, display last game outcome (as stored in the database with a message about the game. Saying Join next time
-		
+						
 		var dif_hour = start_hour - cur_hour;
 		var dif_min = start_min - cur_min;
 		var dif_sec = start_sec - cur_sec;
@@ -75,45 +89,69 @@ var timerStatusUpdate = function() {
 		total_seconds = dif_hour*60*60 + dif_min*60 + dif_sec;
 		
 		if( total_seconds == 0 ) {
-		 	
-		 	// Bring window into focus when game starts
-		 	window.focus();
-		 	
-		 	// user was present on time, let's start the game
-		 	bUserAllowedToStart = true;
-		 	
-		 	var intro_message = "<p>BEGIN!</p>";
-			document.getElementById("intro_message").innerHTML = intro_message;
-
-
-			document.getElementById("start_button").innerHTML = "Let's Go!";
-			var spans = document.getElementsByClassName("countdown_til_start");
-			for(var i=0; i<spans.length; i++){
-				spans[i].innerHTML = 0;
-			}
-			// close the intro screen
-			document.getElementById("overlay").style.visibility = 'hidden';
-
-			// start the clock
-			startTheClock();
-			console.log("On Time User - Start Game.");
-			window.clearInterval(statusInterval);
+		 	// start the game
+		 	timerStartGame();
 		}
 		else if( total_seconds + duration < 0) {
 			// user missed the game, display the end result of the game
-// 	        document.getElementById('countdown').innerHTML =  '00:00.00';
-			console.log("Latest User - Show End Game.");
-			window.clearInterval(statusInterval);
-			
-			// possibly send to new page that notifies you missed the game
-			// close the intro screen
-			document.getElementById("overlay").style.visibility = 'hidden';
-
-			bShouldShowMissedGameMessage = true;
+			timerMissedGame();
 		}
 		else if( total_seconds < 0 ) {
 			// user showed up late, let's update the duration and start the game
-			var new_duration = DEFAULT_DURATION + total_seconds;
+			timerLateToGame();
+		}
+		else if( total_seconds > 20 ) {
+			// user showed up more than 20 seconds before start
+			timerEarlyEnoughToWatchVideo();
+		}
+		else {
+			// wait til game start, no video
+			timerWaitTilGameStart();
+		}
+
+	}, 100);
+ 
+}
+
+var timerStartGame = function() {
+	// Bring window into focus when game starts
+ 	window.focus();
+ 	
+ 	// user was present on time, let's start the game
+ 	bUserAllowedToStart = true;
+ 	
+ 	var intro_message = "<p>BEGIN!</p>";
+	document.getElementById("intro_message").innerHTML = intro_message;
+
+
+	document.getElementById("start_button").innerHTML = "Let's Go!";
+	var spans = document.getElementsByClassName("countdown_til_start");
+	for(var i=0; i<spans.length; i++){
+		spans[i].innerHTML = 0;
+	}
+	// close the intro screen
+	document.getElementById("overlay").style.visibility = 'hidden';
+
+	// start the clock
+	startTheClock();
+	console.log("On Time User - Start Game.");
+	window.clearInterval(statusInterval);
+}
+
+var timerMissedGame = function() {
+
+	console.log("Latest User - Show End Game.");
+	window.clearInterval(statusInterval);
+	
+	// possibly send to new page that notifies you missed the game
+	// close the intro screen
+	document.getElementById("overlay").style.visibility = 'hidden';
+
+	bShouldShowMissedGameMessage = true;
+}
+
+var timerLateToGame = function () {
+	var new_duration = DEFAULT_DURATION + total_seconds;
 			bUserAllowedToStart = true;
 			
 			if(!bUpdatedDialogText) {
@@ -126,53 +164,49 @@ var timerStatusUpdate = function() {
 			startTheClock();
 			console.log("Late User - Update duration. Start Game.");
 			window.clearInterval(statusInterval);
-		}
-		else if( total_seconds > 20 ) {
-			
-			if(!bUpdatedDialogText) {
-				var intro_message = "<p>Game starts in <span class='countdown_til_start'>0</span> seconds.</p><p>Once the game starts <b>it will only last 45 seconds!</b> You’ll be playing with everyone else who jumps in.</p><p>You will be on a map of a world in which Patient Zero(<b>P0</b>)  has a lethal infectious disease. You -- and everyone -- will work together to contain  by drawing a quarantine line around them.</p><p><b>You have one job: join the quarantine line, or not.</b> Just press the <b>JOIN/RELEASE</b> button on the upper right. You can do this as many times as you like.</p><p>At the end of the game, we will all have drawn a quarantine line. It will contain <b>P0</b> (hopefully!) or not. It will trap 'healthy' players inside with <b>P0</b>, or not. Hopefully not.</p><p>That’s up to you … all of you.</p>";
-				document.getElementById("intro_message").innerHTML = intro_message;
-				
-				bUpdatedDialogText = true;
-			}
-			
-			var spans = document.getElementsByClassName("countdown_til_start");
-			for(var i=0; i<spans.length; i++){
-				spans[i].innerHTML = total_seconds;
-			}
-			var start_button_text = "Wait ";
-			start_button_text += total_seconds;
-			start_button_text += " seconds";
-			document.getElementById("start_button").innerHTML = start_button_text;
-			//console.log("Early - Show YouTube Vid.");
-		}
-		else {
-			// user showed up early, let's keep them in the waiting room and display a countdown til the start of the game			
-// 			console.log("Early User - (" + dif_hour + ":" + dif_min + ":" + dif_sec + ") --- Seconds left: " + total_seconds);
-			var spans = document.getElementsByClassName("countdown_til_start");
-			for(var i=0; i<spans.length; i++){
-				spans[i].innerHTML = total_seconds;
-			}
-			var start_button_text = "Wait ";
-			start_button_text += total_seconds;
-			start_button_text += " seconds";
-			document.getElementById("start_button").innerHTML = start_button_text;
-			
-			//alert at 5 seconds til
-			// if the page is not in focus, send an alert!
-		 	if(total_seconds == 5 && !isWindowInFocus && !bAlertedUserOfGameStart) {
-		 		var intro_message = "<p>The game is starting!</p><p>Once the game starts <b>it will only last 45 seconds!</b> You’ll be playing with everyone else who jumps in.</p><p>You will be on a map of a world in which Patient Zero(<b>P0</b>)  has a lethal infectious disease. You -- and everyone -- will work together to contain  by drawing a quarantine line around them.</p><p><b>You have one job: join the quarantine line, or not.</b> Just press the <b>JOIN/RELEASE</b> button on the upper right. You can do this as many times as you like.</p><p>At the end of the game, we will all have drawn a quarantine line. It will contain <b>P0</b> (hopefully!) or not. It will trap 'healthy' players inside with <b>P0</b>, or not. Hopefully not.</p><p>That’s up to you … all of you.</p>";
-				document.getElementById("intro_message").innerHTML = intro_message;
-				document.getElementById("start_button").innerHTML = "Let's Go!";
+}
 
-		 		alert("PLAYFUL ALERT!!! CORDON SANITAIRE IS ABOUT TO START!!!");
-		 		window.focus();
-		 	}
+var timerEarlyEnoughToWatchVideo = function() {
+	if(!bUpdatedDialogText) {
+		var intro_message = "<p>Game starts in <span class='countdown_til_start'>0</span> seconds.</p><p>Once the game starts <b>it will only last 45 seconds!</b> You’ll be playing with everyone else who jumps in.</p><p>You will be on a map of a world in which Patient Zero(<b>P0</b>)  has a lethal infectious disease. You -- and everyone -- will work together to contain  by drawing a quarantine line around them.</p><p><b>You have one job: join the quarantine line, or not.</b> Just press the <b>JOIN/RELEASE</b> button on the upper right. You can do this as many times as you like.</p><p>At the end of the game, we will all have drawn a quarantine line. It will contain <b>P0</b> (hopefully!) or not. It will trap 'healthy' players inside with <b>P0</b>, or not. Hopefully not.</p><p>That’s up to you … all of you.</p>";
+		document.getElementById("intro_message").innerHTML = intro_message;
+		
+		bUpdatedDialogText = true;
+	}
+	
+	var spans = document.getElementsByClassName("countdown_til_start");
+	for(var i=0; i<spans.length; i++){
+		spans[i].innerHTML = total_seconds;
+	}
+	var start_button_text = "Wait ";
+	start_button_text += total_seconds;
+	start_button_text += " seconds";
+	document.getElementById("start_button").innerHTML = start_button_text;
+	//console.log("Early - Show YouTube Vid.");
+}
 
-		}
+var timerWaitTilGameStart = function() {
+	// user showed up early, let's keep them in the waiting room and display a countdown til the start of the game			
+	// console.log("Early User - (" + dif_hour + ":" + dif_min + ":" + dif_sec + ") --- Seconds left: " + total_seconds);
+	var spans = document.getElementsByClassName("countdown_til_start");
+	for(var i=0; i<spans.length; i++){
+		spans[i].innerHTML = total_seconds;
+	}
+	var start_button_text = "Wait ";
+	start_button_text += total_seconds;
+	start_button_text += " seconds";
+	document.getElementById("start_button").innerHTML = start_button_text;
+	
+	//alert at 5 seconds til
+	// if the page is not in focus, send an alert!
+ 	if(total_seconds == 5 && !isWindowInFocus && !bAlertedUserOfGameStart) {
+ 		var intro_message = "<p>The game is starting!</p><p>Once the game starts <b>it will only last 45 seconds!</b> You’ll be playing with everyone else who jumps in.</p><p>You will be on a map of a world in which Patient Zero(<b>P0</b>)  has a lethal infectious disease. You -- and everyone -- will work together to contain  by drawing a quarantine line around them.</p><p><b>You have one job: join the quarantine line, or not.</b> Just press the <b>JOIN/RELEASE</b> button on the upper right. You can do this as many times as you like.</p><p>At the end of the game, we will all have drawn a quarantine line. It will contain <b>P0</b> (hopefully!) or not. It will trap 'healthy' players inside with <b>P0</b>, or not. Hopefully not.</p><p>That’s up to you … all of you.</p>";
+		document.getElementById("intro_message").innerHTML = intro_message;
+		document.getElementById("start_button").innerHTML = "Let's Go!";
 
-	}, 100);
- 
+ 		alert("PLAYFUL ALERT!!! CORDON SANITAIRE IS ABOUT TO START!!!");
+ 		window.focus();
+ 	}
 }
 
 var isUserAllowedToStart = function() {
@@ -182,12 +216,12 @@ var isUserAllowedToStart = function() {
 
 //
 var timePassedSince = function(start_date) {
-
+    
     // grab the current UTC values
     var cur_date = new Date();
     
     var start = start_date.getTime(start_date);
-    var current = cur_date.getTime(cur_date); 
+	var current = new Date(cur_date.getTime() - offset_system_date);
 
     var difference = current - start;
     var elapsed_time = new Date(difference);  
@@ -275,15 +309,18 @@ var getTimeInStringFormatFromMillis = function(millis) {
 
 var startTheClock = function() {
     
+    if( !bPubNubTimeIsAccessible ) return;
+    
     // grab the current UTC values
     var cur_date = new Date();
-
+	var synchedTime = new Date(cur_date.getTime() - offset_system_date);
+			
     isRunning = true;
 
     //make sure there isn't already an interval running
     window.clearInterval(countdownTimer);
     // create a timer and set its interval
-    countdownTimer = setInterval(function () {timePassedSince(cur_date)}, 10);
+    countdownTimer = setInterval(function () {timePassedSince(synchedTime)}, 10);
 }
 
 var stopTheClock = function() {    
