@@ -615,19 +615,6 @@ simpleUser.save({
 //          NPCs
 //----------------------------
 
-var removeNPCFromLocalArray = function(id){
-    for(var i = 0; i < npcs.length ; i++){
-        if (npcs[i].id == id){
-            if (npcs[i].marker != null)
-                npcs[i].marker.setMap(null);
-            npcs.splice(i, 1);
-            console.log("npc deleted");
-            updateGameBoard();
-        }
-    }
-}
-
-
 // Helper Functions
 
 var pickRandomLoc = function(rnd_users){

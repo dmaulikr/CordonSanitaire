@@ -66,19 +66,28 @@ function Settings(){
             npc.removeFromDatabase();
             sendRemoveNPCMessage(npc.id);
         }
-        var rnd_users = [];
 
+        var rnd_users = [];
+        var loc;
         if (people.length <= 3){
-            pushPatientZeroToDatabase(pickRandomLoc(people));
+            loc = pickRandomLoc(people);
         }
         else{
+            // pick 3 random users
             for (var i = 0; i < 3; i++){
                 var rnd = Math.floor(Math.random()*people.length);
                 rnd_users.push(people[rnd]);
             }
-            pushPatientZeroToDatabase(pickRandomLoc(rnd_users));
+            loc = pickRandomLoc(rnd_users);
         }
 
+        npc = new NPC(
+            loc.x,
+            loc.y,
+            "citizen",
+            TypeEnum.INFECTIOUS,
+            true);
+        npc.pushToDatabase();
     }
 
     this.revealPatientZero = function(){
