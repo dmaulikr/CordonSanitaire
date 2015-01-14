@@ -13,7 +13,7 @@ function ohSnap(text, color, icon) {
   // Available colors : red, green, blue, orange, yellow --- add your own!
   
   // if mobile, only display a single notification at a time
-  if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+  if( $(window).width() < 480 ) {///Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
 	  ohSnapX();
 	  clearTimeout(alertTimeout);
   }
