@@ -184,8 +184,10 @@ NPC.addToLocalArray = function(id){
 NPC.removeFromLocalArray = function(id){
     for(var i = 0; i < npcs.length ; i++){
         if (npcs[i].id == id){
-            if (npcs[i].marker != null)
-              npcs[i].marker.setMap(null);
+            if (npcs[i].marker != null){
+                console.log("remove marker");
+                npcs[i].marker.setMap(null);
+            }
             npcs.splice(i, 1);
             console.log("npc deleted");
             updateGameBoard();
@@ -208,13 +210,15 @@ NPC.isIdPresent = function(id){
 }
 
 /**
- * Looks for patient zero in the local array of NPC. If found, returns patient zero, if not returns undefined.
- * @return patient zero [if patient zero is found returns it, else returns undefined]
+ * Looks for patient zero in the local array of NPC. If found, returns patient zero's index, if not returns false.
+ * @return patient zero [if patient zero is found returns its index in the local array, else returns false]
  */
-NPC.getPatientZero = function(){
+NPC.getPatientZeroIndex = function(){
   for(var i = 0; i < npcs.length ; i++){
     if (npcs[i].isPatientZero){
-        return npcs[i];
+        return i;
     }
+
+    return false;
   }
 }

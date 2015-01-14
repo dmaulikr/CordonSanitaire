@@ -725,27 +725,25 @@ var getAreaQuarantined = function() {
 
 var revealPatientZero = function(){
     console.log("revealing patient zero");
-    for(var i=0; i<npcs.length; i++) {
-        var npc = npcs[i];
-        var npc_coords = getLatLngCoords(npc.x, npc.y);
+    var index = NPC.getPatientZeroIndex();
+    var npc = npcs[index];
+    var npc_coords = getLatLngCoords(npc.x, npc.y);
 
-        if(npc.isPatientZero){
-            // creates a new marker for the npc and adds it to the map
-            var marker_obj = new google.maps.Marker({
-              position: npc_coords,
-              icon: getMarkerIconForPerson(npc), // depends on the type of the npc
-              map: map,
-            });
+    // creates a new marker for the npc if there isnt already one
+    if (npc.marker == null){
+      var marker_obj = new google.maps.Marker({
+        position: npc_coords,
+        icon: getMarkerIconForPerson(npc), // depends on the type of the npc
+        map: map,
+      });
 
-            // sets the npc marker to the created marker
-            npc.marker = marker_obj;
-
-            // pan to show the patient zero centered in the screen
-			map.panTo(npc_coords);
-
-            break;
-        }
+      // sets patient zeros's marker in the local array to the created marker
+      npcs[index].marker = marker_obj;
     }
+
+
+    // pan to show the patient zero centered in the screen
+    map.panTo(npc_coords);
 }
 
 //+ Jonas Raoni Soares Silva

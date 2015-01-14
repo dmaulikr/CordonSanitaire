@@ -60,7 +60,8 @@ function Settings(){
 
     this.addPatientZero = function(){
         // checks if there's already a patient zero
-        var npc = NPC.getPatientZero();
+        var index = NPC.getPatientZeroIndex();
+        var npc = npcs[index];
         // if not, picks 3 random users and place p0 in the middle of them
         if (npc != undefined){
             console.log("there's already a patient zero");

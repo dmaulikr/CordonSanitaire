@@ -617,19 +617,6 @@ simpleUser.save({
 
 // Helper Functions
 
-var pickRandomLoc = function(rnd_users){
-    var total = {x:0, y:0};
-    var loc = {x:0 , y: 0};
-
-    for (var i = 0; i < rnd_users.length; i++){
-        total.x += rnd_users[i].x;
-        total.y += rnd_users[i].y;
-    }
-    loc.x = total.x/rnd_users.length;
-    loc.y = total.y/rnd_users.length;
-    return loc;
-}
-
 var popPerson = function(uuid) {
 
     for(var i=0; i<people.length; i++) {
