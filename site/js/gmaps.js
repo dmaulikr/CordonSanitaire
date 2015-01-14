@@ -216,8 +216,8 @@ var drawNPCs = function() {
     for(var i=0; i<npcs.length; i++) {
         var npc = npcs[i];
         // hides patient zero
-        if(!npc.isPatientZero)
-            npc.draw();
+        // if(!npc.isPatientZero)
+          npc.draw();
     }
 }
 

@@ -60,27 +60,12 @@ function Settings(){
 
     this.addPatientZero = function(){
         // checks if there's already a patient zero
-        for(var i = 0; i < npcs.length ; i++){
-            if (npcs[i].isPatientZero){
-                console.log("there's already a patient zero");
-                sendRemoveNPCMessage(npcs[i].id);
-
-                var npc = Parse.Object.extend("NPC");
-                var query = new Parse.Query(npc);
-                var isIdPresent = false;
-                query.get(npcs[i].id, {
-                    success: function(npc) {
-                        npc.destroy();
-                    },
-                    error: function(object, error) {
-                        // The object was not retrieved successfully.
-                        // error is a Parse.Error with an error code and message.
-                        console.log("Error: " + error.code + " " + error.message + ". ID " + npc.id);
-                    }
-                });
-            }
-        }
+        var npc = NPC.getPatientZero();
         // if not, picks 3 random users and place p0 in the middle of them
+        if (npc != undefined){
+            npc.removeFromDatabase();
+            sendRemoveNPCMessage(npc.id);
+        }
         var rnd_users = [];
 
         if (people.length <= 3){

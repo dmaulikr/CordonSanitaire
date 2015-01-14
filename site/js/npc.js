@@ -80,6 +80,21 @@ NPC.prototype.pushToDatabase = function() {
     });
 };
 
+NPC.prototype.removeFromDatabase = function(){
+  var npc = Parse.Object.extend("NPC");
+  var query = new Parse.Query(npc);
+  query.get(this.id, {
+    success: function(npc) {
+        npc.destroy();
+    },
+    error: function(object, error) {
+        // The object was not retrieved successfully.
+        // error is a Parse.Error with an error code and message.
+        console.log("Error: " + error.code + " " + error.message + ". ID " + npc.id);
+    }
+  });
+}
+
 /**
  * Updates the type of this NPC
  * @param  {TypeEnum} type
@@ -163,6 +178,22 @@ NPC.addToLocalArray = function(id){
 }
 
 /**
+ * Removes an NPC from the local array of NPCs.
+ * @param id [id of the NPC to be removed]
+ */
+NPC.removeFromLocalArray = function(id){
+    for(var i = 0; i < npcs.length ; i++){
+        if (npcs[i].id == id){
+            if (npcs[i].marker != null)
+                npcs[i].marker.setMap(null);
+            npcs.splice(i, 1);
+            console.log("npc deleted");
+            updateGameBoard();
+        }
+    }
+}
+
+/**
  * Checks wheter an certain ID exists in the local array of NPCs.
  * @param  id [the id to be found]
  * @return boolean [wheter the id exist or not]
@@ -174,4 +205,12 @@ NPC.isIdPresent = function(id){
       }
   }
   return false;
+}
+
+NPC.getPatientZero = function(){
+  for(var i = 0; i < npcs.length ; i++){
+    if (npcs[i].isPatientZero){
+        return npcs[i];
+    }
+  }
 }
