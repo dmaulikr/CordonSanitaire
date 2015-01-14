@@ -201,7 +201,7 @@ var getLatLngCoords = function(x,y) {
 }
 
 var drawNPCs = function() {
-    console.log("drawing NPCs");
+    //console.log("drawing NPCs");
     for(var i=0; i<npcs.length; i++) {
 
         var npc = npcs[i];
@@ -556,7 +556,7 @@ var updateScoreboard = function() {
 }
 
 var updateButtonAvailable = function(){
-    console.log("updating join functionality");
+    //console.log("updating join functionality");
     if(getPersonType(myPerson) == 'casualty') {
         document.getElementById('buttons').style.visibility = 'hidden';
         document.getElementById('shoutButton').style.visibility = 'visible';

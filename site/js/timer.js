@@ -223,6 +223,7 @@ var timePassedSince = function(start_date) {
     var start = start_date.getTime(start_date);
 	var current = new Date(cur_date.getTime() - offset_system_date);
 
+	
     var difference = current - start;
     var elapsed_time = new Date(difference);  
 
@@ -308,8 +309,6 @@ var getTimeInStringFormatFromMillis = function(millis) {
 // }
 
 var startTheClock = function() {
-    
-    if( !bPubNubTimeIsAccessible ) return;
     
     // grab the current UTC values
     var cur_date = new Date();
