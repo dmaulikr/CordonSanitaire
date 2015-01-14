@@ -61,14 +61,14 @@ if (typeof document.addEventListener === "undefined" ||
 
 // Init
 // Live Database
-// Parse.initialize("Og1SUamdseHSQXnX940SK3DrVVJHtb3efFyv4sqO", "f0R0Nv8JMxOrU5VoPnGrR43C5iFcJomeTIVnJi1J");
+Parse.initialize("Og1SUamdseHSQXnX940SK3DrVVJHtb3efFyv4sqO", "f0R0Nv8JMxOrU5VoPnGrR43C5iFcJomeTIVnJi1J");
 
 // Development Database
 // Parse.initialize("se41N3nzbLBJ9oZFHrvhun7dGPK3tiLsj1mrey49", "ptVDEW3c1A3rGCotPgbBswc8Z0GtYrYIjvxDpZLn");// NOT IN USE
-Parse.initialize("R2T7ReO7LkHmM8ASf11pqjyNJcYXPdVqAD09wWvC", "VLVfcK4ttzTdPo7fwXtexEbA6VnZ8wShmVhodTpE");// CLONE
+// Parse.initialize("R2T7ReO7LkHmM8ASf11pqjyNJcYXPdVqAD09wWvC", "VLVfcK4ttzTdPo7fwXtexEbA6VnZ8wShmVhodTpE");// CLONE
 
-// var _channel = 'production'; // Dev Channel vs. Production Channel
-var _channel = 'development';   // Dev Channel vs. Production Channel
+var _channel = 'production'; // Dev Channel vs. Production Channel
+// var _channel = 'development';   // Dev Channel vs. Production Channel
 var _uuid = PUBNUB.uuid();
 var hasReceivedJoinedMessage = false;
 var people = [];
