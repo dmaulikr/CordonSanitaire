@@ -39,24 +39,26 @@ var _myPrevType = 'passive';
 //var usersCoords = getUserAsGoogleCoords();
 
 var drawMap = function() {
-    
-  var mapOptions = {
-    zoom: 12,
-    center: getUserAsGoogleCoords(),
-    //center: new google.maps.LatLng(40.776779, -73.969699),
-    mapTypeId: google.maps.MapTypeId.ROADMAP,
-    disableDefaultUI: true,
-    scrollwheel: false,
-    disableDoubleClickZoom: true,
-    panControl: false,
-    streetViewControl: false
-  };
 
-  if(map == null) {
-      
-      map = new google.maps.Map(document.getElementById('map-canvas'),
-       mapOptions);
-   }
+	var centerMap = new google.maps.LatLng(40.776779, -73.969699);
+	
+	if($(window).width() < 480)
+		centerMap = getUserAsGoogleCoords();
+    
+	var mapOptions = {
+	    zoom: 12,
+	    center: centerMap,
+	    mapTypeId: google.maps.MapTypeId.ROADMAP,
+	    disableDefaultUI: true,
+	    scrollwheel: false,
+	    disableDoubleClickZoom: true,
+	    panControl: false,
+	    streetViewControl: false
+	};
+
+	if(map == null) {
+    	map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+    }
 }
 
 
