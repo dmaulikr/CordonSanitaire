@@ -42,7 +42,7 @@ function sendCurlRequest(){
 
 var sendTextMessage = function() {
 	// simply send to the php page that successfully sends the text message
-	var url = "http://playful.jonathanbobrow.com/prototypes/cordonsans/control/sendSMS/"
+	var url = "../control/sendSMS/index.php?" + Math.random();
 	var win = window.open(url, '_blank');
 	//sendCurlRequest();
 };

@@ -16,7 +16,7 @@
 			
 		// pass this page some values, such as group to message, message text, and time to send text
 		
-		$sms_group = 'Play Test 01';
+		$sms_group = 'INTERNAL';
 		$sms_time = '17:30';
 		
 		if (isset($_GET['group'])) {
@@ -37,7 +37,7 @@
 		    'Password'      => 'dmiHQzPp6Kxt3q',
 		    'Groups'        => array($sms_group),
 		    'Subject'       => '',
-		    'Message'       => 'AGAIN FAKE URGENT. Patient Zero detected BUT NO ONE KNOWS WHERE. At ' . $sms_time . ' EST, 45 SECONDS to enact quarantine from a laptop. bit.ly/cordonsans',
+		    'Message'       => 'Playful FAKE URGENT. Patient Zero detected, but no on knows where! USE YOUR PHONE to enact quarantine bit.ly/cordonsans',
 		    'MessageTypeID' => 1
 		);
 		$curl = curl_init('https://app.eztexting.com/sending/messages?format=json');
