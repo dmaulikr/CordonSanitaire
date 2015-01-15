@@ -21,8 +21,11 @@ pubnub.subscribe({
                 console.log("received JOIN message - " + m.uuid);
                 if(m.uuid == _uuid) {
                     hasReceivedJoinedMessage = true;
+                    setup(function() {
+                        updateGameBoard();
+                    });
                 }
-                updatePopulation();
+                // updatePopulation();
             break;
 
             case "leave":
@@ -66,6 +69,14 @@ pubnub.subscribe({
             case "removeNPC":
                 NPC.removeFromLocalArray(m.id);
             break;
+
+            case "addUser":
+                if (!User.isIdPresent(m.id)){
+                    User.addToLocalArray(m.id);
+                }
+                else{
+                    console.log("User " + m.id + " was already present in the local array");
+                }
 
             case "flipState":
                 flipPlayerState(m.id, m.state);
@@ -126,6 +137,13 @@ var sendRemoveNPCMessage = function(id){
     pubnub.publish({
         channel: _channel,
         message: {action: 'removeNPC', id: id}
+    });
+}
+
+var sendAddUserMessage = function(id) {
+    pubnub.publish({
+        channel: _channel,
+        message: {action: 'addUser', id: id}
     });
 }
 

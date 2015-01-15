@@ -1,82 +1,3 @@
-/* PubNub + Parse to keep track of a game state and update a page when changes are published
- *
- * by Jonathan Bobrow
- *
- */
-
-// MOBILE PHONE MESSAGE
-if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
- // Redirect to Mobile Phone message;
- //window.location = "http://playful.jonathanbobrow.com/prototypes/cordonsans/mobile/"
-}
-// CHROME ONLY
-if (!window.chrome) {
-//  window.location = "http://playful.jonathanbobrow.com/prototypes/cordonsans/unsupported/"
-}
-
-var isWindowInFocus = true;
-
-// NOTIFY USER WITH AN ALERT IF THE GAME IS STARTING AND THEY NAVIGATE AWAY
-// Set the name of the hidden property and the change event for visibility
-var hidden, visibilityChange;
-if (typeof document.hidden !== "undefined") { // Opera 12.10 and Firefox 18 and later support
-  hidden = "hidden";
-  visibilityChange = "visibilitychange";
-} else if (typeof document.mozHidden !== "undefined") {
-  hidden = "mozHidden";
-  visibilityChange = "mozvisibilitychange";
-} else if (typeof document.msHidden !== "undefined") {
-  hidden = "msHidden";
-  visibilityChange = "msvisibilitychange";
-} else if (typeof document.webkitHidden !== "undefined") {
-  hidden = "webkitHidden";
-  visibilityChange = "webkitvisibilitychange";
-}
-
-// If the page is hidden, pause the video;
-// if the page is shown, play the video
-function handleVisibilityChange() {
-    if (document[hidden]) {
-        isWindowInFocus = false;
-        console.log("window out of focus");
-    } else {
-        isWindowInFocus = true;
-        console.log("window in focus");
-    }
-}
-
-// Warn if the browser doesn't support addEventListener or the Page Visibility API
-if (typeof document.addEventListener === "undefined" ||
-  typeof document[hidden] === "undefined") {
-  alert("This demo requires a browser, such as Google Chrome or Firefox, that supports the Page Visibility API.");
-} else {
-  // Handle page visibility change
-  document.addEventListener(visibilityChange, handleVisibilityChange, false);
-}
-
-
-//----------------------------
-//          Parse
-//----------------------------
-
-// Init
-// Live Database
-Parse.initialize("Og1SUamdseHSQXnX940SK3DrVVJHtb3efFyv4sqO", "f0R0Nv8JMxOrU5VoPnGrR43C5iFcJomeTIVnJi1J");
-
-// Development Database
-// Parse.initialize("se41N3nzbLBJ9oZFHrvhun7dGPK3tiLsj1mrey49", "ptVDEW3c1A3rGCotPgbBswc8Z0GtYrYIjvxDpZLn");// NOT IN USE
-// Parse.initialize("R2T7ReO7LkHmM8ASf11pqjyNJcYXPdVqAD09wWvC", "VLVfcK4ttzTdPo7fwXtexEbA6VnZ8wShmVhodTpE");// CLONE
-
-var _channel = 'production'; // Dev Channel vs. Production Channel
-// var _channel = 'development';   // Dev Channel vs. Production Channel
-var _uuid = PUBNUB.uuid();
-var hasReceivedJoinedMessage = false;
-var people = [];
-var npcs = [];
-var center;         // point that represents the center of the population (holding)
-
-NPC.getAllFromDatabase();
-
 //----------------------------
 // Map stuffs
 //----------------------------
@@ -132,10 +53,10 @@ var pickPatientZero = function() {
 var flipPlayerState = function(id, state){
     console.log("adding player to the quarantine");
     var person = popPerson(id);
-    if (person.active == state)
+    if (person.isActive() == state)
         console.log('no changes were made to the player ' + id);
     else{
-        person.active = state;
+        person.isActive() = state;
         people.push(person);
     }
     updateGameBoard();
@@ -184,14 +105,14 @@ var updatePopulation = function(){
 }
 
 // find center of active people
-var findCenter = function() {
+function findCenter() {
 
     var numPeopleHolding = 0;
     var total = {x:0, y:0};
     center = {x:0, y:0};
 
     for(var i=0; i<people.length; i++) {
-        if(people[i].active) {
+        if(people[i].isActive()) {
             total.x += people[i].x;
             total.y += people[i].y;
             numPeopleHolding++;
@@ -586,30 +507,6 @@ Array.prototype.clear = function() {
     this.pop();
   }
 };
-
-// Then add new user
-var SimpleUser = Parse.Object.extend("SimpleUser");
-var simpleUser = new SimpleUser();
-
-simpleUser.save({
-  playerID: _uuid,
-  x: Math.random(0,1),
-  y: Math.random(0,1),
-  role: "citizen",
-  active: false,
-  present: true,
-  isPatientZero: false
-}, {
-  success: function(simpleUser) {
-    // The object was saved successfully.
-    console.log("Success: Added a new simple user");
-  },
-  error: function(simpleUser, error) {
-    // The save failed.
-    // error is a Parse.Error with an error code and message.
-  }
-});
-
 
 //----------------------------
 //          NPCs

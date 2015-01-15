@@ -68,7 +68,6 @@ NPC.prototype.pushToDatabase = function() {
         this.id = npc.id;
 
         // sends message so other players also add the npc locally
-        console.log(this.id);
         sendAddNPCMessage(this.id);
       },
       error: function(npc, error) {
@@ -106,7 +105,7 @@ NPC.prototype.updateType = function(type) {
 /**
  * Repopulates the local array of NPCs with all the entries from the database.
  */
-NPC.getAllFromDatabase = function(){
+NPC.getAllFromDatabase = function(callback){
   npcs.clear;
   var npc = Parse.Object.extend("NPC");
   var query = new Parse.Query(npc);
@@ -132,6 +131,10 @@ NPC.getAllFromDatabase = function(){
               npcs.push(npc);
           }
           console.log("synchronized npcs array with database");
+          if (callback != null){
+            console.log("calling callback");
+              callback();
+          }
       },
       error: function(object, error) {
           // The object was not retrieved successfully.
@@ -165,7 +168,6 @@ NPC.addToLocalArray = function(id){
         npc.id = object.id;
 
         npcs.push(npc);
-        console.log(npcs.length);
         updateGameBoard();
 
       },

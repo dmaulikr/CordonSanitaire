@@ -6,7 +6,6 @@ var map = null;
 var quarantine = null;
 var markers = [];
 
-var myPerson;
 var myMarker;
 var myIcon;
 var patientZeroMarker;
@@ -61,7 +60,7 @@ var drawMap = function() {
 }
 
 
-var updateGameBoard = function() {
+function updateGameBoard() {
 
     findCenter();
 
@@ -69,7 +68,7 @@ var updateGameBoard = function() {
 
     // temporarily recall create map
     // in the future, only redraw the board, only load map once
-    drawMap();
+    // drawMap();
 
     // draw quarantine
     drawQuarantine();
@@ -95,6 +94,8 @@ var updateGameBoard = function() {
     //show missed game message after updating gameboard if need be
     if(bShouldShowMissedGameMessage)
         showMissedGameMessage();
+
+    console.log("board updated");
 }
 
 
@@ -139,11 +140,11 @@ var getTrappedPopulationMarkers = function() {
   return trapped;
 }
 
-var getActivePopulationAsNormalCoords = function() {
+function getActivePopulationAsNormalCoords() {
   var coords = [];
 
   for(var i=0; i<people.length; i++) {
-    if(people[i].active && !people[i].isPatientZero)
+    if(people[i].isActive() && !people[i].isPatientZero)
       coords.push(people[i]);
   }
 
@@ -214,103 +215,30 @@ var drawNPCs = function() {
 
     // draw npcs one by one
     for(var i=0; i<npcs.length; i++) {
-        var npc = npcs[i];
         // hides patient zero
-        if(!npc.isPatientZero)
-          npc.draw();
+        if(!npcs[i].isPatientZero)
+          npcs[i].draw();
     }
 }
 
 
 var drawPopulation = function() {
-
+  console.log("myUser id" + myUser.id);
   var people_coords = getPopulationAsGoogleCoords();
 
   for(var i=0; i<people.length; i++) {
-
-    var person = people[i];
-
-    if(person.isPatientZero)
-    	continue;
-
-    if(!doesPersonHaveAMarkerYet(person)) {
-
-        if(isPersonMe(person)) {
-            labelMeWithYouAreHere(people_coords[i]);
-        }
-
-        var marker_obj = new google.maps.Marker({
-          position: people_coords[i],
-          icon: getMarkerIconForPerson(person),
-          map: map,
-        });
-
-        if(isPersonMe(person)) {
-            myMarker = marker_obj;
-            myPerson = person;
-            myIcon = marker_obj.icon;
-        }
-
-        markers.push({marker: marker_obj,
-                        id: person.id});
+    // hide patient zero
+    if(!people[i].isPatientZero){
+      people[i].draw();
     }
-    else {
-        var marker_obj = getMarkerForPerson(person)
-        marker_obj.setIcon(getMarkerIconForPerson(person));
-
-        if(isPersonMe(person)) {    // update my status
-            myMarker = marker_obj;
-            myPerson = person;
-            myIcon = marker_obj.icon;
-        }
-
+    if (people[i].isUserMe()){
+      myUser.marker = people[i].marker;
     }
   }
-
+  // label wiht you are here
+  myUser.labelWithYouAreHere();
   // start the recurring animations
   startAnimations();
-}
-
-
-var labelMeWithYouAreHere = function(coords) {
-
-    var labelText = "YOU ARE HERE";
-
-    var myOptions = {
-         content: labelText
-        ,boxStyle: {
-           textAlign: "center"
-          ,fontSize: "8pt"
-          ,fontWeight: "bold"
-          ,backgroundColor: "white"
-          ,border: "4px solid rgba(0,0,0,.8)"
-          ,borderRadius: "10px"
-          ,padding: "5px 0 5px 0"
-          ,width: "100px"
-         }
-        ,disableAutoPan: true
-        ,pixelOffset: new google.maps.Size(-55, 20)
-        ,position: coords
-        ,closeBoxURL: ""
-        ,isHidden: false
-        ,pane: "mapPane"
-        ,enableEventPropagation: true
-    };
-
-    var ibLabel = new InfoBox(myOptions);
-    ibLabel.open(map);
-
-}
-
-
-var doesPersonHaveAMarkerYet = function(person) {
-
-    for(var i=0; i<markers.length; i++) {
-        if(markers[i].id == person.id)
-            return true;
-    }
-
-    return false;
 }
 
 var getPersonForUUID = function(uuid) {
@@ -338,7 +266,7 @@ var getPersonType = function(person) {
 
   var type;
 
-  if(person.active)
+  if(person.isActive())
     type = 'active';
   else
     type = 'passive';
@@ -427,7 +355,7 @@ var isMyTypeDifferent = function() {
     }
 }
 
-//
+// this only needs to be called once!!!!
 var startAnimations = function() {
 
     if(isAnimatingMyIcon) return;
@@ -442,11 +370,11 @@ var startAnimations = function() {
         var icon;
         // animate my icon so I know who I am
         if(isMyTypeDifferent())
-            icon = getMarkerIconForPerson(myPerson);
+            icon = getMarkerIconForPerson(myUser);
         else
-            icon = myIcon;
+            icon = myUser.marker.icon;
         icon.scale = 12 + 4 * Math.sin(2 * Math.PI * count/period);
-        myMarker.setIcon(icon);
+        myUser.marker.setIcon(icon);
     }, 20);
 
     isAnimatingMyIcon = true;
@@ -546,7 +474,7 @@ var updateScoreboard = function() {
 
 var updateButtonAvailable = function(){
     //console.log("updating join functionality");
-    if(getPersonType(myPerson) == 'casualty') {
+    if(getPersonType(myUser) == 'casualty') {
         document.getElementById('buttons').style.visibility = 'hidden';
         document.getElementById('shoutButton').style.visibility = 'visible';
     }
