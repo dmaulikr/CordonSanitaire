@@ -216,13 +216,11 @@ NPC.isIdPresent = function(id){
  * @return patient zero [if patient zero is found returns its index in the local array, else returns false]
  */
 NPC.getPatientZeroIndex = function(){
-  for(var i = 0; i < npcs.length ; i++){
+  for(var i = 0; i < npcs.length; i++){
     if (npcs[i].isPatientZero){
         return i;
     }
-
-    return false;
   }
-}
 
-console.log("loaded npc")
+  return false;
+}

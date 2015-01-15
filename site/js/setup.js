@@ -93,14 +93,12 @@ myUser.pushToDatabase(function(){
 });
 // console.log("myUser id:" + myUser.id);
 
-function setup(callback) {
+function setup() {
     // callback setup: it will only draw the map after it has gotten the NPC and User data from the Database
     NPC.getAllFromDatabase(function() { // populate the npc array with the entries in the Database
         User.getAllFromDatabase(function() { // populate the people array with the entries in the Database
-            drawMap(); // draw map
+            setupGameBoard();
             console.log("setting up");
-            console.log("calling setup callback");
-            callback();
         });
     });
 }

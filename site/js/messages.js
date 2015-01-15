@@ -21,9 +21,7 @@ pubnub.subscribe({
                 console.log("received JOIN message - " + m.uuid);
                 if (m.uuid == _uuid) {
                     hasReceivedJoinedMessage = true;
-                    setup(function() {
-                        updateGameBoard();
-                    });
+                    setup();
                 }
                 // updatePopulation();
                 break;

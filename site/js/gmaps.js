@@ -7,10 +7,8 @@ var quarantine = null;
 var markers = [];
 
 var myMarker;
-var myIcon;
 var patientZeroMarker;
 
-var isAnimatingMyIcon = false;
 var isAnimatingPatientZero = false;
 
 var myType = 'passive';
@@ -33,15 +31,12 @@ var _numActive = 0;
 
 var _myPrevType = 'passive';
 
-
-// center map on user
-//var usersCoords = getUserAsGoogleCoords();
-
-var drawMap = function() {
+function drawMap() {
     var centerMap = new google.maps.LatLng(40.776779, -73.969699);
 
+    // center the map on user
     if ($(window).width() < 480)
-        centerMap = getUserAsGoogleCoords();
+        centerMap = getLatLngCoords(myUser.x, myUser.y);
 
     var mapOptions = {
         zoom: 12,
@@ -57,6 +52,43 @@ var drawMap = function() {
     if (map == null) {
         map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
     }
+}
+
+function setupGameBoard(){
+    findCenter();
+    sortPeople();
+
+    drawMap();
+    setQuarantine();
+    updatePopulation();
+
+    // draw quarantine
+    drawQuarantine();
+
+    // draw population
+    drawPopulation();
+    startAnimations();
+
+    // draw npcs
+    drawNPCs();
+
+    // simply pulse the trapped once to draw attention to them
+    // animateTrapped(); // don't do this if people have the ability to shout
+
+    // update checkbox
+    updateButtonAvailable();
+
+    // update scoreboard
+    updateScoreboard();
+
+    // update notifications
+    updateNotifications();
+
+    //show missed game message after updating gameboard if need be
+    if (bShouldShowMissedGameMessage)
+        showMissedGameMessage();
+
+    console.log("board set up");
 }
 
 function updateGameBoard() {
@@ -96,8 +128,36 @@ function updateGameBoard() {
     console.log("board updated");
 }
 
+function setQuarantine(){
+    var q_stroke, q_fill;
+
+    quarantine = new google.maps.Polygon({
+        paths: getActivePopulationAsGoogleCoords(),
+        strokeOpacity: 0.8,
+        strokeWeight: 3,
+        fillOpacity: settings.color_border_opacity
+    });
+
+    // wait until quaratine path is set to check if patient zero is contained and set the proper colors
+    if (isPatientZeroContained()) {
+        console.log("heeere2")
+        q_stroke = settings.color_border_contained_stroke;
+        q_fill = settings.color_border_contained_fill;
+    } else {
+        q_stroke = settings.color_border_not_contained_stroke;
+        q_fill = settings.color_border_not_contained_fill;
+    }
+
+    quarantine.setOptions({
+        strokeColor: q_stroke,
+        fillColor: q_fill
+    });
+}
+
 function updateQuarantine() {
     var q_stroke, q_fill;
+
+    quarantine.setPaths(getActivePopulationAsGoogleCoords());
 
     if (isPatientZeroContained()) {
         q_stroke = settings.color_border_contained_stroke;
@@ -108,22 +168,10 @@ function updateQuarantine() {
     }
 
 
-    if (quarantine == null)
-        quarantine = new google.maps.Polygon({
-            paths: getActivePopulationAsGoogleCoords(),
-            strokeColor: q_stroke,
-            strokeOpacity: 0.8,
-            strokeWeight: 3,
-            fillColor: q_fill,
-            fillOpacity: settings.color_border_opacity
-        });
-    else {
-        quarantine.setOptions({
-            strokeColor: q_stroke,
-            fillColor: q_fill
-        });
-        quarantine.setPaths(getActivePopulationAsGoogleCoords());
-    }
+    quarantine.setOptions({
+        strokeColor: q_stroke,
+        fillColor: q_fill
+    });
 }
 
 function drawQuarantine() {
@@ -147,14 +195,14 @@ var getTrappedPopulationMarkers = function() {
 
     for (var i = 0; i < people.length; i++) {
         var person = people[i];
-        if (getPersonType(person) == 'casualty' && !isPersonMe(person))
+        if (getType(person) == TypeEnum.TRAPPED && !person.isUserMe())
             trapped.push(person);
     }
 
     return trapped;
 }
 
-function getTrappedNPCMarkers = function() {
+function getTrappedNPCMarkers() {
     var trapped = [];
 
     for (var i = 0; i < npcs.length; i++) {
@@ -164,38 +212,6 @@ function getTrappedNPCMarkers = function() {
     }
 
     return trapped;
-}
-function getActivePopulationAsNormalCoords() {
-    var coords = [];
-
-    for (var i = 0; i < people.length; i++) {
-        if (people[i].isActive() && !people[i].isPatientZero)
-            coords.push(people[i]);
-    }
-
-    return coords;
-}
-
-
-var getPopulationAsGoogleCoords = function() {
-    var coords = [];
-
-    for (var i = 0; i < people.length; i++) {
-        coords.push(getLatLngCoords(people[i].x, people[i].y));
-    }
-
-    return coords;
-}
-
-
-var getUserAsGoogleCoords = function() {
-
-    for (var i = 0; i < people.length; i++) {
-        if (isPersonMe(people[i])) {
-            return getLatLngCoords(people[i].x, people[i].y);
-        }
-    }
-
 }
 
 var updateNPCs = function() {
@@ -219,9 +235,6 @@ var drawNPCs = function() {
 
 
 var drawPopulation = function() {
-    console.log("myUser id" + myUser.id);
-    var people_coords = getPopulationAsGoogleCoords();
-
     for (var i = 0; i < people.length; i++) {
         // hide patient zero
         if (!people[i].isPatientZero) {
@@ -235,119 +248,9 @@ var drawPopulation = function() {
     // label wiht you are here
     myUser.labelWithYouAreHere();
     // start the recurring animations
-    startAnimations();
 }
 
-
-
-var getMarkerForPerson = function(person) {
-
-    for (var i = 0; i < markers.length; i++) {
-        if (markers[i].id == person.id)
-            return markers[i].marker;
-    }
-
-    console.log("DID NOT FIND MARKER FOR PERSON");
-}
-
-
-var getPersonType = function(person) {
-
-    var type;
-
-    if (person.isActive())
-        type = 'active';
-    else
-        type = 'passive';
-
-    var poly = getActivePopulationAsNormalCoords();
-
-    // check for casualty
-    if (type == 'passive' && isPointInPoly(poly, person.x, person.y))
-        type = 'casualty';
-
-    // check for patient zero
-    if (person.isPatientZero) {
-        if (isPointInPoly(poly, person.x, person.y))
-            type = 'healed';
-        else
-            type = 'infectious';
-    }
-
-    // set if updated for self
-    if (isPersonMe(person))
-        myType = type;
-
-    return type;
-}
-
-
-var getMarkerIconForPerson = function(person) {
-
-    // common options for icons
-    var _icon = {
-        path: google.maps.SymbolPath.CIRCLE,
-        fillColor: '#FFFFFF',
-        fillOpacity: 1.0,
-        scale: 8,
-        strokeColor: settings.color_border_stroke,
-        strokeOpacity: 0.8,
-        strokeWeight: 4
-    };
-
-    var type = getPersonType(person);
-
-    // set the colors now that we know what type we are
-    switch (type) {
-
-        case 'infectious':
-            _icon.scale = 16;
-            _icon.fillColor = settings.color_infectious_fill;
-            _icon.strokeColor = settings.color_infectious_stroke;
-            break;
-
-        case 'healed':
-            _icon.scale = 16;
-            _icon.fillColor = settings.color_healed_fill; // don't change the color of patient zero
-            _icon.strokeColor = settings.color_healed_stroke; // instead change the color of the quarantine
-            break;
-
-        case 'active':
-            _icon.fillColor = settings.color_active_fill;
-            _icon.strokeColor = settings.color_active_stroke;
-            break;
-
-        case 'passive':
-            _icon.fillColor = settings.color_passive_fill;
-            _icon.strokeColor = settings.color_passive_stroke;
-            break;
-
-        case 'casualty':
-            _icon.fillColor = settings.color_casualty_fill;
-            _icon.strokeColor = settings.color_casualty_stroke;
-            break;
-    }
-
-    // make the person stand out so they know who they are
-    // Now handled in the animation
-
-    return _icon;
-}
-
-var isMyTypeDifferent = function() {
-    if (myType != myPrevType) {
-        myPrevType = myType;
-        return true;
-    } else {
-        return false;
-    }
-}
-
-// this only needs to be called once!!!!
-var startAnimations = function() {
-
-    if (isAnimatingMyIcon) return;
-
+function startAnimations() {
     var count = 0;
     var period = 150;
 
@@ -357,19 +260,14 @@ var startAnimations = function() {
 
         var icon;
         // animate my icon so I know who I am
-        if (isMyTypeDifferent())
-            icon = getMarkerIconForPerson(myUser);
-        else
-            icon = myUser.marker.icon;
+        icon = myUser.marker.icon;
         icon.scale = 12 + 4 * Math.sin(2 * Math.PI * count / period);
         myUser.marker.setIcon(icon);
     }, 20);
-
-    isAnimatingMyIcon = true;
 }
 
 // animate the person who is shouting
-var animateShout = function(id) {
+function animateShout(id) {
     var shoutPerson = User.getPersonById(id);
     var shoutMarker = shoutPerson.marker;
     var shoutMarkerIcon = shoutMarker.icon;
@@ -399,7 +297,7 @@ var animateShout = function(id) {
 // pulse the trapped icons once all together. A sort of cry for help.
 function animateTrapped() {
     // var trapped = getTrappedPopulationMarkers();
-    var trapped == getTrappedNPCMarkers();
+    var trapped = getTrappedNPCMarkers();
     console.log(trapped);
     var count = 0;
     var period = 20;
@@ -416,9 +314,9 @@ function animateTrapped() {
         var marker;
 
         for (var i = 0; i < trapped.length; i++) {
-            if (isPersonMe(trapped[i])) continue; // skip my already animating icon
-            marker = getMarkerForPerson(trapped[i]);
-            icon = getMarkerIconForPerson(trapped[i]);
+            if (trapped[i].isUserMe()) continue; // skip my already animating icon
+            marker = trapped[i].marker;
+            icon = marker.icon;
             icon.scale = 8 + 2 * Math.sin(Math.PI * (count / period));
             marker.setIcon(icon);
         }
@@ -464,7 +362,7 @@ var updateScoreboard = function() {
 
 var updateButtonAvailable = function() {
     //console.log("updating join functionality");
-    if (getPersonType(myUser) == 'casualty') {
+    if (getType(myUser) == TypeEnum.TRAPPED) {
         document.getElementById('buttons').style.visibility = 'hidden';
         document.getElementById('shoutButton').style.visibility = 'visible';
     } else {
@@ -547,17 +445,10 @@ var updateNotifications = function() {
     }
 }
 
+function isPatientZeroContained() {
 
-var isPersonMe = function(person) {
-    return person.id == _uuid;
-}
-
-
-var isPatientZeroContained = function() {
-
-    var poly = getActivePopulationAsNormalCoords();
-
-    if (poly.length < 3) { // can't do it with less than 3
+    if (quarantine == null || quarantine.length < 3) { // can't do it with less than 3
+        console.log("heere");
         _patientZeroContained = false;
         return false;
     }
@@ -566,7 +457,7 @@ var isPatientZeroContained = function() {
     for (var i = 0; i < people.length; i++) {
         var person = people[i];
         if (person.isPatientZero) {
-            if (isPointInPoly(poly, person.x, person.y)) {
+            if (isInsideQuarantine(person.x, person.y)) {
                 _patientZeroContained = true;
                 return true;
             } else {
@@ -580,7 +471,7 @@ var isPatientZeroContained = function() {
     for (var i = 0; i < npcs.length; i++) {
         var npc = npcs[i];
         if (npc.isPatientZero) {
-            if (isPointInPoly(poly, npc.x, npc.y)) {
+            if (isInsideQuarantine(npc.x, npc.y)) {
                 _patientZeroContained = true;
                 return true;
             } else {
@@ -598,7 +489,7 @@ var countCasualties = function() {
     // count players casualities
     for (var i = 0; i < people.length; i++) {
         if (!people[i].isPatientZero) {
-            if (getPersonType(people[i]) == 'casualty')
+            if (getType(people[i]) == TypeEnum.TRAPPED)
                 count++;
         }
     }
@@ -606,7 +497,7 @@ var countCasualties = function() {
     // count npcs casualities
     for (var i = 0; i < npcs.length; i++) {
         if (!npcs[i].isPatientZero) {
-            if (getPersonType(npcs[i]) == 'casualty')
+            if (getType(npcs[i]) == TypeEnum.TRAPPED)
                 count++;
         }
     }
@@ -618,7 +509,14 @@ var countCasualties = function() {
 
 
 var countActivePeople = function() {
-    return getActivePopulationAsNormalCoords().length;
+    var count = 0;
+
+    for (var i = 0; i < people.length; i++) {
+        if (people[i].isActive())
+            count++;
+    }
+
+    return count;
 }
 
 
@@ -645,7 +543,7 @@ var revealPatientZero = function() {
     if (npc.marker == null) {
         var marker_obj = new google.maps.Marker({
             position: npc_coords,
-            icon: getMarkerIconForPerson(npc), // depends on the type of the npc
+            icon: getMarkerIcon(npc.type), // depends on the type of the npc
             map: map,
         });
 
@@ -656,13 +554,4 @@ var revealPatientZero = function() {
 
     // pan to show the patient zero centered in the screen
     map.panTo(npc_coords);
-}
-
-//+ Jonas Raoni Soares Silva
-//@ http://jsfromhell.com/math/is-point-in-poly [rev. #0]
-
-function isPointInPoly(poly, x, y) {
-    for (var c = false, i = -1, l = poly.length, j = l - 1; ++i < l; j = i)
-        ((poly[i].y <= y && y < poly[j].y) || (poly[j].y <= y && y < poly[i].y)) && (x < (poly[j].x - poly[i].x) * (y - poly[i].y) / (poly[j].y - poly[i].y) + poly[i].x) && (c = !c);
-    return c;
 }

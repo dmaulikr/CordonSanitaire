@@ -84,7 +84,7 @@ User.prototype.pushToDatabase = function(callback) {
                 callback();
 
             // sends message so other players also add the user locally
-            sendAddUserMessage(this.id);
+            // sendAddUserMessage(this.id);
         },
         error: function(user, error) {
             // The save failed.
@@ -187,6 +187,7 @@ User.isIdPresent = function(id) {
  * @param id [id of the User in the database]
  */
 User.addToLocalArray = function(id) {
+    console.log("shouldn't be here");
     var user = Parse.Object.extend("SimpleUser");
     var query = new Parse.Query(user);
     query.get(id, {
