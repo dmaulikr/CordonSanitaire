@@ -49,7 +49,7 @@ User.prototype.erase = function() {
  * @return boolean [true if the the user is active, false otherwise]
  */
 User.prototype.isActive = function() {
-    return this.type == TypeEnum.Active
+    return this.type == TypeEnum.ACTIVE
 };
 
 User.prototype.isUserMe = function() {
@@ -82,6 +82,7 @@ User.prototype.pushToDatabase = function(callback) {
             // calls the callback function, if there's one
             if (callback != null)
                 callback();
+
             // sends message so other players also add the user locally
             sendAddUserMessage(this.id);
         },
@@ -214,4 +215,22 @@ User.addToLocalArray = function(id) {
             console.log("Error: " + error.code + " " + error.message);
         }
     });
+}
+
+/**
+ * Changes the type of an User in the local array of Users.
+ * @param   id      [id of the User that will have its type changed]
+ * @param   type    [the new type of the User]
+ * @return  boolean [true if the change was successful, false otherwise]
+ */
+User.changeUserType = function(id, type){
+    for (var i = 0; i < people.length; i++){
+        if(people[i].id == id){
+            people[i].type = type;
+            updateGameBoard();
+            return true;
+        }
+    }
+
+    return false;
 }

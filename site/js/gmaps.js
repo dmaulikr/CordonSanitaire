@@ -112,6 +112,7 @@ var drawQuarantine = function() {
         q_fill = settings.color_border_not_contained_fill;
     }
 
+
     if(quarantine == null)
         quarantine = new google.maps.Polygon({
             paths: getActivePopulationAsGoogleCoords(),
@@ -125,6 +126,7 @@ var drawQuarantine = function() {
         quarantine.setOptions({strokeColor: q_stroke, fillColor: q_fill});
         quarantine.setPaths(getActivePopulationAsGoogleCoords());
     }
+    console.log("quarantine: " + getActivePopulationAsGoogleCoords());
     quarantine.setMap(map);
 }
 
@@ -154,10 +156,10 @@ function getActivePopulationAsNormalCoords() {
 
 var getActivePopulationAsGoogleCoords = function() {
   var coords = [];
-
   for(var i=0; i<people.length; i++) {
-    if(people[i].active && !people[i].isPatientZero)
+    if(people[i].isActive() && !people[i].isPatientZero){
       coords.push(getLatLngCoords(people[i].x, people[i].y));
+    }
   }
 
   _numActive = coords.length;   //update for notifications
@@ -232,6 +234,7 @@ var drawPopulation = function() {
       people[i].draw();
     }
     if (people[i].isUserMe()){
+      console.log(people[i].type)
       myUser.marker = people[i].marker;
     }
   }

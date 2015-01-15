@@ -4,7 +4,7 @@
 
 // Init
 var pubnub = PUBNUB.init({
-    keepalive     : 30,
+    keepalive: 30,
     publish_key: 'pub-c-f1d4a0b1-66e6-48ae-bd2b-72bcaac47884',
     subscribe_key: 'sub-c-37e7ca9a-54e6-11e4-a7f8-02ee2ddab7fe',
     uuid: _uuid
@@ -13,76 +13,76 @@ var pubnub = PUBNUB.init({
 // Subscribe
 pubnub.subscribe({
     channel: _channel,
-    presence: function(m){
+    presence: function(m) {
         //console.log(m)
-        switch(m.action){
+        switch (m.action) {
             case "join":
                 // set the UUID here
                 console.log("received JOIN message - " + m.uuid);
-                if(m.uuid == _uuid) {
+                if (m.uuid == _uuid) {
                     hasReceivedJoinedMessage = true;
                     setup(function() {
                         updateGameBoard();
                     });
                 }
                 // updatePopulation();
-            break;
+                break;
 
             case "leave":
                 // set this user to no longer focussed...
                 console.log("received LEAVE message - " + m.uuid);
                 updatePopulation();
-            break;
+                break;
         }
     },
-    message: function(m){
-        switch(m.action) {
+    message: function(m) {
+        switch (m.action) {
 
             case "update":
                 console.log("received UPDATE message");
                 updatePopulation();
-            break;
+                break;
 
             case "start":
                 console.log("received START message");
                 startTheClock();
-            break;
+                break;
 
             case "end":
                 console.log("received END message");
-            break;
+                break;
 
             case "shout":
                 //console.log("received SHOUT message from " + m.uuid);
                 animateShout(m.uuid);
-            break;
+                break;
 
             case "addNPC":
-                if (!NPC.isIdPresent(m.id)){
+                if (!NPC.isIdPresent(m.id)) {
                     NPC.addToLocalArray(m.id);
-                }
-                else{
+                } else {
                     console.log("npc " + m.id + " was already present in the local array");
                 }
-            break;
+                break;
 
             case "removeNPC":
                 NPC.removeFromLocalArray(m.id);
-            break;
+                break;
 
             case "addUser":
-                if (!User.isIdPresent(m.id)){
+                if (!User.isIdPresent(m.id)) {
                     User.addToLocalArray(m.id);
-                }
-                else{
+                } else {
                     console.log("User " + m.id + " was already present in the local array");
                 }
+                break;
 
-            case "flipState":
-                flipPlayerState(m.id, m.state);
-            break;
+            case "changeUserType":
+                User.changeUserType(m.id, m.type);
+                break;
 
-            default: console.log(m);
+            default:
+                console.log(m);
         }
     }
 });
@@ -90,8 +90,8 @@ pubnub.subscribe({
 // Unsubscribe when closing the window
 window.onbeforeunload = function() {
     return pubnub.unsubscribe({
-        channel : _channel
-        });
+        channel: _channel
+    });
 }
 
 // window.onunload = function() {
@@ -104,8 +104,10 @@ window.onbeforeunload = function() {
 // Publish
 var sendUpdateMessage = function() {
     pubnub.publish({
-     channel: _channel,
-     message: {action: 'update'}
+        channel: _channel,
+        message: {
+            action: 'update'
+        }
     });
 }
 
@@ -113,43 +115,61 @@ var sendUpdateMessage = function() {
 // send start message
 var sendStartOfGame = function() {
     pubnub.publish({
-     channel: _channel,
-     message: {action:'start'}
+        channel: _channel,
+        message: {
+            action: 'start'
+        }
     });
 }
 
 // send shout message
 var sendShout = function() {
     pubnub.publish({
-     channel: _channel,
-     message: {action:'shout', uuid: _uuid}
+        channel: _channel,
+        message: {
+            action: 'shout',
+            uuid: _uuid
+        }
     });
 }
 
 var sendAddNPCMessage = function(id) {
     pubnub.publish({
         channel: _channel,
-        message: {action: 'addNPC', id: id}
+        message: {
+            action: 'addNPC',
+            id: id
+        }
     });
 }
 
-var sendRemoveNPCMessage = function(id){
+var sendRemoveNPCMessage = function(id) {
     pubnub.publish({
         channel: _channel,
-        message: {action: 'removeNPC', id: id}
+        message: {
+            action: 'removeNPC',
+            id: id
+        }
     });
 }
 
 var sendAddUserMessage = function(id) {
     pubnub.publish({
         channel: _channel,
-        message: {action: 'addUser', id: id}
+        message: {
+            action: 'addUser',
+            id: id
+        }
     });
 }
 
-var sendFlipStateMessage = function(id, state) {
+var sendChangeUserTypeMessage = function(id, type) {
     pubnub.publish({
         channel: _channel,
-        message: {action: 'flipState', id: id, state: state}
+        message: {
+            action: 'changeUserType',
+            id: id,
+            type: type
+        }
     })
 }
