@@ -234,3 +234,13 @@ User.changeUserType = function(id, type){
 
     return false;
 }
+
+User.getPersonById = function(id) {
+    for (var i = 0; i < people.length; i++) {
+        if (people[i].id == id)
+            return people[i];
+    }
+
+    console.log("DID NOT FIND PERSON FOR UUID");
+}
+

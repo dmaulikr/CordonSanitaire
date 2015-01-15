@@ -1,3 +1,4 @@
+console.log("loaded helper");
 /**
  * Set of helper functions.
  */
@@ -70,17 +71,18 @@ function getType(obj) {
 
   var type = obj.type;
 
-  var poly = getActivePopulationAsNormalCoords();
-
   // check for casualty
-  if(isPointInPoly(poly, obj.x, obj.y))
-    type = TypeEnum.TRAPPED;
-  else
+  if(!isInsideQuarantine(obj.x, obj.y) && type != TypeEnum.ACTIVE){
     type = TypeEnum.PASSIVE;
+    console.log("heeeere");
+  }
+  else if(type != TypeEnum.ACTIVE){
+    type = TypeEnum.TRAPPED;
+  }
 
   // check for patient zero
   if(obj.isPatientZero) {
-    if(isPointInPoly(poly, obj.x, obj.y))
+    if(isInsideQuarantine(obj.x, obj.y))
       type = TypeEnum.HEALED;
     else
       type = TypeEnum.INFECTIOUS;
@@ -90,11 +92,49 @@ function getType(obj) {
 }
 
 /**
+ * Gets the Google Coordinates of the active Users.
+ * @return coord [an array with the Google Coordinates of the active Users]
+ */
+function getActivePopulationAsGoogleCoords() {
+  var coords = [];
+  for(var i=0; i<people.length; i++) {
+    if(people[i].isActive() && !people[i].isPatientZero){
+      coords.push(getLatLngCoords(people[i].x, people[i].y));
+    }
+  }
+
+  _numActive = coords.length;   //update for notifications
+
+  return coords;
+}
+
+
+/**
+ * Given x and y, returns the respective latitute and longitude as Google Coordinates
+ * @param     x     [description]
+ * @param     y     [description]
+ * @return  latlng  [description]
+ */
+function getLatLngCoords(x,y) {
+
+  var begLat = 40.704204;
+  var endLat = 40.829535;
+  var begLng = -74.096729;
+  var endLng = -73.834258;
+  var diffLat = endLat - begLat;
+  var diffLng = endLng - begLng;
+
+  var latlng = new google.maps.LatLng(begLat + diffLat*x, begLng + diffLng*y);
+
+  return latlng;
+}
+
+/**
  * Given an array of users, returns the center locations of those users.
  * @param  users [users]
  * @return loc   [the center of the coordinates of the users]
  */
-var getCenter = function(users){
+function getCenter(users){
     var total = {x:0, y:0};
     var loc = {x:0 , y: 0};
 

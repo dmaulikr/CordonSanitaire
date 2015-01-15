@@ -224,3 +224,5 @@ NPC.getPatientZeroIndex = function(){
     return false;
   }
 }
+
+console.log("loaded npc")

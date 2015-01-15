@@ -54,7 +54,7 @@ pubnub.subscribe({
 
             case "shout":
                 //console.log("received SHOUT message from " + m.uuid);
-                animateShout(m.uuid);
+                animateShout(m.id);
                 break;
 
             case "addNPC":
@@ -128,7 +128,7 @@ var sendShout = function() {
         channel: _channel,
         message: {
             action: 'shout',
-            uuid: _uuid
+            id: myUser.id
         }
     });
 }

@@ -38,37 +38,35 @@ var _myPrevType = 'passive';
 //var usersCoords = getUserAsGoogleCoords();
 
 var drawMap = function() {
-	var centerMap = new google.maps.LatLng(40.776779, -73.969699);
+    var centerMap = new google.maps.LatLng(40.776779, -73.969699);
 
-	if($(window).width() < 480)
-		centerMap = getUserAsGoogleCoords();
+    if ($(window).width() < 480)
+        centerMap = getUserAsGoogleCoords();
 
-	var mapOptions = {
-	    zoom: 12,
-	    center: centerMap,
-	    mapTypeId: google.maps.MapTypeId.ROADMAP,
-	    disableDefaultUI: true,
-	    scrollwheel: false,
-	    disableDoubleClickZoom: true,
-	    panControl: false,
-	    streetViewControl: false
-	};
+    var mapOptions = {
+        zoom: 12,
+        center: centerMap,
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+        disableDefaultUI: true,
+        scrollwheel: false,
+        disableDoubleClickZoom: true,
+        panControl: false,
+        streetViewControl: false
+    };
 
-	if(map == null) {
-    	map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+    if (map == null) {
+        map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
     }
 }
-
 
 function updateGameBoard() {
 
     findCenter();
 
-    sortPeople();       // sort the people into the order to hold the rope
+    sortPeople(); // sort the people into the order to hold the rope
 
-    // temporarily recall create map
-    // in the future, only redraw the board, only load map once
-    // drawMap();
+    updateQuarantine();
+    updatePopulation();
 
     // draw quarantine
     drawQuarantine();
@@ -80,7 +78,7 @@ function updateGameBoard() {
     drawNPCs();
 
     // simply pulse the trapped once to draw attention to them
-    //animateTrapped(); // don't do this if people have the ability to shout
+    // animateTrapped(); // don't do this if people have the ability to shout
 
     // update checkbox
     updateButtonAvailable();
@@ -92,28 +90,25 @@ function updateGameBoard() {
     updateNotifications();
 
     //show missed game message after updating gameboard if need be
-    if(bShouldShowMissedGameMessage)
+    if (bShouldShowMissedGameMessage)
         showMissedGameMessage();
 
     console.log("board updated");
 }
 
-
-var drawQuarantine = function() {
-
+function updateQuarantine() {
     var q_stroke, q_fill;
 
-    if(isPatientZeroContained()) {
+    if (isPatientZeroContained()) {
         q_stroke = settings.color_border_contained_stroke;
         q_fill = settings.color_border_contained_fill;
-    }
-    else {
+    } else {
         q_stroke = settings.color_border_not_contained_stroke;
         q_fill = settings.color_border_not_contained_fill;
     }
 
 
-    if(quarantine == null)
+    if (quarantine == null)
         quarantine = new google.maps.Polygon({
             paths: getActivePopulationAsGoogleCoords(),
             strokeColor: q_stroke,
@@ -123,89 +118,88 @@ var drawQuarantine = function() {
             fillOpacity: settings.color_border_opacity
         });
     else {
-        quarantine.setOptions({strokeColor: q_stroke, fillColor: q_fill});
+        quarantine.setOptions({
+            strokeColor: q_stroke,
+            fillColor: q_fill
+        });
         quarantine.setPaths(getActivePopulationAsGoogleCoords());
     }
-    console.log("quarantine: " + getActivePopulationAsGoogleCoords());
+}
+
+function drawQuarantine() {
     quarantine.setMap(map);
+}
+
+
+function isInsideQuarantine(x, y) {
+    var coords = getLatLngCoords(x, y);
+    return (google.maps.geometry.poly.containsLocation(coords, quarantine) && !google.maps.geometry.poly.isLocationOnEdge(coords, quarantine, 0));
+}
+
+function updatePopulation() {
+    for (var i = 0; i < people.length; i++) {
+        people[i].type = getType(people[i]);
+    }
 }
 
 var getTrappedPopulationMarkers = function() {
     var trapped = [];
 
-    for(var i=0; i<people.length; i++) {
+    for (var i = 0; i < people.length; i++) {
         var person = people[i];
-        if(getPersonType(person) == 'casualty' && !isPersonMe(person))
+        if (getPersonType(person) == 'casualty' && !isPersonMe(person))
             trapped.push(person);
     }
 
-  return trapped;
+    return trapped;
 }
 
-function getActivePopulationAsNormalCoords() {
-  var coords = [];
+function getTrappedNPCMarkers = function() {
+    var trapped = [];
 
-  for(var i=0; i<people.length; i++) {
-    if(people[i].isActive() && !people[i].isPatientZero)
-      coords.push(people[i]);
-  }
-
-  return coords;
-}
-
-
-var getActivePopulationAsGoogleCoords = function() {
-  var coords = [];
-  for(var i=0; i<people.length; i++) {
-    if(people[i].isActive() && !people[i].isPatientZero){
-      coords.push(getLatLngCoords(people[i].x, people[i].y));
+    for (var i = 0; i < npcs.length; i++) {
+        var npc = npcs[i];
+        if (getType(npc) == TypeEnum.TRAPPED)
+            trapped.push(npc);
     }
-  }
 
-  _numActive = coords.length;   //update for notifications
+    return trapped;
+}
+function getActivePopulationAsNormalCoords() {
+    var coords = [];
 
-  return coords;
+    for (var i = 0; i < people.length; i++) {
+        if (people[i].isActive() && !people[i].isPatientZero)
+            coords.push(people[i]);
+    }
+
+    return coords;
 }
 
 
 var getPopulationAsGoogleCoords = function() {
-  var coords = [];
+    var coords = [];
 
-  for(var i=0; i<people.length; i++) {
-      coords.push(getLatLngCoords(people[i].x, people[i].y));
-  }
+    for (var i = 0; i < people.length; i++) {
+        coords.push(getLatLngCoords(people[i].x, people[i].y));
+    }
 
-  return coords;
+    return coords;
 }
 
 
 var getUserAsGoogleCoords = function() {
 
-    for(var i=0; i<people.length; i++) {
-        if(isPersonMe(people[i])) {
+    for (var i = 0; i < people.length; i++) {
+        if (isPersonMe(people[i])) {
             return getLatLngCoords(people[i].x, people[i].y);
         }
     }
 
 }
 
-
-var getLatLngCoords = function(x,y) {
-
-  var begLat = 40.704204;
-  var endLat = 40.829535;
-  var begLng = -74.096729;
-  var endLng = -73.834258;
-  var diffLat = endLat - begLat;
-  var diffLng = endLng - begLng;
-
-  var latlng = new google.maps.LatLng(begLat + diffLat*x, begLng + diffLng*y);
-
-  return latlng;
-}
-
 var updateNPCs = function() {
-    for(var i=0; i<npcs.length; i++) {
+    for (var i = 0; i < npcs.length; i++) {
         var npc = npcs[i];
         npc.updateType(getType(npc));
     }
@@ -216,48 +210,40 @@ var drawNPCs = function() {
     updateNPCs();
 
     // draw npcs one by one
-    for(var i=0; i<npcs.length; i++) {
+    for (var i = 0; i < npcs.length; i++) {
         // hides patient zero
-        if(!npcs[i].isPatientZero)
-          npcs[i].draw();
+        if (!npcs[i].isPatientZero)
+            npcs[i].draw();
     }
 }
 
 
 var drawPopulation = function() {
-  console.log("myUser id" + myUser.id);
-  var people_coords = getPopulationAsGoogleCoords();
+    console.log("myUser id" + myUser.id);
+    var people_coords = getPopulationAsGoogleCoords();
 
-  for(var i=0; i<people.length; i++) {
-    // hide patient zero
-    if(!people[i].isPatientZero){
-      people[i].draw();
+    for (var i = 0; i < people.length; i++) {
+        // hide patient zero
+        if (!people[i].isPatientZero) {
+            people[i].draw();
+        }
+        if (people[i].isUserMe()) {
+            console.log(people[i].type)
+            myUser.marker = people[i].marker;
+        }
     }
-    if (people[i].isUserMe()){
-      console.log(people[i].type)
-      myUser.marker = people[i].marker;
-    }
-  }
-  // label wiht you are here
-  myUser.labelWithYouAreHere();
-  // start the recurring animations
-  startAnimations();
+    // label wiht you are here
+    myUser.labelWithYouAreHere();
+    // start the recurring animations
+    startAnimations();
 }
 
-var getPersonForUUID = function(uuid) {
 
-	for(var i=0; i<people.length; i++) {
-		if(people[i].id == uuid)
-			return people[i];
-	}
-
-	console.log("DID NOT FIND PERSON FOR UUID");
-}
 
 var getMarkerForPerson = function(person) {
 
-    for(var i=0; i<markers.length; i++) {
-        if(markers[i].id == person.id)
+    for (var i = 0; i < markers.length; i++) {
+        if (markers[i].id == person.id)
             return markers[i].marker;
     }
 
@@ -267,93 +253,92 @@ var getMarkerForPerson = function(person) {
 
 var getPersonType = function(person) {
 
-  var type;
+    var type;
 
-  if(person.isActive())
-    type = 'active';
-  else
-    type = 'passive';
-
-  var poly = getActivePopulationAsNormalCoords();
-
-  // check for casualty
-  if(type == 'passive' && isPointInPoly(poly, person.x, person.y))
-    type = 'casualty';
-
-  // check for patient zero
-  if(person.isPatientZero) {
-    if(isPointInPoly(poly, person.x, person.y))
-      type = 'healed';
+    if (person.isActive())
+        type = 'active';
     else
-      type = 'infectious';
-  }
+        type = 'passive';
 
-  // set if updated for self
-  if(isPersonMe(person))
-    myType = type;
+    var poly = getActivePopulationAsNormalCoords();
 
-  return type;
+    // check for casualty
+    if (type == 'passive' && isPointInPoly(poly, person.x, person.y))
+        type = 'casualty';
+
+    // check for patient zero
+    if (person.isPatientZero) {
+        if (isPointInPoly(poly, person.x, person.y))
+            type = 'healed';
+        else
+            type = 'infectious';
+    }
+
+    // set if updated for self
+    if (isPersonMe(person))
+        myType = type;
+
+    return type;
 }
 
 
 var getMarkerIconForPerson = function(person) {
 
-  // common options for icons
-  var _icon = {
-    path: google.maps.SymbolPath.CIRCLE,
-    fillColor: '#FFFFFF',
-    fillOpacity: 1.0,
-    scale: 8,
-    strokeColor: settings.color_border_stroke,
-    strokeOpacity: 0.8,
-    strokeWeight: 4
-  };
+    // common options for icons
+    var _icon = {
+        path: google.maps.SymbolPath.CIRCLE,
+        fillColor: '#FFFFFF',
+        fillOpacity: 1.0,
+        scale: 8,
+        strokeColor: settings.color_border_stroke,
+        strokeOpacity: 0.8,
+        strokeWeight: 4
+    };
 
-  var type = getPersonType(person);
+    var type = getPersonType(person);
 
-  // set the colors now that we know what type we are
-  switch(type){
+    // set the colors now that we know what type we are
+    switch (type) {
 
-    case 'infectious':
+        case 'infectious':
             _icon.scale = 16;
             _icon.fillColor = settings.color_infectious_fill;
             _icon.strokeColor = settings.color_infectious_stroke;
-      break;
+            break;
 
-    case 'healed':
+        case 'healed':
             _icon.scale = 16;
-            _icon.fillColor = settings.color_healed_fill;       // don't change the color of patient zero
-            _icon.strokeColor = settings.color_healed_stroke;   // instead change the color of the quarantine
-      break;
+            _icon.fillColor = settings.color_healed_fill; // don't change the color of patient zero
+            _icon.strokeColor = settings.color_healed_stroke; // instead change the color of the quarantine
+            break;
 
-    case 'active':
-           _icon.fillColor = settings.color_active_fill;
-           _icon.strokeColor = settings.color_active_stroke;
-      break;
+        case 'active':
+            _icon.fillColor = settings.color_active_fill;
+            _icon.strokeColor = settings.color_active_stroke;
+            break;
 
-    case 'passive':
+        case 'passive':
             _icon.fillColor = settings.color_passive_fill;
             _icon.strokeColor = settings.color_passive_stroke;
-      break;
+            break;
 
-    case 'casualty':
+        case 'casualty':
             _icon.fillColor = settings.color_casualty_fill;
             _icon.strokeColor = settings.color_casualty_stroke;
-      break;
-  }
+            break;
+    }
 
-  // make the person stand out so they know who they are
-  // Now handled in the animation
+    // make the person stand out so they know who they are
+    // Now handled in the animation
 
-  return _icon;
+    return _icon;
 }
 
 var isMyTypeDifferent = function() {
-    if( myType != myPrevType ) {
+    if (myType != myPrevType) {
         myPrevType = myType;
         return true;
-    }
-    else {
+    } else {
         return false;
     }
 }
@@ -361,7 +346,7 @@ var isMyTypeDifferent = function() {
 // this only needs to be called once!!!!
 var startAnimations = function() {
 
-    if(isAnimatingMyIcon) return;
+    if (isAnimatingMyIcon) return;
 
     var count = 0;
     var period = 150;
@@ -372,11 +357,11 @@ var startAnimations = function() {
 
         var icon;
         // animate my icon so I know who I am
-        if(isMyTypeDifferent())
+        if (isMyTypeDifferent())
             icon = getMarkerIconForPerson(myUser);
         else
             icon = myUser.marker.icon;
-        icon.scale = 12 + 4 * Math.sin(2 * Math.PI * count/period);
+        icon.scale = 12 + 4 * Math.sin(2 * Math.PI * count / period);
         myUser.marker.setIcon(icon);
     }, 20);
 
@@ -384,36 +369,37 @@ var startAnimations = function() {
 }
 
 // animate the person who is shouting
-var animateShout = function(uuid) {
-	var shoutPerson = getPersonForUUID(uuid)
-	var shoutMarker = getMarkerForPerson(shoutPerson);
-	var shoutMarkerIcon = getMarkerIconForPerson(shoutPerson);
+var animateShout = function(id) {
+    var shoutPerson = User.getPersonById(id);
+    var shoutMarker = shoutPerson.marker;
+    var shoutMarkerIcon = shoutMarker.icon;
 
-	var count = 0;
-	var dur = 50;
+    var count = 0;
+    var dur = 50;
 
-	if(isPersonMe(shoutPerson))
-		window.clearInterval(my_animation_interval);
+    if (shoutPerson.isUserMe(shoutPerson))
+        window.clearInterval(my_animation_interval);
 
-    window.clearInterval(shout_intervals[uuid]);
+    window.clearInterval(shout_intervals[id]);
 
-    shout_intervals[uuid] = window.setInterval(function() {
+    shout_intervals[id] = window.setInterval(function() {
 
-    	count = (count + 1);
+        count = (count + 1);
 
-		if( count > dur ) {
-			window.clearInterval(shout_intervals[uuid]);
-		}
+        if (count > dur) {
+            window.clearInterval(shout_intervals[id]);
+        }
 
-		shoutMarkerIcon.scale = 8 + 16 * Math.pow(.9, count);
-		shoutMarker.setIcon(shoutMarkerIcon);
+        shoutMarkerIcon.scale = 8 + 16 * Math.pow(.9, count);
+        shoutMarker.setIcon(shoutMarkerIcon);
 
     }, 20);
 }
 
 // pulse the trapped icons once all together. A sort of cry for help.
-var animateTrapped = function() {
-    var trapped = getTrappedPopulationMarkers();
+function animateTrapped() {
+    // var trapped = getTrappedPopulationMarkers();
+    var trapped == getTrappedNPCMarkers();
     console.log(trapped);
     var count = 0;
     var period = 20;
@@ -422,18 +408,18 @@ var animateTrapped = function() {
 
         count = (count + 1);
 
-        if( count > period ) {
+        if (count > period) {
             window.clearInterval(trapped_interval);
         }
 
         var icon;
         var marker;
 
-        for( var i=0; i<trapped.length; i++ ) {
-            if(isPersonMe(trapped[i])) continue;    // skip my already animating icon
+        for (var i = 0; i < trapped.length; i++) {
+            if (isPersonMe(trapped[i])) continue; // skip my already animating icon
             marker = getMarkerForPerson(trapped[i]);
             icon = getMarkerIconForPerson(trapped[i]);
-            icon.scale = 8 + 2 * Math.sin( Math.PI * (count/period));
+            icon.scale = 8 + 2 * Math.sin(Math.PI * (count / period));
             marker.setIcon(icon);
         }
     }, 20);
@@ -445,43 +431,43 @@ var animateTrapped = function() {
 var animatePatientZero = function(icon) {
     var count = 0;
     window.setInterval(function() {
-      count = (count + 1) % 200;
- /*
+        count = (count + 1) % 200;
+        /*
      icons[0].offset = (count / 2) + '%';
       line.set('icons', icons);
 
-*/ }, 20);
+*/
+    }, 20);
 }
 
 
 //
 var updateScoreboard = function() {
-  //check status of patient zero
-  if(_patientZeroContained)
-    document.getElementById('patient_status').innerHTML = 'contained';
-  else
-    document.getElementById('patient_status').innerHTML = 'not contained';
+    //check status of patient zero
+    if (_patientZeroContained)
+        document.getElementById('patient_status').innerHTML = 'contained';
+    else
+        document.getElementById('patient_status').innerHTML = 'not contained';
 
-  // update count of casualties
-  document.getElementById('casualty_count').innerHTML = countCasualties();
+    // update count of casualties
+    document.getElementById('casualty_count').innerHTML = countCasualties();
 
-  // calculate the sq mi of quarantine...
-  document.getElementById('area_quarantined').innerHTML = getAreaQuarantined();
+    // calculate the sq mi of quarantine...
+    document.getElementById('area_quarantined').innerHTML = getAreaQuarantined();
 
-  // update count of people quarantining
-  document.getElementById('num_active').innerHTML = countActivePeople();
+    // update count of people quarantining
+    document.getElementById('num_active').innerHTML = countActivePeople();
 
-  // update score
+    // update score
 
 }
 
-var updateButtonAvailable = function(){
+var updateButtonAvailable = function() {
     //console.log("updating join functionality");
-    if(getPersonType(myUser) == 'casualty') {
+    if (getPersonType(myUser) == 'casualty') {
         document.getElementById('buttons').style.visibility = 'hidden';
         document.getElementById('shoutButton').style.visibility = 'visible';
-    }
-    else {
+    } else {
         document.getElementById('shoutButton').style.visibility = 'hidden';
         document.getElementById('buttons').style.visibility = 'visible';
     }
@@ -494,40 +480,40 @@ var updateNotifications = function() {
 
     // if p0 is contained && prev state !contained
     //PATIENT ZERO IS QUARANTINED
-    if(_patientZeroContained && !_prevPatientZeroContained) {
-        ohSnap('PATIENT ZERO IS QUARANTINED','green');
+    if (_patientZeroContained && !_prevPatientZeroContained) {
+        ohSnap('PATIENT ZERO IS QUARANTINED', 'green');
     }
 
     // if p0 is not contained && prev state is contained
     //PATIENT ZERO IS ON THE LOOSE
-    else if(!_patientZeroContained ) { //{&& _prevPatientZeroContained) {
-        ohSnap('PATIENT ZERO IS ON THE LOOSE','red');
+    else if (!_patientZeroContained) { //{&& _prevPatientZeroContained) {
+        ohSnap('PATIENT ZERO IS ON THE LOOSE', 'red');
     }
 
     // if active count < 3 && prev active count >=3
     //QUARANTINE FORMED
-    if(_numActive >= 3 && _prevNumActive < 3) {
-        ohSnap('QUARANTINE FORMED!','yellow');
+    if (_numActive >= 3 && _prevNumActive < 3) {
+        ohSnap('QUARANTINE FORMED!', 'yellow');
         _prevNumActive = _numActive;
     }
 
     // if active count >= && prev active count < 3
     //QUARANTINE BROKEN!
-    else if(_numActive < 3 && _prevNumActive >= 3) {
-        ohSnap('QUARANTINE BROKEN!','red');
+    else if (_numActive < 3 && _prevNumActive >= 3) {
+        ohSnap('QUARANTINE BROKEN!', 'red');
         _prevNumActive = _numActive;
     }
 
     // if numTrapped == 1 &&  prev numTrapped == 0
     //HEALTHY PEOPLE ARE INSIDE THE QUARANTINE
-    else if(_numTrapped == 1 && _prevNumTrapped == 0) {
+    else if (_numTrapped == 1 && _prevNumTrapped == 0) {
         ohSnap('HEALTHY PEOPLE ARE INSIDE THE QUARANTINE', 'orange');
         _prevNumTrapped = _numTrapped;
     }
 
     // else if numTrapped != prev numTrapped
     //ANOTHER HEALTHY PERSON GOT TRAPPED!
-    else if(_numTrapped > _prevNumTrapped) {
+    else if (_numTrapped > _prevNumTrapped) {
         ohSnap('ANOTHER HEALTHY PERSON GOT TRAPPED!', 'orange');
         _prevNumTrapped = _numTrapped;
     }
@@ -535,15 +521,15 @@ var updateNotifications = function() {
 
     // if active count is > prev active count
     //ADDITIONAL PLAYER ON THE QUARANTINE LINE
-    else if(_numActive > _prevNumActive) {
-        ohSnap('ADDITIONAL PLAYER ON THE QUARANTINE LINE','yellow');
+    else if (_numActive > _prevNumActive) {
+        ohSnap('ADDITIONAL PLAYER ON THE QUARANTINE LINE', 'yellow');
         _prevNumActive = _numActive;
     }
 
     // if active count < prev active count
     //LOST A PLAYER FROM THE QUARANTINE LINE
-    else if(_numActive < _prevNumActive) {
-        ohSnap('LOST A PLAYER FROM THE QUARANTINE LINE','yellow');
+    else if (_numActive < _prevNumActive) {
+        ohSnap('LOST A PLAYER FROM THE QUARANTINE LINE', 'yellow');
         _prevNumActive = _numActive;
     }
 
@@ -552,12 +538,10 @@ var updateNotifications = function() {
 
 
     // sends additional notifications about being trapped/free from a quarantine
-    if(myType == 'casualty' && _myPrevType != 'casualty'){
+    if (myType == 'casualty' && _myPrevType != 'casualty') {
         ohSnap('YOU ARE TRAPPED INSIDE THE QUARANTINE', 'red');
         _myPrevType = myType;
-    }
-
-    else if (myType != 'casualty' && _myPrevType == 'casualty'){
+    } else if (myType != 'casualty' && _myPrevType == 'casualty') {
         ohSnap('YOU ARE OUT OF THE QUARANTINE', 'green');
         _myPrevType = myType;
     }
@@ -573,20 +557,19 @@ var isPatientZeroContained = function() {
 
     var poly = getActivePopulationAsNormalCoords();
 
-    if( poly.length < 3 ) { // can't do it with less than 3
+    if (poly.length < 3) { // can't do it with less than 3
         _patientZeroContained = false;
         return false;
     }
 
     // searches por patient zero among players
-    for(var i=0; i<people.length; i++) {
+    for (var i = 0; i < people.length; i++) {
         var person = people[i];
-        if(person.isPatientZero){
-            if(isPointInPoly(poly, person.x, person.y)) {
+        if (person.isPatientZero) {
+            if (isPointInPoly(poly, person.x, person.y)) {
                 _patientZeroContained = true;
                 return true;
-            }
-            else {
+            } else {
                 _patientZeroContained = false;
                 return false;
             }
@@ -594,14 +577,13 @@ var isPatientZeroContained = function() {
     }
 
     // searches for patient zero among npcs
-    for(var i=0; i<npcs.length; i++) {
+    for (var i = 0; i < npcs.length; i++) {
         var npc = npcs[i];
-        if(npc.isPatientZero){
-            if(isPointInPoly(poly, npc.x, npc.y)) {
+        if (npc.isPatientZero) {
+            if (isPointInPoly(poly, npc.x, npc.y)) {
                 _patientZeroContained = true;
                 return true;
-            }
-            else {
+            } else {
                 _patientZeroContained = false;
                 return false;
             }
@@ -611,65 +593,64 @@ var isPatientZeroContained = function() {
 
 
 var countCasualties = function() {
-  var count = 0;
+    var count = 0;
 
-  // count players casualities
-  for(var i=0; i<people.length; i++) {
-    if(!people[i].isPatientZero){
-      if(getPersonType(people[i]) == 'casualty')
-        count++;
+    // count players casualities
+    for (var i = 0; i < people.length; i++) {
+        if (!people[i].isPatientZero) {
+            if (getPersonType(people[i]) == 'casualty')
+                count++;
+        }
     }
-  }
 
-  // count npcs casualities
-  for(var i=0; i<npcs.length; i++) {
-    if(!npcs[i].isPatientZero){
-      if(getPersonType(npcs[i]) == 'casualty')
-        count++;
+    // count npcs casualities
+    for (var i = 0; i < npcs.length; i++) {
+        if (!npcs[i].isPatientZero) {
+            if (getPersonType(npcs[i]) == 'casualty')
+                count++;
+        }
     }
-  }
 
-  _numTrapped = count;
+    _numTrapped = count;
 
-  return count;
+    return count;
 }
 
 
 var countActivePeople = function() {
-  return getActivePopulationAsNormalCoords().length;
+    return getActivePopulationAsNormalCoords().length;
 }
 
 
 // calculate the total area quarantined
 var getAreaQuarantined = function() {
-    if(quarantine.getPath()) {  // only compute quarantine area if a path exists (even of one point :)
+    if (quarantine.getPath()) { // only compute quarantine area if a path exists (even of one point :)
         var area = google.maps.geometry.spherical.computeArea(quarantine.getPath());
         // convert from sq meters to sq miles
         area = area * (0.000621371) * (0.000621371);
         return area.toFixed(2);
-    }
-    else {
+    } else {
         var defaultArea = 0;
         return defaultArea.toFixed(2);
     }
 }
 
-var revealPatientZero = function(){
+var revealPatientZero = function() {
     console.log("revealing patient zero");
     var index = NPC.getPatientZeroIndex();
     var npc = npcs[index];
     var npc_coords = getLatLngCoords(npc.x, npc.y);
 
     // creates a new marker for the npc if there isnt already one
-    if (npc.marker == null){
-      var marker_obj = new google.maps.Marker({
-        position: npc_coords,
-        icon: getMarkerIconForPerson(npc), // depends on the type of the npc
-        map: map,
-      });
+    if (npc.marker == null) {
+        var marker_obj = new google.maps.Marker({
+            position: npc_coords,
+            icon: getMarkerIconForPerson(npc), // depends on the type of the npc
+            map: map,
+        });
 
-      // sets patient zeros's marker in the local array to the created marker
-      npcs[index].marker = marker_obj;
+        // sets patient zeros's marker in the local array to the created marker
+        npcs[index].marker = marker_obj;
     }
 
 
@@ -680,10 +661,8 @@ var revealPatientZero = function(){
 //+ Jonas Raoni Soares Silva
 //@ http://jsfromhell.com/math/is-point-in-poly [rev. #0]
 
-function isPointInPoly(poly, x, y){
-    for(var c = false, i = -1, l = poly.length, j = l - 1; ++i < l; j = i)
-        ((poly[i].y <= y && y < poly[j].y) || (poly[j].y <= y && y < poly[i].y))
-        && (x < (poly[j].x - poly[i].x) * (y - poly[i].y) / (poly[j].y - poly[i].y) + poly[i].x)
-        && (c = !c);
+function isPointInPoly(poly, x, y) {
+    for (var c = false, i = -1, l = poly.length, j = l - 1; ++i < l; j = i)
+        ((poly[i].y <= y && y < poly[j].y) || (poly[j].y <= y && y < poly[i].y)) && (x < (poly[j].x - poly[i].x) * (y - poly[i].y) / (poly[j].y - poly[i].y) + poly[i].x) && (c = !c);
     return c;
 }
