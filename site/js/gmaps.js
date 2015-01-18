@@ -6,6 +6,8 @@ var map = null;
 var quarantine = null;
 var markers = [];
 
+var markerSize = 8;	// default size for markers
+
 var myPerson;
 var myMarker;
 var myIcon;
@@ -34,7 +36,6 @@ var _numActive = 0;
 
 var _myPrevType = 'passive';
 
-
 // center map on user
 //var usersCoords = getUserAsGoogleCoords();
 
@@ -57,6 +58,19 @@ var drawMap = function() {
 
 	if(map == null) {
     	map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+    	
+    	// Listen for map zoom events and resize the markers as needed
+		google.maps.event.addListener(map, 'zoom_changed', function() {
+		    
+		    //update the marker size based on the map zoom
+			var zoom = map.getZoom();
+			if (zoom >= 12) markerSize = 8;
+			else if (zoom < 12 && zoom >= 8) markerSize = 4;
+			else if (zoom < 8) markerSize = 2;
+		 
+			drawPopulation();
+			drawNPCs();
+		});
     }
 }
 
@@ -224,48 +238,48 @@ var drawNPCs = function() {
 
 var drawPopulation = function() {
 
-  var people_coords = getPopulationAsGoogleCoords();
+	var people_coords = getPopulationAsGoogleCoords();
 
-  for(var i=0; i<people.length; i++) {
+	for(var i=0; i<people.length; i++) {
 
-    var person = people[i];
-
-    if(person.isPatientZero)
-    	continue;
-
-    if(!doesPersonHaveAMarkerYet(person)) {
-
-        if(isPersonMe(person)) {
-            labelMeWithYouAreHere(people_coords[i]);
-        }
-
-        var marker_obj = new google.maps.Marker({
-          position: people_coords[i],
-          icon: getMarkerIconForPerson(person),
-          map: map,
-        });
-
-        if(isPersonMe(person)) {
-            myMarker = marker_obj;
-            myPerson = person;
-            myIcon = marker_obj.icon;
-        }
-
-        markers.push({marker: marker_obj,
-                        id: person.id});
-    }
-    else {
-        var marker_obj = getMarkerForPerson(person)
-        marker_obj.setIcon(getMarkerIconForPerson(person));
-
-        if(isPersonMe(person)) {    // update my status
-            myMarker = marker_obj;
-            myPerson = person;
-            myIcon = marker_obj.icon;
-        }
-
-    }
-  }
+	    var person = people[i];
+	
+	    if(person.isPatientZero)
+	    	continue;
+	
+	    if(!doesPersonHaveAMarkerYet(person)) {
+	
+	        if(isPersonMe(person)) {
+	            labelMeWithYouAreHere(people_coords[i]);
+	        }
+	
+	        var marker_obj = new google.maps.Marker({
+	          position: people_coords[i],
+	          icon: getMarkerIconForPerson(person),
+	          map: map,
+	        });
+	
+	        if(isPersonMe(person)) {
+	            myMarker = marker_obj;
+	            myPerson = person;
+	            myIcon = marker_obj.icon;
+	        }
+	
+	        markers.push({marker: marker_obj,
+	                        id: person.id});
+	    }
+	    else {
+	        var marker_obj = getMarkerForPerson(person)
+	        marker_obj.setIcon(getMarkerIconForPerson(person));
+	
+	        if(isPersonMe(person)) {    // update my status
+	            myMarker = marker_obj;
+	            myPerson = person;
+	            myIcon = marker_obj.icon;
+	        }
+	
+	    }
+	}
 
   // start the recurring animations
   startAnimations();
@@ -366,16 +380,16 @@ var getPersonType = function(person) {
 
 
 var getMarkerIconForPerson = function(person) {
-
+	 
   // common options for icons
   var _icon = {
     path: google.maps.SymbolPath.CIRCLE,
     fillColor: '#FFFFFF',
     fillOpacity: 1.0,
-    scale: 8,
+    scale: markerSize,
     strokeColor: settings.color_border_stroke,
     strokeOpacity: 0.8,
-    strokeWeight: 4
+    strokeWeight: markerSize/2
   };
 
   var type = getPersonType(person);
@@ -384,13 +398,13 @@ var getMarkerIconForPerson = function(person) {
   switch(type){
 
     case 'infectious':
-            _icon.scale = 16;
+            _icon.scale = 1.5*markerSize;
             _icon.fillColor = settings.color_infectious_fill;
             _icon.strokeColor = settings.color_infectious_stroke;
       break;
 
     case 'healed':
-            _icon.scale = 16;
+            _icon.scale = 1.5*markerSize;
             _icon.fillColor = settings.color_healed_fill;       // don't change the color of patient zero
             _icon.strokeColor = settings.color_healed_stroke;   // instead change the color of the quarantine
       break;
@@ -445,7 +459,7 @@ var startAnimations = function() {
             icon = getMarkerIconForPerson(myPerson);
         else
             icon = myIcon;
-        icon.scale = 12 + 4 * Math.sin(2 * Math.PI * count/period);
+        icon.scale = markerSize + (1 + Math.sin(2 * Math.PI * count/period)) * markerSize/2;
         myMarker.setIcon(icon);
     }, 20);
 
@@ -474,7 +488,7 @@ var animateShout = function(uuid) {
 			window.clearInterval(shout_intervals[uuid]);
 		}
 
-		shoutMarkerIcon.scale = 8 + 16 * Math.pow(.9, count);
+		shoutMarkerIcon.scale = markerSize + 2 * markerSize * Math.pow(.9, count);
 		shoutMarker.setIcon(shoutMarkerIcon);
 
     }, 20);
@@ -502,7 +516,7 @@ var animateTrapped = function() {
             if(isPersonMe(trapped[i])) continue;    // skip my already animating icon
             marker = getMarkerForPerson(trapped[i]);
             icon = getMarkerIconForPerson(trapped[i]);
-            icon.scale = 8 + 2 * Math.sin( Math.PI * (count/period));
+            icon.scale = markerSize + markerSize/4 * Math.sin( Math.PI * (count/period));
             marker.setIcon(icon);
         }
     }, 20);
