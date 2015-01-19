@@ -422,42 +422,6 @@ var showMissedGameMessage = function() {
 //      General Actions
 //----------------------------
 
-var setUserActiveState = function(isActive) {
-
-    // something with parse to set the value inactive
-    console.log("setting user state");
-
-    var User = Parse.Object.extend("SimpleUser");
-    var query = new Parse.Query(User);
-    query.equalTo("playerID", _uuid);
-    query.find(
-    {
-        success: function(result)
-        {
-            var object = result[0];
-            object.set("active", isActive);
-            object.save(null,
-            {
-                success:function (object)
-                {
-                    // then update pubnub
-                    sendUpdateMessage();
-                    //console.log("WOAAAAHHHH YEAH", object);
-                },
-                error:function(object)
-                {
-                    console.log("WOAAAAHHHH NOOOOOOO!", object);
-                }
-            });
-        },
-        error: function(error) {
-            console.log("Error: " + error.code + " " + error.message);
-        }
-
-    });
-}
-
-
 var flipUserActiveState = function() {
     // something with parse to set the value inactive
     console.log("flipping user state");
@@ -490,40 +454,6 @@ var flipUserActiveState = function() {
                     // then update pubnub
                     sendFlipStateMessage(id, state);
 
-                    //console.log("WOAAAAHHHH YEAH", object);
-                },
-                error:function(object)
-                {
-                    console.log("WOAAAAHHHH NOOOOOOO!", object);
-                }
-            });
-        },
-        error: function(error) {
-            console.log("Error: " + error.code + " " + error.message);
-        }
-
-    });
-}
-
-
-var setUserPresent = function(uuid) {
-
-    // something with parse to set the value inactive
-    console.log("setting user present");
-
-    var User = Parse.Object.extend("SimpleUser");
-    var query = new Parse.Query(User);
-    query.equalTo("playerID", uuid);
-    query.find({
-        success: function(result) {
-            var object = result[0];
-            object.set("present", true);
-            object.save(null,
-            {
-                success:function (object)
-                {
-                    // then update pubnub
-                    sendUpdateMessage();
                     //console.log("WOAAAAHHHH YEAH", object);
                 },
                 error:function(object)
@@ -587,6 +517,27 @@ Array.prototype.clear = function() {
   }
 };
 
+// Helper Functions
+
+var popPerson = function(uuid) {
+
+    for(var i=0; i<people.length; i++) {
+        if(people[i].id == uuid){
+            var person = people[i]
+            people.splice(i, 1);
+            return person;
+        }
+    }
+
+    console.log("DID NOT FIND PERSON");
+}
+
+//-----------------------------
+//		Setup
+//
+//	TODO: Move this to its own folder
+//-----------------------------
+
 // Then add new user
 var SimpleUser = Parse.Object.extend("SimpleUser");
 var simpleUser = new SimpleUser();
@@ -609,23 +560,3 @@ simpleUser.save({
     // error is a Parse.Error with an error code and message.
   }
 });
-
-
-//----------------------------
-//          NPCs
-//----------------------------
-
-// Helper Functions
-
-var popPerson = function(uuid) {
-
-    for(var i=0; i<people.length; i++) {
-        if(people[i].id == uuid){
-            var person = people[i]
-            people.splice(i, 1);
-            return person;
-        }
-    }
-
-    console.log("DID NOT FIND PERSON");
-}
