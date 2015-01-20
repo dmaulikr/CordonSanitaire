@@ -2,92 +2,6 @@
 // Map stuffs
 //----------------------------
 
-function pickPatientZero() {
-    // something with parse to set the value inactive
-    console.log("picking patient zero");
-
-    var uuid = people[Math.floor(Math.random() * people.length)].id;
-    console.log("picked" + uuid);
-
-    var users = Parse.Object.extend("SimpleUser");
-    var query = new Parse.Query(users);
-    query.equalTo("present", true);
-    query.find({
-        success: function(results) {
-            // look through all present people
-            for (var i = 0; i < results.length; i++) {
-
-                var object = results[i];
-
-                if (object.get('playerID') == uuid)
-                    object.set('isPatientZero', true);
-                else
-                    object.set('isPatientZero', false);
-
-                if (i != results.length - 1)
-                    object.save();
-                else
-                    object.save(null, // update after the last one is saved
-                        {
-                            success: function(object) {
-                                // let the others know we have picked a new patient zero
-                                sendUpdateMessage();
-                                //console.log("WOAAAAHHHH YEAH", object);
-                            },
-                            error: function(object) {
-                                console.log("WOAAAAHHHH NOOOOOOO!", object);
-                            }
-                        });
-            }
-
-        },
-        error: function(error) {
-            console.log("Error: " + error.code + " " + error.message);
-        }
-
-    });
-}
-
-function updatePopulation() {
-    if (!hasReceivedJoinedMessage) return; // only update after we have added ourselves to the population
-
-    people.clear();
-
-    var users = Parse.Object.extend("SimpleUser");
-    var query = new Parse.Query(users);
-    query.equalTo("present", true);
-    query.find({
-        success: function(results) {
-            console.log("Success: Update population - get present");
-            // draw this list of players across the screen.
-            for (var i = 0; i < results.length; i++) {
-                var object = results[i];
-
-                // place useful data into a local object
-                var obj = {
-                    x: object.get('x'),
-                    y: object.get('y'),
-                    id: object.get('playerID'),
-                    active: object.get('active'),
-                    role: object.get('role'),
-                    isPatientZero: object.get('isPatientZero')
-                };
-
-                //              console.log("placing person at (" + obj.x + ", " + obj.y + ")");
-
-                people.push(obj);
-            }
-
-            // updateGameBoard();
-        },
-        error: function(object, error) {
-            // The object was not retrieved successfully.
-            // error is a Parse.Error with an error code and message.
-            console.log("Error: " + error.code + " " + error.message);
-        }
-    });
-}
-
 // sort people
 function sortPeople() {
 
@@ -351,9 +265,7 @@ function setAllUsersNotPresent() {
                     object.save(null, // update after the last one is saved
                         {
                             success: function(object) {
-                                // let the others know we have picked a new patient zero
-                                sendUpdateMessage();
-                                //console.log("WOAAAAHHHH YEAH", object);
+                                sendResetPlayersMessage();
                             },
                             error: function(object) {
                                 console.log("WOAAAAHHHH NOOOOOOO!", object);

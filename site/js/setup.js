@@ -84,7 +84,8 @@ var myUser = new User(Math.random(0, 1),
     Math.random(0, 1),
     "citizen",
     TypeEnum.PASSIVE,
-    false
+    false, // isPatientZero
+    true   // present
 );
 
 // pushes myUser to the database and sets its id to the be the database id.

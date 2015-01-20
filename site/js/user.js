@@ -3,7 +3,7 @@
 /**
  * Constructor for User Class
  */
-var User = function(x, y, role, type, isPatientZero) {
+var User = function(x, y, role, type, isPatientZero, present) {
     this.id = null; // id will be attributed once the object is pushed to the database
     this.x = x;
     this.y = y;
@@ -11,6 +11,7 @@ var User = function(x, y, role, type, isPatientZero) {
     this.type = type;
     this.isPatientZero = isPatientZero;
     this.marker = null;
+    this.present = present
 };
 
 /**
@@ -78,7 +79,8 @@ User.prototype.pushToDatabase = function(callback) {
         y: this.y,
         role: this.role,
         type: this.type,
-        isPatientZero: this.isPatientZero
+        isPatientZero: this.isPatientZero,
+        present: this.present
     }, {
         success: function(user) {
             // The object was saved successfully.
@@ -137,9 +139,11 @@ User.prototype.labelWithYouAreHere = function() {
  * Repopulates the local array of Users with all the entries from the database.
  */
 User.getAllFromDatabase = function(callback) {
+    User.eraseAll();
     people.clear;
     var user = Parse.Object.extend("SimpleUser");
     var query = new Parse.Query(user);
+    query.equalTo("present", true);
     query.find({
         success: function(results) {
             console.log("Success: Getting people");
@@ -254,3 +258,11 @@ User.getPersonById = function(id) {
     console.log("DID NOT FIND PERSON FOR UUID");
 }
 
+/**
+ * Erase all users from the map (delete their markers).
+ */
+User.eraseAll = function() {
+    for (var i = 0; i < people.length; i++){
+        people[i].erase();
+    }
+}

@@ -35,11 +35,6 @@ pubnub.subscribe({
     message: function(m) {
         switch (m.action) {
 
-            case "update":
-                console.log("received UPDATE message");
-                // updatePopulation();
-                break;
-
             case "start":
                 console.log("received START message");
                 startTheClock();
@@ -78,6 +73,15 @@ pubnub.subscribe({
                 User.changeUserType(m.id, m.type);
                 break;
 
+            case "resetPlayers":
+                console.log("resetting players");
+                // repopulate the local array
+                User.getAllFromDatabase();
+
+                // update the game board
+                updateGameBoard();
+                break;
+
             default:
                 console.log(m);
         }
@@ -99,15 +103,6 @@ window.onbeforeunload = function() {
 
 
 // Publish
-function sendUpdateMessage() {
-    pubnub.publish({
-        channel: _channel,
-        message: {
-            action: 'update'
-        }
-    });
-}
-
 
 // send start message
 function sendStartOfGame() {
@@ -167,6 +162,15 @@ function sendChangeUserTypeMessage(id, type) {
             action: 'changeUserType',
             id: id,
             type: type
+        }
+    })
+}
+
+function sendResetPlayersMessage() {
+    pubnub.publish({
+        channel: _channel,
+        message: {
+            action: 'resetPlayers'
         }
     })
 }

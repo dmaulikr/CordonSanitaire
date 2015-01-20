@@ -24,11 +24,6 @@ function Settings(){
     this.chat = false;
     this.gmaps = false;
 
-    this.rollDice = function(){
-        //pick the patient zero
-        pickPatientZero();
-    };
-
     this.start = function(){
         //startTheClock();
         sendStartOfGame();
@@ -123,7 +118,6 @@ f0.add(settings, 'refresh');
 f0.closed = true;
 
 var f5 = gui.addFolder('advanced');
-f5.add(settings, 'rollDice');
 f5.add(settings, 'resetPlayers');
 
 var f1 = gui.addFolder('settings');
