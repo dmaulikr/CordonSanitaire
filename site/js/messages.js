@@ -99,7 +99,7 @@ window.onbeforeunload = function() {
 
 
 // Publish
-var sendUpdateMessage = function() {
+function sendUpdateMessage() {
     pubnub.publish({
         channel: _channel,
         message: {
@@ -110,7 +110,7 @@ var sendUpdateMessage = function() {
 
 
 // send start message
-var sendStartOfGame = function() {
+function sendStartOfGame() {
     pubnub.publish({
         channel: _channel,
         message: {
@@ -120,7 +120,7 @@ var sendStartOfGame = function() {
 }
 
 // send shout message
-var sendShout = function() {
+function sendShout() {
     pubnub.publish({
         channel: _channel,
         message: {
@@ -130,7 +130,7 @@ var sendShout = function() {
     });
 }
 
-var sendAddNPCMessage = function(id) {
+function sendAddNPCMessage(id) {
     pubnub.publish({
         channel: _channel,
         message: {
@@ -140,7 +140,7 @@ var sendAddNPCMessage = function(id) {
     });
 }
 
-var sendRemoveNPCMessage = function(id) {
+function sendRemoveNPCMessage(id) {
     pubnub.publish({
         channel: _channel,
         message: {
@@ -150,7 +150,7 @@ var sendRemoveNPCMessage = function(id) {
     });
 }
 
-var sendAddUserMessage = function(id) {
+function sendAddUserMessage(id) {
     pubnub.publish({
         channel: _channel,
         message: {
@@ -160,7 +160,7 @@ var sendAddUserMessage = function(id) {
     });
 }
 
-var sendChangeUserTypeMessage = function(id, type) {
+function sendChangeUserTypeMessage(id, type) {
     pubnub.publish({
         channel: _channel,
         message: {

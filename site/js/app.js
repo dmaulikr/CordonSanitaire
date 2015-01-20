@@ -2,7 +2,7 @@
 // Map stuffs
 //----------------------------
 
-var pickPatientZero = function() {
+function pickPatientZero() {
     // something with parse to set the value inactive
     console.log("picking patient zero");
 
@@ -48,7 +48,7 @@ var pickPatientZero = function() {
     });
 }
 
-var updatePopulation = function() {
+function updatePopulation() {
     if (!hasReceivedJoinedMessage) return; // only update after we have added ourselves to the population
 
     people.clear();
@@ -89,7 +89,7 @@ var updatePopulation = function() {
 }
 
 // sort people
-var sortPeople = function() {
+function sortPeople() {
 
     var sortedPeople = [];
     sortedPeople.clear();
@@ -107,7 +107,7 @@ var sortPeople = function() {
 }
 
 
-var getNextPersonCounterClockwise = function(p) {
+function getNextPersonCounterClockwise(p) {
 
     var min = 2 * Math.PI; // max angle
     var index = 0;
@@ -297,7 +297,7 @@ var showMissedGameMessage = function() {
 //      General Actions
 //----------------------------
 
-var flipUserActiveState = function() {
+function flipUserActiveState() {
     // something with parse to set the value inactive
     console.log("flipping user state");
 
@@ -334,7 +334,7 @@ var flipUserActiveState = function() {
 
 
 // reset all of the players back to no-one playing
-var setAllUsersNotPresent = function() {
+function setAllUsersNotPresent() {
 
     var users = Parse.Object.extend("SimpleUser");
     var query = new Parse.Query(users);

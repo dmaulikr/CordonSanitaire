@@ -203,7 +203,7 @@ function getTrappedNPCMarkers() {
     return trapped;
 }
 
-var updateNPCs = function() {
+function updateNPCs() {
     for (var i = 0; i < npcs.length; i++) {
         var npc = npcs[i];
         npc.updateType(getType(npc));
@@ -213,7 +213,7 @@ var updateNPCs = function() {
     }
 }
 
-var drawNPCs = function() {
+function drawNPCs() {
     // draw npcs one by one
     for (var i = 0; i < npcs.length; i++) {
         // hides patient zero
@@ -223,7 +223,7 @@ var drawNPCs = function() {
 }
 
 
-var drawPopulation = function() {
+function drawPopulation() {
     for (var i = 0; i < people.length; i++) {
         // hide patient zero
         if (!people[i].isPatientZero) {
@@ -319,7 +319,7 @@ function animateTrapped() {
 
 
 // animate Patient Zero
-var animatePatientZero = function(icon) {
+function animatePatientZero(icon) {
     var count = 0;
     window.setInterval(function() {
         count = (count + 1) % 200;
@@ -333,7 +333,7 @@ var animatePatientZero = function(icon) {
 
 
 //
-var updateScoreboard = function() {
+function updateScoreboard() {
     //check status of patient zero
     if (_patientZeroContained)
         document.getElementById('patient_status').innerHTML = 'contained';
@@ -353,7 +353,7 @@ var updateScoreboard = function() {
 
 }
 
-var updateButtonAvailable = function() {
+function updateButtonAvailable() {
     //console.log("updating join functionality");
     if (getType(myUser) == TypeEnum.TRAPPED) {
         document.getElementById('buttons').style.visibility = 'hidden';
@@ -364,7 +364,7 @@ var updateButtonAvailable = function() {
     }
 }
 
-var updateNotifications = function() {
+function updateNotifications() {
 
     // IN ORDER OF PRIORITY
     // Only a single message each action
@@ -453,7 +453,7 @@ function isPatientZeroContained() {
 }
 
 
-var countCasualties = function() {
+function countCasualties() {
     var count = 0;
 
     // count players casualities
@@ -478,7 +478,7 @@ var countCasualties = function() {
 }
 
 
-var countActivePeople = function() {
+function countActivePeople() {
     var count = 0;
 
     for (var i = 0; i < people.length; i++) {
@@ -491,7 +491,7 @@ var countActivePeople = function() {
 
 
 // calculate the total area quarantined
-var getAreaQuarantined = function() {
+function getAreaQuarantined() {
     if (quarantine.getPath()) { // only compute quarantine area if a path exists (even of one point :)
         var area = google.maps.geometry.spherical.computeArea(quarantine.getPath());
         // convert from sq meters to sq miles
