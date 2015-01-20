@@ -57,7 +57,8 @@ function drawMap() {
 function setGameBoard() {
 
     console.log("setting up game board");
-    findCenter();
+
+    center = getCenter(getActivePopulation());
 
     sortPeople(); // sort the people into the order to hold the rope
     setQuarantine();
@@ -96,10 +97,12 @@ function setGameBoard() {
 
 function updateGameBoard() {
 
+
     if (!hasReceivedJoinedMessage) return;
 
     console.log("updating population")
-    findCenter();
+
+    center = getCenter(getActivePopulation());
 
     sortPeople(); // sort the people into the order to hold the rope
     drawMap();

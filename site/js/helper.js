@@ -86,6 +86,21 @@ function getType(obj) {
 }
 
 /**
+ * Return the active Users.
+ * @return activePopulation [an array with the active Users]
+ */
+function getActivePopulation(){
+    var activePopulation = [];
+    for (var i = 0; i < people.length; i++) {
+        if (people[i].isActive() && !people[i].isPatientZero) {
+            activePopulation.push(people[i]);
+        }
+    }
+
+    return activePopulation;
+}
+
+/**
  * Gets the Google Coordinates of the active Users.
  * @return coord [an array with the Google Coordinates of the active Users]
  */
@@ -142,7 +157,10 @@ function getCenter(users) {
         total.x += users[i].x;
         total.y += users[i].y;
     }
-    loc.x = total.x / users.length;
-    loc.y = total.y / users.length;
+    if (users.length > 0){
+        loc.x = total.x / users.length;
+        loc.y = total.y / users.length;
+    }
+
     return loc;
 }

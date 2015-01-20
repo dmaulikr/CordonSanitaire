@@ -37,7 +37,7 @@ pubnub.subscribe({
 
             case "update":
                 console.log("received UPDATE message");
-                updatePopulation();
+                // updatePopulation();
                 break;
 
             case "start":

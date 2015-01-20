@@ -88,36 +88,6 @@ var updatePopulation = function() {
     });
 }
 
-// find center of active people
-function findCenter() {
-
-    var numPeopleHolding = 0;
-    var total = {
-        x: 0,
-        y: 0
-    };
-    center = {
-        x: 0,
-        y: 0
-    };
-
-    for (var i = 0; i < people.length; i++) {
-        if (people[i].isActive()) {
-            total.x += people[i].x;
-            total.y += people[i].y;
-            numPeopleHolding++;
-        }
-    }
-
-    if (numPeopleHolding > 0) {
-        center.x = total.x / numPeopleHolding;
-        center.y = total.y / numPeopleHolding;
-    }
-
-    //     console.log("Found center: (" + center.x + ", " + center.y + ")");
-}
-
-
 // sort people
 var sortPeople = function() {
 
@@ -327,37 +297,6 @@ var showMissedGameMessage = function() {
 //      General Actions
 //----------------------------
 
-var setUserActiveState = function(isActive) {
-
-    // something with parse to set the value inactive
-    console.log("setting user state");
-
-    var User = Parse.Object.extend("SimpleUser");
-    var query = new Parse.Query(User);
-    query.equalTo("playerID", _uuid);
-    query.find({
-        success: function(result) {
-            var object = result[0];
-            object.set("active", isActive);
-            object.save(null, {
-                success: function(object) {
-                    // then update pubnub
-                    sendUpdateMessage();
-                    //console.log("WOAAAAHHHH YEAH", object);
-                },
-                error: function(object) {
-                    console.log("WOAAAAHHHH NOOOOOOO!", object);
-                }
-            });
-        },
-        error: function(error) {
-            console.log("Error: " + error.code + " " + error.message);
-        }
-
-    });
-}
-
-
 var flipUserActiveState = function() {
     // something with parse to set the value inactive
     console.log("flipping user state");
@@ -383,37 +322,6 @@ var flipUserActiveState = function() {
                 error: function(object) {
                     console.log("WOAAAAHHHH NOOOOOOO!", object);
                     console.log("Error: " + error.code + " " + error.message);
-                }
-            });
-        },
-        error: function(error) {
-            console.log("Error: " + error.code + " " + error.message);
-        }
-
-    });
-}
-
-
-var setUserPresent = function(uuid) {
-
-    // something with parse to set the value inactive
-    console.log("setting user present");
-
-    var User = Parse.Object.extend("SimpleUser");
-    var query = new Parse.Query(User);
-    query.equalTo("playerID", uuid);
-    query.find({
-        success: function(result) {
-            var object = result[0];
-            object.set("present", true);
-            object.save(null, {
-                success: function(object) {
-                    // then update pubnub
-                    sendUpdateMessage();
-                    //console.log("WOAAAAHHHH YEAH", object);
-                },
-                error: function(object) {
-                    console.log("WOAAAAHHHH NOOOOOOO!", object);
                 }
             });
         },
