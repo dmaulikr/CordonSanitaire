@@ -59,16 +59,17 @@ function Settings(){
     };
 
     this.addPatientZero = function(){
-        // checks if there's already a patient zero
-        var index = NPC.getPatientZeroIndex();
-        var npc = npcs[index];
-        // if not, picks 3 random users and place p0 in the middle of them
-        if (npc != undefined){
+        // checks if there's already a patient zero, if there's remove it locally and from the database
+        if (patient_zero != undefined){
             console.log("there's already a patient zero");
-            npc.removeFromDatabase();
-            sendRemoveNPCMessage(npc.id);
+            // erase patient zero's marker if there's one.
+            if (patient_zero.marker != null)
+                patient_zero.marker.setMap(null);
+            patient_zero.removeFromDatabase();
+            sendRemoveNPCMessage(patient_zero.id);
         }
 
+        // then picks 3 random users and place p0 in the middle of them
         var rnd_users = [];
         var loc;
         if (people.length <= 3){
@@ -84,13 +85,16 @@ function Settings(){
             loc = getCenter(rnd_users);
         }
 
-        npc = new NPC(
+        patient_zero = new NPC(
             loc.x,
             loc.y,
             "citizen",
             TypeEnum.INFECTIOUS,
             true);
-        npc.pushToDatabase();
+
+        patient_zero.pushToDatabase(function() {
+            patient_zero.id = this.id
+        });
     }
 
     this.revealPatientZero = function(){

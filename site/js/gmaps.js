@@ -6,9 +6,6 @@ var map = null;
 var quarantine = new google.maps.Polygon();
 var markers = [];
 
-var myMarker;
-var patientZeroMarker;
-
 var isAnimatingPatientZero = false;
 
 var myType = 'passive';
@@ -61,9 +58,10 @@ function setGameBoard() {
     center = getCenter(getActivePopulation());
 
     sortPeople(); // sort the people into the order to hold the rope
-    setQuarantine();
 
-    drawMap();
+    drawMap(); // only draw the map once
+    setQuarantine();
+    updateNPCs();
     updatePopulation();
 
     // draw quarantine
@@ -108,6 +106,7 @@ function updateGameBoard() {
     drawMap();
 
     updateQuarantine();
+    updateNPCs();
     updatePopulation();
 
     // draw quarantine
@@ -148,26 +147,14 @@ function setQuarantine(){
         fillOpacity: settings.color_border_opacity
     });
 
-    // wait until quaratine path is set to check if patient zero is contained and set the proper colors
-    if (isPatientZeroContained()) {
-        console.log("heeere2")
-        q_stroke = settings.color_border_contained_stroke;
-        q_fill = settings.color_border_contained_fill;
-    } else {
-        q_stroke = settings.color_border_not_contained_stroke;
-        q_fill = settings.color_border_not_contained_fill;
-    }
-
-    quarantine.setOptions({
-        strokeColor: q_stroke,
-        fillColor: q_fill
-    });
 }
 
 function updateQuarantine() {
-    var q_stroke, q_fill;
-
     quarantine.setPaths(getActivePopulationAsGoogleCoords());
+}
+
+function drawQuarantine() {
+    var q_stroke, q_fill;
 
     if (isPatientZeroContained()) {
         q_stroke = settings.color_border_contained_stroke;
@@ -182,9 +169,6 @@ function updateQuarantine() {
         strokeColor: q_stroke,
         fillColor: q_fill
     });
-}
-
-function drawQuarantine() {
     quarantine.setMap(map);
 }
 
@@ -196,11 +180,12 @@ function isInsideQuarantine(x, y) {
 
 function updatePopulation() {
     for (var i = 0; i < people.length; i++) {
-        people[i].type = getType(people[i]);
+        people[i].updateType(getType(people[i]));
+        console.log(people.id + " " + people.type)
     }
 }
 
-var getTrappedPopulationMarkers = function() {
+function getTrappedPopulationMarkers() {
     var trapped = [];
 
     for (var i = 0; i < people.length; i++) {
@@ -228,13 +213,13 @@ var updateNPCs = function() {
     for (var i = 0; i < npcs.length; i++) {
         var npc = npcs[i];
         npc.updateType(getType(npc));
+        // update patient zero
+        if (npc.isPatientZero)
+            patient_zero.updateType(npc.type);
     }
 }
 
 var drawNPCs = function() {
-    // update before start drawing
-    updateNPCs();
-
     // draw npcs one by one
     for (var i = 0; i < npcs.length; i++) {
         // hides patient zero
@@ -282,7 +267,6 @@ function startAnimations() {
 function animateShout(id) {
     var shoutPerson = User.getPersonById(id);
     var shoutMarker = shoutPerson.marker;
-    var shoutMarkerIcon = shoutMarker.icon;
 
     var count = 0;
     var dur = 50;
@@ -298,10 +282,13 @@ function animateShout(id) {
 
         if (count > dur) {
             window.clearInterval(shout_intervals[id]);
+            // once shouting is over go back to animate myself.
+            if (shoutPerson.isUserMe(shoutPerson))
+                startAnimations();
         }
 
-        shoutMarkerIcon.scale = 8 + 16 * Math.pow(.9, count);
-        shoutMarker.setIcon(shoutMarkerIcon);
+        shoutMarker.icon.scale = 8 + 16 * Math.pow(.9, count);
+        shoutMarker.setIcon(shoutMarker.icon);
 
     }, 20);
 }
@@ -459,39 +446,18 @@ var updateNotifications = function() {
 
 function isPatientZeroContained() {
 
+    if (patient_zero == null)
+        return true
+
     if (quarantine == null || quarantine.length < 3) { // can't do it with less than 3
         console.log("heere");
         _patientZeroContained = false;
         return false;
     }
 
-    // searches por patient zero among players
-    for (var i = 0; i < people.length; i++) {
-        var person = people[i];
-        if (person.isPatientZero) {
-            if (isInsideQuarantine(person.x, person.y)) {
-                _patientZeroContained = true;
-                return true;
-            } else {
-                _patientZeroContained = false;
-                return false;
-            }
-        }
-    }
+    _patientZeroContained = (patient_zero.type == TypeEnum.HEALED);
 
-    // searches for patient zero among npcs
-    for (var i = 0; i < npcs.length; i++) {
-        var npc = npcs[i];
-        if (npc.isPatientZero) {
-            if (isInsideQuarantine(npc.x, npc.y)) {
-                _patientZeroContained = true;
-                return true;
-            } else {
-                _patientZeroContained = false;
-                return false;
-            }
-        }
-    }
+    return _patientZeroContained
 }
 
 
@@ -545,25 +511,21 @@ var getAreaQuarantined = function() {
     }
 }
 
-var revealPatientZero = function() {
+function revealPatientZero() {
     console.log("revealing patient zero");
-    var index = NPC.getPatientZeroIndex();
-    var npc = npcs[index];
-    var npc_coords = getLatLngCoords(npc.x, npc.y);
+    var patient_zero_coords = getLatLngCoords(patient_zero.x, patient_zero.y);
 
     // creates a new marker for the npc if there isnt already one
-    if (npc.marker == null) {
+    if (patient_zero.marker == null) {
         var marker_obj = new google.maps.Marker({
-            position: npc_coords,
-            icon: getMarkerIcon(npc.type), // depends on the type of the npc
+            position: patient_zero_coords,
+            icon: getMarkerIcon(patient_zero.type), // depends on the type of the npc
             map: map,
         });
-
-        // sets patient zeros's marker in the local array to the created marker
-        npcs[index].marker = marker_obj;
     }
 
+    patient_zero.marker = marker_obj;
 
     // pan to show the patient zero centered in the screen
-    map.panTo(npc_coords);
+    map.panTo(patient_zero_coords);
 }

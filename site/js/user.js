@@ -57,6 +57,14 @@ User.prototype.isUserMe = function() {
 }
 
 /**
+ * Updates the type of this NPC
+ * @param  {TypeEnum} type
+ */
+User.prototype.updateType = function(type) {
+    this.type = type;
+};
+
+/**
  * Creates a new User in the database with the same info of this User.
  * Also assigns the UUID from the database to this User.
  */

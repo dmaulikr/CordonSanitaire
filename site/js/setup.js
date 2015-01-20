@@ -77,7 +77,7 @@ var hasReceivedJoinedMessage = false;
 var people = [];
 var npcs = [];
 var center; // point that represents the center of the population (holding)
-
+var patient_zero;
 
 // Then add new user (the current user)
 var myUser = new User(Math.random(0, 1),

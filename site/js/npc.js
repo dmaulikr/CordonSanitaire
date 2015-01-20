@@ -48,7 +48,7 @@ NPC.prototype.erase = function() {
  * Creates a new NPC in the database with the same info of this NPC.
  * Also assigns the UUID from the database to this NPC.
  */
-NPC.prototype.pushToDatabase = function() {
+NPC.prototype.pushToDatabase = function(callback) {
     var NPC = Parse.Object.extend("NPC");
     var npc = new NPC();
 
@@ -69,6 +69,10 @@ NPC.prototype.pushToDatabase = function() {
 
             // sends message so other players also add the npc locally
             sendAddNPCMessage(this.id);
+
+            if (callback != null){
+                callback();
+            }
         },
         error: function(npc, error) {
             // The save failed.
@@ -127,6 +131,8 @@ NPC.getAllFromDatabase = function(callback) {
                 // set id according to the database
                 npc.id = object.id;
 
+                if (npc.isPatientZero)
+                    patient_zero = npc;
 
                 npcs.push(npc);
             }
