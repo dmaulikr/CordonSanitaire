@@ -2,14 +2,11 @@
 // as the icon for a marker. The resulting icon is a star-shaped symbol
 // with a pale yellow fill and a thick yellow border.
 
-var map = null;
+var map;
 var quarantine = new google.maps.Polygon();
 var markers = [];
 
 var isAnimatingPatientZero = false;
-
-var myType = 'passive';
-var myPrevType = 'passive';
 
 var my_animation_interval;
 var trapped_interval;
@@ -46,9 +43,8 @@ function drawMap() {
         streetViewControl: false
     };
 
-    if (map == null) {
-        map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
-    }
+    map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+
 }
 
 function setGameBoard() {
@@ -103,7 +99,6 @@ function updateGameBoard() {
     center = getCenter(getActivePopulation());
 
     sortPeople(); // sort the people into the order to hold the rope
-    drawMap();
 
     updateQuarantine();
     updateNPCs();
@@ -181,7 +176,6 @@ function isInsideQuarantine(x, y) {
 function updatePopulation() {
     for (var i = 0; i < people.length; i++) {
         people[i].updateType(getType(people[i]));
-        console.log(people.id + " " + people.type)
     }
 }
 
@@ -430,18 +424,16 @@ var updateNotifications = function() {
         _prevNumActive = _numActive;
     }
 
+    // sends additional notifications about being trapped/free from a quarantine
+    if (myUser.type == TypeEnum.TRAPPED && _myPrevType != TypeEnum.TRAPPED) {
+        ohSnap('YOU ARE TRAPPED INSIDE THE QUARANTINE', 'red');
+    } else if (myUser.type != TypeEnum.TRAPPED && _myPrevType == TypeEnum.TRAPPED) {
+        ohSnap('YOU ARE OUT OF THE QUARANTINE', 'green');
+    }
+
     // update status of previous values
     _prevPatientZeroContained = _patientZeroContained;
-
-
-    // sends additional notifications about being trapped/free from a quarantine
-    if (myType == 'casualty' && _myPrevType != 'casualty') {
-        ohSnap('YOU ARE TRAPPED INSIDE THE QUARANTINE', 'red');
-        _myPrevType = myType;
-    } else if (myType != 'casualty' && _myPrevType == 'casualty') {
-        ohSnap('YOU ARE OUT OF THE QUARANTINE', 'green');
-        _myPrevType = myType;
-    }
+    _myPrevType = myUser.type;
 }
 
 function isPatientZeroContained() {
