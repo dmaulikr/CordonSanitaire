@@ -20,16 +20,15 @@ pubnub.subscribe({
                 // set the UUID here
                 console.log("received JOIN message - " + m.uuid);
                 if (m.uuid == _uuid) {
-                    hasReceivedJoinedMessage = true;
+                    console.log("start setup");
                     setup();
                 }
-                // updatePopulation();
                 break;
 
             case "leave":
                 // set this user to no longer focussed...
                 console.log("received LEAVE message - " + m.uuid);
-                updatePopulation();
+                // updatePopulation();
                 break;
         }
     },
@@ -68,10 +67,10 @@ pubnub.subscribe({
                 break;
 
             case "addUser":
-                if (!User.isIdPresent(m.id)) {
+                if (!User.isIdPresent(m.id) && hasReceivedJoinedMessage) {
                     User.addToLocalArray(m.id);
                 } else {
-                    console.log("User " + m.id + " was already present in the local array");
+                    console.log("User " + m.id + " was already present in the local array or I have not joined the game yet.");
                 }
                 break;
 

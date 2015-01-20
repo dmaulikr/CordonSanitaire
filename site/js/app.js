@@ -49,7 +49,6 @@ var pickPatientZero = function() {
 }
 
 var updatePopulation = function() {
-
     if (!hasReceivedJoinedMessage) return; // only update after we have added ourselves to the population
 
     people.clear();
@@ -79,7 +78,7 @@ var updatePopulation = function() {
                 people.push(obj);
             }
 
-            updateGameBoard();
+            // updateGameBoard();
         },
         error: function(object, error) {
             // The object was not retrieved successfully.

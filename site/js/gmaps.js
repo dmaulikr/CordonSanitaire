@@ -3,7 +3,7 @@
 // with a pale yellow fill and a thick yellow border.
 
 var map = null;
-var quarantine = null;
+var quarantine = new google.maps.Polygon();
 var markers = [];
 
 var myMarker;
@@ -54,12 +54,15 @@ function drawMap() {
     }
 }
 
-function setupGameBoard(){
+function setGameBoard() {
+
+    console.log("setting up game board");
     findCenter();
-    sortPeople();
+
+    sortPeople(); // sort the people into the order to hold the rope
+    setQuarantine();
 
     drawMap();
-    setQuarantine();
     updatePopulation();
 
     // draw quarantine
@@ -93,9 +96,13 @@ function setupGameBoard(){
 
 function updateGameBoard() {
 
+    if (!hasReceivedJoinedMessage) return;
+
+    console.log("updating population")
     findCenter();
 
     sortPeople(); // sort the people into the order to hold the rope
+    drawMap();
 
     updateQuarantine();
     updatePopulation();
@@ -241,7 +248,6 @@ var drawPopulation = function() {
             people[i].draw();
         }
         if (people[i].isUserMe()) {
-            console.log(people[i].type)
             myUser.marker = people[i].marker;
         }
     }
@@ -251,6 +257,7 @@ var drawPopulation = function() {
 }
 
 function startAnimations() {
+    console.log("starting animations");
     var count = 0;
     var period = 150;
 
@@ -260,6 +267,8 @@ function startAnimations() {
 
         var icon;
         // animate my icon so I know who I am
+        if (myUser.marker == null)
+            throw "My marker is null"
         icon = myUser.marker.icon;
         icon.scale = 12 + 4 * Math.sin(2 * Math.PI * count / period);
         myUser.marker.setIcon(icon);

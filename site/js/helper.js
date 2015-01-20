@@ -1,11 +1,6 @@
-console.log("loaded helper");
 /**
  * Set of helper functions.
  */
-
-/////////////
-// GENERAL //
-/////////////
 
 /**
  * Given a type, return the proper marker.
