@@ -83,21 +83,19 @@ var people = [];
 var npcs = [];
 var center; // point that represents the center of the population (holding)
 var patient_zero;
-var my_user = Parse.User.current()
+var myUser;
 
-// Then add new user (the current user)
-var myUser = new User(
-    my_user.id,
-    my_user.get('x'),
-    my_user.get('y'),
-    my_user.get('role'),
-    my_user.get('type'),
-    false // isPatientZero
-);
-
-console.log("MY USEEEER " + myUser.type);
-
-// pushes myUser to the database and sets its id to the be the database id.
+Parse.User.current().fetch().then( function(current_user){
+    // Then creates myUser with the data
+    myUser = new User(
+        current_user.id,
+        current_user.get('x'),
+        current_user.get('y'),
+        current_user.get('role'),
+        current_user.get('type'),
+        false // isPatientZero
+    );
+})
 
 function setup() {
     NPC.getAllFromDatabase(function() { // populate the npc array with the entries in the Database

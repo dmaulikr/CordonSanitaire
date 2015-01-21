@@ -25,6 +25,7 @@ function userLogout() {
             present : false
         });
         Parse.User.logOut();
+        sendRemoveUserMessage();
         window.location.href = 'login.html';
     }
 }

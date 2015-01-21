@@ -74,6 +74,7 @@ function setGameBoard() {
     // animateTrapped(); // don't do this if people have the ability to shout
 
     // update checkbox
+    setButton();
     updateButtonAvailable();
 
     // update scoreboard
@@ -355,12 +356,19 @@ function updateScoreboard() {
 
 function updateButtonAvailable() {
     //console.log("updating join functionality");
-    if (getType(myUser) == TypeEnum.TRAPPED) {
+    if (myUser.type == TypeEnum.TRAPPED) {
         document.getElementById('buttons').style.visibility = 'hidden';
         document.getElementById('shoutButton').style.visibility = 'visible';
     } else {
         document.getElementById('shoutButton').style.visibility = 'hidden';
         document.getElementById('buttons').style.visibility = 'visible';
+    }
+}
+
+function setButton(){
+    if(myUser.type == TypeEnum.ACTIVE){
+        console.log("MYYYYY TYPE: " + myUser.type)
+        document.getElementById('myonoffswitch').checked = true;
     }
 }
 

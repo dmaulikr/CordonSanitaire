@@ -69,6 +69,10 @@ pubnub.subscribe({
                 }
                 break;
 
+            case "removeUser":
+                User.removeFromLocalArray(m.id);
+                break;
+
             case "changeUserType":
                 User.changeUserType(m.id, m.type);
                 break;
@@ -140,6 +144,16 @@ function sendRemoveNPCMessage(id) {
         channel: _channel,
         message: {
             action: 'removeNPC',
+            id: id
+        }
+    });
+}
+
+function sendRemoveUserMessage(id) {
+    pubnub.publish({
+        channel: _channel,
+        message: {
+            action: 'removeUser',
             id: id
         }
     });

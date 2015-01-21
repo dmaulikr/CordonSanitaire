@@ -64,40 +64,6 @@ User.prototype.updateType = function(type) {
     this.type = type;
 };
 
-/**
- * Creates a new User in the database with the same info of this User.
- * Also assigns the UUID from the database to this User.
- */
-User.prototype.pushToDatabase = function(callback) {
-    var User = Parse.Object.extend("SimpleUser");
-    var user = new User();
-
-    // save new npc to database
-    user.save({
-        x: this.x,
-        y: this.y,
-        role: this.role,
-        type: this.type,
-        isPatientZero: this.isPatientZero,
-    }, {
-        success: function(user) {
-            // The object was saved successfully.
-            console.log("Success: a new user was added to the database");
-
-            // sends message so other players also add the user locally
-            sendAddUserMessage(this.id);
-
-            // calls the callback function, if there's one
-            if (callback != null)
-                callback();
-        },
-        error: function(user, error) {
-            // The save failed.
-            // error is a Parse.Error with an error code and message.
-            console.log("Error: " + error.code + " " + error.message);
-        }
-    });
-};
 
 User.prototype.labelWithYouAreHere = function() {
 
@@ -152,6 +118,7 @@ User.getAllFromDatabase = function(callback) {
                     object.get('x'),
                     object.get('y'),
                     object.get('role'),
+                    object.get('type'),
                     object.get('isPatientZero')
                 );
 
@@ -203,6 +170,7 @@ User.addToLocalArray = function(id) {
                 object.get('x'),
                 object.get('y'),
                 object.get('role'),
+                object.get('type'),
                 object.get('isPatientZero')
             );
 
@@ -220,6 +188,24 @@ User.addToLocalArray = function(id) {
             console.log("Error: " + error.code + " " + error.message);
         }
     });
+}
+
+/**
+ * Removes an NPC from the local array of NPCs.
+ * @param id [id of the NPC to be removed]
+ */
+User.removeFromLocalArray = function(id) {
+    for (var i = 0; i < people.length; i++) {
+        if (people[i].id == id) {
+            if (people[i].marker != null) {
+                console.log("remove marker");
+                people[i].marker.setMap(null);
+            }
+            people.splice(i, 1);
+            console.log("user deleted");
+            updateGameBoard();
+        }
+    }
 }
 
 /**
