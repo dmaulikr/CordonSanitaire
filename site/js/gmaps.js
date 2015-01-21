@@ -366,11 +366,9 @@ function updateButtonAvailable() {
     }
 
     if(myUser.type == TypeEnum.ACTIVE){
-        console.log("MYYYYY TYPE: " + myUser.type)
         document.getElementById('myonoffswitch').checked = true;
     }
     else if (myUser.type == TypeEnum.PASSIVE){
-        console.log("MYYYYY TYPE: " + myUser.type)
         document.getElementById('myonoffswitch').checked = false;
     }
 }
