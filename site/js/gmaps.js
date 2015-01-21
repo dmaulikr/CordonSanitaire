@@ -74,7 +74,6 @@ function setGameBoard() {
     // animateTrapped(); // don't do this if people have the ability to shout
 
     // update checkbox
-    setButton();
     updateButtonAvailable();
 
     // update scoreboard
@@ -177,6 +176,8 @@ function isInsideQuarantine(x, y) {
 function updatePopulation() {
     for (var i = 0; i < people.length; i++) {
         people[i].updateType(getType(people[i]));
+        if (people[i].isUserMe)
+            myUser.type = people[i].type
     }
 }
 
@@ -363,12 +364,14 @@ function updateButtonAvailable() {
         document.getElementById('shoutButton').style.visibility = 'hidden';
         document.getElementById('buttons').style.visibility = 'visible';
     }
-}
 
-function setButton(){
     if(myUser.type == TypeEnum.ACTIVE){
         console.log("MYYYYY TYPE: " + myUser.type)
         document.getElementById('myonoffswitch').checked = true;
+    }
+    else if (myUser.type == TypeEnum.PASSIVE){
+        console.log("MYYYYY TYPE: " + myUser.type)
+        document.getElementById('myonoffswitch').checked = false;
     }
 }
 
