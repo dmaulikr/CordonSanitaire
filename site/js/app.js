@@ -215,11 +215,12 @@ function flipUserActiveState() {
     // something with parse to set the value inactive
     console.log("flipping user state");
 
-    var User = Parse.Object.extend("SimpleUser");
+    var User = Parse.Object.extend("_User");
     var query = new Parse.Query(User);
     query.get(myUser.id, {
         success: function(object) {
             var type = object.get("type");
+            console.log(type);
             if (type == TypeEnum.PASSIVE)
                 type = TypeEnum.ACTIVE;
             else if (type == TypeEnum.ACTIVE)
@@ -240,7 +241,7 @@ function flipUserActiveState() {
             });
         },
         error: function(error) {
-            console.log("Error: " + error.code + " " + error.message);
+            console.log("Error: " + error.message);
         }
 
     });

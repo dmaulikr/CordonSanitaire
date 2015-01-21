@@ -3,15 +3,14 @@
 /**
  * Constructor for User Class
  */
-var User = function(x, y, role, type, isPatientZero, present) {
-    this.id = null; // id will be attributed once the object is pushed to the database
+var User = function(id, x, y, role, type, isPatientZero) {
+    this.id = id; // id will be attributed once the object is pushed to the database
     this.x = x;
     this.y = y;
     this.role = role;
     this.type = type;
     this.isPatientZero = isPatientZero;
     this.marker = null;
-    this.present = present
 };
 
 /**
@@ -80,14 +79,10 @@ User.prototype.pushToDatabase = function(callback) {
         role: this.role,
         type: this.type,
         isPatientZero: this.isPatientZero,
-        present: this.present
     }, {
         success: function(user) {
             // The object was saved successfully.
             console.log("Success: a new user was added to the database");
-
-            // once the object is pushed to the database give it its id
-            this.id = user.id;
 
             // sends message so other players also add the user locally
             sendAddUserMessage(this.id);
@@ -141,9 +136,9 @@ User.prototype.labelWithYouAreHere = function() {
 User.getAllFromDatabase = function(callback) {
     User.eraseAll();
     people.clear;
-    var user = Parse.Object.extend("SimpleUser");
+    var user = Parse.Object.extend("_User");
     var query = new Parse.Query(user);
-    query.equalTo("present", true);
+    query.equalTo('present', true);
     query.find({
         success: function(results) {
             console.log("Success: Getting people");
@@ -153,15 +148,12 @@ User.getAllFromDatabase = function(callback) {
 
                 // create a local user
                 var user = new User(
+                    object.id,
                     object.get('x'),
                     object.get('y'),
                     object.get('role'),
-                    object.get('type'),
                     object.get('isPatientZero')
                 );
-                // set id according to the database
-                user.id = object.id;
-
 
                 people.push(user);
             }
@@ -199,7 +191,7 @@ User.isIdPresent = function(id) {
  * @param id [id of the User in the database]
  */
 User.addToLocalArray = function(id) {
-    var user = Parse.Object.extend("SimpleUser");
+    var user = Parse.Object.extend("_User");
     var query = new Parse.Query(user);
     query.get(id, {
         success: function(object) {
@@ -207,16 +199,15 @@ User.addToLocalArray = function(id) {
 
             // create a local user
             var user = new User(
+                object.id,
                 object.get('x'),
                 object.get('y'),
                 object.get('role'),
-                object.get('type'),
                 object.get('isPatientZero')
             );
 
-            // set id according to the database
+            // if id is not in the local array, add to local array
             if (!User.isIdPresent(user.id)) {
-                user.id = object.id;
                 people.push(user);
             }
 

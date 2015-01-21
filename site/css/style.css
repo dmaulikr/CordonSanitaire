@@ -1,4 +1,4 @@
-* { 
+* {
 	margin: 0px;
 	padding: 0px;
 	font-family: sans-serif;
@@ -37,14 +37,14 @@ footer {
     width: 100%;
 }
 
-#gui { 
+#gui {
 	visibility: hidden;
-	position: absolute; 
-	top: 2px; 
-	right: 2px 
+	position: absolute;
+	top: 2px;
+	right: 2px
 }
 
-#overlay {	
+#overlay {
 	visibility: visible;
 	position: fixed;
 	z-index: 999;
@@ -61,7 +61,7 @@ footer {
 	padding: 30px;
 	background-color: rgba(255, 255, 255, 0.95);
 	max-width: 600px;
-	margin: 100px auto 0 auto;	
+	margin: 100px auto 0 auto;
 }
 
 #intro h1{
@@ -123,7 +123,7 @@ button:focus {outline:0;}
 	margin: 0;
 	padding: 10px;
 	background: white;
-	
+
 }
 
 #scoreboard {
@@ -211,7 +211,7 @@ button:focus {outline:0;}
 .shoutButton {
 	visibility: hidden;
     position: absolute;
-    left: 650px; 
+    left: 650px;
     top: 30px;
     width: 156px;
     height: 50px;
@@ -225,9 +225,9 @@ button:focus {outline:0;}
 	display:inline-block;
 	cursor:pointer;
 	font-size: 24px;
-	color: #000000; 
-	font-family: Trebuchet, Arial, sans-serif; 
-	font-weight: bold;	
+	color: #000000;
+	font-family: Trebuchet, Arial, sans-serif;
+	font-weight: bold;
 	padding:0px;
 	text-decoration:none;
 	text-align: center;
@@ -247,7 +247,7 @@ button:focus {outline:0;}
 /* Radio button styling */
 .onoffswitch {
     position: absolute;
-    left: 650px; 
+    left: 650px;
     top: -50px;
     width: 156px;
     -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
@@ -256,7 +256,7 @@ button:focus {outline:0;}
     display: none;
 }
 .onoffswitch-label {
-    display: block; 
+    display: block;
     overflow: hidden;
     cursor: pointer;
     border: 2px solid #000; border-radius: 40px;
@@ -292,10 +292,10 @@ button:focus {outline:0;}
     border: 2px solid #FFFFFF; border-radius: 23px;
     position: absolute; top: 0; bottom: 0; right: 129px;
     -moz-transition: all 0.3s ease-in 0s; -webkit-transition: all 0.3s ease-in 0s;
-    -o-transition: all 0.3s ease-in 0s; transition: all 0.3s ease-in 0s; 
-    background-image: -moz-linear-gradient(center top, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0) 80%); 
-    background-image: -webkit-linear-gradient(center top, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0) 80%); 
-    background-image: -o-linear-gradient(center top, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0) 80%); 
+    -o-transition: all 0.3s ease-in 0s; transition: all 0.3s ease-in 0s;
+    background-image: -moz-linear-gradient(center top, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0) 80%);
+    background-image: -webkit-linear-gradient(center top, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0) 80%);
+    background-image: -o-linear-gradient(center top, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0) 80%);
     background-image: linear-gradient(center top, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0) 80%);
     box-shadow: 0 1px 1px white inset;
 }
@@ -303,7 +303,7 @@ button:focus {outline:0;}
     margin-left: 0;
 }
 .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
-    right: 0px; 
+    right: 0px;
 }
 
 /* Oh Snap Notifications styling */

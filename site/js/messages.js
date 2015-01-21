@@ -65,7 +65,7 @@ pubnub.subscribe({
                 if (!User.isIdPresent(m.id) && hasReceivedJoinedMessage) {
                     User.addToLocalArray(m.id);
                 } else {
-                    console.log("User " + m.id + " was already present in the local array or I have not joined the game yet.");
+                    console.log("User " + m.id + " was already present in the local array.");
                 }
                 break;
 

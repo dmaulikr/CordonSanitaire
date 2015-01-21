@@ -3,6 +3,7 @@
  * by Jonathan Bobrow
  *
  */
+// check if user is logged
 
 // MOBILE PHONE MESSAGE
 if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
@@ -66,6 +67,10 @@ if (typeof document.addEventListener === "undefined" ||
 // Development Database
 // Parse.initialize("se41N3nzbLBJ9oZFHrvhun7dGPK3tiLsj1mrey49", "ptVDEW3c1A3rGCotPgbBswc8Z0GtYrYIjvxDpZLn");// NOT IN USE
 Parse.initialize("R2T7ReO7LkHmM8ASf11pqjyNJcYXPdVqAD09wWvC", "VLVfcK4ttzTdPo7fwXtexEbA6VnZ8wShmVhodTpE"); // CLONE
+if (Parse.User.current() == null || !Parse.User.current().authenticated()){
+    alert('You are not logged in');
+    window.location = 'login.html'
+}
 
 // sets Pubnub channel
 // var _channel = 'production'; // Dev Channel vs. Production Channel
@@ -78,27 +83,29 @@ var people = [];
 var npcs = [];
 var center; // point that represents the center of the population (holding)
 var patient_zero;
+var my_user = Parse.User.current()
 
 // Then add new user (the current user)
-var myUser = new User(Math.random(0, 1),
-    Math.random(0, 1),
-    "citizen",
-    TypeEnum.PASSIVE,
-    false, // isPatientZero
-    true   // present
+var myUser = new User(
+    my_user.id,
+    my_user.get('x'),
+    my_user.get('y'),
+    my_user.get('role'),
+    my_user.get('type'),
+    false // isPatientZero
 );
+
+console.log("MY USEEEER " + myUser.type);
 
 // pushes myUser to the database and sets its id to the be the database id.
 
 function setup() {
-    myUser.pushToDatabase(function() { // push myUser to the database and send message to other players to add me to their local array
-        myUser.id = this.id; // set myUser.id
-        NPC.getAllFromDatabase(function() { // populate the npc array with the entries in the Database
-            User.getAllFromDatabase(function() { // populate the people array with the entries in the Database
-                setGameBoard(); // set the game board
-                hasReceivedJoinedMessage = true; // with the game board set, we are allowed to update it.
-                console.log("allowed to update");
-            });
+    NPC.getAllFromDatabase(function() { // populate the npc array with the entries in the Database
+        User.getAllFromDatabase(function() { // populate the people array with the entries in the Database
+            setGameBoard(); // set the game board
+            hasReceivedJoinedMessage = true; // with the game board set, we are allowed to update it.
+            console.log("allowed to update");
+            sendAddUserMessage(myUser.id);
         });
     });
 }
