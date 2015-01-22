@@ -176,8 +176,9 @@ function isInsideQuarantine(x, y) {
 function updatePopulation() {
     for (var i = 0; i < people.length; i++) {
         people[i].updateType(getType(people[i]));
-        if (people[i].isUserMe)
+        if (people[i].isUserMe()){
             myUser.type = people[i].type
+        }
     }
 }
 
@@ -356,7 +357,8 @@ function updateScoreboard() {
 }
 
 function updateButtonAvailable() {
-    //console.log("updating join functionality");
+    console.log("updating join functionality");
+    console.log("my type is: "+ myUser.type)
     if (myUser.type == TypeEnum.TRAPPED) {
         document.getElementById('buttons').style.visibility = 'hidden';
         document.getElementById('shoutButton').style.visibility = 'visible';
