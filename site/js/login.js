@@ -12,8 +12,9 @@ if (Parse.User.current() != null){
   window.location = "/index.html"
 }
 
-var login = function(){
-    console.log('in');
+var login = function(evnt){
+    evnt = evnt || window.event;
+
     var username = document.getElementById('username-login').value;
     var password = document.getElementById('password-login').value;
     console.log(username)
@@ -34,10 +35,12 @@ var login = function(){
       }
     });
 
-    event.preventDefault();
+    evnt.preventDefault();
 }
 
-var signUp = function(){
+var signUp = function(evnt){
+    evnt = evnt || window.event;
+
     var username = document.getElementById('username-signup').value;
     var password = document.getElementById('password-signup').value;
     var email = document.getElementById('email-signup').value;
@@ -62,5 +65,5 @@ var signUp = function(){
       }
     });
 
-    event.preventDefault();
+    evnt.preventDefault();
 }

@@ -251,7 +251,7 @@ function flipUserActiveState() {
 // reset all of the players back to no-one playing
 function setAllUsersNotPresent() {
 
-    var users = Parse.Object.extend("SimpleUser");
+    var users = Parse.Object.extend("_User");
     var query = new Parse.Query(users);
     query.equalTo("present", true);
     query.find({
@@ -262,16 +262,18 @@ function setAllUsersNotPresent() {
 
                 if (i != results.length - 1)
                     object.save();
-                else
+                else{
                     object.save(null, // update after the last one is saved
                         {
                             success: function(object) {
                                 sendResetPlayersMessage();
                             },
-                            error: function(object) {
+                            error: function(object, error) {
                                 console.log("WOAAAAHHHH NOOOOOOO!", object);
+                                console.log("Error: " + error.code + " " + error.message);
                             }
                         });
+                }
             }
         },
         error: function(object, error) {
