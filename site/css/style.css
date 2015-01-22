@@ -242,6 +242,27 @@ button:focus {outline:0;}
 	border:3px solid #ffa352;
 }
 
+/* Shout button styling */
+.logoutButton {
+    position: absolute;
+    left: 2px;
+    top: 2px;
+    width: 100px;
+    height: 20px;
+    -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
+    font-family: sans-serif;
+    color: #ffffff;
+    font-size: .65em;
+    border-radius: 2px;
+    background: #000000;
+    border: none;
+    text-decoration: none;
+}
+.logoutButton:hover {
+  background: #262626;
+  text-decoration: none;
+}
+
 
 
 /* Radio button styling */
