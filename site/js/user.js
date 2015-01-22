@@ -191,8 +191,8 @@ User.addToLocalArray = function(id) {
 }
 
 /**
- * Removes an NPC from the local array of NPCs.
- * @param id [id of the NPC to be removed]
+ * Removes an User from the local array of people.
+ * @param id [id of the User to be removed]
  */
 User.removeFromLocalArray = function(id) {
     for (var i = 0; i < people.length; i++) {
@@ -202,7 +202,6 @@ User.removeFromLocalArray = function(id) {
                 people[i].marker.setMap(null);
             }
             people.splice(i, 1);
-            console.log("user deleted");
             updateGameBoard();
         }
     }

@@ -86,6 +86,14 @@ pubnub.subscribe({
                 updateGameBoard();
                 break;
 
+            case "logOut":
+                if(myUser.id == m.id){
+                    Parse.User.logOut();
+                    window.location.href = 'login.html';
+                }
+                User.removeFromLocalArray(m.id);
+                break;
+
             default:
                 console.log(m);
         }
@@ -150,6 +158,7 @@ function sendRemoveNPCMessage(id) {
 }
 
 function sendRemoveUserMessage(id) {
+    console.log("remove")
     pubnub.publish({
         channel: _channel,
         message: {
@@ -185,6 +194,16 @@ function sendResetPlayersMessage() {
         channel: _channel,
         message: {
             action: 'resetPlayers'
+        }
+    })
+}
+
+function sendLogOutMessage(id){
+    pubnub.publish({
+        channel: _channel,
+        message: {
+            action: 'logOut',
+            id: id
         }
     })
 }

@@ -24,8 +24,8 @@ function userLogout() {
         Parse.User.current().save({
             present : false
         });
+        sendLogOutMessage(myUser.id);
         Parse.User.logOut();
-        sendRemoveUserMessage();
         window.location.href = 'login.html';
     }
 }

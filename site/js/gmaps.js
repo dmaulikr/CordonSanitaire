@@ -357,8 +357,6 @@ function updateScoreboard() {
 }
 
 function updateButtonAvailable() {
-    console.log("updating join functionality");
-    console.log("my type is: "+ myUser.type)
     if (myUser.type == TypeEnum.TRAPPED) {
         document.getElementById('buttons').style.visibility = 'hidden';
         document.getElementById('shoutButton').style.visibility = 'visible';
