@@ -1,29 +1,28 @@
-@import url(http://fonts.googleapis.com/css?family=Roboto:100);
 @import url(http://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.css);
 
 body {
-  background: #1a1a1a;
-  color: white;
-  font-family: 'Roboto';
+  font-family: sans-serif;
+  background-color: rgba(0, 0, 0, 0.85);
 }
 .flat-form {
-  background: #e74c3c;
   margin: 25px auto;
   width: 390px;
   height: 355px;
   position: relative;
-  font-family: 'Roboto';
+  font-family: sans-serif;
 }
 .tabs {
-  background: #c0392b;
   height: 40px;
-  margin: 0;
+  margin-right: auto;
+  margin-left: auto;
+  width: 90%;
   padding: 0;
   list-style-type: none;
-  width: 100%;
   position: relative;
   display: block;
   margin-bottom: 20px;
+  border-bottom: 1px solid rgba(0,0,0, 0.1)
+
 }
 .tabs li {
   display: block;
@@ -32,11 +31,10 @@ body {
   padding: 0;
 }
 .tabs a {
-  background: #c0392b;
   display: block;
   float: left;
   text-decoration: none;
-  color: white;
+  color: black;
   font-size: 16px;
   padding: 12px 22px 12px 22px;
   /*border-right: 1px solid @tab-border;*/
@@ -44,13 +42,10 @@ body {
 }
 .tabs li:last-child a {
   border-right: none;
-  width: 174px;
-  padding-left: 0;
-  padding-right: 0;
   text-align: center;
 }
 .tabs a.active {
-  background: #e74c3c;
+  background: #C0C0C0;
   border-right: none;
   -webkit-transition: all 0.5s linear;
     -moz-transition: all 0.5s linear;
@@ -75,19 +70,20 @@ form {
 }
 form input[type=text],
 form input[type=password],
+form input[type=date],
 form input[type=submit] {
-  font-family: 'Roboto';
+  font-family: sans-serif;
 }
 
 form input[type=text],
-form input[type=password] {
+form input[type=password],
+form input[type=date] {
   width: 100%;
   height: 40px;
   margin-bottom: 10px;
   padding-left: 15px;
   background: #fff;
   border: none;
-  color: #e74c3c;
   outline: none;
 }
 
@@ -115,6 +111,8 @@ form input[type=password] {
 }
 
 .button {
+    margin-right: auto;
+    margin-left: auto;
     border: none;
     display: block;
     background: #136899;
@@ -140,16 +138,49 @@ form input[type=password] {
 }
 
 ::-webkit-input-placeholder {
-  color: #e74c3c;
+  color: black;
 }
 :-moz-placeholder {
   /* Firefox 18- */
-  color: #e74c3c;
+  color: black;
 }
 ::-moz-placeholder {
   /* Firefox 19+ */
-  color: #e74c3c;
+  color: black;
 }
 :-ms-input-placeholder {
-  color: #e74c3c;
+  color: black;
+}
+
+/********************************************/
+
+.intro {
+  z-index: 1000;
+  border-radius: 30px;
+  padding: 30px;
+  background-color: rgba(255, 255, 255, 0.95);
+  max-width: 600px;
+  margin: 100px auto 0 auto;
+}
+
+.intro h1{
+  font-size: 25px;
+  font-weight: lighter;
+  padding: 0 0 12px 0;
+  border-bottom: 1px solid rgba(0,0,0, 0.1)
+}
+
+.intro h2{
+  padding: 12px 0 12px 0;
+}
+
+.intro p{
+  padding: 0 0 12px 0;
+  font-size: .8em;
+  font-weight: lighter;
+  line-height: 1.5em;
+}
+
+.intro b{
+  font-weight: 500;
 }

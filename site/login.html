@@ -22,7 +22,18 @@
 </head>
 <body>
 
-    <div class="container">
+    <div class="intro">
+        <h1>CORDON SANITAIRE</h1>
+        <h2>PLAYABLE PROTOTYPE v. 152</h2>
+        <div id="intro_message">
+            <p id="first_line"></p>
+            <p>Once the game starts <b>it will only last 45 seconds!</b> You’ll be playing with everyone else who jumps in.</p>
+            <p>You will be on a map of a world in which Patient Zero(<b>P0</b>)  has a lethal infectious disease. You -- and everyone -- will work together to contain  by drawing a quarantine line around them.</p>
+            <p><b>You have one job: join the quarantine line, or not.</b> Just press the <b>JOIN/RELEASE</b> button on the upper right. You can do this as many times as you like.</p>
+            <p>At the end of the game, we will all have drawn a quarantine line. It will contain <b>P0</b> (hopefully!) or not. It will trap “healthy” players inside with <b>P0</b>, or not. Hopefully not.</p>
+            <p>That’s up to you … all of you.</p>
+        </div>
+
         <div class="flat-form">
             <ul class="tabs">
                 <li>
@@ -36,69 +47,62 @@
                 </li>
             </ul>
             <div id="login" class="form-action show">
-                <h1>Login on Cordon Sanitaire</h1>
-                <p>
-                    Take part on the Cordon and contain the infection.
-                </p>
-                <form>
-                    <ul>
-                        <li>
-                            <input type="text" id="username-login" placeholder="Username" />
-                        </li>
-                        <li>
-                            <input type="password" id="password-login" placeholder="Password" />
-                        </li>
-                        <li>
-                            <input type="submit" value="Login" class="button" onclick="login(event);"/>
-                        </li>
-                    </ul>
-                </form>
-            </div>
-            <!--/#login.form-action-->
-            <div id="register" class="form-action hide">
-                <h1>Register</h1>
-                <p>
-                    Sign up for CordonSanitaire and start playing right away!
-                </p>
-                <form>
-                    <ul>
-                        <li>
-                            <input type="text" id="username-signup" placeholder="Username" />
-                        </li>
-                        <li>
-                            <input type="password" id="password-signup" placeholder="Password" />
-                        </li>
-                        <li>
-                            <input type="text" id="email-signup" placeholder="Email" />
-                        </li>
-                        <li>
-                            <input type="submit" value="Sign Up" class="button" onclick="signUp(event)"/>
-                        </li>
-                    </ul>
-                </form>
-            </div>
-            <!--/#register.form-action-->
-            <div id="reset" class="form-action hide">
-                <h1>Reset Password</h1>
-                <p>
-                    To reset your password enter your email and your birthday
-                    and we'll send you a link to reset your password.
-                </p>
-                <form>
-                    <ul>
-                        <li>
-                            <input type="text" placeholder="Email" />
-                        </li>
-                        <li>
-                            <input type="text" placeholder="Birthday" />
-                        </li>
-                        <li>
-                            <input type="submit" value="Send" class="button" />
-                        </li>
-                    </ul>
-                </form>
-            </div>
-            <!--/#register.form-action-->
+            <p>
+                Take part on the Cordon and contain the infection.
+            </p>
+            <form>
+                <ul>
+                    <li>
+                        <input type="text" id="username-login" placeholder="Username" />
+                    </li>
+                    <li>
+                        <input type="password" id="password-login" placeholder="Password" />
+                    </li>
+                    <li>
+                        <input type="submit" value="Login" class="button" onclick="login(event);"/>
+                    </li>
+                </ul>
+            </form>
+        </div>
+        <!--/#login.form-action-->
+        <div id="register" class="form-action hide">
+            <p>
+                Sign up for Cordon Sanitaire and start playing right away!
+            </p>
+            <form>
+                <ul>
+                    <li>
+                        <input type="text" id="username-signup" placeholder="Username" />
+                    </li>
+                    <li>
+                        <input type="password" id="password-signup" placeholder="Password" />
+                    </li>
+                    <li>
+                        <input type="text" id="email-signup" placeholder="Email" />
+                    </li>
+                    <li>
+                        <input type="submit" value="Sign Up" class="button" onclick="signUp(event)"/>
+                    </li>
+                </ul>
+            </form>
+        </div>
+        <!--/#register.form-action-->
+        <div id="reset" class="form-action hide">
+            <p>
+                To reset your password enter your email and your username
+                and we'll send you a link to reset your password.
+            </p>
+            <form>
+                <ul>
+                    <li>
+                        <input type="text" id="email-reset" placeholder="Email" />
+                    </li>
+                    <li>
+                        <input type="submit" value="Send" class="button" onclick="resetPassword(event)"/>
+                    </li>
+                </ul>
+            </form>
+        </div>
         </div>
     </div>
 
