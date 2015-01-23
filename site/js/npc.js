@@ -106,6 +106,28 @@ NPC.prototype.updateType = function(type) {
     this.type = type;
 };
 
+NPC.prototype.updatePosition = function(pos, callback){
+    var npc = Parse.Object.extend("NPC");
+    var query = new Parse.Query(npc);
+    query.get(this.id, {
+        success: function(npc) {
+            npc.set('x', pos.x);
+            npc.set('y', pos.y);
+            npc.save({
+                success: function(){
+                    callback();
+                },
+                error: function() {
+                    console.log("Error: " + error.code + " " + error.message + ". ID " + npc.id);
+                }
+            });
+        },
+        error: function(error) {
+            console.log("Error: " + error.code + " " + error.message + ". ID " + npc.id);
+        }
+    });
+}
+
 /**
  * Repopulates the local array of NPCs with all the entries from the database.
  */
@@ -133,8 +155,8 @@ NPC.getAllFromDatabase = function(callback) {
 
                 if (npc.isPatientZero)
                     patient_zero = npc;
-
-                npcs.push(npc);
+                else
+                    npcs.push(npc);
             }
             console.log("synchronized npcs array with database");
             if (callback != null) {
@@ -172,7 +194,10 @@ NPC.addToLocalArray = function(id) {
 
             // set id according to the database
             npc.id = object.id;
-            npcs.push(npc);
+            if (npc.isPatientZero)
+                patient_zero = npc;
+            else
+                npcs.push(npc);
             updateGameBoard();
 
         },
@@ -216,16 +241,3 @@ NPC.isIdPresent = function(id) {
     return false;
 }
 
-/**
- * Looks for patient zero in the local array of NPC. If found, returns patient zero's index, if not returns false.
- * @return patient zero [if patient zero is found returns its index in the local array, else returns false]
- */
-NPC.getPatientZeroIndex = function() {
-    for (var i = 0; i < npcs.length; i++) {
-        if (npcs[i].isPatientZero) {
-            return i;
-        }
-    }
-
-    return false;
-}

@@ -138,6 +138,19 @@ function getLatLngCoords(x, y) {
     return latlng;
 }
 
+function getPositionFromGoogleCoords(coords){
+    var begLat = 40.704204;
+    var endLat = 40.829535;
+    var begLng = -74.096729;
+    var endLng = -73.834258;
+    var diffLat = endLat - begLat;
+    var diffLng = endLng - begLng;
+
+    var x = (coords.k - begLat) / diffLat
+    var y = (coords.D - begLng) / diffLng
+
+    return {x: x, y: y}
+}
 /**
  * Given an array of users, returns the center locations of those users.
  * @param  users [users]

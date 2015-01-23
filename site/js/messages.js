@@ -84,6 +84,13 @@ pubnub.subscribe({
 
                 // update the game board
                 updateGameBoard();
+
+                if(!Parse.User.current().get('admin')){
+                    alert("For some reason you were logged out.")
+                    Parse.User.logOut();
+                    window.location.href = 'login.html';
+                } else
+                    window.location.reload()
                 break;
 
             case "logOut":
@@ -92,6 +99,12 @@ pubnub.subscribe({
                     window.location.href = 'login.html';
                 }
                 User.removeFromLocalArray(m.id);
+                break;
+
+            case "setPatientZeroPosition":
+                patient_zero.x = m.pos.x
+                patient_zero.y = m.pos.y
+                updateGameBoard();
                 break;
 
             default:
@@ -204,6 +217,16 @@ function sendLogOutMessage(id){
         message: {
             action: 'logOut',
             id: id
+        }
+    })
+}
+
+function sendSetPatientZeroPositionMessage(pos){
+    pubnub.publish({
+        channel: _channel,
+        message: {
+            action: 'setPatientZeroPosition',
+            pos: pos
         }
     })
 }

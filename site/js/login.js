@@ -72,8 +72,7 @@ function login(evnt) {
 
     var username = document.getElementById('username-login').value;
     var password = document.getElementById('password-login').value;
-    console.log(username)
-    console.log(password)
+
     Parse.User.logIn(username, password, {
         success: function(user) {
             console.log("a user logged in");
@@ -99,7 +98,6 @@ function signUp(evnt) {
     var username = document.getElementById('username-signup').value;
     var password = document.getElementById('password-signup').value;
     var email = document.getElementById('email-signup').value;
-    console.log(username)
 
     Parse.User.signUp(username, password, {
         email: email,
@@ -107,7 +105,8 @@ function signUp(evnt) {
         y: Math.random(0, 1),
         role: "citizen",
         type: "passive",
-        present: true
+        present: true,
+        admin: false
     }, {
         success: function(user) {
             console.log("a new user signed up");

@@ -59,6 +59,7 @@ function setGameBoard() {
     setQuarantine();
     updateNPCs();
     updatePopulation();
+    updatePatientZero();
 
     // draw quarantine
     drawQuarantine();
@@ -103,6 +104,7 @@ function updateGameBoard() {
     updateQuarantine();
     updateNPCs();
     updatePopulation();
+    updatePatientZero();
 
     // draw quarantine
     drawQuarantine();
@@ -175,7 +177,7 @@ function isInsideQuarantine(x, y) {
 
 function updatePopulation() {
     for (var i = 0; i < people.length; i++) {
-        people[i].updateType(getType(people[i]));
+        people[i].type = getType(people[i]);
         if (people[i].isUserMe()){
             myUser.type = people[i].type
         }
@@ -206,13 +208,14 @@ function getTrappedNPCMarkers() {
     return trapped;
 }
 
+function updatePatientZero() {
+    patient_zero.type = getType(patient_zero);
+}
+
 function updateNPCs() {
     for (var i = 0; i < npcs.length; i++) {
         var npc = npcs[i];
-        npc.updateType(getType(npc));
-        // update patient zero
-        if (npc.isPatientZero)
-            patient_zero.updateType(npc.type);
+        npc.type = getType(npc);
     }
 }
 
@@ -518,14 +521,15 @@ function revealPatientZero() {
 
     // creates a new marker for the npc if there isnt already one
     if (patient_zero.marker == null) {
+        console.log("create a new marker")
+        console.log(patient_zero.marker)
         var marker_obj = new google.maps.Marker({
             position: patient_zero_coords,
             icon: getMarkerIcon(patient_zero.type), // depends on the type of the npc
             map: map,
         });
+        patient_zero.marker = marker_obj;
     }
-
-    patient_zero.marker = marker_obj;
 
     // pan to show the patient zero centered in the screen
     map.panTo(patient_zero_coords);

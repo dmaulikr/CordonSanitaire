@@ -69,7 +69,11 @@ if (typeof document.addEventListener === "undefined" ||
 Parse.initialize("R2T7ReO7LkHmM8ASf11pqjyNJcYXPdVqAD09wWvC", "VLVfcK4ttzTdPo7fwXtexEbA6VnZ8wShmVhodTpE"); // CLONE
 if (Parse.User.current() == null || !Parse.User.current().authenticated()){
     alert('You are not logged in');
+    Parse.User.logOut();
     window.location = 'login.html'
+} else {
+    Parse.User.current().set('present', true);
+    Parse.User.current().save();
 }
 
 // sets Pubnub channel
