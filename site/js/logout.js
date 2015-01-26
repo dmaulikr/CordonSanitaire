@@ -30,5 +30,21 @@ function userLogout() {
     }
 }
 
+function ping(){
+    console.log("ping called");
+    var pingInterval = setInterval( function() {
+        Parse.Cloud.run('ping', {}, {
+            success: function(){
+                console.log("ping sent");
+            },
+            error: function(error){
+                console.log("Error: " + error.code + " " + error.message);
+            }
+        });
+    }, 60 * 1000)
+}
+
 // run idle log out loop
 idleLogout();
+// run ping loop
+ping();
