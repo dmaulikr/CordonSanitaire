@@ -25,7 +25,7 @@ Parse.Cloud.define("setAllUsersNotPresent", function(request, response) {
     });
 });
 
-// user ping
+// an user ping
 Parse.Cloud.define("ping", function(request, response) {
     var cur_date = new Date();
     request.user.set('ping', cur_date);
@@ -36,7 +36,7 @@ Parse.Cloud.define("ping", function(request, response) {
     });
 });
 
-// checks if the user is present according to the ping
+// every 2 minutes checks which users are present according to their pings
 Parse.Cloud.job("updateUsersPresent", function(request, status) {
     console.log("Updating users present");
     Parse.Cloud.useMasterKey();
@@ -85,7 +85,7 @@ Parse.Cloud.job("updateUsersPresent", function(request, status) {
     })
 });
 
-// selects the position of patient zero
+// selects the position of patient zero one minute before a game starts
 Parse.Cloud.job('selectPatientZero', function(request, status) {
     var count = 0;
     var total = { x: 0, y: 0 };
@@ -118,7 +118,7 @@ Parse.Cloud.job('selectPatientZero', function(request, status) {
     });
 });
 
-
+// every day at midnight sets a new game to be started at a given time
 Parse.Cloud.job('setGame', function(request, status) {
     var start_time = new Date();
     start_time.setHours(request.params.hours, request.params.minutes, request.params.seconds);
@@ -130,12 +130,26 @@ Parse.Cloud.job('setGame', function(request, status) {
         }, {
         success: function() {
             status.success("Game is set to " + start_time);
-            alert("Game is set to " + start_time);
         },
         error: function(error) {
             status.error("Error: " + error.code + " " + error.message);
-            alert("Error: " + error.code + " " + error.message);
         }
+    });
+});
+
+// every day at midnight reset the position of the users
+Parse.Cloud.job('resetUsersPosition', function(request, status) {
+    Parse.Cloud.useMasterKey();
+    var query = new Parse.Query(Parse.User);
+    query.each(function(user) {
+        user.save({
+            x : Math.random(),
+            y : Math.random()
+        });
+    }).then (function() {
+        status.success("Users' position have been reseted");
+    }, function(error) {
+        statur.error("Error: " + error.code + " " + error.message);
     });
 });
 
