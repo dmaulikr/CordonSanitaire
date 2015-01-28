@@ -66,9 +66,10 @@ function Settings(){
         if (patient_zero != undefined){
             console.log("there's already a patient zero");
             // erase patient zero's marker if there's one.
-            if (patient_zero.marker != null)
+            if (patient_zero.marker != null){
                 patient_zero.marker.setMap(null);
                 listener = null
+            }
             patient_zero.removeFromDatabase();
         }
 

@@ -522,7 +522,6 @@ function revealPatientZero() {
     // creates a new marker for the npc if there isnt already one
     if (patient_zero.marker == null) {
         console.log("create a new marker")
-        console.log(patient_zero.marker)
         var marker_obj = new google.maps.Marker({
             position: patient_zero_coords,
             icon: getMarkerIcon(patient_zero.type), // depends on the type of the npc
