@@ -38,7 +38,7 @@ Parse.Cloud.define("ping", function(request, response) {
 
 // checks if the user is present according to the ping
 Parse.Cloud.job("updateUsersPresent", function(request, status) {
-    status.message("Updating users present");
+    console.log("Updating users present");
     Parse.Cloud.useMasterKey();
 
     var query = new Parse.Query(Parse.User);
@@ -46,31 +46,36 @@ Parse.Cloud.job("updateUsersPresent", function(request, status) {
         var timestamp = user.get('ping')
 
         var cur_date = new Date();
-        var cur_hour = cur_date.getUTCHours();
-        var cur_min = cur_date.getUTCMinutes();
-        var cur_sec = cur_date.getUTCSeconds();
 
-        var start_hour = timestamp.getUTCHours();
-        var start_min = timestamp.getUTCMinutes();
-        var start_sec = timestamp.getUTCSeconds();
-
-        var dif_hour = cur_hour - start_hour;
-        var dif_min = cur_min - start_min;
-        var dif_sec = cur_sec - start_sec;
-
-        var total_seconds = dif_hour * 60 * 60 + dif_min * 60 + dif_sec;
+        var total_seconds = (cur_date - timestamp) / 1000
         if (total_seconds > 120) {
-            status.message("User not present");
-            user.set({
-                present: false
-            });
-            user.save();
+            if (user.get("present")){
+                user.set({
+                    present: false
+                });
+                user.save();
+
+                var message = {
+                    action: 'removeUser',
+                    id: user.id
+                }
+
+                sendMessage(message);
+            }
         } else {
-            status.message("User present");
-            user.set({
-                present: true
-            });
-            user.save();
+            if(!user.get("present")) {
+                user.set({
+                    present: true
+                });
+                user.save();
+
+                var message = {
+                    action: 'addUser',
+                    id: user.id
+                }
+
+                sendMessage(message);
+            }
         }
     }).then(function() {
 
@@ -90,7 +95,6 @@ Parse.Cloud.job('selectPatientZero', function(request, status) {
     userQuery.equalTo('present', true);
     userQuery.each(function(user) {
         var rnd = Math.round(Math.random());
-        console.log("rnd " + rnd);
         if (rnd == 1) {
             total.x += user.get('x');
             total.y += user.get('y');
@@ -104,8 +108,6 @@ Parse.Cloud.job('selectPatientZero', function(request, status) {
             pos.x = Math.random();
             pos.y = Math.random();
         }
-        console.log("total " + total.x + " " + total.y);
-        console.log("pos " + pos.x + " " + pos.y);
 
         setPatientZeroPosition(pos, function() {
             status.success("Patient Zero position was set to " + pos.x + ", " + pos.y);
@@ -140,7 +142,6 @@ Parse.Cloud.job('setGame', function(request, status) {
 
 // publish message to pubnub from cloud code
 function sendMessage(message){
-    console.log("message called");
     Parse.Cloud.httpRequest({
         url: 'http://pubsub.pubnub.com/publish/' +
             pubnub.publish_key + '/' +
@@ -150,7 +151,6 @@ function sendMessage(message){
 
         // successful HTTP status code
         success: function(httpResponse) {
-            console.log("message sent");
             console.log(httpResponse.text);
         },
         // unsuccessful HTTP status code
@@ -161,6 +161,7 @@ function sendMessage(message){
 }
 
 function setPatientZeroPosition(pos, callback){
+    var message;
     var NPC = Parse.Object.extend("NPC");
     var query = new Parse.Query(NPC);
     query.equalTo('isPatientZero', true);
@@ -175,7 +176,6 @@ function setPatientZeroPosition(pos, callback){
                     action: 'setPatientZeroPosition',
                     pos: pos
                 }
-                console.log("message set");
                 sendMessage(message);
             } else {
                 patient_zero = new NPC();

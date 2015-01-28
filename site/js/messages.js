@@ -102,7 +102,6 @@ pubnub.subscribe({
                 break;
 
             case "setPatientZeroPosition":
-                console.log("message received");
                 if (patient_zero.marker != null){
                     patient_zero.marker.setMap(null);
                     patient_zero.marker = null;
