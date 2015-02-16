@@ -26,12 +26,6 @@
         <h1>CORDON SANITAIRE</h1>
         <h2>PLAYABLE PROTOTYPE v. 152</h2>
         <div id="intro_message">
-            <p id="first_line"></p>
-            <p>Once the game starts <b>it will only last 45 seconds!</b> You’ll be playing with everyone else who jumps in.</p>
-            <p>You will be on a map of a world in which Patient Zero(<b>P0</b>)  has a lethal infectious disease. You -- and everyone -- will work together to contain  by drawing a quarantine line around them.</p>
-            <p><b>You have one job: join the quarantine line, or not.</b> Just press the <b>JOIN/RELEASE</b> button on the upper right. You can do this as many times as you like.</p>
-            <p>At the end of the game, we will all have drawn a quarantine line. It will contain <b>P0</b> (hopefully!) or not. It will trap “healthy” players inside with <b>P0</b>, or not. Hopefully not.</p>
-            <p>That’s up to you … all of you.</p>
         </div>
 
         <div class="flat-form">
@@ -42,13 +36,15 @@
                 <li>
                     <a href="#register">Register</a>
                 </li>
+                <!--
                 <li>
                     <a href="#reset">Reset Password</a>
                 </li>
+                -->
             </ul>
             <div id="login" class="form-action show">
             <p>
-                Take part on the Cordon and contain the infection.
+                Log in before game time to help find Patient Zero or jump in quickly as a Guest.
             </p>
             <form>
                 <ul>
@@ -60,6 +56,7 @@
                     </li>
                     <li>
                         <input type="submit" value="Login" class="button" onclick="login(event);"/>
+                        <!--<input type="submit" value="Guest" class="button" onclick="loginGuest(event);"/>-->
                     </li>
                 </ul>
             </form>
@@ -67,7 +64,7 @@
         <!--/#login.form-action-->
         <div id="register" class="form-action hide">
             <p>
-                Sign up for Cordon Sanitaire and start playing right away!
+                Creating a login will help with game development and features like scoring. Thanks!
             </p>
             <form>
                 <ul>
@@ -87,6 +84,7 @@
             </form>
         </div>
         <!--/#register.form-action-->
+        <!--
         <div id="reset" class="form-action hide">
             <p>
                 To reset your password enter your email and your username
@@ -104,6 +102,7 @@
             </form>
         </div>
         </div>
+        -->
     </div>
 
     <script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.3.1.min.js"></script>
