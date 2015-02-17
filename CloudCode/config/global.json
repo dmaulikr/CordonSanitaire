@@ -1,0 +1,14 @@
+{
+    "applications": {
+        "Cordon Sanitaire - dev 1": {
+            "applicationId": "R2T7ReO7LkHmM8ASf11pqjyNJcYXPdVqAD09wWvC", 
+            "masterKey": "DrCrnxMjnugPWTV0l8InpE1BUN0jicvDVgNsZTFm"
+        }, 
+        "_default": {
+            "link": "Cordon Sanitaire - dev 1"
+        }
+    }, 
+    "global": {
+        "parseVersion": "1.3.1"
+    }
+}

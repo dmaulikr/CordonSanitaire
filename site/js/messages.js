@@ -4,7 +4,7 @@
 
 // Init
 var pubnub = PUBNUB.init({
-    keepalive     : 30,
+    keepalive: 30,
     publish_key: 'pub-c-f1d4a0b1-66e6-48ae-bd2b-72bcaac47884',
     subscribe_key: 'sub-c-37e7ca9a-54e6-11e4-a7f8-02ee2ddab7fe',
     uuid: _uuid
@@ -13,65 +13,106 @@ var pubnub = PUBNUB.init({
 // Subscribe
 pubnub.subscribe({
     channel: _channel,
-    presence: function(m){
+    presence: function(m) {
         //console.log(m)
-        switch(m.action){
+        switch (m.action) {
             case "join":
                 // set the UUID here
                 console.log("received JOIN message - " + m.uuid);
-                if(m.uuid == _uuid) {
-                    hasReceivedJoinedMessage = true;
+                if (m.uuid == _uuid) {
+                    console.log("start setup");
+                    setup();
                 }
-                updatePopulation();
-            break;
+                break;
 
             case "leave":
                 // set this user to no longer focussed...
                 console.log("received LEAVE message - " + m.uuid);
-                updatePopulation();
-            break;
+                // updatePopulation();
+                break;
         }
     },
-    message: function(m){
-        switch(m.action) {
-
-            case "update":
-                console.log("received UPDATE message");
-                updatePopulation();
-            break;
+    message: function(m) {
+        switch (m.action) {
 
             case "start":
                 console.log("received START message");
                 startTheClock();
-            break;
+                break;
 
             case "end":
                 console.log("received END message");
-            break;
+                break;
 
             case "shout":
                 //console.log("received SHOUT message from " + m.uuid);
-                animateShout(m.uuid);
-            break;
+                animateShout(m.id);
+                break;
 
             case "addNPC":
-                if (!NPC.isIdPresent(m.id)){
+                if (!NPC.isIdPresent(m.id)) {
                     NPC.addToLocalArray(m.id);
-                }
-                else{
+                } else {
                     console.log("npc " + m.id + " was already present in the local array");
                 }
-            break;
+                break;
 
             case "removeNPC":
                 NPC.removeFromLocalArray(m.id);
-            break;
+                break;
 
-            case "flipState":
-                flipPlayerState(m.id, m.state);
-            break;
+            case "addUser":
+                if (!User.isIdPresent(m.id) && hasReceivedJoinedMessage) {
+                    User.addToLocalArray(m.id);
+                } else {
+                    console.log("User " + m.id + " was already present in the local array.");
+                }
+                break;
 
-            default: console.log(m);
+            case "removeUser":
+                User.removeFromLocalArray(m.id);
+                break;
+
+            case "changeUserType":
+                User.changeUserType(m.id, m.type);
+                break;
+
+            case "resetPlayers":
+                console.log("resetting players");
+                // repopulate the local array
+                User.getAllFromDatabase();
+
+                // update the game board
+                updateGameBoard();
+
+                if(!Parse.User.current().get('admin')){
+                    alert("For some reason you were logged out.")
+                    Parse.User.logOut();
+                    window.location.href = 'login.html';
+                } else
+                    window.location.reload()
+                break;
+
+            case "logOut":
+                if(myUser.id == m.id){
+                    Parse.User.logOut();
+                    window.location.href = 'login.html';
+                }
+                User.removeFromLocalArray(m.id);
+                break;
+
+            case "setPatientZeroPosition":
+                if (patient_zero.marker != null){
+                    patient_zero.marker.setMap(null);
+                    patient_zero.marker = null;
+                }
+                patient_zero.x = m.pos.x
+                patient_zero.y = m.pos.y
+                updateGameBoard();
+                break;
+
+            default:
+                console.log(m);
         }
     }
 });
@@ -79,8 +120,8 @@ pubnub.subscribe({
 // Unsubscribe when closing the window
 window.onbeforeunload = function() {
     return pubnub.unsubscribe({
-        channel : _channel
-        });
+        channel: _channel
+    });
 }
 
 // window.onunload = function() {
@@ -91,47 +132,105 @@ window.onbeforeunload = function() {
 
 
 // Publish
-var sendUpdateMessage = function() {
-    pubnub.publish({
-     channel: _channel,
-     message: {action: 'update'}
-    });
-}
-
 
 // send start message
-var sendStartOfGame = function() {
+function sendStartOfGame() {
     pubnub.publish({
-     channel: _channel,
-     message: {action:'start'}
+        channel: _channel,
+        message: {
+            action: 'start'
+        }
     });
 }
 
 // send shout message
-var sendShout = function() {
+function sendShout() {
     pubnub.publish({
-     channel: _channel,
-     message: {action:'shout', uuid: _uuid}
+        channel: _channel,
+        message: {
+            action: 'shout',
+            id: myUser.id
+        }
     });
 }
 
-var sendAddNPCMessage = function(id) {
+function sendAddNPCMessage(id) {
     pubnub.publish({
         channel: _channel,
-        message: {action: 'addNPC', id: id}
+        message: {
+            action: 'addNPC',
+            id: id
+        }
     });
 }
 
-var sendRemoveNPCMessage = function(id){
+function sendRemoveNPCMessage(id) {
     pubnub.publish({
         channel: _channel,
-        message: {action: 'removeNPC', id: id}
+        message: {
+            action: 'removeNPC',
+            id: id
+        }
     });
 }
 
-var sendFlipStateMessage = function(id, state) {
+function sendRemoveUserMessage(id) {
+    console.log("remove")
     pubnub.publish({
         channel: _channel,
-        message: {action: 'flipState', id: id, state: state}
+        message: {
+            action: 'removeUser',
+            id: id
+        }
+    });
+}
+
+function sendAddUserMessage(id) {
+    pubnub.publish({
+        channel: _channel,
+        message: {
+            action: 'addUser',
+            id: id
+        }
+    });
+}
+
+function sendChangeUserTypeMessage(id, type) {
+    pubnub.publish({
+        channel: _channel,
+        message: {
+            action: 'changeUserType',
+            id: id,
+            type: type
+        }
+    })
+}
+
+function sendResetPlayersMessage() {
+    pubnub.publish({
+        channel: _channel,
+        message: {
+            action: 'resetPlayers'
+        }
+    })
+}
+
+function sendLogOutMessage(id){
+    pubnub.publish({
+        channel: _channel,
+        message: {
+            action: 'logOut',
+            id: id
+        }
+    })
+}
+
+function sendSetPatientZeroPositionMessage(pos){
+    pubnub.publish({
+        channel: _channel,
+        message: {
+            action: 'setPatientZeroPosition',
+            pos: pos
+        }
     })
 }

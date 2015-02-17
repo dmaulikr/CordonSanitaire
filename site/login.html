@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <!-- Basic Page Needs
+  ================================================== -->
+    <meta charset="utf-8">
+    <title>Cordon Sanitaire | Login</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Mobile Specific Metas
+  ================================================== -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" type="text/css" href="css/login.css?v153" />
+    <!-- CSS
+  ================================================== -->
+
+    <!--[if lt IE 9]>
+        <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+<body>
+
+    <div class="intro">
+        <h1>CORDON SANITAIRE</h1>
+        <h2>PLAYABLE PROTOTYPE v. 153</h2>
+        <div id="intro_message">
+        </div>
+
+        <div class="flat-form">
+            <ul class="tabs">
+                <li>
+                    <a href="#login" class="active">Login</a>
+                </li>
+                <li>
+                    <a href="#register">Register</a>
+                </li>
+                <!--
+                <li>
+                    <a href="#reset">Reset Password</a>
+                </li>
+                -->
+            </ul>
+            <div id="login" class="form-action show">
+	        <div id="first_line"></div>
+            <p>
+                Log in before game time to help find Patient Zero.
+            </p>
+            <form>
+                <ul>
+                    <li>
+                        <input type="text" id="username-login" placeholder="Username" />
+                    </li>
+                    <li>
+                        <input type="password" id="password-login" placeholder="Password" />
+                    </li>
+                    <li>
+                        <input type="submit" value="Login" class="button" onclick="login(event);"/>
+                        <!--<input type="submit" value="Guest" class="button" onclick="loginGuest(event);"/>-->
+                    </li>
+                </ul>
+            </form>
+        </div>
+        <!--/#login.form-action-->
+        <div id="register" class="form-action hide">
+            <p>
+                Creating a login will help with game development and features like scoring. Thanks!
+            </p>
+            <form>
+                <ul>
+                    <li>
+                        <input type="text" id="username-signup" placeholder="Username" />
+                    </li>
+                    <li>
+                        <input type="password" id="password-signup" placeholder="Password" />
+                    </li>
+                    <li>
+                        <input type="text" id="email-signup" placeholder="Email" />
+                    </li>
+                    <li>
+                        <input type="submit" value="Sign Up" class="button" onclick="signUp(event)"/>
+                    </li>
+                </ul>
+            </form>
+        </div>
+        <!--/#register.form-action-->
+        <!--
+        <div id="reset" class="form-action hide">
+            <p>
+                To reset your password enter your email and your username
+                and we'll send you a link to reset your password.
+            </p>
+            <form>
+                <ul>
+                    <li>
+                        <input type="text" id="email-reset" placeholder="Email" />
+                    </li>
+                    <li>
+                        <input type="submit" value="Send" class="button" onclick="resetPassword(event)"/>
+                    </li>
+                </ul>
+            </form>
+        </div>
+        </div>
+        -->
+    </div>
+
+    <script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.3.1.min.js"></script>
+    <script type="text/javascript" src="js/login.js?v153"></script>
+    <script class="cssdeck" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+    <script type="text/javascript">
+        (function( $ ) {
+          // constants
+          var SHOW_CLASS = 'show',
+              HIDE_CLASS = 'hide',
+              ACTIVE_CLASS = 'active';
+
+          $( '.tabs' ).on( 'click', 'li a', function(e){
+            e.preventDefault();
+            var $tab = $( this ),
+                 href = $tab.attr( 'href' );
+
+             $( '.active' ).removeClass( ACTIVE_CLASS );
+             $tab.addClass( ACTIVE_CLASS );
+
+             $( '.show' )
+                .removeClass( SHOW_CLASS )
+                .addClass( HIDE_CLASS )
+                .hide();
+
+              $(href)
+                .removeClass( HIDE_CLASS )
+                .addClass( SHOW_CLASS )
+                .hide()
+                .fadeIn( 550 );
+          });
+        })( jQuery );
+    </script>
+</body>
+</html>
+
+

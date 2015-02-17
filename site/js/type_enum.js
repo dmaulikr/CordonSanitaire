@@ -5,4 +5,3 @@ var TypeEnum = {
   PASSIVE:    "passive",
   TRAPPED:    "casualty" // older naming:  casualty
 }
-

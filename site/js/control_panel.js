@@ -1,5 +1,5 @@
 var settings = new Settings();
-
+var listener = null;
 function Settings(){
     this.duration = 120;
     this.distance = 20;
@@ -24,11 +24,6 @@ function Settings(){
     this.chat = false;
     this.gmaps = false;
 
-    this.rollDice = function(){
-        //pick the patient zero
-        pickPatientZero();
-    };
-
     this.start = function(){
         //startTheClock();
         sendStartOfGame();
@@ -43,7 +38,15 @@ function Settings(){
     };
 
     this.resetPlayers = function(){
-        setAllUsersNotPresent();
+        Parse.Cloud.run('setAllUsersNotPresent', {}, {
+            success: function(result){
+                sendResetPlayersMessage();
+                console.log("users have been reset");
+            },
+            error: function(error){
+                console.log("Error: " + error.code + " " + error.message);
+            }
+        });
     };
 
     this.addNPC = function(){
@@ -59,16 +62,18 @@ function Settings(){
     };
 
     this.addPatientZero = function(){
-        // checks if there's already a patient zero
-        var index = NPC.getPatientZeroIndex();
-        var npc = npcs[index];
-        // if not, picks 3 random users and place p0 in the middle of them
-        if (npc != undefined){
+        // checks if there's already a patient zero, if there's remove it locally and from the database
+        if (patient_zero != undefined){
             console.log("there's already a patient zero");
-            npc.removeFromDatabase();
-            sendRemoveNPCMessage(npc.id);
+            // erase patient zero's marker if there's one.
+            if (patient_zero.marker != null){
+                patient_zero.marker.setMap(null);
+                listener = null
+            }
+            patient_zero.removeFromDatabase();
         }
 
+        // then picks 3 random users and place p0 in the middle of them
         var rnd_users = [];
         var loc;
         if (people.length <= 3){
@@ -84,28 +89,61 @@ function Settings(){
             loc = getCenter(rnd_users);
         }
 
-        npc = new NPC(
+        patient_zero = new NPC(
             loc.x,
             loc.y,
             "citizen",
             TypeEnum.INFECTIOUS,
             true);
-        npc.pushToDatabase();
+
+        patient_zero.pushToDatabase(function() {
+            patient_zero.id = this.id
+        });
     }
 
     this.revealPatientZero = function(){
 	    revealPatientZero();
     }
+
+    this.changePosition = function(){
+        var patient_zero_coords = getLatLngCoords(patient_zero.x, patient_zero.y);
+        if (patient_zero.marker == null) {
+            var marker_obj = new google.maps.Marker({
+                position: patient_zero_coords,
+                draggable: true,
+                icon: getMarkerIcon(patient_zero.type), // depends on the type of the npc
+                map: map,
+            });
+
+            patient_zero.marker = marker_obj;
+        } else {
+            patient_zero.marker.setDraggable(true);
+        }
+
+        if (listener == null){
+            console.log("set listener")
+            listener = google.maps.event.addListener(patient_zero.marker, "dragend", function() {
+                var pos = getPositionFromGoogleCoords(patient_zero.marker.getPosition());
+                patient_zero.updatePosition(pos, function(){
+                    sendSetPatientZeroPositionMessage(pos);
+                });
+            });
+        }
+    }
 };
 
-/* Comment out one of the following to have the control panel visible or not visible */
+/* Only shows the control panel for the admin user, otherwise hide the panel */
 
-/* visible control panel */
-// var gui = new dat.GUI();
+if (Parse.User.current().get('admin')){
+    /* visible control panel */
+    var gui = new dat.GUI();
+}
+else{
+    /* invisible control panel */
 
-/* invisible control panel */
-var gui = new dat.GUI( { autoPlace: false } );
-gui.domElement.id = 'gui';
+    var gui = new dat.GUI( { autoPlace: false } );
+    gui.domElement.id = 'gui';
+}
 
 /* -------------------------------------------------------------------------------- */
 
@@ -117,8 +155,8 @@ f0.add(settings, 'refresh');
 f0.closed = true;
 
 var f5 = gui.addFolder('advanced');
-f5.add(settings, 'rollDice');
 f5.add(settings, 'resetPlayers');
+f5.add(settings, 'changePosition');
 
 var f1 = gui.addFolder('settings');
 var duration = f1.add(settings, 'duration', 0, 180).step(1);
