@@ -9,7 +9,7 @@ Parse.initialize("R2T7ReO7LkHmM8ASf11pqjyNJcYXPdVqAD09wWvC", "VLVfcK4ttzTdPo7fwX
 
 if (Parse.User.current() != null) {
     alert("You are already logged in! Let's play!")
-    window.location = "/index.html"
+    window.location = "/prototypes/cordonsans/index.html"	// this path is necessary for the online location
 }
 
 // check start time from parse
@@ -81,7 +81,7 @@ function login(evnt) {
                 type: "passive"
             });
             user.save();
-            window.location = "/index.html";
+            window.location = "/prototypes/cordonsans/index.html";	// this path is necessary for the online location
         },
         error: function(user, error) {
             // The login failed. Check error to see why.
@@ -111,7 +111,7 @@ function signUp(evnt) {
         success: function(user) {
             console.log("a new user signed up");
             alert("Thank you for signning up. You will now be redirected to Cordon Sanitaire!");
-            window.location = "/index.html";
+            window.location = "/prototypes/cordonsans/index.html";	// this path is necessary for the online location
         },
         error: function(user, error) {
             // Show the error message somewhere and let the user try again.

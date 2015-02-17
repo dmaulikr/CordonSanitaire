@@ -44,7 +44,10 @@ function ping(){
     }, 60 * 1000)
 }
 
-// run idle log out loop
-idleLogout();
+// run idle log out loop 
+// NOTE: JB - do we ever need to log someone out?
+// 
+// idleLogout();
+
 // run ping loop
 ping();
