@@ -245,6 +245,30 @@ function flipUserActiveState() {
                     console.log("Error: " + error.code + " " + error.message);
                 }
             });
+            
+            // test save to the actions table before relying on this table for current state
+            // Then add new user
+            //var user_relation = Parse.Relation(User, myUser.id);
+			var Action = Parse.Object.extend("Actions");
+			var action_obj = new Action();
+			 
+			action_obj.save({
+				user: Parse.User.current(),
+				type: type,
+				x: Math.random(0,1),	// updated position...
+				y: Math.random(0,1)		// updated position...
+			}, {
+			  success: function(action_obj) {
+			    // The object was saved successfully.
+			    console.log("Success: Added a log of user's action");
+			  },
+			  error: function(action_obj, error) {
+			    // The save failed.
+			    // error is a Parse.Error with an error code and message.
+				console.log("Error: " + error.code + " " + error.message);
+			  }
+			});
+
         },
         error: function(error) {
             console.log("Error: " + error.message);
