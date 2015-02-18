@@ -228,6 +228,12 @@ function flipUserActiveState() {
             else
                 throw "The flip state button is not supposed to be available."
 
+			// save the state in parse and then notify players via pubnub
+			// currently saves the type over its previous type
+			// ----------------------------------------------------------------
+			// change this to save a history by adding a new and latest value to 
+			// the running log of actions with a reference to the table of users
+
             object.set("type", type);
             object.save(null, {
                 success: function(object) {
