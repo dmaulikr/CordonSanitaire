@@ -64,11 +64,11 @@
 		6BC0FB401A9561D000542CF0 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		6BC0FB421A9561DB00542CF0 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		6BC0FB551A9562B700542CF0 /* Cordon Sanitaire-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Cordon Sanitaire-Bridging-Header.h"; sourceTree = SOURCE_ROOT; };
-		6BC0FB6F1A956A5E00542CF0 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bolts.framework; path = "../../../../Downloads/parse-library-1.6.2/Bolts.framework"; sourceTree = "<group>"; };
-		6BC0FB701A956A5E00542CF0 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Parse.framework; path = "../../../../Downloads/parse-library-1.6.2/Parse.framework"; sourceTree = "<group>"; };
-		6BC0FB711A956A5E00542CF0 /* ParseCrashReporting.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ParseCrashReporting.framework; path = "../../../../Downloads/parse-library-1.6.2/ParseCrashReporting.framework"; sourceTree = "<group>"; };
-		6BC0FB721A956A5E00542CF0 /* ParseFacebookUtils.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ParseFacebookUtils.framework; path = "../../../../Downloads/parse-library-1.6.2/ParseFacebookUtils.framework"; sourceTree = "<group>"; };
-		6BC0FB731A956A5E00542CF0 /* ParseUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ParseUI.framework; path = "../../../../Downloads/parse-library-1.6.2/ParseUI.framework"; sourceTree = "<group>"; };
+		6BC0FB6F1A956A5E00542CF0 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bolts.framework; path = "Addons/parse-library-1.6.2/Bolts.framework"; sourceTree = "<group>"; };
+		6BC0FB701A956A5E00542CF0 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Parse.framework; path = "Addons/parse-library-1.6.2/Parse.framework"; sourceTree = "<group>"; };
+		6BC0FB711A956A5E00542CF0 /* ParseCrashReporting.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ParseCrashReporting.framework; path = "Addons/parse-library-1.6.2/ParseCrashReporting.framework"; sourceTree = "<group>"; };
+		6BC0FB721A956A5E00542CF0 /* ParseFacebookUtils.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ParseFacebookUtils.framework; path = "Addons/parse-library-1.6.2/ParseFacebookUtils.framework"; sourceTree = "<group>"; };
+		6BC0FB731A956A5E00542CF0 /* ParseUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ParseUI.framework; path = "Addons/parse-library-1.6.2/ParseUI.framework"; sourceTree = "<group>"; };
 		6BC0FB791A956AF500542CF0 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		6BC0FB7D1A956B8700542CF0 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -107,10 +107,9 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		2B487FD31A95589200AB6375 = {
+		2B16B9831A95736C000BAD81 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				6BC0FB7D1A956B8700542CF0 /* libsqlite3.dylib */,
 				6BC0FB791A956AF500542CF0 /* CFNetwork.framework */,
 				6BC0FB6F1A956A5E00542CF0 /* Bolts.framework */,
 				6BC0FB701A956A5E00542CF0 /* Parse.framework */,
@@ -122,11 +121,20 @@
 				6BC0FB3E1A9561C500542CF0 /* Security.framework */,
 				6BC0FB3C1A9561BD00542CF0 /* QuartzCore.framework */,
 				6BC0FB3A1A9561B700542CF0 /* MobileCoreServices.framework */,
-				6BC0FB381A9561AE00542CF0 /* libz.dylib */,
 				6BC0FB361A95619C00542CF0 /* CoreLocation.framework */,
 				6BC0FB341A95619000542CF0 /* CoreGraphics.framework */,
 				6BC0FB301A95617D00542CF0 /* AudioToolbox.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		2B487FD31A95589200AB6375 = {
+			isa = PBXGroup;
+			children = (
+				6BC0FB7D1A956B8700542CF0 /* libsqlite3.dylib */,
+				6BC0FB381A9561AE00542CF0 /* libz.dylib */,
 				2B487FDE1A95589200AB6375 /* Cordon Sanitaire */,
+				2B16B9831A95736C000BAD81 /* Frameworks */,
 				2B487FF71A95589200AB6375 /* Cordon SanitaireTests */,
 				2B487FDD1A95589200AB6375 /* Products */,
 			);
