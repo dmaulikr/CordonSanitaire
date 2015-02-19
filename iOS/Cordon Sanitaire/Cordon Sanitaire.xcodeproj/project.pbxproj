@@ -417,8 +417,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/parse-library-1.6.2",
-					"/Users/laratimbo/Downloads/parse-library-1.6.2",
+					"$(PROJECT_DIR)/Addons/parse-library-1.6.2",
 				);
 				INFOPLIST_FILE = "Cordon Sanitaire/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -435,8 +434,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/parse-library-1.6.2",
-					"/Users/laratimbo/Downloads/parse-library-1.6.2",
+					"$(PROJECT_DIR)/Addons/parse-library-1.6.2",
 				);
 				INFOPLIST_FILE = "Cordon Sanitaire/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
