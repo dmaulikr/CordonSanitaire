@@ -13,12 +13,10 @@ import CoreData
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
-
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         Parse.setApplicationId("R2T7ReO7LkHmM8ASf11pqjyNJcYXPdVqAD09wWvC",
             clientKey: "N887JOIALTlSt0A66yG1TrZ3NDcQfwrzmSMulmCa")
-        
+
         // Override point for customization after application launch.
         return true
     }
