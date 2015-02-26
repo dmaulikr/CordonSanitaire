@@ -137,6 +137,9 @@ function Settings(){
 if (Parse.User.current().get('admin')){
     /* visible control panel */
     var gui = new dat.GUI();
+    
+    // close the intro screen
+	document.getElementById("overlay").style.visibility = 'hidden';
 }
 else{
     /* invisible control panel */
