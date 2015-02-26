@@ -17,19 +17,23 @@ class Action {
     let id : Int
     init(action: String){
         var components = action.componentsSeparatedByString(" ")
+        if components.count != 2 {
+            println("Malformed action")
+        }
         self.header = components[0]
         self.id = components[1].toInt()!
+        
     }
     class func shout(fromId: Int){
-        PubNub.sendMessage(shoutHeader + " " + fromId.description, toChannel: client.channel)
+        PubNub.sendMessage(shoutHeader + " " + fromId.description, toChannel: Client.current.global_channel)
     }
     
     class func addToQuaratine(fromId: Int){
-        PubNub.sendMessage(addToQuarantineHeader + " " + fromId.description, toChannel: client.channel)
+        PubNub.sendMessage(addToQuarantineHeader + " " + fromId.description, toChannel: Client.current.global_channel)
     }
     
     class func removeFromQuaratine(fromId: Int){
-        PubNub.sendMessage(removeFromQuarantineHeader + " " + fromId.description, toChannel: client.channel)
+        PubNub.sendMessage(removeFromQuarantineHeader + " " + fromId.description, toChannel: Client.current.global_channel)
     }
 }
 

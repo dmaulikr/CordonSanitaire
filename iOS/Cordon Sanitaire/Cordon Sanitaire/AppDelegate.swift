@@ -14,8 +14,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+
+        // Initiate Parse
         Parse.setApplicationId("R2T7ReO7LkHmM8ASf11pqjyNJcYXPdVqAD09wWvC",
             clientKey: "N887JOIALTlSt0A66yG1TrZ3NDcQfwrzmSMulmCa")
+        
+        // Checks if there's a user logged in
+        PFAnonymousUtils.logInWithBlock {
+            (user: PFUser!, error: NSError!) -> Void in
+            if error != nil {
+                NSLog("Anonymous login failed.")
+            } else {
+                NSLog("Anonymous user logged in.")
+                NSLog(PFUser.currentUser().username)
+                Client.current.setId(PFUser.currentUser().objectId)
+            }
+        }
 
         // Override point for customization after application launch.
         return true
