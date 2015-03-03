@@ -19,6 +19,9 @@ class Game: NSObject{
     
     // Start the game
     func start(){
+        
+        // TODO: get players from parse
+        // TODO: change view to game view
         timer = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: Selector("updateTimer"), userInfo: nil, repeats: true)
         start_time = NSDate()
     }
@@ -33,7 +36,7 @@ class Game: NSObject{
         }
     }
     
-    func getPlayers(players_ids: [String]){
+    private func getPlayers(players_ids: [String]){
         var userQuery = PFUser.query()
         userQuery.whereKey("objectId", containedIn: players_ids)
         var objects = userQuery.findObjects()
