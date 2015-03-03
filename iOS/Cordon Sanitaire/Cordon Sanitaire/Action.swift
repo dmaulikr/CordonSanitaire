@@ -8,32 +8,45 @@
 
 import Foundation
 
-let shoutHeader = "shout"
-let addToQuarantineHeader = "addToQuarantine"
-let removeFromQuarantineHeader = "removeFromQuarantine"
+    
+enum Headers : String, RawRepresentable{
+    case Shout = "Shout"
+    case AddToQuarantine = "AddToQuaratine"
+    case RemoveFromQuarantine = "RemoveFromQuarantine"
+    case MalFormattedMessage = "MalFormattedMessage"
+}
 
 class Action {
-    let header : String
-    let id : Int
-    init(action: String){
-        var components = action.componentsSeparatedByString(" ")
+    let header : Headers
+    let id : String
+    init(id: String, header: Headers){
+        self.id = id
+        self.header = header
+    }
+    class func shout(fromId: String){
+        PubNub.sendMessage(Headers.Shout.rawValue + " " + fromId, toChannel: Client.current.global_channel)
+    }
+    
+    class func addToQuaratine(fromId: String){
+        PubNub.sendMessage(Headers.AddToQuarantine.rawValue + " " + fromId, toChannel: Client.current.global_channel)
+    }
+    
+    class func removeFromQuaratine(fromId: String){
+        PubNub.sendMessage(Headers.RemoveFromQuarantine.rawValue + " " + fromId, toChannel: Client.current.global_channel)
+    }
+    
+    class func parseMessage(message: String) -> Action{
+        var header: Headers;
+        var id: String;
+        var components = message.componentsSeparatedByString(" ")
         if components.count != 2 {
-            println("Malformed action")
+            header = Headers.MalFormattedMessage
+            id = ""
+        } else {
+            header = Headers(rawValue: components[0])!
+            id = components[1]
         }
-        self.header = components[0]
-        self.id = components[1].toInt()!
-        
-    }
-    class func shout(fromId: Int){
-        PubNub.sendMessage(shoutHeader + " " + fromId.description, toChannel: Client.current.global_channel)
-    }
-    
-    class func addToQuaratine(fromId: Int){
-        PubNub.sendMessage(addToQuarantineHeader + " " + fromId.description, toChannel: Client.current.global_channel)
-    }
-    
-    class func removeFromQuaratine(fromId: Int){
-        PubNub.sendMessage(removeFromQuarantineHeader + " " + fromId.description, toChannel: Client.current.global_channel)
+        return Action(id: id, header: header)
     }
 }
 

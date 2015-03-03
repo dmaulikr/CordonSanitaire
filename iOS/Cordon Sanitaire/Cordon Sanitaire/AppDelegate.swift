@@ -26,8 +26,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 NSLog("Anonymous login failed.")
             } else {
                 NSLog("Anonymous user logged in.")
-                NSLog(PFUser.currentUser().username)
                 Client.current.setId(PFUser.currentUser().objectId)
+//                var game = Game()
+//                game.start()
             }
         }
 

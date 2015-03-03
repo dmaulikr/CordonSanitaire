@@ -40,44 +40,46 @@ class Client: NSObject, PNDelegate {
     // Sets the ID of a client, also sets its private channel according to the ID
     func setId(id: String){
         self.id = id
-        PubNub.setClientIdentifier(PFUser.currentUser().username)
+        PubNub.setClientIdentifier(PFUser.currentUser().objectId)
         self.private_channel = PNChannel.channelWithName(id, shouldObservePresence: false) as PNChannel
         PubNub.subscribeOn([self.private_channel])
     }
     
     func setGroupChannel(channel_name: String){
         self.group_channel = PNChannel.channelWithName(channel_name, shouldObservePresence: true) as PNChannel
+        PubNub.subscribeOn([self.group_channel])
     }
 
     func pubnubClient(client: PubNub!, didConnectToOrigin origin: String!) {
-        println("DELEGATE: Connected to " + origin)
+        NSLog("DELEGATE: Connected to " + origin)
     }
     
     func pubnubClient(client: PubNub!, didReceivePresenceEvent event: PNPresenceEvent!) {
         switch event.type.rawValue {
         case PNPresenceEventType.Join.rawValue:
             // should add event.client.identifier to list of usernames in the waiting area
-            println("user " + event.client.identifier + "joined channel " + event.channel.name)
+            Lobby.singleton.addPlayer(event.client.identifier)
+            NSLog("User " + event.client.identifier + "joined channel " + event.channel.name)
         default:
-            println("defaulted")
+            NSLog("defaulted")
         }
     }
     
     func pubnubClient(client: PubNub!, didSubscribeOn channelObjects: [AnyObject]!) {
-        println("Subscribed on " + channelObjects.description)
+        NSLog("Subscribed on " + channelObjects.description)
     }
 
     func pubnubClient(client: PubNub!, didReceiveMessage message: PNMessage!) {
-        var action = Action(action: message.message as String)
+        var action = Action.parseMessage(message.message.description)
         switch action.header {
-        case shoutHeader:
-            println("Received " + action.header + " from " + action.id.description)
-        case addToQuarantineHeader:
-            println(action.id.description + " " + action.header)
-        case removeFromQuarantineHeader:
-            println(action.id.description + " " + action.header)
+        case Headers.Shout:
+            NSLog("Received " + action.header.rawValue + " from " + action.id)
+        case Headers.AddToQuarantine:
+            NSLog(action.id + " " + action.header.rawValue)
+        case Headers.RemoveFromQuarantine:
+            NSLog(action.id + " " + action.header.rawValue)
         default:
-            println("Unknown action")
+            NSLog("Header: " + action.header.rawValue)
         }
     }
 }
