@@ -29,6 +29,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 Client.current.setId(PFUser.currentUser().objectId)
 //                var game = Game()
 //                game.start()
+                
+                //TODO: update Parse status to present
+
             }
         }
 
@@ -58,6 +61,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
         // Saves changes in the application's managed object context before the application terminates.
         self.saveContext()
+        
+        //TODO: update Parse to be no longer present
     }
 
     // MARK: - Core Data stack
