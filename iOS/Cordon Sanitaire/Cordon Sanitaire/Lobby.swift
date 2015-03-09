@@ -37,7 +37,7 @@ class Lobby: NSObject{
                     self.countdown_timer = NSTimer.scheduledTimerWithTimeInterval(secondsUntilStart, target: self, selector: Selector("startGame"), userInfo: nil, repeats: false)
                 } else if (abs(secondsUntilStart) < Game.duration){
                     NSLog("Game in progress")
-                    self.startGameAfter(secondsUntilStart)
+                    self.startGameAfter(abs(secondsUntilStart))
                 }
                 else {
                     NSLog("Game is alrady over :(")
