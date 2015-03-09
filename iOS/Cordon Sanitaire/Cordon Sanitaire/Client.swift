@@ -79,9 +79,10 @@ class Client: NSObject, PNDelegate {
         case Headers.RemoveFromQuarantine:
             NSLog(action.id + " " + action.header.rawValue)
         default:
-            NSLog("Header: " + action.header.rawValue)
+            NSLog("Header: " + action.header.rawValue + message.message.description)
         }
     }
+    
 }
 
 private let _SingletonSharedInstance = Client()

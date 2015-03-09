@@ -12,27 +12,27 @@ import MapKit
 class Game: NSObject{
     var players: [String: Player] = [:];
     // TODO: Add map to the game
-//    var map;
     var timer = NSTimer()
-    let game_time: Double = 45
+    class var duration: Double {return 45.0} // Default duration of a game
     var start_time: NSDate?
     
     // Start the game
-    func start(){
-        
+    // seconds -> how many seconds in the game we are in
+    func start(seconds: Double){
+        NSLog("Game is going to start")
         // TODO: get players from parse
         // TODO: change view to game view
-        timer = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: Selector("updateTimer"), userInfo: nil, repeats: true)
-        start_time = NSDate()
+        self.timer = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: Selector("updateTimer"), userInfo: nil, repeats: true)
+        self.start_time = NSDate().dateByAddingTimeInterval(-seconds)
     }
     
     func updateTimer(){
         var elapsed_time = Double(NSDate().timeIntervalSinceDate(start_time!))
-        if (elapsed_time > game_time) {
+        if (elapsed_time > Game.duration) {
             timer.invalidate()
             NSLog("Time is up!")
         } else {
-            NSLog("Timer: \(game_time - elapsed_time)")
+            NSLog("Timer: \(Game.duration - elapsed_time)")
         }
     }
     
@@ -44,6 +44,15 @@ class Game: NSObject{
             var player = Player(id: obj.objectId, pos: (obj.x, obj.y))
             players[player.id] = player
         }
+    }
+    
+    // Get start game start time from Parse
+    class func getStartTime() -> NSDate{
+        var query = PFQuery(className: "Game")
+        var game = query.getFirstObject()
+        var startTime: AnyObject? = game.valueForKey("startTime")
+        NSLog("Game time is " + startTime!.description)
+        return startTime as NSDate
     }
     
 }

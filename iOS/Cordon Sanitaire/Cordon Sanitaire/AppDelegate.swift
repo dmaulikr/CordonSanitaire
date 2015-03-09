@@ -16,8 +16,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
 
         // Initiate Parse
-        Parse.setApplicationId("R2T7ReO7LkHmM8ASf11pqjyNJcYXPdVqAD09wWvC",
-            clientKey: "N887JOIALTlSt0A66yG1TrZ3NDcQfwrzmSMulmCa")
+        Parse.setApplicationId("XzPwPddo8UjT14oI14b69CPgq8bRFYsA9TrqeZTL",
+            clientKey: "4ThcPZWeffGCaBjsjReXh5rtp0Ygxb7DOQ8PbiHa")
         
         // Checks if there's a user logged in
         PFAnonymousUtils.logInWithBlock {
@@ -27,8 +27,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             } else {
                 NSLog("Anonymous user logged in.")
                 Client.current.setId(PFUser.currentUser().objectId)
-//                var game = Game()
-//                game.start()
+                let startTime = Game.getStartTime()
+                var lobby = Lobby()
             }
         }
 
