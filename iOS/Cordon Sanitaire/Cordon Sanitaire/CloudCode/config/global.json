@@ -1,0 +1,11 @@
+{
+    "applications": {
+        "CS - iOS - Dev": {
+            "applicationId": "XzPwPddo8UjT14oI14b69CPgq8bRFYsA9TrqeZTL", 
+            "masterKey": "viTDPBOie5vWthVNbddmFPvxFsXwWAP9yixUacrr"
+        }, 
+        "_default": {
+            "link": "CS - iOS - Dev"
+        }
+    }
+}

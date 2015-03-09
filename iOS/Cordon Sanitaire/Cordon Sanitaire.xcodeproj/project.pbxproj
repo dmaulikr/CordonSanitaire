@@ -133,6 +133,9 @@
 		6BC0FB781A956A5E00542CF0 /* ParseUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6BC0FB731A956A5E00542CF0 /* ParseUI.framework */; };
 		6BC0FB7A1A956AF500542CF0 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6BC0FB791A956AF500542CF0 /* CFNetwork.framework */; };
 		6BC0FB7E1A956B8700542CF0 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 6BC0FB7D1A956B8700542CF0 /* libsqlite3.dylib */; };
+		6BD04D781AAE4F47003AE167 /* main.js in Resources */ = {isa = PBXBuildFile; fileRef = 6BD04D731AAE4F47003AE167 /* main.js */; };
+		6BD04D791AAE4F47003AE167 /* global.json in Resources */ = {isa = PBXBuildFile; fileRef = 6BD04D751AAE4F47003AE167 /* global.json */; };
+		6BD04D7A1AAE4F47003AE167 /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = 6BD04D771AAE4F47003AE167 /* index.html */; };
 		6BE938B81AA50FFC00AA2B20 /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE938B71AA50FFC00AA2B20 /* Game.swift */; };
 		6BE938BC1AA510B700AA2B20 /* Lobby.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE938BB1AA510B700AA2B20 /* Lobby.swift */; };
 		6BE938BE1AA5119100AA2B20 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE938BD1AA5119100AA2B20 /* Player.swift */; };
@@ -445,6 +448,9 @@
 		6BC0FB731A956A5E00542CF0 /* ParseUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ParseUI.framework; path = "Addons/parse-library-1.6.2/ParseUI.framework"; sourceTree = "<group>"; };
 		6BC0FB791A956AF500542CF0 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		6BC0FB7D1A956B8700542CF0 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
+		6BD04D731AAE4F47003AE167 /* main.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = main.js; sourceTree = "<group>"; };
+		6BD04D751AAE4F47003AE167 /* global.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = global.json; sourceTree = "<group>"; };
+		6BD04D771AAE4F47003AE167 /* index.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = index.html; sourceTree = "<group>"; };
 		6BE938B71AA50FFC00AA2B20 /* Game.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
 		6BE938BB1AA510B700AA2B20 /* Lobby.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Lobby.swift; sourceTree = "<group>"; };
 		6BE938BD1AA5119100AA2B20 /* Player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
@@ -508,6 +514,7 @@
 		2B487FD31A95589200AB6375 = {
 			isa = PBXGroup;
 			children = (
+				6BD04D711AAE4F47003AE167 /* CloudCode */,
 				2B487FDE1A95589200AB6375 /* Cordon Sanitaire */,
 				2B16B9831A95736C000BAD81 /* Frameworks */,
 				2B487FF71A95589200AB6375 /* Cordon SanitaireTests */,
@@ -965,6 +972,41 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
+		6BD04D711AAE4F47003AE167 /* CloudCode */ = {
+			isa = PBXGroup;
+			children = (
+				6BD04D721AAE4F47003AE167 /* cloud */,
+				6BD04D741AAE4F47003AE167 /* config */,
+				6BD04D761AAE4F47003AE167 /* public */,
+			);
+			name = CloudCode;
+			path = "Cordon Sanitaire/CloudCode";
+			sourceTree = "<group>";
+		};
+		6BD04D721AAE4F47003AE167 /* cloud */ = {
+			isa = PBXGroup;
+			children = (
+				6BD04D731AAE4F47003AE167 /* main.js */,
+			);
+			path = cloud;
+			sourceTree = "<group>";
+		};
+		6BD04D741AAE4F47003AE167 /* config */ = {
+			isa = PBXGroup;
+			children = (
+				6BD04D751AAE4F47003AE167 /* global.json */,
+			);
+			path = config;
+			sourceTree = "<group>";
+		};
+		6BD04D761AAE4F47003AE167 /* public */ = {
+			isa = PBXGroup;
+			children = (
+				6BD04D771AAE4F47003AE167 /* index.html */,
+			);
+			path = public;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1046,10 +1088,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6BD04D7A1AAE4F47003AE167 /* index.html in Resources */,
+				6BD04D791AAE4F47003AE167 /* global.json in Resources */,
 				2B487FEA1A95589200AB6375 /* Main.storyboard in Resources */,
 				2B487FEF1A95589200AB6375 /* LaunchScreen.xib in Resources */,
 				6B8C27E41A97E51C0084EB96 /* PNLoggerSymbols.plist in Resources */,
 				2B487FEC1A95589200AB6375 /* Images.xcassets in Resources */,
+				6BD04D781AAE4F47003AE167 /* main.js in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
