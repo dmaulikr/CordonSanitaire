@@ -42,7 +42,15 @@ class Client: NSObject, PNDelegate {
         self.id = id
         PubNub.setClientIdentifier(PFUser.currentUser().objectId)
         self.private_channel = PNChannel.channelWithName(id, shouldObservePresence: false) as PNChannel
-        PubNub.subscribeOn([self.private_channel])
+
+        PubNub.subscribeOn([self.private_channel], withCompletionHandlingBlock: {(state: PNSubscriptionProcessState, object: [AnyObject]!, error: PNError!) -> Void in
+            if (error == nil){
+                self.tellCloudCodeMe()
+            }
+            else{
+                NSLog("An error occured")
+            }
+        })
     }
     
     func setGroupChannel(channel_name: String){
@@ -78,9 +86,23 @@ class Client: NSObject, PNDelegate {
             NSLog(action.id + " " + action.header.rawValue)
         case Headers.RemoveFromQuarantine:
             NSLog(action.id + " " + action.header.rawValue)
+        case Headers.SubscribeToChannel:
+            setGroupChannel(action.id)
         default:
             NSLog("Header: " + action.header.rawValue + message.message.description)
         }
+    }
+        
+    func tellCloudCodeMe() {
+        PFCloud.callFunctionInBackground("dummyKMeans", withParameters: ["id": PFUser.currentUser().objectId] , block: {(result: AnyObject!, error: NSError!) -> Void in
+            if (error == nil){
+                NSLog("done")
+                PFUser.currentUser().setValue(true, forKey: "present")
+                PFUser.currentUser().save()
+            } else {
+                NSLog("An error has occured")
+            }
+        })
     }
     
 }

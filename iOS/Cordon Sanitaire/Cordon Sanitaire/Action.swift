@@ -13,6 +13,7 @@ enum Headers : String, RawRepresentable{
     case Shout = "Shout"
     case AddToQuarantine = "AddToQuaratine"
     case RemoveFromQuarantine = "RemoveFromQuarantine"
+    case SubscribeToChannel = "SubscribeToChannel"
     case MalFormattedMessage = "MalFormattedMessage"
 }
 

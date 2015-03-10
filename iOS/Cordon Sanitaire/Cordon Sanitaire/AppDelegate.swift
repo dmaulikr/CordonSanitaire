@@ -27,14 +27,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             } else {
                 NSLog("Anonymous user logged in.")
                 Client.current.setId(PFUser.currentUser().objectId)
-                PFCloud.callFunctionInBackground("dummyKMeans", withParameters: ["id": PFUser.currentUser().objectId] , block: {(result: AnyObject!, error: NSError!) -> Void in
-                        if (error == nil){
-                            PFUser.currentUser().setValue(true, forKey: "present")
-                            PFUser.currentUser().save()
-                        } else {
-                            NSLog("An error has occured")
-                        }
-                    })
+
                 let startTime = Game.getStartTime()
                 var lobby = Lobby()
             }
