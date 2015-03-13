@@ -39,29 +39,41 @@ class Client: NSObject, PNDelegate {
     
     // Sets the ID of a client, also sets its private channel according to the ID
     func setId(id: String){
-        NSLog("setting ID")
         self.id = id
         PubNub.setClientIdentifier(PFUser.currentUser().objectId)
         self.private_channel = PNChannel.channelWithName(id, shouldObservePresence: false) as PNChannel
 
         PubNub.subscribeOn([self.private_channel], withCompletionHandlingBlock: {(state: PNSubscriptionProcessState, object: [AnyObject]!, error: PNError!) -> Void in
             if (error == nil){
-                NSLog("Subscribed on private channel")
                 self.tellCloudCodeAboutMe()
             }
             else{
-                NSLog("An error occured")
+                NSLog("An error occured when subscribing to private channel")
             }
         })
     }
     
     func setGroupChannel(channel_name: String){
+        if (self.group_channel != nil){
+            PubNub.unsubscribeFrom([self.group_channel])
+        }
         self.group_channel = PNChannel.channelWithName(channel_name, shouldObservePresence: true) as PNChannel
         PubNub.subscribeOn([self.group_channel])
+        PubNub.requestParticipantsListFor([self.group_channel])
+//        Lobby.singleton.addPlayers(players as [String])
     }
 
     func pubnubClient(client: PubNub!, didConnectToOrigin origin: String!) {
         NSLog("DELEGATE: Connected to " + origin)
+    }
+    
+    
+    func pubnubClient(client: PubNub!, didReceiveParticipants presenceInformation: PNHereNow!, forObjects channelObjects: [AnyObject]!){
+        var clients = presenceInformation.participantsForChannel(self.group_channel) as [PNClient]!
+        var players = clients.map({ ($0).identifier })
+        NSLog(players.description)
+        Lobby.singleton.addPlayers(players)
+        
     }
     
     func pubnubClient(client: PubNub!, didReceivePresenceEvent event: PNPresenceEvent!) {
@@ -96,16 +108,14 @@ class Client: NSObject, PNDelegate {
     }
         
     func tellCloudCodeAboutMe() {
-        NSLog(" pleeease")
         PFCloud.callFunctionInBackground("dummyKMeans", withParameters: ["id": PFUser.currentUser().objectId] , block: {(result: AnyObject!, error: NSError!) -> Void in
             if (error == nil){
-                NSLog("done")
                 PFUser.currentUser().setValue(true, forKey: "present")
                 PFUser.currentUser().saveInBackgroundWithBlock({(result: Bool, error: NSError!) -> Void in
                     if (error == nil){
-                        NSLog("Success")
+                        NSLog("Saved user successfully")
                     } else {
-                        NSLog("Failure")
+                        NSLog("Failed to save user")
                     }
                 })
             } else {

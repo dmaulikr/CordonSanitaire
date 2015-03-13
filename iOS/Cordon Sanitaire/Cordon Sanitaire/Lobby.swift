@@ -15,14 +15,14 @@ class Lobby: NSObject{
         return _SingletonSharedInstance
     }
     
-    var players: [String] = [];
+    var players: [String!] = [];
     var countdown_timer = NSTimer();
     
     override init(){
         super.init()
         
         // get the start time from parse
-        var startTime = scheduledStartTime as NSDate!
+        var startTime = scheduledStartTime
 
         // query pubnub time and set up the countdown timer
         PubNub.requestServerTimeTokenWithCompletionBlock({(timetoken: NSNumber!, error: PNError!) -> Void in
@@ -52,10 +52,13 @@ class Lobby: NSObject{
     func addPlayer(player: String){
         self.players.append(player)
         NSLog("Player \(player) was added to the lobby")
+        NSLog("The Players in the lobby are: " + self.players.description)
     }
     
-    func addPlayers(newPlayers: [String]){
+    func addPlayers(newPlayers: [String!]){
         self.players.extend(newPlayers)
+        NSLog("Players \(newPlayers) were added to the lobby")
+        NSLog("The Players in the lobby are: " + self.players.description)
     }
     
     func emptyLobby(){

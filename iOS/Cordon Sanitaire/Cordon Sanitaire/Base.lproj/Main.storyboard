@@ -20,7 +20,7 @@
                         <subviews>
                             <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HEU-jm-MDm">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                            </mapView>
+                            </view>
                             <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="WhR-pD-ZTx">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="114"/>
                                 <subviews>
