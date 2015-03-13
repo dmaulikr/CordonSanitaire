@@ -7,9 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2B0AE36E1AAA6A3500C508C7 /* HistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B0AE36B1AAA6A3500C508C7 /* HistoryViewController.swift */; };
-		2B0AE36F1AAA6A3500C508C7 /* IntroViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B0AE36C1AAA6A3500C508C7 /* IntroViewController.swift */; };
-		2B0AE3701AAA6A3500C508C7 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B0AE36D1AAA6A3500C508C7 /* MapViewController.swift */; };
 		2B0AE3731AAA74E800C508C7 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B0AE3721AAA74E800C508C7 /* Utilities.swift */; };
 		2B0AE3751AAA7CD700C508C7 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B0AE3741AAA7CD700C508C7 /* MapKit.framework */; };
 		2B0AE3771AAA7D3900C508C7 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B0AE3761AAA7D3900C508C7 /* UIKit.framework */; };
@@ -20,6 +17,9 @@
 		2B487FEC1A95589200AB6375 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2B487FEB1A95589200AB6375 /* Images.xcassets */; };
 		2B487FEF1A95589200AB6375 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2B487FED1A95589200AB6375 /* LaunchScreen.xib */; };
 		2B487FFB1A95589200AB6375 /* Cordon_SanitaireTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B487FFA1A95589200AB6375 /* Cordon_SanitaireTests.swift */; };
+		2BA5D3991AB2E55800F2567E /* IntroViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BA5D3981AB2E55800F2567E /* IntroViewController.swift */; };
+		2BA5D39B1AB2E56700F2567E /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BA5D39A1AB2E56700F2567E /* MapViewController.swift */; };
+		2BA5D39F1AB2E59F00F2567E /* HistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BA5D39E1AB2E59F00F2567E /* HistoryViewController.swift */; };
 		6B765F9E1A9BF3BA00B021E6 /* Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B765F9D1A9BF3BA00B021E6 /* Action.swift */; };
 		6B8C27801A97E51C0084EB96 /* PNObservationCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B8C266B1A97E51B0084EB96 /* PNObservationCenter.m */; };
 		6B8C27811A97E51C0084EB96 /* PubNub+APNS.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B8C266D1A97E51B0084EB96 /* PubNub+APNS.m */; };
@@ -155,9 +155,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		2B0AE36B1AAA6A3500C508C7 /* HistoryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryViewController.swift; sourceTree = "<group>"; };
-		2B0AE36C1AAA6A3500C508C7 /* IntroViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntroViewController.swift; sourceTree = "<group>"; };
-		2B0AE36D1AAA6A3500C508C7 /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		2B0AE3721AAA74E800C508C7 /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 		2B0AE3741AAA7CD700C508C7 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		2B0AE3761AAA7D3900C508C7 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -172,6 +169,9 @@
 		2B487FF41A95589200AB6375 /* Cordon SanitaireTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Cordon SanitaireTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2B487FF91A95589200AB6375 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2B487FFA1A95589200AB6375 /* Cordon_SanitaireTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cordon_SanitaireTests.swift; sourceTree = "<group>"; };
+		2BA5D3981AB2E55800F2567E /* IntroViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntroViewController.swift; sourceTree = "<group>"; };
+		2BA5D39A1AB2E56700F2567E /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
+		2BA5D39E1AB2E59F00F2567E /* HistoryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryViewController.swift; sourceTree = "<group>"; };
 		6B765F9D1A9BF3BA00B021E6 /* Action.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Action.swift; sourceTree = "<group>"; };
 		6B8C26691A97E51B0084EB96 /* PNObservationCenter+Protected.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PNObservationCenter+Protected.h"; sourceTree = "<group>"; };
 		6B8C266A1A97E51B0084EB96 /* PNObservationCenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNObservationCenter.h; sourceTree = "<group>"; };
@@ -501,9 +501,9 @@
 		2B0AE3711AAA6A3F00C508C7 /* views */ = {
 			isa = PBXGroup;
 			children = (
-				2B0AE36B1AAA6A3500C508C7 /* HistoryViewController.swift */,
-				2B0AE36C1AAA6A3500C508C7 /* IntroViewController.swift */,
-				2B0AE36D1AAA6A3500C508C7 /* MapViewController.swift */,
+				2BA5D3981AB2E55800F2567E /* IntroViewController.swift */,
+				2BA5D39E1AB2E59F00F2567E /* HistoryViewController.swift */,
+				2BA5D39A1AB2E56700F2567E /* MapViewController.swift */,
 			);
 			name = views;
 			sourceTree = "<group>";
@@ -1159,7 +1159,6 @@
 				6B8C278E1A97E51C0084EB96 /* PNChannel.m in Sources */,
 				6B8C27B71A97E51C0084EB96 /* PNRequestsQueue.m in Sources */,
 				6BE938BC1AA510B700AA2B20 /* Lobby.swift in Sources */,
-				2B0AE3701AAA6A3500C508C7 /* MapViewController.swift in Sources */,
 				6B8C27A81A97E51C0084EB96 /* PNAccessRightsInformation.m in Sources */,
 				6B8C27CC1A97E51C0084EB96 /* PNChannelGroupRemoveRequest.m in Sources */,
 				6B8C279D1A97E51C0084EB96 /* PNErrorResponseParser.m in Sources */,
@@ -1174,15 +1173,14 @@
 				6B8C27821A97E51C0084EB96 /* PubNub+ChannelRegistry.m in Sources */,
 				6B8C27831A97E51C0084EB96 /* PubNub+Cipher.m in Sources */,
 				6B8C27861A97E51C0084EB96 /* PubNub+PAM.m in Sources */,
+				2BA5D3991AB2E55800F2567E /* IntroViewController.swift in Sources */,
 				6B8C27DC1A97E51C0084EB96 /* PNTimeTokenRequest.m in Sources */,
 				6B8C278A1A97E51C0084EB96 /* PubNub+Subscription.m in Sources */,
 				6B8C27C61A97E51C0084EB96 /* PNLogger.m in Sources */,
-				2B0AE36E1AAA6A3500C508C7 /* HistoryViewController.swift in Sources */,
 				6B8C27CF1A97E51C0084EB96 /* PNChannelsListUpdateForChannelGroupRequest.m in Sources */,
 				6B8C27BB1A97E51C0084EB96 /* NSData+PNAdditions.m in Sources */,
 				6B8C27D41A97E51C0084EB96 /* PNLatencyMeasureRequest.m in Sources */,
 				2B0AE3731AAA74E800C508C7 /* Utilities.swift in Sources */,
-				2B0AE36F1AAA6A3500C508C7 /* IntroViewController.swift in Sources */,
 				6B8C27E31A97E51C0084EB96 /* PNConnectionChannel.m in Sources */,
 				6B8C27801A97E51C0084EB96 /* PNObservationCenter.m in Sources */,
 				6B8C27D51A97E51C0084EB96 /* PNLeaveRequest.m in Sources */,
@@ -1200,6 +1198,7 @@
 				6B8C27DD1A97E51C0084EB96 /* PNWhereNowRequest.m in Sources */,
 				6B8C27921A97E51C0084EB96 /* PNAccessRightsResponseParser.m in Sources */,
 				6B8C27D61A97E51C0084EB96 /* PNMessageHistoryRequest.m in Sources */,
+				2BA5D39F1AB2E59F00F2567E /* HistoryViewController.swift in Sources */,
 				6B8C27A21A97E51C0084EB96 /* PNResponseDeserialize.m in Sources */,
 				6B8C278C1A97E51C0084EB96 /* PubNub.m in Sources */,
 				6B8C27B51A97E51C0084EB96 /* PNMessagesHistory.m in Sources */,
@@ -1207,6 +1206,7 @@
 				6B8C27B31A97E51C0084EB96 /* PNJSONSerialization.m in Sources */,
 				6B8C27B11A97E51C0084EB96 /* PNError.m in Sources */,
 				6B8C27D31A97E51C0084EB96 /* PNHereNowRequest.m in Sources */,
+				2BA5D39B1AB2E56700F2567E /* MapViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
