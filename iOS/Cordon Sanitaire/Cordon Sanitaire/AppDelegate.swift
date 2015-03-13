@@ -25,10 +25,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             if error != nil {
                 NSLog("Anonymous login failed.")
             } else {
-                NSLog("Anonymous user logged in.")
+                NSLog("Anonymous user with ID " + PFUser.currentUser().objectId + " logged in.")
                 Client.current.setId(PFUser.currentUser().objectId)
 
-                Game.getStartTime()
                 var lobby = Lobby()
             }
         }
@@ -59,7 +58,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
         // Saves changes in the application's managed object context before the application terminates.
         self.saveContext()
-        
+        Client.current.terminate()
+        PubNub.disconnect()
         //TODO: update Parse to be no longer present
     }
 
