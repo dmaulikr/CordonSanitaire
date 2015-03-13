@@ -18,53 +18,51 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HEU-jm-MDm">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                            </view>
-                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="WhR-pD-ZTx">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="114"/>
-                                <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OrY-Hd-S1Y">
-                                        <rect key="frame" x="257" y="216" width="87" height="39"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="22"/>
-                                        <state key="normal" title="PLAY">
-                                            <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <segue destination="x1y-Ho-a5b" kind="presentation" id="be5-Jv-gnY"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="A6a-Xe-0JY">
-                                        <rect key="frame" x="240" y="276" width="121" height="30"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="22"/>
-                                        <state key="normal" title="HISTORY">
-                                            <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="R7h-57-SXK">
-                                        <rect key="frame" x="244" y="339" width="113" height="30"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="22"/>
-                                        <state key="normal" title="PROFILE">
-                                            <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                    </button>
-                                </subviews>
-                                <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="600" id="iiF-Dc-dtb"/>
-                                    <constraint firstAttribute="centerX" secondItem="OrY-Hd-S1Y" secondAttribute="centerX" constant="-0.5" id="sfa-Lk-qGY"/>
-                                </constraints>
-                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="R7h-57-SXK">
+                                <rect key="frame" x="244" y="285" width="113" height="30"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="22"/>
+                                <state key="normal" title="PROFILE">
+                                    <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="A6a-Xe-0JY">
+                                <rect key="frame" x="240" y="347" width="121" height="30"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="22"/>
+                                <state key="normal" title="HISTORY">
+                                    <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OrY-Hd-S1Y">
+                                <rect key="frame" x="257" y="213" width="87" height="39"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="22"/>
+                                <state key="normal" title="PLAY">
+                                    <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <segue destination="x1y-Ho-a5b" kind="presentation" id="be5-Jv-gnY"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="centerX" secondItem="HEU-jm-MDm" secondAttribute="centerX" id="E9Q-4g-j3J"/>
-                            <constraint firstItem="HEU-jm-MDm" firstAttribute="height" secondItem="kh9-bI-dsS" secondAttribute="height" id="H0l-OK-zuQ"/>
-                            <constraint firstItem="HEU-jm-MDm" firstAttribute="top" secondItem="lgt-6o-mGN" secondAttribute="bottom" id="Pv8-9e-mwD"/>
+                            <constraint firstAttribute="centerX" secondItem="R7h-57-SXK" secondAttribute="centerX" constant="-0.5" id="4MG-yJ-d6M"/>
+                            <constraint firstItem="OrY-Hd-S1Y" firstAttribute="top" secondItem="lgt-6o-mGN" secondAttribute="bottom" constant="218" id="95a-Ia-eSq"/>
+                            <constraint firstAttribute="centerY" secondItem="R7h-57-SXK" secondAttribute="centerY" id="A22-dS-XQC"/>
+                            <constraint firstAttribute="centerX" secondItem="A6a-Xe-0JY" secondAttribute="centerX" constant="-0.5" id="hHc-1T-t59"/>
+                            <constraint firstItem="A6a-Xe-0JY" firstAttribute="top" secondItem="R7h-57-SXK" secondAttribute="bottom" constant="32" id="hTF-Og-xEQ"/>
+                            <constraint firstAttribute="centerX" secondItem="OrY-Hd-S1Y" secondAttribute="centerX" constant="-0.5" id="hmd-Av-fvW"/>
+                            <constraint firstItem="pAs-aD-joq" firstAttribute="top" secondItem="A6a-Xe-0JY" secondAttribute="bottom" constant="247" id="pHN-6W-PFw"/>
+                            <constraint firstItem="R7h-57-SXK" firstAttribute="top" secondItem="OrY-Hd-S1Y" secondAttribute="bottom" constant="33" id="qJh-mD-70A"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="95a-Ia-eSq"/>
+                                <exclude reference="pHN-6W-PFw"/>
+                            </mask>
+                        </variation>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
