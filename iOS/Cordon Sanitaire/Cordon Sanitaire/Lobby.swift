@@ -22,7 +22,7 @@ class Lobby: NSObject{
         super.init()
         
         // get the start time from parse
-        var startTime = Game.getStartTime()
+        var startTime = scheduledStartTime as NSDate!
 
         // query pubnub time and set up the countdown timer
         PubNub.requestServerTimeTokenWithCompletionBlock({(timetoken: NSNumber!, error: PNError!) -> Void in
@@ -40,7 +40,7 @@ class Lobby: NSObject{
                     self.startGameAfter(abs(secondsUntilStart))
                 }
                 else {
-                    NSLog("Game is alrady over :(")
+                    NSLog("Game is already over :(")
                 }
 
             } else {

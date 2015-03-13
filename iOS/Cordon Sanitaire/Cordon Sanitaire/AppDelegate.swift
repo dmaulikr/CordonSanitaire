@@ -28,7 +28,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 NSLog("Anonymous user logged in.")
                 Client.current.setId(PFUser.currentUser().objectId)
 
-                let startTime = Game.getStartTime()
+                Game.getStartTime()
                 var lobby = Lobby()
             }
         }

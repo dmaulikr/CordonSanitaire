@@ -9,13 +9,15 @@
 import Foundation
 import MapKit
 
+var scheduledStartTime: NSDate?
+
 class Game: NSObject{
     var players: [String: Player] = [:];
     // TODO: Add map to the game
     var timer = NSTimer()
     class var duration: Double {return 45.0} // Default duration of a game
     var start_time: NSDate?
-    
+
     // Start the game
     // seconds -> how many seconds in the game we are in
     func start(seconds: Double){
@@ -47,12 +49,15 @@ class Game: NSObject{
     }
     
     // Get start game start time from Parse
-    class func getStartTime() -> NSDate{
+    class func getStartTime() -> Void{
         var query = PFQuery(className: "Game")
-        var game = query.getFirstObject()
-        var startTime: AnyObject? = game.valueForKey("startTime")
-        NSLog("Game time is " + startTime!.description)
-        return startTime as NSDate
+        query.getFirstObjectInBackgroundWithBlock({(result: PFObject!, error: NSError!) -> Void in
+            if (error == nil){
+                scheduledStartTime = result.valueForKey("startTime") as NSDate?
+                NSLog("Game time is " + scheduledStartTime!.description)
+            } else {
+                NSLog("Couldn't get game start time")
+            }
+        })
     }
-    
 }

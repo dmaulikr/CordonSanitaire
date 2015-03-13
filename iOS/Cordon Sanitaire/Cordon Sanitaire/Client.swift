@@ -39,13 +39,15 @@ class Client: NSObject, PNDelegate {
     
     // Sets the ID of a client, also sets its private channel according to the ID
     func setId(id: String){
+        NSLog("setting ID")
         self.id = id
         PubNub.setClientIdentifier(PFUser.currentUser().objectId)
         self.private_channel = PNChannel.channelWithName(id, shouldObservePresence: false) as PNChannel
 
         PubNub.subscribeOn([self.private_channel], withCompletionHandlingBlock: {(state: PNSubscriptionProcessState, object: [AnyObject]!, error: PNError!) -> Void in
             if (error == nil){
-                self.tellCloudCodeMe()
+                NSLog("Subscribed on private channel")
+                self.tellCloudCodeAboutMe()
             }
             else{
                 NSLog("An error occured")
@@ -93,12 +95,19 @@ class Client: NSObject, PNDelegate {
         }
     }
         
-    func tellCloudCodeMe() {
+    func tellCloudCodeAboutMe() {
+        NSLog(" pleeease")
         PFCloud.callFunctionInBackground("dummyKMeans", withParameters: ["id": PFUser.currentUser().objectId] , block: {(result: AnyObject!, error: NSError!) -> Void in
             if (error == nil){
                 NSLog("done")
                 PFUser.currentUser().setValue(true, forKey: "present")
-                PFUser.currentUser().save()
+                PFUser.currentUser().saveInBackgroundWithBlock({(result: Bool, error: NSError!) -> Void in
+                    if (error == nil){
+                        NSLog("Success")
+                    } else {
+                        NSLog("Failure")
+                    }
+                })
             } else {
                 NSLog("An error has occured")
             }
