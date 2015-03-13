@@ -71,7 +71,6 @@ class Client: NSObject, PNDelegate {
     func pubnubClient(client: PubNub!, didReceiveParticipants presenceInformation: PNHereNow!, forObjects channelObjects: [AnyObject]!){
         var clients = presenceInformation.participantsForChannel(self.group_channel) as [PNClient]!
         var players = clients.map({ ($0).identifier })
-        NSLog(players.description)
         Lobby.singleton.addPlayers(players)
         
     }
@@ -106,7 +105,7 @@ class Client: NSObject, PNDelegate {
             NSLog("Header: " + action.header.rawValue + message.message.description)
         }
     }
-        
+    
     func tellCloudCodeAboutMe() {
         PFCloud.callFunctionInBackground("dummyKMeans", withParameters: ["id": PFUser.currentUser().objectId] , block: {(result: AnyObject!, error: NSError!) -> Void in
             if (error == nil){
@@ -120,6 +119,17 @@ class Client: NSObject, PNDelegate {
                 })
             } else {
                 NSLog("An error has occured")
+            }
+        })
+    }
+    
+    func terminate(){
+        PubNub.unsubscribeFrom([private_channel, group_channel, global_channel], withCompletionHandlingBlock: {(object: [AnyObject]!, error: PNError!) -> Void in
+            if (error == nil){
+                NSLog("Unsubscribed successfully")
+            } else {
+                NSLog("Failed to unsubscribe")
+                NSLog(error.description)
             }
         })
     }

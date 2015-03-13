@@ -50,6 +50,7 @@ class Game: NSObject{
     // Get start game start time from Parse
     class func getStartTime() -> NSDate{
         var query = PFQuery(className: "Game")
+        query.orderByDescending("startTime")
         var game = query.getFirstObject()
         var startTime: AnyObject? = game.valueForKey("startTime")
         NSLog("Game time is " + startTime!.description)
