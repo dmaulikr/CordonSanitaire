@@ -502,8 +502,8 @@
 			isa = PBXGroup;
 			children = (
 				2BA5D3981AB2E55800F2567E /* IntroViewController.swift */,
-				2BA5D39E1AB2E59F00F2567E /* HistoryViewController.swift */,
 				2BA5D39A1AB2E56700F2567E /* MapViewController.swift */,
+				2BA5D39E1AB2E59F00F2567E /* HistoryViewController.swift */,
 			);
 			name = views;
 			sourceTree = "<group>";
