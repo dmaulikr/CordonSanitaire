@@ -20,6 +20,7 @@
 		2BA5D3991AB2E55800F2567E /* IntroViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BA5D3981AB2E55800F2567E /* IntroViewController.swift */; };
 		2BA5D39B1AB2E56700F2567E /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BA5D39A1AB2E56700F2567E /* MapViewController.swift */; };
 		2BA5D39F1AB2E59F00F2567E /* HistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BA5D39E1AB2E59F00F2567E /* HistoryViewController.swift */; };
+		2BACDEC71AB3470200592AB1 /* Quarantine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BACDEC61AB3470200592AB1 /* Quarantine.swift */; };
 		6B765F9E1A9BF3BA00B021E6 /* Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B765F9D1A9BF3BA00B021E6 /* Action.swift */; };
 		6B8C27801A97E51C0084EB96 /* PNObservationCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B8C266B1A97E51B0084EB96 /* PNObservationCenter.m */; };
 		6B8C27811A97E51C0084EB96 /* PubNub+APNS.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B8C266D1A97E51B0084EB96 /* PubNub+APNS.m */; };
@@ -175,6 +176,7 @@
 		2BA5D3981AB2E55800F2567E /* IntroViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntroViewController.swift; sourceTree = "<group>"; };
 		2BA5D39A1AB2E56700F2567E /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		2BA5D39E1AB2E59F00F2567E /* HistoryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryViewController.swift; sourceTree = "<group>"; };
+		2BACDEC61AB3470200592AB1 /* Quarantine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Quarantine.swift; sourceTree = "<group>"; };
 		6B765F9D1A9BF3BA00B021E6 /* Action.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Action.swift; sourceTree = "<group>"; };
 		6B8C26691A97E51B0084EB96 /* PNObservationCenter+Protected.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PNObservationCenter+Protected.h"; sourceTree = "<group>"; };
 		6B8C266A1A97E51B0084EB96 /* PNObservationCenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNObservationCenter.h; sourceTree = "<group>"; };
@@ -564,11 +566,8 @@
 				2B487FE11A95589200AB6375 /* AppDelegate.swift */,
 				2B487FE61A95589200AB6375 /* ViewController.swift */,
 				2B0AE3711AAA6A3F00C508C7 /* views */,
-				6B765F9D1A9BF3BA00B021E6 /* Action.swift */,
-				6BA247671A9B032100D077AE /* Client.swift */,
-				6BE938BB1AA510B700AA2B20 /* Lobby.swift */,
-				6BE938B71AA50FFC00AA2B20 /* Game.swift */,
-				6BE938BD1AA5119100AA2B20 /* Player.swift */,
+				2BACDEC51AB338C000592AB1 /* messaging */,
+				2BACDEC41AB3389700592AB1 /* game */,
 				2B0AE3721AAA74E800C508C7 /* Utilities.swift */,
 				2B487FE81A95589200AB6375 /* Main.storyboard */,
 				2B487FEB1A95589200AB6375 /* Images.xcassets */,
@@ -603,6 +602,26 @@
 				2B487FF91A95589200AB6375 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		2BACDEC41AB3389700592AB1 /* game */ = {
+			isa = PBXGroup;
+			children = (
+				6BE938BB1AA510B700AA2B20 /* Lobby.swift */,
+				6BE938B71AA50FFC00AA2B20 /* Game.swift */,
+				6BE938BD1AA5119100AA2B20 /* Player.swift */,
+				2BACDEC61AB3470200592AB1 /* Quarantine.swift */,
+			);
+			name = game;
+			sourceTree = "<group>";
+		};
+		2BACDEC51AB338C000592AB1 /* messaging */ = {
+			isa = PBXGroup;
+			children = (
+				6B765F9D1A9BF3BA00B021E6 /* Action.swift */,
+				6BA247671A9B032100D077AE /* Client.swift */,
+			);
+			name = messaging;
 			sourceTree = "<group>";
 		};
 		6B8C26661A97E4F70084EB96 /* libs */ = {
@@ -1194,6 +1213,7 @@
 				6B8C27B61A97E51C0084EB96 /* PNOperationStatus.m in Sources */,
 				6BE938BE1AA5119100AA2B20 /* Player.swift in Sources */,
 				6B8C27B01A97E51C0084EB96 /* PNDate.m in Sources */,
+				2BACDEC71AB3470200592AB1 /* Quarantine.swift in Sources */,
 				2B487FE51A95589200AB6375 /* Cordon_Sanitaire.xcdatamodeld in Sources */,
 				6B8C27C41A97E51C0084EB96 /* NSString+PNAddition.m in Sources */,
 				6B8C27811A97E51C0084EB96 /* PubNub+APNS.m in Sources */,
