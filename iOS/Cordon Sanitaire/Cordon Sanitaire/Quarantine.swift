@@ -34,6 +34,15 @@ class Quarantine: NSObject {
         return loc
     }
     
+    // ask for the total area of the quarantine (in sq. miles, Made in USA :)
+    func getTotalAreaOfQuarantine() -> Int {
+        var area = 0
+        
+        // find area of polygon here
+        
+        return area
+    }
+    
     // ask for the center of the quarantine, this will be used to generate
     // the pathing order, i.e. the axis with which to rotate around
     func getCenterOfQuarantine() -> CLLocationCoordinate2D {
