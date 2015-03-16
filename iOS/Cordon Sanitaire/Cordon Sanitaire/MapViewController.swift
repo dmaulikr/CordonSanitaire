@@ -11,17 +11,25 @@ import MapKit
 
 class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
 
-    @IBOutlet var theButton: UIButton!
-    @IBOutlet var escapeButton: UIButton!
-    @IBOutlet var timerTextView: UITextView!
-    @IBOutlet var mapView: MKMapView!
+    var mapView: MKMapView!
 
     let locationManager = CLLocationManager()
+    
+    // UI elements
+    let timerTextView:UITextView = UITextView()
+    var timeLeft = 45.0;
+    var gameTimer = NSTimer()
+    
+    var theButton = UIButton()
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        self.view.backgroundColor = UIColor.blackColor()
+        
         // Do any additional setup after loading the view.
+        mapView = MKMapView(frame: self.view.frame)
+        self.view.addSubview(mapView)
 
         locationManager.delegate = self
         // must request authorization to use location
@@ -64,39 +72,67 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         //        mapView.addOverlay(tile)
         
         
+        // add a button to join, release, or shout
+        let padding:CGFloat = 40.0
+        theButton = UIButton(frame: CGRectMake(0,0, self.view.frame.width - padding*2.0, 80.0))
+        theButton.center = CGPoint(x: self.view.center.x, y: self.view.frame.height - 80.0)
+        theButton.setTitle("SHOUT", forState: UIControlState.Normal)
+        theButton.backgroundColor = UIColor.blackColor()
+        theButton.titleLabel?.font = UIFont(name: "helvetica", size: 48.0)
+        self.view.addSubview(theButton)
+        
          //style the text box for timer display
+        timerTextView.frame = CGRectMake(0, 0, self.view.frame.width, 100.0)
+        self.view.addSubview(timerTextView)
         timerTextView.backgroundColor = UIColor.blackColor()
         timerTextView.textColor = UIColor.whiteColor()
+        timerTextView.font = UIFont(name: "helvetica", size: 48.0)
+        timerTextView.text = "00:00.00"
         timerTextView.selectable = false
         timerTextView.editable = false
         
-        //        // when the game starts, zoom out from your position on a 3 second countdown
-        //        // here we simulate that by triggering the zoom out after 5 seconds of launch
-        //        var timer = NSTimer()
-        //        timer = NSTimer.scheduledTimerWithTimeInterval(5, target: self, selector: Selector("zoomOut"), userInfo: nil, repeats: false)
+        // when the game starts, zoom out from your position on a 3 second countdown
+        // here we simulate that by triggering the zoom out after 5 seconds of launch
+        var timer = NSTimer()
+        timer = NSTimer.scheduledTimerWithTimeInterval(5, target: self, selector: Selector("zoomOut"), userInfo: nil, repeats: false)
     }
     
-    //    func zoomOut() {
-    //        let widthOfGameBoard = 0.2 // degrees
-    //        let heightOfGameBoard = 0.2 // degrees
-    //        let centerOfGameBoard = CLLocationCoordinate2D(
-    //            latitude: 42.3601,
-    //            longitude: -71.0689
-    //        )
-    //        let span = MKCoordinateSpanMake(widthOfGameBoard/2.0, heightOfGameBoard/2.0)
-    //        let region = MKCoordinateRegion(center: centerOfGameBoard, span: span)
-    //
-    //        //
-    //        UIView.animateWithDuration(3.0,
-    //            delay: 0.0,
-    //            options: .CurveEaseInOut | .AllowUserInteraction,
-    //            animations: {
-    //                self.mapView.setRegion(region, animated: true);
-    //            },
-    //            completion: { finished in
-    //                println("zoomed out!")
-    //        })
-    //    }
+    func zoomOut() {
+        let widthOfGameBoard = 0.2 // degrees
+        let heightOfGameBoard = 0.2 // degrees
+        let centerOfGameBoard = CLLocationCoordinate2D(
+            latitude: 42.3601,
+            longitude: -71.0689
+        )
+        let span = MKCoordinateSpanMake(widthOfGameBoard/2.0, heightOfGameBoard/2.0)
+        let region = MKCoordinateRegion(center: centerOfGameBoard, span: span)
+
+        //
+        UIView.animateWithDuration(3.0,
+            delay: 0.0,
+            options: .CurveEaseInOut | .AllowUserInteraction,
+            animations: {
+                self.mapView.setRegion(region, animated: true);
+            },
+            completion: { finished in
+                println("zoomed out!")
+                // start game timer
+                var gameTimer = NSTimer()
+                gameTimer = NSTimer.scheduledTimerWithTimeInterval(0.01, target: self, selector: Selector("updateTimer"), userInfo: nil, repeats: true)
+        })
+    }
+    
+    func updateTimer() {
+        timeLeft -= 0.01
+        if(timeLeft < 0.0) {
+            gameTimer.invalidate()
+            gameTimer.isEqual(nil)
+            timerTextView.text = "00:00.00"
+        }
+        else {
+         timerTextView.text = NSString(format: "00:%.2f",  timeLeft)
+        }
+    }
 
 
     override func didReceiveMemoryWarning() {
@@ -115,20 +151,14 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     }
     
     
-    @IBAction func theButtonIsPressed(sender: AnyObject) {
+    func theButtonIsPressed(sender: AnyObject) {
         // check the state of the button
         // then perform the appropriate action for the button
         Action.shout("testing")
     }
     
-    @IBAction func menuButtonPressed(sender: AnyObject) {
+    func menuButtonPressed(sender: AnyObject) {
     }
-    
-    @IBAction func returnToRootViewController(segue:UIStoryboardSegue) {
-        
-        dismissViewControllerAnimated(true, completion: nil)
-    }
-
 
     /*
     // MARK: - Navigation
