@@ -24,6 +24,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             (user: PFUser!, error: NSError!) -> Void in
             if error != nil {
                 NSLog("Anonymous login failed.")
+                NSLog(error.description)
             } else {
                 NSLog("Anonymous user with ID " + PFUser.currentUser().objectId + " logged in.")
                 Client.current.setId(PFUser.currentUser().objectId)

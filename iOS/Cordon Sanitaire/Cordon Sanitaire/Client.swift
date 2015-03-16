@@ -6,7 +6,10 @@
 //  Copyright (c) 2015 Playful Systems. All rights reserved.
 //
 
-class Client: NSObject, PNDelegate {
+import CoreLocation
+import MapKit
+
+class Client: NSObject, PNDelegate, CLLocationManagerDelegate {
     
     let global_channel = PNChannel.channelWithName("development", shouldObservePresence: false) as PNChannel // Global channel
     var private_channel: PNChannel!
@@ -18,6 +21,7 @@ class Client: NSObject, PNDelegate {
         secretKey: "sec-c-MTMwNmJiYTYtM2JhMC00NTQ5lThmM2UtNjhmNjJiYmJkNjlm")
     
     let delegate:PNDelegate!
+    let location_manager = CLLocationManager()
     
     var id: String?
     
@@ -27,14 +31,26 @@ class Client: NSObject, PNDelegate {
     
     override init(){
         super.init()
+        
         self.delegate = self
-
+        
         PubNub.setDelegate(self.delegate)
         PubNub.setConfiguration(self.config)
         PubNub.connect()
         
         PNLogger.loggerEnabled(false) // disables PubNub logger -- too verbose
         PubNub.subscribeOn([self.global_channel])
+        
+
+    }
+    
+    func setLocation(){
+        self.location_manager.delegate = self
+        self.location_manager.requestAlwaysAuthorization()
+        self.location_manager.desiredAccuracy = kCLLocationAccuracyBest
+        
+        self.location_manager.startUpdatingLocation()
+
     }
     
     // Sets the ID of a client, also sets its private channel according to the ID
@@ -63,13 +79,15 @@ class Client: NSObject, PNDelegate {
 //        Lobby.singleton.addPlayers(players as [String])
     }
 
+    
+    // PubNub delegates
     func pubnubClient(client: PubNub!, didConnectToOrigin origin: String!) {
         NSLog("DELEGATE: Connected to " + origin)
     }
     
     
     func pubnubClient(client: PubNub!, didReceiveParticipants presenceInformation: PNHereNow!, forObjects channelObjects: [AnyObject]!){
-        var clients = presenceInformation.participantsForChannel(self.group_channel) as [PNClient]!
+        var clients = presenceInformation.participantsForChannel(self.group_channel) as [PNClient]
         var players = clients.map({ ($0).identifier })
         Lobby.singleton.addPlayers(players)
         
@@ -105,7 +123,7 @@ class Client: NSObject, PNDelegate {
             NSLog("Header: " + action.header.rawValue + message.message.description)
         }
     }
-    
+    /////////////////////////////////////
     func tellCloudCodeAboutMe() {
         PFCloud.callFunctionInBackground("dummyKMeans", withParameters: ["id": PFUser.currentUser().objectId] , block: {(result: AnyObject!, error: NSError!) -> Void in
             if (error == nil){
@@ -132,6 +150,20 @@ class Client: NSObject, PNDelegate {
                 NSLog(error.description)
             }
         })
+    }
+    ////////////////////////////////
+    // CLLocationManager delegates
+    
+    func locationManager(manager: CLLocationManager!, didUpdateToLocation newLocation: CLLocation!, fromLocation oldLocation: CLLocation!) {
+        NSLog("LOCATION: " + newLocation.description)
+        PFUser.currentUser().setValuesForKeysWithDictionary(["latitude": newLocation.coordinate.latitude, "longitude": newLocation.coordinate.longitude])
+        PFUser.currentUser().save()
+
+        self.location_manager.stopUpdatingLocation()
+    }
+    
+    func locationManager(manager: CLLocationManager!, didFailWithError error: NSError!) {
+        NSLog("LOCATION: " + error.description)
     }
     
 }

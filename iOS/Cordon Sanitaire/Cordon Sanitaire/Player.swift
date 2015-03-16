@@ -18,11 +18,13 @@ enum State {
 class Player {
     let id: String
     var state = State.Passive
-    var pos: (Double, Double)
+    var latitude: CLLocationDegrees
+    var longitude: CLLocationDegrees
     
-    init(id: String, pos: (Double, Double)){
+    init(id: String, latitude: CLLocationDegrees, longitude: CLLocationDegrees){
         self.id = id
-        self.pos = pos
+        self.latitude = latitude
+        self.longitude = longitude
     }
     
     func changeState(newState: State){

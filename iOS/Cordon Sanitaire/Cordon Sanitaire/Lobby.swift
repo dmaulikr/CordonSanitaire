@@ -22,7 +22,7 @@ class Lobby: NSObject{
         super.init()
         
         // get the start time from parse
-        var startTime = scheduledStartTime
+        var startTime = Game.getStartTime()
 
         // query pubnub time and set up the countdown timer
         PubNub.requestServerTimeTokenWithCompletionBlock({(timetoken: NSNumber!, error: PNError!) -> Void in
@@ -67,12 +67,12 @@ class Lobby: NSObject{
     
     func startGame(){
         var game = Game()
-        game.start(0)
+        game.start(0, players_ids: players)
     }
     
     func startGameAfter(seconds: Double){
         var game = Game()
-        game.start(seconds)
+        game.start(seconds, players_ids: players)
     }
     
 
