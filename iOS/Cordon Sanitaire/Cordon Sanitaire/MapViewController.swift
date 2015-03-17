@@ -22,40 +22,59 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     
     var theButton = UIButton()
     
+    var playerIcons = [String: MKAnnotation]()
+    var activePlayerIcons = [String: MKAnnotation]()
+    var passivePlayerIcons = [String: MKAnnotation]()
+    var trappedPlayerIcons = [String: MKAnnotation]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        // setup functions for GUI
+        addMap()
+        addTimer()
+        addButton()
+        // add status
+        
+        // when the game starts, zoom out from your position on a 3 second countdown
+        // here we simulate that by triggering the zoom out after 3 seconds of launch
+        var timer = NSTimer()
+        timer = NSTimer.scheduledTimerWithTimeInterval(3, target: self, selector: Selector("zoomOut"), userInfo: nil, repeats: false)
+    }
+    
+    func addMap() {
         self.view.backgroundColor = UIColor.blackColor()
         
         // Do any additional setup after loading the view.
         mapView = MKMapView(frame: self.view.frame)
+        mapView.delegate = self
         self.view.addSubview(mapView)
-
+        
         locationManager.delegate = self
         // must request authorization to use location
         locationManager.requestWhenInUseAuthorization()
-
+        
         // will cause map to zoom nicely to user location
         mapView.userTrackingMode = .Follow
-
+        
         // sample pin location
         // 42.3601° N, 71.0589°
         let location = CLLocationCoordinate2D(
             latitude: 42.3601,
             longitude: -71.0589
         )
+        addPlayerToMap(location, playerID: "location 1")
+        
+        let loc2 = CLLocationCoordinate2D(latitude: 42.3651, longitude: -71.0589)
+        addPlayerToMap(loc2, playerID: "location 2")
+        
+        let loc3 = CLLocationCoordinate2D(latitude: 42.3651, longitude: -71.0529)
+        addPlayerToMap(loc3, playerID: "location 3")
         
         // start at a zoomed in location on the player
         let span = MKCoordinateSpanMake(0.005, 0.005)
         let region = MKCoordinateRegion(center: location, span: span)
         mapView.setRegion(region, animated: true)
-        
-        // place a pin to show that we can place annotations
-        let annotation = MKPointAnnotation()
-        annotation.setCoordinate(location)
-        annotation.title = "Red Pin"
-        annotation.subtitle = "coolest location on the map"
-        mapView.addAnnotation(annotation)
         
         // settings for the map to hide most information and prevent interaction with the map
         mapView.showsPointsOfInterest = false
@@ -72,6 +91,11 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         //        mapView.addOverlay(tile)
         
         
+        // add the quarantine
+        addQuarantineToMap()
+    }
+    
+    func addButton() {
         // add a button to join, release, or shout
         let padding:CGFloat = 40.0
         theButton = UIButton(frame: CGRectMake(0,0, self.view.frame.width - padding*2.0, 80.0))
@@ -80,8 +104,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         theButton.backgroundColor = UIColor.blackColor()
         theButton.titleLabel?.font = UIFont(name: "helvetica", size: 48.0)
         self.view.addSubview(theButton)
-        
-         //style the text box for timer display
+    }
+    
+    func addTimer() {
+        //style the text box for timer display
         timerTextView.frame = CGRectMake(0, 0, self.view.frame.width, 100.0)
         self.view.addSubview(timerTextView)
         timerTextView.backgroundColor = UIColor.blackColor()
@@ -90,11 +116,67 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         timerTextView.text = "00:00.00"
         timerTextView.selectable = false
         timerTextView.editable = false
+    }
+    
+    func addPlayerToMap(location:CLLocationCoordinate2D, playerID:String) {
+        // place a pin to show that we can place annotations
+        let annotation = MKPointAnnotation()
+        annotation.setCoordinate(location)
+        annotation.title = "Red Pin"
+        annotation.subtitle = "coolest location on the map"
+        mapView.addAnnotation(annotation)
         
-        // when the game starts, zoom out from your position on a 3 second countdown
-        // here we simulate that by triggering the zoom out after 5 seconds of launch
-        var timer = NSTimer()
-        timer = NSTimer.scheduledTimerWithTimeInterval(5, target: self, selector: Selector("zoomOut"), userInfo: nil, repeats: false)
+        // keey track of our players annotation
+        playerIcons[playerID] = annotation
+        activePlayerIcons[playerID] = annotation
+    }
+    
+    func addQuarantineToMap() {
+        
+        var coords = [CLLocationCoordinate2D]()
+        
+        for player in activePlayerIcons {
+
+            coords.append(player.1.coordinate)
+        }
+        
+        let quarantine = MKPolygon(coordinates: &coords, count: coords.count)
+        mapView.addOverlay(quarantine)
+    }
+    
+    // receive array of coordinates and update polygon of quarantine
+    func updateQuarantine(quarantine:[CLLocationCoordinate2D]) {
+        
+        let polygon = MKPolygon(coordinates: quarantine, count: quarantine.count)
+        mapView.addOverlay(polygon)
+    }
+    
+    func mapView(mapView: MKMapView!, viewForOverlay overlay: MKOverlay!) -> MKOverlayView! {
+    
+        var overlay : MKOverlayView! = nil
+        
+        println("waiting for overlay")
+        
+        return overlay
+    }
+    
+    func mapView(mapView: MKMapView!, rendererForOverlay overlay: MKOverlay!) -> MKOverlayRenderer! {
+        
+        var v : MKPolygonRenderer! = nil
+        
+        if let overlay = overlay as? MKPolygon {
+            
+            v = MKPolygonRenderer(polygon: overlay)
+            v.fillColor = UIColor(hue: 0, saturation: 0, brightness: 0, alpha: 0.3)
+            v.strokeColor = UIColor(hue: 0, saturation: 0, brightness: 0, alpha: 0.9)
+            v.lineWidth = 4
+        }
+        
+        return v
+    }
+    
+    func revealPatientZero() {
+        
     }
     
     func zoomOut() {
@@ -131,6 +213,23 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         }
         else {
          timerTextView.text = NSString(format: "00:%.2f",  timeLeft)
+            
+            // test animating the overlay
+            var a :MKAnnotation = activePlayerIcons["location 3"]!
+            a.setCoordinate!(CLLocationCoordinate2D(latitude: a.coordinate.latitude + 0.00002, longitude: a.coordinate.longitude))
+            activePlayerIcons["location 3"] = a
+            
+            //
+//            MKPolyline *newPolyLine = [MKPolyline polylineWithCoordinates:points count:numberOfPoints];
+//            [self.mapView addOverlay:newPolyLine];
+//            
+//            self.polyLine = newPolyLine;
+//            
+//            // note, remove old polyline _after_ adding new one, to avoid flickering effect
+//            
+//            if (oldPolyLine)
+//            [self.mapView removeOverlay:oldPolyLine];
+            
         }
     }
 
