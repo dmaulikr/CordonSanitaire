@@ -27,6 +27,8 @@ class ViewController: UIViewController {
         playButton.titleLabel?.font = UIFont(name: "helvetica neue", size: 48.0)
         playButton.addTarget(self, action: "onButtonPress:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(playButton)
+        
+        Client.current.setLocation()
     }
     
     override func didReceiveMemoryWarning() {
