@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import MapKit
 
 class Quarantine: NSObject {
     
@@ -50,9 +51,38 @@ class Quarantine: NSObject {
     // ask for the center of the quarantine, this will be used to generate
     // the pathing order, i.e. the axis with which to rotate around
     func getCenterOfQuarantine() -> CLLocationCoordinate2D {
-        var loc:CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: 0, longitude: 0)
+        
+        var loc:CLLocationCoordinate2D!
+        
+        var avgLat = 0.0
+        var avgLon = 0.0
+        
+        for (playerID, player) in self.quarantinePlayers {
+            avgLat += player.latitude
+            avgLon += player.longitude
+        }
+        
+        avgLat = avgLat/Double(quarantinePlayers.count)
+        avgLon = avgLon/Double(quarantinePlayers.count)
+        
+        loc = CLLocationCoordinate2D(latitude: avgLat, longitude: avgLon)
+        
         return loc
     }
+    
+    // ask if a point is inside of the quarantine
+    // TODO: implement this function
+    func pointInPolygon(point:CLLocationCoordinate2D, mapView:MKMapView) -> Bool {
+
+//        let mapPoint:MKMapPoint! = MKMapPointForCoordinate(point)
+//        let polygonView:MKPolygonView! = mapView.viewForOverlay //(MKPolygonView*)[mapView viewForOverlay:self];
+//        let polygonViewPoint:CGPoint! = polygonView.pointForMapPoint(mapPoint)  //[polygonView pointForMapPoint:mapPoint];
+//        
+//        return CGPathContainsPoint(polygonView.path, nil, polygonViewPoint, NO)
+ 
+        return false
+    }
+
     
     // order the quarantine players based on rotation around the center
     func updateQuarantineOrder() {

@@ -28,6 +28,16 @@ class ViewController: UIViewController {
         playButton.addTarget(self, action: "onButtonPress:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(playButton)
         
+        let introButton   = UIButton.buttonWithType(UIButtonType.System) as UIButton
+        
+        introButton.frame = CGRectMake(0, 0, 300, 50)
+        introButton.center = CGPointMake(self.view.center.x, self.view.center.y + 75)
+        introButton.setTitle("INTRO", forState: UIControlState.Normal)
+        introButton.titleLabel?.textColor = UIColor.whiteColor()
+        introButton.titleLabel?.font = UIFont(name: "helvetica neue", size: 48.0)
+        introButton.addTarget(self, action: "onButtonPress:", forControlEvents: UIControlEvents.TouchUpInside)
+        self.view.addSubview(introButton)
+        
         Client.current.setLocation()
     }
     
@@ -38,10 +48,17 @@ class ViewController: UIViewController {
     
     func onButtonPress(sender:UIButton!) {
         println("button pressed")
-        
-        // display the map view
-        let mapViewController:MapViewController = MapViewController()
-        self.presentViewController(mapViewController, animated: true, completion: nil)
+       
+        if(sender.titleLabel?.text == "PLAY"){
+            // display the map view
+            let mapViewController:MapViewController = MapViewController()
+            self.presentViewController(mapViewController, animated: true, completion: nil)
+        }
+        else if(sender.titleLabel?.text == "INTRO") {
+            // display the map view
+            let introViewController:IntroViewController = IntroViewController()
+            self.presentViewController(introViewController, animated: true, completion: nil)
+        }
     }
 }
 

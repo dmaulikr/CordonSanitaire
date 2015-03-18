@@ -17,8 +17,11 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     
     // UI elements
     let timerTextView:UITextView = UITextView()
-    var timeLeft = 45.0;
+    let duration = 45.0
+    var timeLeft = 45.0
     var gameTimer = NSTimer()
+    var bStartOfTimer = false
+    var startTime = 0.0
     
     var theButton = UIButton()
     
@@ -26,6 +29,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     var activePlayerIcons = [String: MKAnnotation]()
     var passivePlayerIcons = [String: MKAnnotation]()
     var trappedPlayerIcons = [String: MKAnnotation]()
+    
+    var quarantinePolygon:MKPolygon = MKPolygon()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -65,10 +70,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         )
         addPlayerToMap(location, playerID: "location 1")
         
-        let loc2 = CLLocationCoordinate2D(latitude: 42.3651, longitude: -71.0589)
+        let loc2 = CLLocationCoordinate2D(latitude: 42.3801, longitude: -71.0589)
         addPlayerToMap(loc2, playerID: "location 2")
         
-        let loc3 = CLLocationCoordinate2D(latitude: 42.3651, longitude: -71.0529)
+        let loc3 = CLLocationCoordinate2D(latitude: 42.3801, longitude: -71.0389)
         addPlayerToMap(loc3, playerID: "location 3")
         
         // start at a zoomed in location on the player
@@ -80,9 +85,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         mapView.showsPointsOfInterest = false
         mapView.showsBuildings = false
         mapView.showsUserLocation = true
-        mapView.zoomEnabled = false
         mapView.scrollEnabled = false
-        mapView.userInteractionEnabled = false
+        mapView.pitchEnabled = false
+        //mapView.zoomEnabled = false
+        //mapView.userInteractionEnabled = false
         
         // TODO: make this work
         // try out a different tile pattern (i.e. water color from stamen)
@@ -93,6 +99,19 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         
         // add the quarantine
         addQuarantineToMap()
+    }
+    
+    func mapView(mapView: MKMapView!, regionDidChangeAnimated animated: Bool) {
+        // if the region changes, let's bring us back to where we want to be
+        
+        let widthOfGameBoard = 0.2 // degrees
+        let heightOfGameBoard = 0.2 // degrees
+        let centerOfGameBoard = CLLocationCoordinate2D(
+            latitude: 42.3601,
+            longitude: -71.0689
+        )
+        let span = MKCoordinateSpanMake(widthOfGameBoard/2.0, heightOfGameBoard/2.0)
+        let region = MKCoordinateRegion(center: centerOfGameBoard, span: span)
     }
     
     func addButton() {
@@ -140,15 +159,25 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
             coords.append(player.1.coordinate)
         }
         
-        let quarantine = MKPolygon(coordinates: &coords, count: coords.count)
-        mapView.addOverlay(quarantine)
+        quarantinePolygon = MKPolygon(coordinates: &coords, count: coords.count)
+        mapView.addOverlay(quarantinePolygon)
     }
     
     // receive array of coordinates and update polygon of quarantine
-    func updateQuarantine(quarantine:[CLLocationCoordinate2D]) {
+    func updateQuarantine(quarantine:CLLocationCoordinate2D...) {
+      
+        var coords = [CLLocationCoordinate2D]()
+        for player in quarantine {
+            coords.append(player)
+        }
         
-        let polygon = MKPolygon(coordinates: quarantine, count: quarantine.count)
-        mapView.addOverlay(polygon)
+        let polyLine:MKPolygon = MKPolygon(coordinates: &coords, count: coords.count)
+        
+        self.mapView.addOverlay(polyLine)
+        
+        self.mapView.removeOverlay(quarantinePolygon)
+        
+        quarantinePolygon = polyLine
     }
     
     func mapView(mapView: MKMapView!, viewForOverlay overlay: MKOverlay!) -> MKOverlayView! {
@@ -205,34 +234,42 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     }
     
     func updateTimer() {
-        timeLeft -= 0.01
+        
+        if(!bStartOfTimer){
+            startTime = NSDate().timeIntervalSince1970
+            bStartOfTimer = true
+        }
+        
+        timeLeft = duration - (NSDate().timeIntervalSince1970 - startTime)        
+        
         if(timeLeft < 0.0) {
             gameTimer.invalidate()
             gameTimer.isEqual(nil)
             timerTextView.text = "00:00.00"
         }
         else {
-         timerTextView.text = NSString(format: "00:%.2f",  timeLeft)
-            
-            // test animating the overlay
-            var a :MKAnnotation = activePlayerIcons["location 3"]!
-            a.setCoordinate!(CLLocationCoordinate2D(latitude: a.coordinate.latitude + 0.00002, longitude: a.coordinate.longitude))
-            activePlayerIcons["location 3"] = a
-            
-            //
-//            MKPolyline *newPolyLine = [MKPolyline polylineWithCoordinates:points count:numberOfPoints];
-//            [self.mapView addOverlay:newPolyLine];
-//            
-//            self.polyLine = newPolyLine;
-//            
-//            // note, remove old polyline _after_ adding new one, to avoid flickering effect
-//            
-//            if (oldPolyLine)
-//            [self.mapView removeOverlay:oldPolyLine];
+            timerTextView.text = NSString(format: "00:%.2f",  timeLeft)
+            animateQuarantine()
             
         }
     }
 
+    func animateQuarantine() {
+        // test animating the overlay
+        var a :MKAnnotation = activePlayerIcons["location 3"]!
+        a.setCoordinate!(CLLocationCoordinate2D(latitude: a.coordinate.latitude + 0.00002, longitude: a.coordinate.longitude))
+        activePlayerIcons["location 3"] = a
+        
+        var coords = [CLLocationCoordinate2D]()
+        for player in activePlayerIcons {
+            coords.append(player.1.coordinate)
+        }
+        var polyLine:MKPolygon = MKPolygon(coordinates: &coords, count: coords.count)
+        self.mapView.addOverlay(polyLine)
+        self.mapView.removeOverlay(quarantinePolygon)
+        
+        quarantinePolygon = polyLine
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
