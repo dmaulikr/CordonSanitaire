@@ -33,3 +33,21 @@ function sendMessage(message, channel, callback){
         }
     });
 }
+
+Parse.Cloud.job("sendPushNotification", function(request, status) {
+    var pushQuery = new Parse.Query(Parse.Installation);
+    pushQuery.equalTo('deviceType', 'ios');
+                
+    Parse.Push.send({
+        where: pushQuery,
+        data: {
+            alert: "You have been pushed"
+        }
+        }, { success: function() {
+            status.success("Notification sent")
+        }, error: function(err) { 
+            console.log(err);
+            status.error("Something went wrong. Notification was not sent")
+        }
+    });
+})

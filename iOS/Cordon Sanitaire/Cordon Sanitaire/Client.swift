@@ -156,10 +156,12 @@ class Client: NSObject, PNDelegate, CLLocationManagerDelegate {
     
     func locationManager(manager: CLLocationManager!, didUpdateToLocation newLocation: CLLocation!, fromLocation oldLocation: CLLocation!) {
         NSLog("LOCATION: " + newLocation.description)
-        PFUser.currentUser().setValuesForKeysWithDictionary(["latitude": newLocation.coordinate.latitude, "longitude": newLocation.coordinate.longitude])
-        PFUser.currentUser().save()
+        if (PFUser.currentUser() != nil) {
+            PFUser.currentUser().setValuesForKeysWithDictionary(["latitude": newLocation.coordinate.latitude, "longitude": newLocation.coordinate.longitude])
+            PFUser.currentUser().save()
 
-        self.location_manager.stopUpdatingLocation()
+            self.location_manager.stopUpdatingLocation()
+        }
     }
     
     func locationManager(manager: CLLocationManager!, didFailWithError error: NSError!) {
