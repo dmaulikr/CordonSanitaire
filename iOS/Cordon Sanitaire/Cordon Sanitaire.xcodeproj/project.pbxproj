@@ -10,6 +10,8 @@
 		2B0AE3731AAA74E800C508C7 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B0AE3721AAA74E800C508C7 /* Utilities.swift */; };
 		2B0AE3751AAA7CD700C508C7 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B0AE3741AAA7CD700C508C7 /* MapKit.framework */; };
 		2B0AE3771AAA7D3900C508C7 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B0AE3761AAA7D3900C508C7 /* UIKit.framework */; };
+		2B0C892A1ABE224B0064FAB8 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B0C89291ABE224B0064FAB8 /* GameKit.framework */; };
+		2B0C892D1ABE22C80064FAB8 /* GameKitHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B0C892C1ABE22C80064FAB8 /* GameKitHelper.swift */; };
 		2B0D11601AB3B33000586EA8 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B0D115F1AB3B33000586EA8 /* ProfileViewController.swift */; };
 		2B487FE21A95589200AB6375 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B487FE11A95589200AB6375 /* AppDelegate.swift */; };
 		2B487FE51A95589200AB6375 /* Cordon_Sanitaire.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2B487FE31A95589200AB6375 /* Cordon_Sanitaire.xcdatamodeld */; };
@@ -165,6 +167,8 @@
 		2B0AE3721AAA74E800C508C7 /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 		2B0AE3741AAA7CD700C508C7 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		2B0AE3761AAA7D3900C508C7 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		2B0C89291ABE224B0064FAB8 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
+		2B0C892C1ABE22C80064FAB8 /* GameKitHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameKitHelper.swift; sourceTree = "<group>"; };
 		2B0D115F1AB3B33000586EA8 /* ProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		2B487FDC1A95589200AB6375 /* Cordon Sanitaire.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Cordon Sanitaire.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2B487FE01A95589200AB6375 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -481,6 +485,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2B0C892A1ABE224B0064FAB8 /* GameKit.framework in Frameworks */,
 				2B0AE3771AAA7D3900C508C7 /* UIKit.framework in Frameworks */,
 				2B0AE3751AAA7CD700C508C7 /* MapKit.framework in Frameworks */,
 				6BC0FB3B1A9561B700542CF0 /* MobileCoreServices.framework in Frameworks */,
@@ -526,9 +531,18 @@
 			name = views;
 			sourceTree = "<group>";
 		};
+		2B0C892B1ABE22A00064FAB8 /* gamekit */ = {
+			isa = PBXGroup;
+			children = (
+				2B0C892C1ABE22C80064FAB8 /* GameKitHelper.swift */,
+			);
+			name = gamekit;
+			sourceTree = "<group>";
+		};
 		2B16B9831A95736C000BAD81 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2B0C89291ABE224B0064FAB8 /* GameKit.framework */,
 				2B0AE3761AAA7D3900C508C7 /* UIKit.framework */,
 				2B0AE3741AAA7CD700C508C7 /* MapKit.framework */,
 				6BC0FB791A956AF500542CF0 /* CFNetwork.framework */,
@@ -578,6 +592,7 @@
 				2B0AE3711AAA6A3F00C508C7 /* views */,
 				2BACDEC51AB338C000592AB1 /* messaging */,
 				2BACDEC41AB3389700592AB1 /* game */,
+				2B0C892B1ABE22A00064FAB8 /* gamekit */,
 				2B0AE3721AAA74E800C508C7 /* Utilities.swift */,
 				2B487FE81A95589200AB6375 /* Main.storyboard */,
 				2B487FEB1A95589200AB6375 /* Images.xcassets */,
@@ -1261,6 +1276,7 @@
 				6B8C27E31A97E51C0084EB96 /* PNConnectionChannel.m in Sources */,
 				6B8C27801A97E51C0084EB96 /* PNObservationCenter.m in Sources */,
 				6B8C27D51A97E51C0084EB96 /* PNLeaveRequest.m in Sources */,
+				2B0C892D1ABE22C80064FAB8 /* GameKitHelper.swift in Sources */,
 				6B8C278D1A97E51C0084EB96 /* PNWriteBuffer.m in Sources */,
 				6B8C27C11A97E51C0084EB96 /* NSMutableSet+PNAdditions.m in Sources */,
 				6B8C27AC1A97E51C0084EB96 /* PNChannelGroupChange.m in Sources */,
@@ -1400,6 +1416,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Addons/parse-library-1.6.2",
@@ -1411,6 +1429,7 @@
 					"$(PROJECT_DIR)/objective-c-master/iOS/tests/UnitTests/3rdParty/iOS",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Cordon Sanitaire-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -1422,6 +1441,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Addons/parse-library-1.6.2",
@@ -1433,6 +1454,7 @@
 					"$(PROJECT_DIR)/objective-c-master/iOS/tests/UnitTests/3rdParty/iOS",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Cordon Sanitaire-Bridging-Header.h";
 			};
 			name = Release;
