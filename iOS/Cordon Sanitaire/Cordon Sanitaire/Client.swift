@@ -11,7 +11,7 @@ import MapKit
 
 class Client: NSObject, PNDelegate, CLLocationManagerDelegate {
     
-    let global_channel = PNChannel.channelWithName("development", shouldObservePresence: false) as PNChannel // Global channel
+    let global_channel = PNChannel.channelWithName("ios_development", shouldObservePresence: false) as PNChannel // Global channel
     var private_channel: PNChannel!
     var group_channel: PNChannel!
 
