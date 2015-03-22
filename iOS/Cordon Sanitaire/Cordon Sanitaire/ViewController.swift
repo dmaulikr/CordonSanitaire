@@ -39,6 +39,7 @@ class ViewController: UIViewController {
         self.view.addSubview(introButton)
         
         Client.current.setLocation()
+
     }
     
     override func didReceiveMemoryWarning() {

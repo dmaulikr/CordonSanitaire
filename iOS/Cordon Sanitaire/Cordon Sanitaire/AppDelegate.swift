@@ -14,6 +14,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+        NSLog(application.isRegisteredForRemoteNotifications().description)
+        var settings = UIUserNotificationSettings(forTypes: UIUserNotificationType.Alert, categories: nil)
+        application.registerUserNotificationSettings(settings)
 
         // Initiate Parse
         Parse.setApplicationId("XzPwPddo8UjT14oI14b69CPgq8bRFYsA9TrqeZTL",
@@ -35,6 +38,30 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         // Override point for customization after application launch.
         return true
+    }
+    
+    func application(application: UIApplication, didRegisterUserNotificationSettings notificationSettings: UIUserNotificationSettings) {
+        application.registerForRemoteNotifications()
+    }
+    
+    func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
+        var currentInstallation = PFInstallation.currentInstallation()
+        currentInstallation.setDeviceTokenFromData(deviceToken)
+        currentInstallation.channels = ["global"]
+        currentInstallation.saveInBackgroundWithBlock({
+            (bool: Bool, error: NSError!) -> Void in
+            if (error != nil){
+                NSLog("An error occurred in the push notifications setup")
+            }
+        })
+    }
+    
+    func application(application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: NSError) {
+        NSLog(error.description)
+    }
+    
+    func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
+        PFPush.handlePush(userInfo)
     }
 
     func applicationWillResignActive(application: UIApplication) {

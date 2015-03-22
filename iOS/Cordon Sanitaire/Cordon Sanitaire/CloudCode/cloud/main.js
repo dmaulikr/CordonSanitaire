@@ -1,3 +1,13 @@
+/*
+ *  To publish changes to Cloud code
+ *  From terminal:
+ *      cd CloudCode
+ *      parse deploy
+ *
+ *  In english, change directory to cloud code and then deploy w/ parse :)
+ */
+
+
 // set PubNub
 var pubnub = {
     publish_key: 'pub-c-f1d4a0b1-66e6-48ae-bd2b-72bcaac47884',
@@ -33,3 +43,21 @@ function sendMessage(message, channel, callback){
         }
     });
 }
+
+Parse.Cloud.job("sendPushNotification", function(request, status) {
+    var pushQuery = new Parse.Query(Parse.Installation);
+    pushQuery.equalTo('deviceType', 'ios');
+                
+    Parse.Push.send({
+        where: pushQuery,
+        data: {
+            alert: "You have been pushed"
+        }
+        }, { success: function() {
+            status.success("Notification sent")
+        }, error: function(err) { 
+            console.log(err);
+            status.error("Something went wrong. Notification was not sent")
+        }
+    });
+})
