@@ -73,8 +73,8 @@ Parse.Cloud.job("setGame", function(request, status) {
     var minutes = start_time.getUTCMinutes();
     var seconds = start_time.getUTCSeconds();
     
-    // set the time 5 minutes away from now
-    minutes += 5;
+    // set the time 1 minute away from now
+    minutes += 1;
     if(minutes >=60) {
         minutes = minutes - 60;
         hours += 1;
