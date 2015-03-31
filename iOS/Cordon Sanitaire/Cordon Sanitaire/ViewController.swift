@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, GameDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,21 +39,22 @@ class ViewController: UIViewController {
         self.view.addSubview(introButton)
         
         Client.current.setLocation()
-
+        
+        Game.singleton.delegate = self
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    // listen to the game for when to start
+    func startGame() {
+        createMapView()
     }
     
+    // handle the button presses (open the map view, or open the intro view)
     func onButtonPress(sender:UIButton!) {
         println("button pressed")
        
         if(sender.titleLabel?.text == "PLAY"){
             // display the map view
-            let mapViewController:MapViewController = MapViewController()
-            self.presentViewController(mapViewController, animated: true, completion: nil)
+            createMapView()
         }
         else if(sender.titleLabel?.text == "INTRO") {
             // display the map view
@@ -61,6 +62,20 @@ class ViewController: UIViewController {
             self.presentViewController(introViewController, animated: true, completion: nil)
         }
     }
+    
+    // create an instance of the map view for the game and animate to display it
+    func createMapView() {
+        // display the map view
+        let mapViewController:MapViewController = MapViewController()
+        self.presentViewController(mapViewController, animated: true, completion: nil)
+    }
+    
+    //
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+
 }
 
 
