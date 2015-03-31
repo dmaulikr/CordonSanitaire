@@ -31,8 +31,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             } else {
                 NSLog("Anonymous user with ID " + PFUser.currentUser().objectId + " logged in.")
                 Client.current.setId(PFUser.currentUser().objectId)
-
-                var lobby = Lobby()
             }
         }
 
