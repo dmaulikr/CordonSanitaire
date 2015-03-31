@@ -61,3 +61,37 @@ Parse.Cloud.job("sendPushNotification", function(request, status) {
         }
     });
 })
+
+// every day at midnight sets a new game to be started at a given time
+Parse.Cloud.job("setGame", function(request, status) {
+                var start_time = new Date();
+                
+    // set the start time to be 5 minutes from when the job is run (for testing purposes)
+    // TODO: set the start time to be random (within... a time range) - set once a day
+    start_time.getTime();
+    var hours = start_time.getUTCHours();
+    var minutes = start_time.getUTCMinutes();
+    var seconds = start_time.getUTCSeconds();
+    
+    // set the time 5 minutes away from now
+    minutes += 5;
+    if(minutes >=60) {
+        minutes = minutes - 60;
+        hours += 1;
+    }
+    
+    start_time.setHours(hours, minutes, seconds);
+    var Game = Parse.Object.extend("Game");
+    var game = new Game();
+    
+    game.save({
+              startTime: start_time
+              }, {
+              success: function() {
+              status.success("Game is set to " + start_time);
+              },
+              error: function(error) {
+              status.error("Error: " + error.code + " " + error.message);
+              }
+    });
+});
