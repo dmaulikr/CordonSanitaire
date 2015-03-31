@@ -9,8 +9,14 @@
 import Foundation
 import MapKit
 
+private let _SingletonSharedInstance = Game()
+
 // TODO: Add map to the game
 class Game: NSObject{
+    
+    class var singleton:Game! {
+        return _SingletonSharedInstance
+    }
 
     var players: [String: Player] = [:]; // Map of id -> players
     var timer = NSTimer() // game timer
