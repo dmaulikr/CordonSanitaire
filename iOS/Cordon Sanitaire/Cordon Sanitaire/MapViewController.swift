@@ -87,8 +87,12 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         mapView.showsUserLocation = true
         mapView.scrollEnabled = false
         mapView.pitchEnabled = false
-        //mapView.zoomEnabled = false
-        //mapView.userInteractionEnabled = false
+        mapView.rotateEnabled = false
+        mapView.zoomEnabled = false
+        mapView.userInteractionEnabled = false
+        
+        // eventually, update this to spring back user interaction to the proper window
+        // feels better to nudge back than completely restrict the user from doing what they want
         
         // TODO: make this work
         // try out a different tile pattern (i.e. water color from stamen)
@@ -99,6 +103,20 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         
         // add the quarantine
         addQuarantineToMap()
+    }
+    
+    func addPlayersToMap() {
+
+        // test adding players from Game
+        for playerID:String in Game.singleton.players.keys {
+            
+            let lat = Game.singleton.players[playerID]?.latitude
+            let lon = Game.singleton.players[playerID]?.longitude
+            let loc = CLLocationCoordinate2D(latitude: lat!, longitude: lon!)
+            
+            addPlayerToMap(loc, playerID: playerID)
+        }
+
     }
     
     func mapView(mapView: MKMapView!, regionDidChangeAnimated animated: Bool) {
@@ -122,7 +140,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         theButton.setTitle("SHOUT", forState: UIControlState.Normal)
         theButton.backgroundColor = UIColor.blackColor()
         theButton.titleLabel?.font = UIFont(name: "helvetica", size: 48.0)
-        self.view.addSubview(theButton)
+        theButton.addTarget(self, action: Selector("theButtonIsPressed:"), forControlEvents: UIControlEvents.TouchDown)
+        self.view.addSubview(theButton)        
     }
     
     func addTimer() {
@@ -249,7 +268,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         }
         else {
             timerTextView.text = NSString(format: "00:%.2f",  timeLeft)
-            animateQuarantine()
+            
+            //animateQuarantine()
             
         }
     }
@@ -290,6 +310,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     func theButtonIsPressed(sender: AnyObject) {
         // check the state of the button
         // then perform the appropriate action for the button
+        println("the button is actually pressed");
         Action.shout("testing")
     }
     
