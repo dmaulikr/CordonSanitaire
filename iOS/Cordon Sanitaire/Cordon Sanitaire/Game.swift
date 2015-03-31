@@ -11,6 +11,10 @@ import MapKit
 
 private let _SingletonSharedInstance = Game()
 
+protocol GameDelegate {
+    func startGame()
+}
+
 // TODO: Add map to the game
 class Game: NSObject{
     
@@ -24,6 +28,8 @@ class Game: NSObject{
     var start_time: NSDate? // The actual time the game started for the client
     var quarantine = Quarantine()
     
+    var delegate:GameDelegate?
+    
     // Start the game
     // seconds      -> how many seconds in the game we are in
     // players_ids -> an array of the ids of the users in this game
@@ -35,6 +41,9 @@ class Game: NSObject{
         
         self.timer = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: Selector("updateTimer"), userInfo: nil, repeats: true)
         self.start_time = NSDate().dateByAddingTimeInterval(-seconds)
+        
+        // notify the view controller of a started game
+        delegate?.startGame()
     }
     
     // Updates the game timer
@@ -55,8 +64,10 @@ class Game: NSObject{
         var objects = userQuery.findObjects()
         for obj in objects {
             NSLog(obj.description)
-            var player = Player(id: obj.objectId, latitude: obj.valueForKey("latitude") as CLLocationDegrees, longitude: obj.valueForKey("longitude") as CLLocationDegrees)
-            players[player.id] = player
+            if(obj.valueForKey("latitude") != nil && obj.valueForKey("longitude") != nil) {
+                var player = Player(id: obj.objectId, latitude: obj.valueForKey("latitude") as CLLocationDegrees, longitude: obj.valueForKey("longitude") as CLLocationDegrees)
+                players[player.id] = player
+            }
         }
         
         NSLog("The players in this game are: " + players.description)
