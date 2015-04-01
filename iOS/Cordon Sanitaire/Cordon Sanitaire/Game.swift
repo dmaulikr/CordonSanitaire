@@ -115,8 +115,8 @@ class Game: NSObject{
         
         let bounds = getBoundingCoordsOfGameMap()
         
-        let centerLat = Double(bounds.topLeft.latitude - bounds.bottomRight.latitude) / 2.0
-        let centerLon = Double(bounds.bottomRight.longitude - bounds.topLeft.longitude) / 2.0
+        let centerLat = Double(bounds.topLeft.latitude + bounds.bottomRight.latitude) / 2.0
+        let centerLon = Double(bounds.bottomRight.longitude + bounds.topLeft.longitude) / 2.0
         
         return CLLocationCoordinate2D(latitude: centerLat, longitude: centerLon)
     }
@@ -171,6 +171,19 @@ class Game: NSObject{
         else {
             return lonSpan
         }
+    }
+    
+    
+    // returns the width at which the map should zoom out
+    func getWidthAndHeightOfGameMap() -> MKCoordinateSpan {
+        
+        let center = getCenterOfGameMap()
+        let bounds = getBoundingCoordsOfGameMap()
+        
+        let latSpan = abs(bounds.topLeft.latitude - center.latitude) + 0.1  // padding
+        let lonSpan = abs(bounds.topLeft.longitude - center.longitude) + 0.1 // padding
+        
+        return MKCoordinateSpanMake(lonSpan, latSpan)
     }
     
 }
