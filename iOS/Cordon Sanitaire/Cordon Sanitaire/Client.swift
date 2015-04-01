@@ -156,6 +156,10 @@ class Client: NSObject, PNDelegate, CLLocationManagerDelegate {
     
     func locationManager(manager: CLLocationManager!, didUpdateToLocation newLocation: CLLocation!, fromLocation oldLocation: CLLocation!) {
         NSLog("LOCATION: " + newLocation.description)
+        
+        // set my location to the current location
+        Game.singleton.myLocation = newLocation.coordinate
+        
         if (PFUser.currentUser() != nil) {
             PFUser.currentUser().setValuesForKeysWithDictionary(["latitude": newLocation.coordinate.latitude, "longitude": newLocation.coordinate.longitude])
             PFUser.currentUser().save()
