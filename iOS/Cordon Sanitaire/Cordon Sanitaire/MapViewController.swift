@@ -62,19 +62,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         // will cause map to zoom nicely to user location
         mapView.userTrackingMode = .Follow
         
-        // sample pin location
-        // 42.3601° N, 71.0589°
-        let location = CLLocationCoordinate2D(
-            latitude: 42.3601,
-            longitude: -71.0589
-        )
-        addPlayerToMap(location, playerID: "location 1")
+        // center on the users location, determined already
+        let location = Game.singleton.myLocation
         
-        let loc2 = CLLocationCoordinate2D(latitude: 42.3801, longitude: -71.0589)
-        addPlayerToMap(loc2, playerID: "location 2")
-        
-        let loc3 = CLLocationCoordinate2D(latitude: 42.3801, longitude: -71.0389)
-        addPlayerToMap(loc3, playerID: "location 3")
+        self.addPlayersToMap()
         
         // start at a zoomed in location on the player
         let span = MKCoordinateSpanMake(0.005, 0.005)
@@ -228,13 +219,13 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     }
     
     func zoomOut() {
-        let widthOfGameBoard = 0.2 // degrees
-        let heightOfGameBoard = 0.2 // degrees
-        let centerOfGameBoard = CLLocationCoordinate2D(
-            latitude: 42.3601,
-            longitude: -71.0689
-        )
-        let span = MKCoordinateSpanMake(widthOfGameBoard/2.0, heightOfGameBoard/2.0)
+        
+//        let widthOfGameBoard = 0.2 // degrees
+//        let heightOfGameBoard = 0.2 // degrees
+//        let span = MKCoordinateSpanMake(widthOfGameBoard/2.0, heightOfGameBoard/2.0)
+
+        let centerOfGameBoard = Game.singleton.getCenterOfGameMap()
+        let span = Game.singleton.getWidthAndHeightOfGameMap()
         let region = MKCoordinateRegion(center: centerOfGameBoard, span: span)
 
         //
