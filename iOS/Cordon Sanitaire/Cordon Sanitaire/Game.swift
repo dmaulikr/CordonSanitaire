@@ -23,6 +23,8 @@ class Game: NSObject{
     }
 
     var players: [String: Player] = [:]; // Map of id -> players
+    var myPlayer: Player!
+    var myLocation: CLLocationCoordinate2D!
     var timer = NSTimer() // game timer
     class var duration: Double {return 45.0} // Default duration of a game.
     var start_time: NSDate? // The actual time the game started for the client
@@ -33,7 +35,6 @@ class Game: NSObject{
     // Start the game
     // seconds      -> how many seconds in the game we are in
     // players_ids -> an array of the ids of the users in this game
-    // TODO: change view to game view
     func start(seconds: Double, players_ids: [String!]){
         NSLog("Game is going to start")
         
@@ -46,6 +47,7 @@ class Game: NSObject{
         delegate?.startGame()
     }
     
+    
     // Updates the game timer
     func updateTimer(){
         var elapsed_time = Double(NSDate().timeIntervalSinceDate(start_time!))
@@ -56,6 +58,7 @@ class Game: NSObject{
             NSLog("Timer: \(Game.duration - elapsed_time)")
         }
     }
+    
     
     // Queries PubNub for the players in the game channel group
     private func getPlayers(players_ids: [String!]){
@@ -73,6 +76,7 @@ class Game: NSObject{
         NSLog("The players in this game are: " + players.description)
     }
     
+    
     // Get start game start time from Parse
     class func getStartTime() -> NSDate{
         var query = PFQuery(className: "Game")
@@ -81,6 +85,92 @@ class Game: NSObject{
         var startTime: AnyObject? = game.valueForKey("startTime")
         NSLog("Game time is " + startTime!.description)
         return startTime as NSDate
+    }
+    
+    // Get center of players in the game
+    // NOTE: not sure if this is useful
+    func getCenterOfPlayerDistributedGameMap() -> CLLocationCoordinate2D {
+        
+        var latSum:CLLocationDegrees = 0.0
+        var lonSum:CLLocationDegrees = 0.0
+        
+        for playerID:String in players.keys {
+            
+            let lat = Game.singleton.players[playerID]?.latitude
+            let lon = Game.singleton.players[playerID]?.longitude
+            
+            latSum = latSum + lat!
+            lonSum = lonSum + lon!
+        }
+        
+        let latAvg = latSum / Double(players.count)
+        let lonAvg = lonSum / Double(players.count)
+        
+        return CLLocationCoordinate2D(latitude: latAvg, longitude: lonAvg)
+    }
+    
+    
+    // Get center of the game map
+    func getCenterOfGameMap() -> CLLocationCoordinate2D {
+        
+        let bounds = getBoundingCoordsOfGameMap()
+        
+        let centerLat = Double(bounds.topLeft.latitude - bounds.bottomRight.latitude) / 2.0
+        let centerLon = Double(bounds.bottomRight.longitude - bounds.topLeft.longitude) / 2.0
+        
+        return CLLocationCoordinate2D(latitude: centerLat, longitude: centerLon)
+    }
+
+    
+    // get the bounds of the game map
+    func getBoundingCoordsOfGameMap() -> (topLeft:CLLocationCoordinate2D, bottomRight:CLLocationCoordinate2D) {
+        
+        var minLat:CLLocationDegrees = 180.0
+        var minLon:CLLocationDegrees = 180.0
+        var maxLat:CLLocationDegrees = -180.0
+        var maxLon:CLLocationDegrees = -180.0
+        
+        for playerID:String in players.keys {
+            
+            let lat = Game.singleton.players[playerID]?.latitude
+            let lon = Game.singleton.players[playerID]?.longitude
+            
+            if( lat < minLat ) {
+                minLat = lat!
+            }
+            if( lat > maxLat ) {
+                maxLat = lat!
+            }
+            if( lon < minLon ) {
+                minLon = lon!
+            }
+            if( lon > maxLon ) {
+                maxLon = lon!
+            }
+        }
+
+        let topLeft = CLLocationCoordinate2D(latitude: maxLat, longitude: minLon)
+        let bottomRight = CLLocationCoordinate2D(latitude: minLat, longitude: maxLon)
+        
+        return (topLeft, bottomRight)
+    }
+    
+    
+    // returns the angle at which the map should zoom out
+    func getAngleForSpanOfGameMap() -> CLLocationDegrees {
+        
+        let center = getCenterOfGameMap()
+        let bounds = getBoundingCoordsOfGameMap()
+        
+        let latSpan = abs(bounds.topLeft.latitude - center.latitude)
+        let lonSpan = abs(bounds.topLeft.longitude - center.longitude)
+        
+        if( latSpan > lonSpan) {
+            return latSpan
+        }
+        else {
+            return lonSpan
+        }
     }
     
 }
