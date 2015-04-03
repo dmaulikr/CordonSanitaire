@@ -228,6 +228,12 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         let span = Game.singleton.getWidthAndHeightOfGameMap()
         let region = MKCoordinateRegion(center: centerOfGameBoard, span: span)
 
+        // check to see if region is valid
+        if(region.center.latitude == 0.0 && region.center.longitude == 0.0) {
+            println("no players in the game")
+            return
+        }
+        
         //
         UIView.animateWithDuration(3.0,
             delay: 0.0,
