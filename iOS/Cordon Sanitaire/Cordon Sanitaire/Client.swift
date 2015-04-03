@@ -8,6 +8,7 @@
 
 import CoreLocation
 import MapKit
+import GameKit
 
 class Client: NSObject, PNDelegate, CLLocationManagerDelegate {
     
@@ -23,9 +24,11 @@ class Client: NSObject, PNDelegate, CLLocationManagerDelegate {
     let delegate:PNDelegate!
     let location_manager = CLLocationManager()
     
-    var id: String?
     
-    class var current :Client! {
+    var id: String?
+    var username: String?
+    
+    class var singleton :Client! {
         return _SingletonSharedInstance
     }
     
@@ -40,8 +43,41 @@ class Client: NSObject, PNDelegate, CLLocationManagerDelegate {
         
         PNLogger.loggerEnabled(false) // disables PubNub logger -- too verbose
         PubNub.subscribeOn([self.global_channel])
+    }
+    
+    func login(gkPlayer: GKLocalPlayer!){
+        // set Client username to be the Game Center username
+        self.username = gkPlayer.alias
+        self.id = gkPlayer.playerID
         
+        var query = PFQuery(className: "SimpleUser")
+        query.whereKey("gkId", equalTo: self.id)
+        
+        query.getFirstObjectInBackgroundWithBlock({(user: PFObject!, error: NSError!) -> Void in
 
+            if(user == nil){ // needs to create new user on Parse
+                var newUser = PFObject(className: "SimpleUser")
+                newUser["username"] = self.username
+                newUser["present"] = true
+                newUser["gkId"] = self.id
+                newUser["role"] = "citizen"
+                
+                newUser.saveInBackgroundWithBlock({(success: Bool!, error: NSError!) -> Void in
+                    if (!success){
+                        NSLog("Failed to create user on Parse")
+                    }
+                })
+                
+            } else { // if user already exists updates username and presence status
+                user["username"] = self.username
+                user["present"] = true
+                user.saveInBackgroundWithBlock({(success: Bool!, error: NSError!) -> Void in
+                    if (!success){
+                        NSLog("Failed to update user on Parse")
+                    }
+                })
+            }
+        })
     }
     
     func setLocation(){

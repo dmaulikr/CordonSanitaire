@@ -25,15 +25,15 @@ class Action {
         self.header = header
     }
     class func shout(fromId: String){
-        PubNub.sendMessage(Headers.Shout.rawValue + " " + fromId, toChannel: Client.current.global_channel)
+        PubNub.sendMessage(Headers.Shout.rawValue + " " + fromId, toChannel: Client.singleton.global_channel)
     }
     
     class func addToQuaratine(fromId: String){
-        PubNub.sendMessage(Headers.AddToQuarantine.rawValue + " " + fromId, toChannel: Client.current.global_channel)
+        PubNub.sendMessage(Headers.AddToQuarantine.rawValue + " " + fromId, toChannel: Client.singleton.global_channel)
     }
     
     class func removeFromQuaratine(fromId: String){
-        PubNub.sendMessage(Headers.RemoveFromQuarantine.rawValue + " " + fromId, toChannel: Client.current.global_channel)
+        PubNub.sendMessage(Headers.RemoveFromQuarantine.rawValue + " " + fromId, toChannel: Client.singleton.global_channel)
     }
     
     class func parseMessage(message: String) -> Action{

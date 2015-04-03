@@ -29,7 +29,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 NSLog(error.description)
             } else {
                 NSLog("Anonymous user with ID " + PFUser.currentUser().objectId + " logged in.")
-                Client.current.setId(PFUser.currentUser().objectId)
+                Client.singleton.setId(PFUser.currentUser().objectId)
             }
         }
 
@@ -83,7 +83,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
         // Saves changes in the application's managed object context before the application terminates.
         self.saveContext()
-        Client.current.terminate()
+        Client.singleton.terminate()
         PubNub.disconnect()
         //TODO: update Parse to be no longer present
     }
