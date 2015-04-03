@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import GameKit
 
 class ViewController: UIViewController, GameDelegate {
     
@@ -41,6 +42,9 @@ class ViewController: UIViewController, GameDelegate {
         Client.current.setLocation()
         
         Game.singleton.delegate = self
+        
+        self.authenticateLocalPlayer()
+
     }
     
     // listen to the game for when to start
@@ -74,6 +78,24 @@ class ViewController: UIViewController, GameDelegate {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func authenticateLocalPlayer() {
+        
+        var localPlayer = GKLocalPlayer.localPlayer()
+        
+        // look at local player information
+        println(localPlayer.debugDescription)
+        
+        localPlayer.authenticateHandler = {(viewController : UIViewController!, error : NSError!) -> Void in
+            if ((viewController) != nil) {
+                self.presentViewController(viewController, animated: true, completion: nil)
+                
+            } else{
+                println((GKLocalPlayer.localPlayer().authenticated))
+                
+            }
+        }
     }
 
 }

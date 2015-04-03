@@ -22,7 +22,6 @@ class GameKitHelper: NSObject {
     override init(){
         super.init()
         // code for game kit helper
-        
         enableGameCenter = true
     }
     
@@ -34,10 +33,10 @@ class GameKitHelper: NSObject {
         println(localPlayer.debugDescription)
         
         localPlayer.authenticateHandler = {(viewController : UIViewController!, error : NSError!) -> Void in
-            
             if ((viewController) != nil) {
-                //self.presentViewController(viewController, animated: true, completion: nil)
-            }else{
+//                self.presentViewController(viewController, animated: true, completion: nil)
+                
+            } else{
                 println((GKLocalPlayer.localPlayer().authenticated))
                 
             }
