@@ -128,9 +128,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         let padding:CGFloat = 40.0
         theButton = UIButton(frame: CGRectMake(0,0, self.view.frame.width - padding*2.0, 80.0))
         theButton.center = CGPoint(x: self.view.center.x, y: self.view.frame.height - 80.0)
-        theButton.setTitle("SHOUT", forState: UIControlState.Normal)
-        theButton.backgroundColor = UIColor.blackColor()
-        theButton.titleLabel?.font = UIFont(name: "helvetica", size: 48.0)
+        theButton.setTitle("JOIN", forState: UIControlState.Normal)
+        theButton.backgroundColor = UIColor(netHex: cs_yellow)
+        theButton.layer.cornerRadius = 40.0
+        theButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Bold", size: 36.0)
         theButton.addTarget(self, action: Selector("theButtonIsPressed:"), forControlEvents: UIControlEvents.TouchDown)
         self.view.addSubview(theButton)        
     }
@@ -304,11 +305,33 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     }
     
     
-    func theButtonIsPressed(sender: AnyObject) {
+    func theButtonIsPressed(sender: UIButton!) {
         // check the state of the button
         // then perform the appropriate action for the button
+        let label = sender.titleLabel?.text
+        
+        switch(label!){
+            case "JOIN":
+                println("JOIN")
+                theButton.setTitle("RELEASE", forState: UIControlState.Normal)
+                theButton.backgroundColor = UIColor(netHex: cs_blue)
+                break;
+            
+            case "RELEASE":
+                println("RELEASE")
+                theButton.setTitle("JOIN", forState: UIControlState.Normal)
+                theButton.backgroundColor = UIColor(netHex: cs_yellow)
+                break;
+            
+            case "SHOUT":
+                println("SHOUT")
+                Action.shout("testing")
+                break;
+        
+            default: println("pressed the button, but no action assigned")
+        }
+        
         println("the button is actually pressed");
-        Action.shout("testing")
     }
     
     func menuButtonPressed(sender: AnyObject) {
