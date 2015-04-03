@@ -80,6 +80,7 @@ class ViewController: UIViewController, GameDelegate {
         // Dispose of any resources that can be recreated.
     }
     
+    // Gamekit authentication for player, displays the log in view for gamekit
     func authenticateLocalPlayer() {
         
         var localPlayer = GKLocalPlayer.localPlayer()
@@ -92,7 +93,8 @@ class ViewController: UIViewController, GameDelegate {
                 self.presentViewController(viewController, animated: true, completion: nil)
                 
             } else{
-                println((GKLocalPlayer.localPlayer().authenticated))
+                print("GameKit authentication: ")
+                println(GKLocalPlayer.localPlayer().authenticated)
                 
             }
         }
