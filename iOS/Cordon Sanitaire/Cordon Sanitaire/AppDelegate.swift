@@ -20,18 +20,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Initiate Parse
         Parse.setApplicationId("XzPwPddo8UjT14oI14b69CPgq8bRFYsA9TrqeZTL",
             clientKey: "4ThcPZWeffGCaBjsjReXh5rtp0Ygxb7DOQ8PbiHa")
-        
-        // Checks if there's a user logged in
-        PFAnonymousUtils.logInWithBlock {
-            (user: PFUser!, error: NSError!) -> Void in
-            if error != nil {
-                NSLog("Anonymous login failed.")
-                NSLog(error.description)
-            } else {
-                NSLog("Anonymous user with ID " + PFUser.currentUser().objectId + " logged in.")
-                Client.singleton.setId(PFUser.currentUser().objectId)
-            }
-        }
 
         // Override point for customization after application launch.
         return true
