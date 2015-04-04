@@ -58,7 +58,7 @@ class ViewController: UIViewController, GameDelegate {
        
         if(sender.titleLabel?.text == "PLAY"){
             // display the map view
-            createMapView()
+            Lobby.singleton.startGame()
         }
         else if(sender.titleLabel?.text == "INTRO") {
             // display the map view
