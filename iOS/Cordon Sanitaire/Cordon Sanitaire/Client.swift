@@ -165,18 +165,11 @@ class Client: NSObject, PNDelegate, CLLocationManagerDelegate {
     }
     /////////////////////////////////////
     func tellCloudCodeAboutMe() {
-        PFCloud.callFunctionInBackground("dummyKMeans", withParameters: ["id": PFUser.currentUser().objectId] , block: {(result: AnyObject!, error: NSError!) -> Void in
+        PFCloud.callFunctionInBackground("dummyKMeans", withParameters: ["id": self.id!] , block: {(result: AnyObject!, error: NSError!) -> Void in
             if (error == nil){
-                PFUser.currentUser().setValue(true, forKey: "present")
-                PFUser.currentUser().saveInBackgroundWithBlock({(result: Bool, error: NSError!) -> Void in
-                    if (error == nil){
-                        NSLog("Saved user successfully")
-                    } else {
-                        NSLog("Failed to save user")
-                    }
-                })
+                NSLog("CLOUD CODE: successfully told Cloud Code about this user")
             } else {
-                NSLog("An error has occured")
+                NSLog("CLOUD CODE: An error has occured")
             }
         })
     }
