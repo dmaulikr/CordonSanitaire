@@ -55,7 +55,7 @@ class Game: NSObject{
             timer.invalidate()
             NSLog("Time is up!")
         } else {
-            NSLog("Timer: \(Game.duration - elapsed_time)")
+//            NSLog("Timer: \(Game.duration - elapsed_time)")
         }
     }
     
