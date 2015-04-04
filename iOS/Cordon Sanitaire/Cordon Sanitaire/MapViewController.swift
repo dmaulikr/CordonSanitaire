@@ -138,11 +138,11 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     
     func addTimer() {
         //style the text box for timer display
-        timerTextView.frame = CGRectMake(0, 0, self.view.frame.width, 100.0)
+        timerTextView.frame = CGRectMake(0, 0, self.view.frame.width, 60.0)
         self.view.addSubview(timerTextView)
-        timerTextView.backgroundColor = UIColor.blackColor()
+        timerTextView.backgroundColor = UIColor(netHex: cs_blue)
         timerTextView.textColor = UIColor.whiteColor()
-        timerTextView.font = UIFont(name: "helvetica", size: 48.0)
+        timerTextView.font = UIFont(name: "HelveticaNeue-Bold", size: 36.0)
         timerTextView.text = "00:00.00"
         timerTextView.selectable = false
         timerTextView.editable = false
