@@ -52,16 +52,21 @@ class Client: NSObject, PNDelegate, CLLocationManagerDelegate {
         self.username = gkPlayer.alias         // set Client username to be the Game Center alias
         self.id = gkPlayer.playerID            // sets Client Id to be the Game Center Id
         PubNub.setClientIdentifier(self.id)    // sets the Client's PubNub Id to be the GameCenter Id
+        NSLog(self.id!)
         
-        // creates and subscribes to a privete channel
-        self.private_channel = PNChannel.channelWithName(self.id, shouldObservePresence: false) as PNChannel
+        // creates and subscribes to a private channel
+        self.private_channel = PNChannel.channelWithName(self.username, shouldObservePresence: false) as PNChannel
+        NSLog(self.private_channel.description)
         PubNub.subscribeOn([self.private_channel], withCompletionHandlingBlock: {(state: PNSubscriptionProcessState, object: [AnyObject]!, error: PNError!) -> Void in
             if (error == nil){
                 self.tellCloudCodeAboutMe()
+                NSLog(self.id!)
+                NSLog("Successfuly subscribed to private channel")
             }
             else{
                 NSLog("An error occured when subscribing to private channel")
             }
+            NSLog("halps")
         })
         
         // search for logged user on Parse
@@ -165,7 +170,8 @@ class Client: NSObject, PNDelegate, CLLocationManagerDelegate {
     }
     /////////////////////////////////////
     func tellCloudCodeAboutMe() {
-        PFCloud.callFunctionInBackground("dummyKMeans", withParameters: ["id": self.id!] , block: {(result: AnyObject!, error: NSError!) -> Void in
+        NSLog(self.username!)
+        PFCloud.callFunctionInBackground("dummyKMeans", withParameters: ["id": self.username!] , block: {(result: AnyObject!, error: NSError!) -> Void in
             if (error == nil){
                 NSLog("CLOUD CODE: successfully told Cloud Code about this user")
             } else {
@@ -195,7 +201,7 @@ class Client: NSObject, PNDelegate, CLLocationManagerDelegate {
         // set my location to the current location
         Game.singleton.myLocation = newLocation.coordinate
         
-        if (myParseUser != nil) {
+        if (myParseUser["id"] != nil) {
             myParseUser.setValuesForKeysWithDictionary(["latitude": newLocation.coordinate.latitude, "longitude": newLocation.coordinate.longitude])
             myParseUser.saveInBackgroundWithBlock({(success: Bool!, error: NSError!) -> Void in
                 if (!success){
