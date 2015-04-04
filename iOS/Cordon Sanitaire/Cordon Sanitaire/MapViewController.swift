@@ -315,19 +315,19 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
                 println("JOIN")
                 theButton.setTitle("RELEASE", forState: UIControlState.Normal)
                 theButton.backgroundColor = UIColor(netHex: cs_blue)
-                Action.addToQuaratine(Client.current.id!)   // TODO: update this
+                Action.addToQuaratine(Client.singleton.id!)
                 break;
             
             case "RELEASE":
                 println("RELEASE")
                 theButton.setTitle("JOIN", forState: UIControlState.Normal)
                 theButton.backgroundColor = UIColor(netHex: cs_yellow)
-                Action.removeFromQuaratine(Client.current.id!)   // TODO: update this
+                Action.removeFromQuaratine(Client.singleton.id!)
                 break;
             
             case "SHOUT":
                 println("SHOUT")
-                Action.shout(Client.current.id!)   // TODO: update this
+                Action.shout(Client.singleton.id!)
                 break;
         
             default: println("pressed the button, but no action assigned")
