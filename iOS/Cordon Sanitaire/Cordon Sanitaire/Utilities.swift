@@ -9,11 +9,11 @@
 import Foundation
 
 // Colors
-let cs_red      = 0xfff341
-let cs_orange   = 0xfff341
-let cs_yellow   = 0xfff341
-let cs_green    = 0x55ffb9
-let cs_blue     = 0xfff341
+let cs_red      = 0xEB624F
+let cs_orange   = 0xEE9036
+let cs_yellow   = 0xF7CC1D
+let cs_green    = 0x03C6AA  //0x55ffb9
+let cs_blue     = 0x405C72
 
 // super handy for web colors
 extension UIColor {
