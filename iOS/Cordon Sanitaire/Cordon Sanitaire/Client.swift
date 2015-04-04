@@ -8,6 +8,7 @@
 
 import CoreLocation
 import MapKit
+import GameKit
 
 class Client: NSObject, PNDelegate, CLLocationManagerDelegate {
     
@@ -23,9 +24,12 @@ class Client: NSObject, PNDelegate, CLLocationManagerDelegate {
     let delegate:PNDelegate!
     let location_manager = CLLocationManager()
     
-    var id: String?
     
-    class var current :Client! {
+    var id: String?
+    var username: String?
+    var myParseUser = PFObject(className: "SimpleUser")
+    
+    class var singleton :Client! {
         return _SingletonSharedInstance
     }
     
@@ -40,25 +44,17 @@ class Client: NSObject, PNDelegate, CLLocationManagerDelegate {
         
         PNLogger.loggerEnabled(false) // disables PubNub logger -- too verbose
         PubNub.subscribeOn([self.global_channel])
-        
-
     }
     
-    func setLocation(){
-        self.location_manager.delegate = self
-        self.location_manager.requestAlwaysAuthorization()
-        self.location_manager.desiredAccuracy = kCLLocationAccuracyBest
+    // "logs in" the client with the information from Game Center
+    // sets the private channel according to the Game Center Id
+    func login(gkPlayer: GKLocalPlayer!){
+        self.username = gkPlayer.alias         // set Client username to be the Game Center alias
+        self.id = gkPlayer.playerID            // sets Client Id to be the Game Center Id
+        PubNub.setClientIdentifier(self.id)    // sets the Client's PubNub Id to be the GameCenter Id
         
-        self.location_manager.startUpdatingLocation()
-
-    }
-    
-    // Sets the ID of a client, also sets its private channel according to the ID
-    func setId(id: String){
-        self.id = id
-        PubNub.setClientIdentifier(PFUser.currentUser().objectId)
-        self.private_channel = PNChannel.channelWithName(id, shouldObservePresence: false) as PNChannel
-
+        // creates and subscribes to a privete channel
+        self.private_channel = PNChannel.channelWithName(self.id, shouldObservePresence: false) as PNChannel
         PubNub.subscribeOn([self.private_channel], withCompletionHandlingBlock: {(state: PNSubscriptionProcessState, object: [AnyObject]!, error: PNError!) -> Void in
             if (error == nil){
                 self.tellCloudCodeAboutMe()
@@ -67,6 +63,48 @@ class Client: NSObject, PNDelegate, CLLocationManagerDelegate {
                 NSLog("An error occured when subscribing to private channel")
             }
         })
+        
+        // search for logged user on Parse
+        var query = PFQuery(className: "SimpleUser")
+        query.whereKey("gkId", equalTo: self.id)
+        
+        query.getFirstObjectInBackgroundWithBlock({(user: PFObject!, error: NSError!) -> Void in
+
+            // if a Parse SimpleUser does not exist, needs to create new SimpleUser on Parse
+            if(user == nil){
+                self.myParseUser["username"] = self.username
+                self.myParseUser["present"] = true
+                self.myParseUser["gkId"] = self.id
+                self.myParseUser["role"] = "citizen"
+                
+                self.myParseUser.saveInBackgroundWithBlock({(success: Bool!, error: NSError!) -> Void in
+                    if (!success){
+                        NSLog("Failed to create user on Parse")
+                    }
+                })
+                
+            } else { // if SimpleUser already exists, just updates username and presence status
+                self.myParseUser = user
+                self.myParseUser["username"] = self.username
+                self.myParseUser["present"] = true
+                self.myParseUser.saveInBackgroundWithBlock({(success: Bool!, error: NSError!) -> Void in
+                    if (!success){
+                        NSLog("Failed to update user on Parse")
+                    }
+                })
+            }
+        })
+        
+        // at last, get the geolocation of the player
+        self.setLocation()
+    }
+    
+    private func setLocation(){
+        self.location_manager.delegate = self
+        self.location_manager.requestWhenInUseAuthorization()
+        self.location_manager.desiredAccuracy = kCLLocationAccuracyBest
+        
+        self.location_manager.startUpdatingLocation()
     }
     
     func setGroupChannel(channel_name: String){
@@ -79,8 +117,10 @@ class Client: NSObject, PNDelegate, CLLocationManagerDelegate {
 //        Lobby.singleton.addPlayers(players as [String])
     }
 
+    //////////////////////
+    // PubNub delegates //
+    //////////////////////
     
-    // PubNub delegates
     func pubnubClient(client: PubNub!, didConnectToOrigin origin: String!) {
         NSLog("DELEGATE: Connected to " + origin)
     }
@@ -151,8 +191,10 @@ class Client: NSObject, PNDelegate, CLLocationManagerDelegate {
             }
         })
     }
-    ////////////////////////////////
-    // CLLocationManager delegates
+    
+    /////////////////////////////////
+    // CLLocationManager delegates //
+    /////////////////////////////////
     
     func locationManager(manager: CLLocationManager!, didUpdateToLocation newLocation: CLLocation!, fromLocation oldLocation: CLLocation!) {
         NSLog("LOCATION: " + newLocation.description)
@@ -160,9 +202,13 @@ class Client: NSObject, PNDelegate, CLLocationManagerDelegate {
         // set my location to the current location
         Game.singleton.myLocation = newLocation.coordinate
         
-        if (PFUser.currentUser() != nil) {
-            PFUser.currentUser().setValuesForKeysWithDictionary(["latitude": newLocation.coordinate.latitude, "longitude": newLocation.coordinate.longitude])
-            PFUser.currentUser().save()
+        if (myParseUser != nil) {
+            myParseUser.setValuesForKeysWithDictionary(["latitude": newLocation.coordinate.latitude, "longitude": newLocation.coordinate.longitude])
+            myParseUser.saveInBackgroundWithBlock({(success: Bool!, error: NSError!) -> Void in
+                if (!success){
+                    NSLog("Failed to update user's location on Parse")
+                }
+            })
 
             self.location_manager.stopUpdatingLocation()
         }

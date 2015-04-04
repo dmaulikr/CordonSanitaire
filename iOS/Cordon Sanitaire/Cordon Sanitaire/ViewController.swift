@@ -39,8 +39,6 @@ class ViewController: UIViewController, GameDelegate {
         introButton.addTarget(self, action: "onButtonPress:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(introButton)
         
-        Client.current.setLocation()
-        
         Game.singleton.delegate = self
         
         self.authenticateLocalPlayer()
@@ -85,17 +83,18 @@ class ViewController: UIViewController, GameDelegate {
         
         var localPlayer = GKLocalPlayer.localPlayer()
         
-        // look at local player information
-        println(localPlayer.debugDescription)
-        
         localPlayer.authenticateHandler = {(viewController : UIViewController!, error : NSError!) -> Void in
-            if ((viewController) != nil) {
+            if (viewController != nil) {
                 self.presentViewController(viewController, animated: true, completion: nil)
                 
-            } else{
-                print("GameKit authentication: ")
-                println(GKLocalPlayer.localPlayer().authenticated)
+            } else if(localPlayer.authenticated) {
+                // go to lobby page
+                // check if username exists in Parse
+                Client.singleton.login(localPlayer)
                 
+            } else {
+                NSLog("WARNING: User not authenticated")
+                // go to page that explains that the user needs to login
             }
         }
     }
