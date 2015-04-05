@@ -24,7 +24,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     var startTime = 0.0
     
     var theButton = UIButton()
-    
+        
     var playerIcons = [String: MKAnnotation]()
     var activePlayerIcons = [String: MKAnnotation]()
     var passivePlayerIcons = [String: MKAnnotation]()
@@ -39,12 +39,46 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         addMap()
         addTimer()
         addButton()
-        // add status
+        addStatus()
         
         // when the game starts, zoom out from your position on a 3 second countdown
         // here we simulate that by triggering the zoom out after 3 seconds of launch
         var timer = NSTimer()
         timer = NSTimer.scheduledTimerWithTimeInterval(3, target: self, selector: Selector("zoomOut"), userInfo: nil, repeats: false)
+    }
+    
+    func addStatus() {
+        
+        UIView.animateWithDuration( NSTimeInterval.infinity, animations: { () -> Void in
+            
+            let patientZeroIndicator = CAShapeLayer()
+            
+            let radius:CGFloat = 20.0
+            let center:CGPoint = CGPointMake(self.view.frame.width - radius - 10, radius + 10)
+            let startAngle = 0.0
+            let endAngle = 2.0 * Double(M_PI)
+            
+            patientZeroIndicator.lineWidth = 10.0
+            patientZeroIndicator.fillColor = UIColor(netHex: cs_red).CGColor
+            patientZeroIndicator.strokeColor = UIColor.whiteColor().CGColor
+            patientZeroIndicator.path = UIBezierPath(arcCenter: center, radius: radius, startAngle: CGFloat(startAngle), endAngle: CGFloat(endAngle), clockwise: true).CGPath
+            self.view.layer.addSublayer(patientZeroIndicator)
+            
+            // Create a blank animation using the keyPath "cornerRadius", the property we want to animate
+            let pZeroAnimation = CABasicAnimation(keyPath: "lineWidth")
+            
+            // Define the parameters for the tween
+            pZeroAnimation.fromValue = 10.0
+            pZeroAnimation.toValue = 5.0
+            pZeroAnimation.autoreverses  = true
+            pZeroAnimation.duration = 3.0
+            pZeroAnimation.repeatDuration = CFTimeInterval.infinity
+            pZeroAnimation.timingFunction = CAMediaTimingFunction(controlPoints: 0.25, 0, 0.75, 1)
+            
+            // Finally, add the animation to the layer
+            self.view.layer.addAnimation(pZeroAnimation, forKey: "lineWidth")
+//            patientZeroIndicator.addAnimation(pZeroAnimation, forKey: "lineWidth")
+        })
     }
     
     func addMap() {
@@ -63,9 +97,12 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         mapView.userTrackingMode = .Follow
         
         // center on the users location, determined already
-        let location = Game.singleton.myLocation
+        // TODO: return the map to the users location
+        let location = CLLocationCoordinate2DMake(42.3601, -71.0589)
+        //let location = Game.singleton.myLocation
         
-        self.addPlayersToMap()
+        // TODO: bring the players back to the map (currently the players array is empty)
+        //self.addPlayersToMap()
         
         // start at a zoomed in location on the player
         let span = MKCoordinateSpanMake(0.005, 0.005)
@@ -85,12 +122,16 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         // eventually, update this to spring back user interaction to the proper window
         // feels better to nudge back than completely restrict the user from doing what they want
         
-        // TODO: make this work
-        // try out a different tile pattern (i.e. water color from stamen)
-        //        let path = MKTileOverlayPath(x: 0, y: 0, z: 1, contentScaleFactor: 0.34)
-        //        let tile = MKTileOverlay(URLTemplate: "http://tile.stamen.com/watercolor/{scale}/{x}/{x}.jpg")
-        //        mapView.addOverlay(tile)
-        
+        // from maps.stamen.com, so free styled map tiles
+        // watercolor, toner, terrain
+        // more info:
+        //  https://github.com/stamen/toner-carto
+        //  https://github.com/Citytracking/toner
+        //  http://content.stamen.com/dotspotting_toner_cartography_available_for_download
+        let template = "http://tile.stamen.com/toner/{z}/{x}/{y}.jpg"
+        let overlay = MKTileOverlay(URLTemplate: template)
+        overlay.canReplaceMapContent = true
+        self.mapView.addOverlay(overlay, level: MKOverlayLevel.AboveLabels)
         
         // add the quarantine
         addQuarantineToMap()
@@ -203,13 +244,17 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     func mapView(mapView: MKMapView!, rendererForOverlay overlay: MKOverlay!) -> MKOverlayRenderer! {
         
         var v : MKPolygonRenderer! = nil
-        
+
         if let overlay = overlay as? MKPolygon {
-            
+
             v = MKPolygonRenderer(polygon: overlay)
             v.fillColor = UIColor(hue: 0, saturation: 0, brightness: 0, alpha: 0.3)
             v.strokeColor = UIColor(hue: 0, saturation: 0, brightness: 0, alpha: 0.9)
             v.lineWidth = 4
+        }
+        else if let overlay = overlay as? MKTileOverlay {
+            
+            return MKTileOverlayRenderer(overlay: overlay)
         }
         
         return v
@@ -221,12 +266,11 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     
     func zoomOut() {
         
-//        let widthOfGameBoard = 0.2 // degrees
-//        let heightOfGameBoard = 0.2 // degrees
-//        let span = MKCoordinateSpanMake(widthOfGameBoard/2.0, heightOfGameBoard/2.0)
+        let centerOfGameBoard = CLLocationCoordinate2DMake(42.3601, -71.0589)
+        let span = MKCoordinateSpanMake(0.1, 0.1)
 
-        let centerOfGameBoard = Game.singleton.getCenterOfGameMap()
-        let span = Game.singleton.getWidthAndHeightOfGameMap()
+//        let centerOfGameBoard = Game.singleton.getCenterOfGameMap()
+//        let span = Game.singleton.getWidthAndHeightOfGameMap()
         let region = MKCoordinateRegion(center: centerOfGameBoard, span: span)
 
         // check to see if region is valid
@@ -315,19 +359,25 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
                 println("JOIN")
                 theButton.setTitle("RELEASE", forState: UIControlState.Normal)
                 theButton.backgroundColor = UIColor(netHex: cs_blue)
-                Action.addToQuaratine(Client.singleton.id!)
+                if(Client.singleton.id != nil) {
+                    Action.addToQuaratine(Client.singleton.id!)
+                }
                 break;
             
             case "RELEASE":
                 println("RELEASE")
                 theButton.setTitle("JOIN", forState: UIControlState.Normal)
                 theButton.backgroundColor = UIColor(netHex: cs_yellow)
-                Action.removeFromQuaratine(Client.singleton.id!)
+                if(Client.singleton.id != nil) {
+                    Action.removeFromQuaratine(Client.singleton.id!)
+                }
                 break;
             
             case "SHOUT":
                 println("SHOUT")
-                Action.shout(Client.singleton.id!)
+                if(Client.singleton.id != nil) {
+                    Action.shout(Client.singleton.id!)
+                }
                 break;
         
             default: println("pressed the button, but no action assigned")
