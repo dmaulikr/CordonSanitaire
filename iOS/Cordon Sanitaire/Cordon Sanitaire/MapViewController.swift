@@ -24,7 +24,9 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     var startTime = 0.0
     
     var theButton = UIButton()
-        
+    
+    var patientZeroIndicator:CAShapeLayer!
+    
     var playerIcons = [String: MKAnnotation]()
     var activePlayerIcons = [String: MKAnnotation]()
     var passivePlayerIcons = [String: MKAnnotation]()
@@ -47,37 +49,43 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         timer = NSTimer.scheduledTimerWithTimeInterval(3, target: self, selector: Selector("zoomOut"), userInfo: nil, repeats: false)
     }
     
+    override func viewDidAppear(animated: Bool) {
+        addStatusAnimation()
+    }
+    
     func addStatus() {
         
+        self.patientZeroIndicator = CAShapeLayer()
+        
+        let radius:CGFloat = 15.0
+        let center:CGPoint = CGPointMake(self.view.frame.width - radius - 15, radius + 15)
+        let startAngle = 0.0
+        let endAngle = 2.0 * Double(M_PI)
+        
+        patientZeroIndicator.lineWidth = 8.0
+        patientZeroIndicator.fillColor = UIColor(netHex: cs_red).CGColor
+        patientZeroIndicator.strokeColor = UIColor.whiteColor().CGColor
+        patientZeroIndicator.path = UIBezierPath(arcCenter: center, radius: radius, startAngle: CGFloat(startAngle), endAngle: CGFloat(endAngle), clockwise: true).CGPath
+        self.view.layer.addSublayer(patientZeroIndicator)
+    }
+    
+    func addStatusAnimation() {
+        
         UIView.animateWithDuration( NSTimeInterval.infinity, animations: { () -> Void in
-            
-            let patientZeroIndicator = CAShapeLayer()
-            
-            let radius:CGFloat = 20.0
-            let center:CGPoint = CGPointMake(self.view.frame.width - radius - 10, radius + 10)
-            let startAngle = 0.0
-            let endAngle = 2.0 * Double(M_PI)
-            
-            patientZeroIndicator.lineWidth = 10.0
-            patientZeroIndicator.fillColor = UIColor(netHex: cs_red).CGColor
-            patientZeroIndicator.strokeColor = UIColor.whiteColor().CGColor
-            patientZeroIndicator.path = UIBezierPath(arcCenter: center, radius: radius, startAngle: CGFloat(startAngle), endAngle: CGFloat(endAngle), clockwise: true).CGPath
-            self.view.layer.addSublayer(patientZeroIndicator)
             
             // Create a blank animation using the keyPath "cornerRadius", the property we want to animate
             let pZeroAnimation = CABasicAnimation(keyPath: "lineWidth")
             
             // Define the parameters for the tween
-            pZeroAnimation.fromValue = 10.0
-            pZeroAnimation.toValue = 5.0
+            pZeroAnimation.fromValue = 8.0
+            pZeroAnimation.toValue = 4.0
             pZeroAnimation.autoreverses  = true
-            pZeroAnimation.duration = 3.0
+            pZeroAnimation.duration = 2.0
             pZeroAnimation.repeatDuration = CFTimeInterval.infinity
             pZeroAnimation.timingFunction = CAMediaTimingFunction(controlPoints: 0.25, 0, 0.75, 1)
             
             // Finally, add the animation to the layer
-            self.view.layer.addAnimation(pZeroAnimation, forKey: "lineWidth")
-//            patientZeroIndicator.addAnimation(pZeroAnimation, forKey: "lineWidth")
+            self.patientZeroIndicator.addAnimation(pZeroAnimation, forKey: "lineWidth")
         })
     }
     
