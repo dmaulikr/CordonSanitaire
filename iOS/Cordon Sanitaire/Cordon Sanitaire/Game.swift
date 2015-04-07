@@ -31,6 +31,7 @@ class Game: NSObject{
     var quarantine = Quarantine()
     
     var delegate:GameDelegate?
+    var viewController:MapViewController?
     
     // Start the game
     // seconds      -> how many seconds in the game we are in
@@ -43,8 +44,9 @@ class Game: NSObject{
         self.timer = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: Selector("updateTimer"), userInfo: nil, repeats: true)
         self.start_time = NSDate().dateByAddingTimeInterval(-seconds)
         
+        self.viewController = MapViewController()
         // notify the view controller of a started game
-        delegate?.startGame()
+//        delegate?.startGame()
     }
     
     
@@ -62,13 +64,14 @@ class Game: NSObject{
     
     // Queries PubNub for the players in the game channel group
     private func getPlayers(players_ids: [String!]){
-        var userQuery = PFUser.query()
-        userQuery.whereKey("objectId", containedIn: players_ids)
+        var userQuery = PFQuery(className: "SimpleUser")
+        userQuery.whereKey("gkId", containedIn: players_ids)
         var objects = userQuery.findObjects()
+        NSLog(players_ids.description)
         for obj in objects {
             NSLog(obj.description)
             if(obj.valueForKey("latitude") != nil && obj.valueForKey("longitude") != nil) {
-                var player = Player(id: obj.objectId, latitude: obj.valueForKey("latitude") as CLLocationDegrees, longitude: obj.valueForKey("longitude") as CLLocationDegrees)
+                var player = Player(id: obj.valueForKey("gkId") as String, latitude: obj.valueForKey("latitude") as CLLocationDegrees, longitude: obj.valueForKey("longitude") as CLLocationDegrees)
                 players[player.id] = player
             }
         }
@@ -184,6 +187,27 @@ class Game: NSObject{
         let lonSpan = abs(bounds.topLeft.longitude - center.longitude) + 0.1 // padding
         
         return MKCoordinateSpanMake(lonSpan, latSpan)
+    }
+    
+    func addPlayerToQuarantine(id: String){
+        if (self.players[id] != nil) {
+            self.quarantine.addPlayer(self.players[id]!)
+        }
+        NSLog("Players in the quarantine: " + quarantine.quarantinePlayers.description)
+        self.updateQuarantine()
+    }
+    
+    func removePlayerFromQuarantine(id: String){
+        if (self.players[id] != nil) {
+            self.quarantine.removePlayer(self.players[id]!)
+        }
+        NSLog("Players in the quarantine: " + quarantine.quarantinePlayers.description)
+        self.updateQuarantine()
+    }
+    
+    func updateQuarantine(){
+        quarantine.updateQuarantineOrder()
+        self.viewController?.updateQuarantine(quarantine.sortedQuarantineCoords)
     }
     
 }

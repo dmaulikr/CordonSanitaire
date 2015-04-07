@@ -30,5 +30,9 @@ class Player {
     func changeState(newState: State){
         self.state = newState;
     }
+    
+    func getCoords() -> CLLocationCoordinate2D {
+        return CLLocationCoordinate2D(latitude: self.latitude, longitude: self.longitude)
+    }
 }
 

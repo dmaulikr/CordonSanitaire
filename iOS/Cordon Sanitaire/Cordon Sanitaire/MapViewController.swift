@@ -9,7 +9,7 @@
 import UIKit
 import MapKit
 
-class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
+class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate{
 
     var mapView: MKMapView!
 
@@ -110,7 +110,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         //let location = Game.singleton.myLocation
         
         // TODO: bring the players back to the map (currently the players array is empty)
-        //self.addPlayersToMap()
+        self.addPlayersToMap()
         
         // start at a zoomed in location on the player
         let span = MKCoordinateSpanMake(0.005, 0.005)
@@ -121,11 +121,11 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         mapView.showsPointsOfInterest = false
         mapView.showsBuildings = false
         mapView.showsUserLocation = true
-        mapView.scrollEnabled = false
+//        mapView.scrollEnabled = false
         mapView.pitchEnabled = false
-        mapView.rotateEnabled = false
-        mapView.zoomEnabled = false
-        mapView.userInteractionEnabled = false
+//        mapView.rotateEnabled = false
+//        mapView.zoomEnabled = false
+//        mapView.userInteractionEnabled = false
         
         // eventually, update this to spring back user interaction to the proper window
         // feels better to nudge back than completely restrict the user from doing what they want
@@ -224,7 +224,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     }
     
     // receive array of coordinates and update polygon of quarantine
-    func updateQuarantine(quarantine:CLLocationCoordinate2D...) {
+    func updateQuarantine(quarantine:[CLLocationCoordinate2D]) {
       
         var coords = [CLLocationCoordinate2D]()
         for player in quarantine {

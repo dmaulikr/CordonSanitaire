@@ -13,11 +13,11 @@ class Quarantine: NSObject {
     
     var quarantinePlayers:[String: Player]
     var center:CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: 0, longitude: 0)
-    var sortedQuarantine:[String]
+    var sortedQuarantineCoords:[CLLocationCoordinate2D]
     
     init(players: Player...){
         self.quarantinePlayers = [:]
-        self.sortedQuarantine = []
+        self.sortedQuarantineCoords = []
     }
     
     // when a player joins the quarantine, add them to the quarantine players
@@ -86,17 +86,19 @@ class Quarantine: NSObject {
     
     // order the quarantine players based on rotation around the center
     func updateQuarantineOrder() {
+        sortedQuarantineCoords = []
         var player_ids = quarantinePlayers.keys.array
-        var lastPlayer = player_ids.first!;
-        sortedQuarantine.append(lastPlayer);
+        var lastPlayer:String;
         
-        for (var i = 0; i < quarantinePlayers.count - 1; i++) {
-            var nextPlayer = getNextPlayerCounterClockwise(lastPlayer);
-            sortedQuarantine.append(nextPlayer);
-            lastPlayer = nextPlayer;
+        if (quarantinePlayers.count != 0){
+            lastPlayer = player_ids.first!
+            sortedQuarantineCoords.append(quarantinePlayers[lastPlayer]!.getCoords());
+            for (var i = 0; i < quarantinePlayers.count - 1; i++) {
+                var nextPlayer = getNextPlayerCounterClockwise(lastPlayer);
+                sortedQuarantineCoords.append(quarantinePlayers[nextPlayer]!.getCoords());
+                lastPlayer = nextPlayer;
+            }
         }
-        
-        
     }
     
     private func getNextPlayerCounterClockwise (id: String) -> String {

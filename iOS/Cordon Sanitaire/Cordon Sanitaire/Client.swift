@@ -27,7 +27,6 @@ class Client: NSObject, PNDelegate, CLLocationManagerDelegate {
     
     var id: String?
     var username: String?
-    var myParseUser = PFObject(className: "SimpleUser")
     
     class var singleton :Client! {
         return _SingletonSharedInstance
@@ -64,9 +63,8 @@ class Client: NSObject, PNDelegate, CLLocationManagerDelegate {
                 NSLog("Successfuly subscribed to private channel")
             }
             else{
-                NSLog("An error occured when subscribing to private channel")
+                NSLog("An error occured when subscribing to private channel: " + error.description)
             }
-            NSLog("halps")
         })
         
         // search for logged user on Parse
@@ -77,22 +75,22 @@ class Client: NSObject, PNDelegate, CLLocationManagerDelegate {
 
             // if a Parse SimpleUser does not exist, needs to create new SimpleUser on Parse
             if(user == nil){
-                self.myParseUser["username"] = self.username
-                self.myParseUser["present"] = true
-                self.myParseUser["gkId"] = self.id
-                self.myParseUser["role"] = "citizen"
+                var myParseUser = PFObject(className: "SimpleUser")
+                myParseUser["username"] = self.username
+                myParseUser["present"] = true
+                myParseUser["gkId"] = self.id
+                myParseUser["role"] = "citizen"
                 
-                self.myParseUser.saveInBackgroundWithBlock({(success: Bool!, error: NSError!) -> Void in
+                myParseUser.saveInBackgroundWithBlock({(success: Bool!, error: NSError!) -> Void in
                     if (!success){
                         NSLog("Failed to create user on Parse")
                     }
                 })
                 
             } else { // if SimpleUser already exists, just updates username and presence status
-                self.myParseUser = user
-                self.myParseUser["username"] = self.username
-                self.myParseUser["present"] = true
-                self.myParseUser.saveInBackgroundWithBlock({(success: Bool!, error: NSError!) -> Void in
+                user["username"] = self.username
+                user["present"] = true
+                user.saveInBackgroundWithBlock({(success: Bool!, error: NSError!) -> Void in
                     if (!success){
                         NSLog("Failed to update user on Parse")
                     }
@@ -106,7 +104,7 @@ class Client: NSObject, PNDelegate, CLLocationManagerDelegate {
     
     private func setLocation(){
         self.location_manager.delegate = self
-        self.location_manager.requestWhenInUseAuthorization()
+        self.location_manager.requestAlwaysAuthorization()
         self.location_manager.desiredAccuracy = kCLLocationAccuracyBest
         
         self.location_manager.startUpdatingLocation()
@@ -158,12 +156,18 @@ class Client: NSObject, PNDelegate, CLLocationManagerDelegate {
         switch action.header {
         case Headers.Shout:
             NSLog("Received " + action.header.rawValue + " from " + action.id)
+            break
         case Headers.AddToQuarantine:
             NSLog(action.id + " " + action.header.rawValue)
+            Game.singleton.addPlayerToQuarantine(action.id)
+            break
         case Headers.RemoveFromQuarantine:
             NSLog(action.id + " " + action.header.rawValue)
+            Game.singleton.removePlayerFromQuarantine(action.id)
+            break
         case Headers.SubscribeToChannel:
             setGroupChannel(action.id)
+            break
         default:
             NSLog("Header: " + action.header.rawValue + message.message.description)
         }
@@ -197,19 +201,25 @@ class Client: NSObject, PNDelegate, CLLocationManagerDelegate {
     
     func locationManager(manager: CLLocationManager!, didUpdateToLocation newLocation: CLLocation!, fromLocation oldLocation: CLLocation!) {
         NSLog("LOCATION: " + newLocation.description)
-        
         // set my location to the current location
         Game.singleton.myLocation = newLocation.coordinate
         
-        if (myParseUser["id"] != nil) {
-            myParseUser.setValuesForKeysWithDictionary(["latitude": newLocation.coordinate.latitude, "longitude": newLocation.coordinate.longitude])
-            myParseUser.saveInBackgroundWithBlock({(success: Bool!, error: NSError!) -> Void in
-                if (!success){
-                    NSLog("Failed to update user's location on Parse")
-                }
-            })
-
-            self.location_manager.stopUpdatingLocation()
+        if (self.id != nil) {
+            var query = PFQuery(className: "SimpleUser")
+            query.whereKey("gkId", equalTo: self.id)
+            var myParseUser = query.getFirstObject()
+            
+            if (myParseUser != nil){
+                myParseUser.setValuesForKeysWithDictionary(["latitude": newLocation.coordinate.latitude, "longitude": newLocation.coordinate.longitude])
+                myParseUser.saveInBackgroundWithBlock({(success: Bool!, error: NSError!) -> Void in
+                    if (!success){
+                        NSLog("Failed to update user's location on Parse")
+                    } else {
+                        NSLog("Successfully updated user's location on Parse")
+                        self.location_manager.stopUpdatingLocation()
+                    }
+                })
+            }
         }
     }
     
