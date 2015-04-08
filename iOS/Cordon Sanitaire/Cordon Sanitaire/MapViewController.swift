@@ -293,7 +293,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
             timerTextView.text = "00:00.00"
         }
         else {
-            timerTextView.text = NSString(format: "00:%.2f",  timeLeft)
+            timerTextView.text = NSString(format: "00:%@%.2f", (timeLeft < 10.0) ? "0" : "", timeLeft)
             
             //animateQuarantine()
             
