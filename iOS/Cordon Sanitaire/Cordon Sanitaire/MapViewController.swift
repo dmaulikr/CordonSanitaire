@@ -100,14 +100,14 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         locationManager.delegate = self
         // must request authorization to use location
         locationManager.requestWhenInUseAuthorization()
+        //locationManager.requestAlwaysAuthorization()    // Not sure if this is necessary, really only need location when in app
         
         // will cause map to zoom nicely to user location
         mapView.userTrackingMode = .Follow
         
         // center on the users location, determined already
         // TODO: return the map to the users location
-        let location = CLLocationCoordinate2DMake(42.3601, -71.0589)
-        //let location = Game.singleton.myLocation
+        let location = Game.singleton.myLocation
         
         // TODO: bring the players back to the map (currently the players array is empty)
         self.addPlayersToMap()
@@ -140,9 +140,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         let overlay = MKTileOverlay(URLTemplate: template)
         overlay.canReplaceMapContent = true
         self.mapView.addOverlay(overlay, level: MKOverlayLevel.AboveLabels)
-        
-        // add the quarantine
-        addQuarantineToMap()
     }
     
     func addPlayersToMap() {
@@ -210,26 +207,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         activePlayerIcons[playerID] = annotation
     }
     
-    func addQuarantineToMap() {
-        
-        var coords = [CLLocationCoordinate2D]()
-        
-        for player in activePlayerIcons {
-
-            coords.append(player.1.coordinate)
-        }
-        
-        quarantinePolygon = MKPolygon(coordinates: &coords, count: coords.count)
-        mapView.addOverlay(quarantinePolygon)
-    }
-    
     // receive array of coordinates and update polygon of quarantine
-    func updateQuarantine(quarantine:[CLLocationCoordinate2D]) {
-      
-        var coords = [CLLocationCoordinate2D]()
-        for player in quarantine {
-            coords.append(player)
-        }
+    func updateQuarantine(var coords:[CLLocationCoordinate2D]) {
         
         let polyLine:MKPolygon = MKPolygon(coordinates: &coords, count: coords.count)
         
@@ -274,11 +253,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     
     func zoomOut() {
         
-        let centerOfGameBoard = CLLocationCoordinate2DMake(42.3601, -71.0589)
-        let span = MKCoordinateSpanMake(0.1, 0.1)
-
-//        let centerOfGameBoard = Game.singleton.getCenterOfGameMap()
-//        let span = Game.singleton.getWidthAndHeightOfGameMap()
+        let centerOfGameBoard = Game.singleton.getCenterOfGameMap()
+        let span = Game.singleton.getWidthAndHeightOfGameMap()
         let region = MKCoordinateRegion(center: centerOfGameBoard, span: span)
 
         // check to see if region is valid
