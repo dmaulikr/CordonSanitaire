@@ -24,7 +24,7 @@ class Game: NSObject{
 
     var players: [String: Player] = [:]; // Map of id -> players
     var myPlayer: Player!
-    var myLocation: CLLocationCoordinate2D!
+    var myLocation: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude:51.5072, longitude:-0.1275)    // default the location to london (to avoid crash)
     var timer = NSTimer() // game timer
     class var duration: Double {return 45.0} // Default duration of a game.
     var start_time: NSDate? // The actual time the game started for the client
