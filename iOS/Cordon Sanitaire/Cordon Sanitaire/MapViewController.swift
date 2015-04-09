@@ -27,7 +27,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     
     var patientZeroIndicator:CAShapeLayer!
     
-    var playerIcons = [String: MKAnnotation]()
+    var playerIcons = [String: PlayerAnnotation]()
     var activePlayerIcons = [String: MKAnnotation]()
     var passivePlayerIcons = [String: MKAnnotation]()
     var trappedPlayerIcons = [String: MKAnnotation]()
@@ -106,8 +106,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         
         // center on the users location, determined already
         // TODO: return the map to the users location
-        let location = CLLocationCoordinate2DMake(42.3601, -71.0589)
-        //let location = Game.singleton.myLocation
+//        let location = CLLocationCoordinate2DMake(42.3601, -71.0589)
+        let location = Game.singleton.myLocation
         
         // TODO: bring the players back to the map (currently the players array is empty)
         self.addPlayersToMap()
@@ -159,6 +159,49 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 
     }
     
+    func updatePlayers() {
+        for id:String in Game.singleton.players.keys {
+            var player = Game.singleton.players[id]!
+            self.updatePlayer(id, state: player.state)
+        }
+    }
+    
+    func updatePlayer(id: String, state: State){
+        playerIcons[id]?.changeState(state)
+        mapView(self.mapView, viewForAnnotation: playerIcons[id]!)
+        self.mapView.viewForAnnotation(playerIcons[id]!)
+    }
+    
+    func mapView(mapView: MKMapView!, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView! {
+        if !(annotation is PlayerAnnotation) {
+            return nil
+        }
+        
+        
+        let reuseId = "pin"
+        
+        var view = mapView.dequeueReusableAnnotationViewWithIdentifier(reuseId) as? PlayerAnnotationView
+        
+        if (view == nil){
+            view = PlayerAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
+        } else {
+            view!.annotation = annotation
+        }
+        
+        switch((annotation as PlayerAnnotation).state){
+        case State.Trapped:
+            view!.pinColor = MKPinAnnotationColor.Red
+        case State.Active:
+            view!.pinColor = MKPinAnnotationColor.Purple
+        case State.Passive:
+            view!.pinColor = MKPinAnnotationColor.Green
+        default:
+            NSLog("No color associated with this state")
+        }
+        
+        return view
+    }
+    
     func mapView(mapView: MKMapView!, regionDidChangeAnimated animated: Bool) {
         // if the region changes, let's bring us back to where we want to be
         
@@ -199,10 +242,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     
     func addPlayerToMap(location:CLLocationCoordinate2D, playerID:String) {
         // place a pin to show that we can place annotations
-        let annotation = MKPointAnnotation()
-        annotation.setCoordinate(location)
-        annotation.title = "Red Pin"
-        annotation.subtitle = "coolest location on the map"
+        let annotation = PlayerAnnotation(state: Game.singleton.players[playerID]!.state, coordinate: location)
         mapView.addAnnotation(annotation)
         
         // keey track of our players annotation
@@ -273,12 +313,12 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     }
     
     func zoomOut() {
-        
-        let centerOfGameBoard = CLLocationCoordinate2DMake(42.3601, -71.0589)
-        let span = MKCoordinateSpanMake(0.1, 0.1)
+//        
+//        let centerOfGameBoard = CLLocationCoordinate2DMake(42.3601, -71.0589)
+//        let span = MKCoordinateSpanMake(0.1, 0.1)
 
-//        let centerOfGameBoard = Game.singleton.getCenterOfGameMap()
-//        let span = Game.singleton.getWidthAndHeightOfGameMap()
+        let centerOfGameBoard = Game.singleton.getCenterOfGameMap()
+        let span = Game.singleton.getWidthAndHeightOfGameMap()
         let region = MKCoordinateRegion(center: centerOfGameBoard, span: span)
 
         // check to see if region is valid
@@ -368,7 +408,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
                 theButton.setTitle("RELEASE", forState: UIControlState.Normal)
                 theButton.backgroundColor = UIColor(netHex: cs_blue)
                 if(Client.singleton.id != nil) {
-                    Action.addToQuaratine(Client.singleton.id!)
+                    Action.join(Client.singleton.id!)
                 }
                 break;
             
@@ -377,7 +417,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
                 theButton.setTitle("JOIN", forState: UIControlState.Normal)
                 theButton.backgroundColor = UIColor(netHex: cs_yellow)
                 if(Client.singleton.id != nil) {
-                    Action.removeFromQuaratine(Client.singleton.id!)
+                    Action.release(Client.singleton.id!)
                 }
                 break;
             
@@ -393,9 +433,20 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         
         println("the button is actually pressed");
     }
+    func showJoinButton(){
+        theButton.setTitle("JOIN", forState: UIControlState.Normal)
+        theButton.backgroundColor = UIColor(netHex: cs_yellow)
+    }
+    
+    func showShoutButton(){
+        theButton.setTitle("SHOUT", forState: UIControlState.Normal)
+        theButton.backgroundColor = UIColor(netHex: cs_orange)
+    }
     
     func menuButtonPressed(sender: AnyObject) {
     }
+    
+
 
     /*
     // MARK: - Navigation

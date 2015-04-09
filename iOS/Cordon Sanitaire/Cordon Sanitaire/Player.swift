@@ -9,10 +9,10 @@
 import Foundation
 import MapKit
 
-enum State {
-    case Passive
-    case Active
-    case Trapped
+enum State : String, RawRepresentable {
+    case Passive = "Passive"
+    case Active = "Active"
+    case Trapped = "Trapped"
 }
 
 class Player {
@@ -33,6 +33,10 @@ class Player {
     
     func getCoords() -> CLLocationCoordinate2D {
         return CLLocationCoordinate2D(latitude: self.latitude, longitude: self.longitude)
+    }
+    
+    func isTrapped() -> Bool {
+        return self.state == State.Trapped
     }
 }
 

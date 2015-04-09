@@ -148,6 +148,8 @@
 		6BD04D821AAE67E5003AE167 /* main.js in Resources */ = {isa = PBXBuildFile; fileRef = 6BD04D7D1AAE67E5003AE167 /* main.js */; };
 		6BD04D831AAE67E5003AE167 /* global.json in Resources */ = {isa = PBXBuildFile; fileRef = 6BD04D7F1AAE67E5003AE167 /* global.json */; };
 		6BD04D841AAE67E5003AE167 /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = 6BD04D811AAE67E5003AE167 /* index.html */; };
+		6BE4B9F81AD5D54C00340E3C /* PlayerAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE4B9F71AD5D54C00340E3C /* PlayerAnnotation.swift */; };
+		6BE4B9FA1AD5D6A700340E3C /* PlayerAnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE4B9F91AD5D6A700340E3C /* PlayerAnnotationView.swift */; };
 		6BE938B81AA50FFC00AA2B20 /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE938B71AA50FFC00AA2B20 /* Game.swift */; };
 		6BE938BC1AA510B700AA2B20 /* Lobby.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE938BB1AA510B700AA2B20 /* Lobby.swift */; };
 		6BE938BE1AA5119100AA2B20 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE938BD1AA5119100AA2B20 /* Player.swift */; };
@@ -475,6 +477,8 @@
 		6BD04D7D1AAE67E5003AE167 /* main.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = main.js; sourceTree = "<group>"; };
 		6BD04D7F1AAE67E5003AE167 /* global.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = global.json; sourceTree = "<group>"; };
 		6BD04D811AAE67E5003AE167 /* index.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = index.html; sourceTree = "<group>"; };
+		6BE4B9F71AD5D54C00340E3C /* PlayerAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerAnnotation.swift; sourceTree = "<group>"; };
+		6BE4B9F91AD5D6A700340E3C /* PlayerAnnotationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerAnnotationView.swift; sourceTree = "<group>"; };
 		6BE938B71AA50FFC00AA2B20 /* Game.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
 		6BE938BB1AA510B700AA2B20 /* Lobby.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Lobby.swift; sourceTree = "<group>"; };
 		6BE938BD1AA5119100AA2B20 /* Player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
@@ -522,6 +526,8 @@
 			children = (
 				2BA5D3981AB2E55800F2567E /* IntroViewController.swift */,
 				2BA5D39A1AB2E56700F2567E /* MapViewController.swift */,
+				6BE4B9F71AD5D54C00340E3C /* PlayerAnnotation.swift */,
+				6BE4B9F91AD5D6A700340E3C /* PlayerAnnotationView.swift */,
 				2BE29BB31AB96B9000A29CCA /* LobbyViewController.swift */,
 				2BE29BB51AB96BB700A29CCA /* LobbyViewCell.swift */,
 				2BA5D39E1AB2E59F00F2567E /* HistoryViewController.swift */,
@@ -1207,12 +1213,14 @@
 				6B8C27AB1A97E51C0084EB96 /* PNChannelGroup.m in Sources */,
 				2BF0904D1AB7913100FD3985 /* QuarantineOverlay.swift in Sources */,
 				6B8C27CD1A97E51C0084EB96 /* PNChannelGroupsRequest.m in Sources */,
+				6BE4B9F81AD5D54C00340E3C /* PlayerAnnotation.swift in Sources */,
 				6B8C27851A97E51C0084EB96 /* PubNub+Messaging.m in Sources */,
 				2BE29BB61AB96BB700A29CCA /* LobbyViewCell.swift in Sources */,
 				6B8C278B1A97E51C0084EB96 /* PubNub+Time.m in Sources */,
 				6B8C27A61A97E51C0084EB96 /* PNAccessRightOptions.m in Sources */,
 				6B8C27E21A97E51C0084EB96 /* PNConnection.m in Sources */,
 				6B8C27C91A97E51C0084EB96 /* PNChangeAccessRightsRequest.m in Sources */,
+				6BE4B9FA1AD5D6A700340E3C /* PlayerAnnotationView.swift in Sources */,
 				6B8C27881A97E51C0084EB96 /* PubNub+PresenceEvents.m in Sources */,
 				6B8C27A11A97E51C0084EB96 /* PNPushNotificationsEnabledChannelsParser.m in Sources */,
 				6B8C27CE1A97E51C0084EB96 /* PNChannelsForGroupRequest.m in Sources */,

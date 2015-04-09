@@ -73,9 +73,12 @@ class Game: NSObject{
             if(obj.valueForKey("latitude") != nil && obj.valueForKey("longitude") != nil) {
                 var player = Player(id: obj.valueForKey("gkId") as String, latitude: obj.valueForKey("latitude") as CLLocationDegrees, longitude: obj.valueForKey("longitude") as CLLocationDegrees)
                 players[player.id] = player
+                if (player.id == Client.singleton.id){
+                    self.myPlayer = player
+                    self.myLocation = player.getCoords()
+                }
             }
         }
-        
         NSLog("The players in this game are: " + players.description)
     }
     
@@ -191,23 +194,52 @@ class Game: NSObject{
     
     func addPlayerToQuarantine(id: String){
         if (self.players[id] != nil) {
+            self.players[id]?.changeState(State.Active)
             self.quarantine.addPlayer(self.players[id]!)
+            
         }
         NSLog("Players in the quarantine: " + quarantine.quarantinePlayers.description)
-        self.updateQuarantine()
+        self.update()
     }
     
     func removePlayerFromQuarantine(id: String){
         if (self.players[id] != nil) {
+            self.players[id]?.changeState(State.Passive)
             self.quarantine.removePlayer(self.players[id]!)
         }
         NSLog("Players in the quarantine: " + quarantine.quarantinePlayers.description)
-        self.updateQuarantine()
+        self.update()
     }
     
     func updateQuarantine(){
         quarantine.updateQuarantineOrder()
         self.viewController?.updateQuarantine(quarantine.sortedQuarantineCoords)
+    }
+    
+    func updatePlayers(){
+        for id in self.players.keys {
+            var player = self.players[id]!
+            var point = CGPoint(x: player.latitude, y: player.longitude)
+            if (quarantine.path.containsPoint(point)){
+                self.players[id]!.changeState(State.Trapped)
+                if (id == myPlayer.id) {
+                    myPlayer.changeState(State.Trapped)
+                    self.viewController?.showShoutButton() // if my player got trapped, show the shout button in the view
+                }
+            } else if(player.isTrapped()) { // if player was trapped, but now is outside the quarantine, change its state to Passive
+                player.changeState(State.Passive)
+                if (id == myPlayer.id) {
+                    myPlayer.changeState(State.Passive)
+                    self.viewController?.showJoinButton() // if my player got untrapped, show the join button in the view
+                }
+            }
+        }
+        self.viewController?.updatePlayers()
+    }
+    
+    func update(){
+        self.updateQuarantine() // updates the quarantine
+        self.updatePlayers() // updates the state of people: wheter they are trapped or not
     }
     
 }

@@ -11,8 +11,8 @@ import Foundation
     
 enum Headers : String, RawRepresentable{
     case Shout = "Shout"
-    case AddToQuarantine = "AddToQuaratine"
-    case RemoveFromQuarantine = "RemoveFromQuarantine"
+    case Join = "Join"
+    case Release = "Release"
     case SubscribeToChannel = "SubscribeToChannel"
     case MalFormattedMessage = "MalFormattedMessage"
 }
@@ -28,12 +28,12 @@ class Action {
         PubNub.sendMessage(Headers.Shout.rawValue + " " + fromId, toChannel: Client.singleton.global_channel)
     }
     
-    class func addToQuaratine(fromId: String){
-        PubNub.sendMessage(Headers.AddToQuarantine.rawValue + " " + fromId, toChannel: Client.singleton.global_channel)
+    class func join(fromId: String){
+        PubNub.sendMessage(Headers.Join.rawValue + " " + fromId, toChannel: Client.singleton.global_channel)
     }
     
-    class func removeFromQuaratine(fromId: String){
-        PubNub.sendMessage(Headers.RemoveFromQuarantine.rawValue + " " + fromId, toChannel: Client.singleton.global_channel)
+    class func release(fromId: String){
+        PubNub.sendMessage(Headers.Release.rawValue + " " + fromId, toChannel: Client.singleton.global_channel)
     }
     
     class func parseMessage(message: String) -> Action{
