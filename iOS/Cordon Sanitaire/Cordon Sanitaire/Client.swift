@@ -33,7 +33,7 @@ class Client: NSObject, PNDelegate, CLLocationManagerDelegate {
     }
     
     override init(){
-        self.delegate = nil
+        self.delegate = nil // self.delegate = self (check if this is now broken, not sure what we want the delegate to be set to)
         super.init()
         
         PubNub.setDelegate(self.delegate)
