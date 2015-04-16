@@ -12,6 +12,7 @@ import MapKit
 class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate{
 
     var mapView: MKMapView!
+    var notificationsView: UIView!
 
     let locationManager = CLLocationManager()
     
@@ -39,6 +40,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         
         // setup functions for GUI
         addMap()
+        addNotificationsView()
         addTimer()
         addButton()
         addStatus()
@@ -156,6 +158,14 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 
     }
     
+    // notifications for actions in the Game
+    func addNotificationsView() {
+        notificationsView = UIView(frame: CGRectMake(0, 0, self.view.frame.width, 60.0))
+        notificationsView.backgroundColor = UIColor(netHex: cs_blue)
+        notificationsView.alpha = 0.9
+        //self.view.addSubview(notificationsView)
+    }
+    
     func mapView(mapView: MKMapView!, regionDidChangeAnimated animated: Bool) {
         // if the region changes, let's bring us back to where we want to be
         
@@ -197,7 +207,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     func addPlayerToMap(location:CLLocationCoordinate2D, playerID:String) {
         // place a pin to show that we can place annotations
         let annotation = MKPointAnnotation()
-        annotation.setCoordinate(location)
+        annotation.coordinate = location
         annotation.title = "Red Pin"
         annotation.subtitle = "coolest location on the map"
         mapView.addAnnotation(annotation)
@@ -293,28 +303,11 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
             timerTextView.text = "00:00.00"
         }
         else {
-            timerTextView.text = NSString(format: "00:%@%.2f", (timeLeft < 10.0) ? "0" : "", timeLeft)
+            timerTextView.text = NSString(format: "00:%@%.2f", (timeLeft < 10.0) ? "0" : "", timeLeft) as String
             
             //animateQuarantine()
             
         }
-    }
-
-    func animateQuarantine() {
-        // test animating the overlay
-        var a :MKAnnotation = activePlayerIcons["location 3"]!
-        a.setCoordinate!(CLLocationCoordinate2D(latitude: a.coordinate.latitude + 0.00002, longitude: a.coordinate.longitude))
-        activePlayerIcons["location 3"] = a
-        
-        var coords = [CLLocationCoordinate2D]()
-        for player in activePlayerIcons {
-            coords.append(player.1.coordinate)
-        }
-        var polyLine:MKPolygon = MKPolygon(coordinates: &coords, count: coords.count)
-        self.mapView.addOverlay(polyLine)
-        self.mapView.removeOverlay(quarantinePolygon)
-        
-        quarantinePolygon = polyLine
     }
 
     override func didReceiveMemoryWarning() {
@@ -324,7 +317,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     
     
     func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [AnyObject]!) {
-        let location = locations.last as CLLocation
+        let location = locations.last as! CLLocation
         
         let center = CLLocationCoordinate2D(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
         let region = MKCoordinateRegion(center: center, span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
@@ -343,6 +336,9 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
                 println("JOIN")
                 theButton.setTitle("RELEASE", forState: UIControlState.Normal)
                 theButton.backgroundColor = UIColor(netHex: cs_blue)
+//                UIView.animateWithDuration(duration:.5 animation
+//                    
+//                }
                 if(Client.singleton.id != nil) {
                     Action.addToQuaratine(Client.singleton.id!)
                 }

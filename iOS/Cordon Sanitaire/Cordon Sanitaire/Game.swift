@@ -71,7 +71,7 @@ class Game: NSObject{
         for obj in objects {
             NSLog(obj.description)
             if(obj.valueForKey("latitude") != nil && obj.valueForKey("longitude") != nil) {
-                var player = Player(id: obj.valueForKey("gkId") as String, latitude: obj.valueForKey("latitude") as CLLocationDegrees, longitude: obj.valueForKey("longitude") as CLLocationDegrees)
+                var player = Player(id: obj.valueForKey("gkId") as! String, latitude: obj.valueForKey("latitude") as! CLLocationDegrees, longitude: obj.valueForKey("longitude") as! CLLocationDegrees)
                 players[player.id] = player
             }
         }
@@ -87,7 +87,7 @@ class Game: NSObject{
         var game = query.getFirstObject()
         var startTime: AnyObject? = game.valueForKey("startTime")
         NSLog("Game time is " + startTime!.description)
-        return startTime as NSDate
+        return startTime as! NSDate
     }
     
     // Get center of players in the game
