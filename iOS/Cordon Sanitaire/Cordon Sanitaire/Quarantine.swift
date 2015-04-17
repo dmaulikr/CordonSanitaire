@@ -14,10 +14,12 @@ class Quarantine: NSObject {
     var quarantinePlayers:[String: Player]
     var center:CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: 0, longitude: 0)
     var sortedQuarantineCoords:[CLLocationCoordinate2D]
+    var path:UIBezierPath
     
     init(players: Player...){
         self.quarantinePlayers = [:]
         self.sortedQuarantineCoords = []
+        self.path = UIBezierPath()
     }
     
     // when a player joins the quarantine, add them to the quarantine players
@@ -89,16 +91,23 @@ class Quarantine: NSObject {
         sortedQuarantineCoords = []
         var player_ids = quarantinePlayers.keys.array
         var lastPlayer:String;
+        self.path = UIBezierPath()
         
         if (quarantinePlayers.count != 0){
             lastPlayer = player_ids.first!
+            var coords = CGPoint(x: quarantinePlayers[lastPlayer]!.latitude, y: quarantinePlayers[lastPlayer]!.longitude)
             sortedQuarantineCoords.append(quarantinePlayers[lastPlayer]!.getCoords());
+            self.path.moveToPoint(coords)
             for (var i = 0; i < quarantinePlayers.count - 1; i++) {
                 var nextPlayer = getNextPlayerCounterClockwise(lastPlayer);
+                coords = CGPoint(x: quarantinePlayers[nextPlayer]!.latitude, y: quarantinePlayers[nextPlayer]!.longitude)
                 sortedQuarantineCoords.append(quarantinePlayers[nextPlayer]!.getCoords());
+                self.path.moveToPoint(coords)
                 lastPlayer = nextPlayer;
             }
         }
+        
+        self.path.closePath()
     }
     
     private func getNextPlayerCounterClockwise (id: String) -> String {

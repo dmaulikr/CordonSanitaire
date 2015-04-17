@@ -59,7 +59,6 @@ class Client: NSObject, PNDelegate, CLLocationManagerDelegate {
         PubNub.subscribeOn([self.private_channel], withCompletionHandlingBlock: {(state: PNSubscriptionProcessState, object: [AnyObject]!, error: PNError!) -> Void in
             if (error == nil){
                 self.tellCloudCodeAboutMe()
-                NSLog(self.id!)
                 NSLog("Successfuly subscribed to private channel")
             }
             else{
@@ -157,11 +156,11 @@ class Client: NSObject, PNDelegate, CLLocationManagerDelegate {
         case Headers.Shout:
             NSLog("Received " + action.header.rawValue + " from " + action.id)
             break
-        case Headers.AddToQuarantine:
+        case Headers.Join:
             NSLog(action.id + " " + action.header.rawValue)
             Game.singleton.addPlayerToQuarantine(action.id)
             break
-        case Headers.RemoveFromQuarantine:
+        case Headers.Release:
             NSLog(action.id + " " + action.header.rawValue)
             Game.singleton.removePlayerFromQuarantine(action.id)
             break
