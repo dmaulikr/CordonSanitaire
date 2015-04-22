@@ -90,20 +90,20 @@ class Quarantine: NSObject {
     func updateQuarantineOrder() {
         sortedQuarantineCoords = []
         var player_ids = quarantinePlayers.keys.array
-        var lastPlayer:String;
+        var lastPlayer:String
         self.path = UIBezierPath()
         
         if (quarantinePlayers.count != 0){
             lastPlayer = player_ids.first!
             var coords = CGPoint(x: quarantinePlayers[lastPlayer]!.latitude, y: quarantinePlayers[lastPlayer]!.longitude)
-            sortedQuarantineCoords.append(quarantinePlayers[lastPlayer]!.getCoords());
+            sortedQuarantineCoords.append(quarantinePlayers[lastPlayer]!.getCoords())
             self.path.moveToPoint(coords)
             for (var i = 0; i < quarantinePlayers.count - 1; i++) {
-                var nextPlayer = getNextPlayerCounterClockwise(lastPlayer);
+                var nextPlayer = getNextPlayerCounterClockwise(lastPlayer)
                 coords = CGPoint(x: quarantinePlayers[nextPlayer]!.latitude, y: quarantinePlayers[nextPlayer]!.longitude)
-                sortedQuarantineCoords.append(quarantinePlayers[nextPlayer]!.getCoords());
+                sortedQuarantineCoords.append(quarantinePlayers[nextPlayer]!.getCoords())
                 self.path.moveToPoint(coords)
-                lastPlayer = nextPlayer;
+                lastPlayer = nextPlayer
             }
         }
         
@@ -111,31 +111,30 @@ class Quarantine: NSObject {
     }
     
     private func getNextPlayerCounterClockwise (id: String) -> String {
-        var min = 2 * M_PI; // max angle
-        var index = 0;
+        var min = 2 * M_PI // max angle
         var player = quarantinePlayers[id]
         var center = getCenterOfQuarantine()
-        var start_theta = atan((player!.latitude - center.latitude)/(player!.longitude - center.longitude));
-        var next_player: Player?;
+        var start_theta = atan((player!.latitude - center.latitude)/(player!.longitude - center.longitude))
+        var next_player: Player?
         
         for other_player in quarantinePlayers.values.array {
             if (other_player.id == player!.id){
-                continue;
+                continue
             }
             
-            var next_theta = atan((other_player.latitude - center.latitude)/(other_player.longitude - center.longitude));
-            var diff = next_theta - start_theta;
+            var next_theta = atan((other_player.latitude - center.latitude)/(other_player.longitude - center.longitude))
+            var diff = next_theta - start_theta
             
             if (diff < 0){
-                diff += 2 * M_PI;
+                diff += 2 * M_PI
             }
             
             if (diff < min) {
                 next_player = other_player
-                min = diff;
+                min = diff
             }
         }
         
-        return next_player!.id;
+        return next_player!.id
     }
 }
