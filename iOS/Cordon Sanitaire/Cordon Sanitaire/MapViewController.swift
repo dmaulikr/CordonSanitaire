@@ -169,9 +169,14 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     }
     
     func updatePlayer(id: String, state: State){
-        playerIcons[id]?.changeState(state)
-        var pinView = self.mapView.viewForAnnotation(playerIcons[id]) as! PlayerAnnotationView
-        pinView.pinColor = getColor(state)
+        if( playerIcons[id] != nil ) {
+            playerIcons[id]?.changeState(state)
+            var pinView = self.mapView.viewForAnnotation(playerIcons[id]) as! PlayerAnnotationView
+            pinView.pinColor = getColor(state)
+        }
+        else {
+            println("Received message from player that we don't think exists!")
+        }
 
     }
     
