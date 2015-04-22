@@ -141,10 +141,12 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         //  https://github.com/stamen/toner-carto
         //  https://github.com/Citytracking/toner
         //  http://content.stamen.com/dotspotting_toner_cartography_available_for_download
-        let template = "http://tile.stamen.com/toner/{z}/{x}/{y}.jpg"
-        let overlay = MKTileOverlay(URLTemplate: template)
-        overlay.canReplaceMapContent = true
-        self.mapView.addOverlay(overlay, level: MKOverlayLevel.AboveLabels)
+
+        // Add tile overlays here
+//        let template = "http://tile.stamen.com/toner/{z}/{x}/{y}.jpg"
+//        let overlay = MKTileOverlay(URLTemplate: template)
+//        overlay.canReplaceMapContent = true
+//        self.mapView.addOverlay(overlay, level: MKOverlayLevel.AboveLabels)
     }
     
     func addPlayersToMap() {
