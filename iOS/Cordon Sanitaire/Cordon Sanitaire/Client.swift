@@ -21,7 +21,6 @@ class Client: NSObject, PNDelegate, CLLocationManagerDelegate {
         subscribeKey: "sub-c-37e7ca9a-54e6-11e4-a7f8-02ee2ddab7fe",
         secretKey: "sec-c-MTMwNmJiYTYtM2JhMC00NTQ5lThmM2UtNjhmNjJiYmJkNjlm")
     
-    let delegate:PNDelegate!
     let location_manager = CLLocationManager()
     
     
@@ -34,11 +33,9 @@ class Client: NSObject, PNDelegate, CLLocationManagerDelegate {
     
     override init(){
         
-        self.delegate = nil // Check on this...
-        
         super.init()
         
-        PubNub.setDelegate(self.delegate)
+        PubNub.setDelegate(self)
         PubNub.setConfiguration(self.config)
         PubNub.connect()
         
