@@ -38,5 +38,13 @@ class Player {
     func isTrapped() -> Bool {
         return self.state == State.Trapped
     }
+    
+    func isActive() -> Bool {
+        return self.state == State.Active
+    }
+    
+    func isPassive() -> Bool {
+        return self.state == State.Passive
+    }
 }
 
