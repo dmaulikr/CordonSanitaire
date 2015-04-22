@@ -32,7 +32,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     var passivePlayerIcons = [String: MKAnnotation]()
     var trappedPlayerIcons = [String: MKAnnotation]()
     
+    // Polygon handles 3+ coordinates
+    // Polyline handles line between 2 coordinates
     var quarantinePolygon:MKPolygon = MKPolygon()
+    var quarantinePolyline:MKPolyline = MKPolyline()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -140,9 +143,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         let overlay = MKTileOverlay(URLTemplate: template)
         overlay.canReplaceMapContent = true
         self.mapView.addOverlay(overlay, level: MKOverlayLevel.AboveLabels)
-        
-        // add the quarantine
-        addQuarantineToMap()
     }
     
     func addPlayersToMap() {
@@ -250,34 +250,38 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         activePlayerIcons[playerID] = annotation
     }
     
-    func addQuarantineToMap() {
-        
-        var coords = [CLLocationCoordinate2D]()
-        
-        for player in activePlayerIcons {
-
-            coords.append(player.1.coordinate)
-        }
-        
-        quarantinePolygon = MKPolygon(coordinates: &coords, count: coords.count)
-        mapView.addOverlay(quarantinePolygon)
-    }
-    
     // receive array of coordinates and update polygon of quarantine
     func updateQuarantine(quarantine:[CLLocationCoordinate2D]) {
-      
-        var coords = [CLLocationCoordinate2D]()
-        for player in quarantine {
-            coords.append(player)
+        
+        if( quarantine.count < 2 ){
+            // no quarantine to draw
+            self.mapView.removeOverlay(quarantinePolygon)
+            self.mapView.removeOverlay(quarantinePolyline)
         }
-        
-        let polyLine:MKPolygon = MKPolygon(coordinates: &coords, count: coords.count)
-        
-        self.mapView.addOverlay(polyLine)
-        
-        self.mapView.removeOverlay(quarantinePolygon)
-        
-        quarantinePolygon = polyLine
+        else if( quarantine.count == 2){
+            // just a line to draw, getting closer
+            var coords = [CLLocationCoordinate2D]()
+            for player in quarantine {
+                coords.append(player)
+            }
+            let polyLine:MKPolyline = MKPolyline(coordinates: &coords, count: coords.count)
+            self.mapView.addOverlay(polyLine)
+            self.mapView.removeOverlay(quarantinePolygon)
+            self.mapView.removeOverlay(quarantinePolyline)
+            quarantinePolyline = polyLine
+        }
+        else {
+            // Houston, we have a quarantine! Let's draw it :)
+            var coords = [CLLocationCoordinate2D]()
+            for player in quarantine {
+                coords.append(player)
+            }
+            let polygon:MKPolygon = MKPolygon(coordinates: &coords, count: coords.count)
+            self.mapView.addOverlay(polygon)
+            self.mapView.removeOverlay(quarantinePolygon)
+            self.mapView.removeOverlay(quarantinePolyline)
+            quarantinePolygon = polygon
+        }
     }
     
     func mapView(mapView: MKMapView!, viewForOverlay overlay: MKOverlay!) -> MKOverlayView! {
@@ -297,8 +301,17 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 
             v = MKPolygonRenderer(polygon: overlay)
             v.fillColor = UIColor(hue: 0, saturation: 0, brightness: 0, alpha: 0.3)
-            v.strokeColor = UIColor(hue: 0, saturation: 0, brightness: 0, alpha: 0.9)
+            v.strokeColor = UIColor(hue: 0, saturation: 1.0, brightness: 1.0, alpha: 0.9)
             v.lineWidth = 4
+        }
+        else if let overlay = overlay as? MKPolyline {
+            
+            var line : MKPolylineRenderer! = nil
+            line = MKPolylineRenderer(polyline: overlay)
+            line.strokeColor = UIColor(hue: 0.5, saturation: 1.0, brightness: 1.0, alpha: 0.9)
+            line.lineWidth = 4
+            
+            return line
         }
         else if let overlay = overlay as? MKTileOverlay {
             
