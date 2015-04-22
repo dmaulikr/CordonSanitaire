@@ -12,7 +12,7 @@ import GameKit
 
 class Client: NSObject, PNDelegate, CLLocationManagerDelegate {
     
-    let global_channel = PNChannel.channelWithName("ios_development", shouldObservePresence: false) as PNChannel // Global channel
+    let global_channel = PNChannel.channelWithName("ios_development", shouldObservePresence: false) as! PNChannel // Global channel
     var private_channel: PNChannel!
     var group_channel: PNChannel!
 
@@ -33,9 +33,10 @@ class Client: NSObject, PNDelegate, CLLocationManagerDelegate {
     }
     
     override init(){
-        super.init()
         
-        self.delegate = self
+        self.delegate = nil // Check on this...
+        
+        super.init()
         
         PubNub.setDelegate(self.delegate)
         PubNub.setConfiguration(self.config)
@@ -54,7 +55,7 @@ class Client: NSObject, PNDelegate, CLLocationManagerDelegate {
         NSLog(self.id!)
         
         // creates and subscribes to a private channel
-        self.private_channel = PNChannel.channelWithName(self.username, shouldObservePresence: false) as PNChannel
+        self.private_channel = PNChannel.channelWithName(self.username, shouldObservePresence: false) as! PNChannel
         NSLog(self.private_channel.description)
         PubNub.subscribeOn([self.private_channel], withCompletionHandlingBlock: {(state: PNSubscriptionProcessState, object: [AnyObject]!, error: PNError!) -> Void in
             if (error == nil){
@@ -80,7 +81,7 @@ class Client: NSObject, PNDelegate, CLLocationManagerDelegate {
                 myParseUser["gkId"] = self.id
                 myParseUser["role"] = "citizen"
                 
-                myParseUser.saveInBackgroundWithBlock({(success: Bool!, error: NSError!) -> Void in
+                myParseUser.saveInBackgroundWithBlock({(success: Bool, error: NSError!) -> Void in
                     if (!success){
                         NSLog("Failed to create user on Parse")
                     }
@@ -89,7 +90,7 @@ class Client: NSObject, PNDelegate, CLLocationManagerDelegate {
             } else { // if SimpleUser already exists, just updates username and presence status
                 user["username"] = self.username
                 user["present"] = true
-                user.saveInBackgroundWithBlock({(success: Bool!, error: NSError!) -> Void in
+                user.saveInBackgroundWithBlock({(success: Bool, error: NSError!) -> Void in
                     if (!success){
                         NSLog("Failed to update user on Parse")
                     }
@@ -113,7 +114,7 @@ class Client: NSObject, PNDelegate, CLLocationManagerDelegate {
         if (self.group_channel != nil){
             PubNub.unsubscribeFrom([self.group_channel])
         }
-        self.group_channel = PNChannel.channelWithName(channel_name, shouldObservePresence: true) as PNChannel
+        self.group_channel = PNChannel.channelWithName(channel_name, shouldObservePresence: true) as! PNChannel
         PubNub.subscribeOn([self.group_channel])
         PubNub.requestParticipantsListFor([self.group_channel])
 //        Lobby.singleton.addPlayers(players as [String])
@@ -129,7 +130,7 @@ class Client: NSObject, PNDelegate, CLLocationManagerDelegate {
     
     
     func pubnubClient(client: PubNub!, didReceiveParticipants presenceInformation: PNHereNow!, forObjects channelObjects: [AnyObject]!){
-        var clients = presenceInformation.participantsForChannel(self.group_channel) as [PNClient]
+        var clients = presenceInformation.participantsForChannel(self.group_channel) as! [PNClient]
         var players = clients.map({ ($0).identifier })
         Lobby.singleton.addPlayers(players)
         
@@ -210,7 +211,7 @@ class Client: NSObject, PNDelegate, CLLocationManagerDelegate {
             
             if (myParseUser != nil){
                 myParseUser.setValuesForKeysWithDictionary(["latitude": newLocation.coordinate.latitude, "longitude": newLocation.coordinate.longitude])
-                myParseUser.saveInBackgroundWithBlock({(success: Bool!, error: NSError!) -> Void in
+                myParseUser.saveInBackgroundWithBlock({(success: Bool, error: NSError!) -> Void in
                     if (!success){
                         NSLog("Failed to update user's location on Parse")
                     } else {

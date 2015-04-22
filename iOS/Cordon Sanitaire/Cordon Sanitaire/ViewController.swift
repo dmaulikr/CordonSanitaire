@@ -19,7 +19,7 @@ class ViewController: UIViewController, GameDelegate {
         self.view.backgroundColor = UIColor.blackColor()
         
         // add buttons
-        let playButton   = UIButton.buttonWithType(UIButtonType.System) as UIButton
+        let playButton   = UIButton.buttonWithType(UIButtonType.System) as! UIButton
         
         playButton.frame = CGRectMake(0, 0, 300, 50)
         playButton.center = self.view.center
@@ -29,7 +29,7 @@ class ViewController: UIViewController, GameDelegate {
         playButton.addTarget(self, action: "onButtonPress:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(playButton)
         
-        let introButton   = UIButton.buttonWithType(UIButtonType.System) as UIButton
+        let introButton   = UIButton.buttonWithType(UIButtonType.System) as! UIButton
         
         introButton.frame = CGRectMake(0, 0, 300, 50)
         introButton.center = CGPointMake(self.view.center.x, self.view.center.y + 75)

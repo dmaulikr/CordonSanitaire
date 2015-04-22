@@ -188,7 +188,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
             view!.annotation = annotation
         }
         
-        switch((annotation as PlayerAnnotation).state){
+        switch((annotation as! PlayerAnnotation).state){
         case State.Trapped:
             view!.pinColor = MKPinAnnotationColor.Red
         case State.Active:
@@ -357,28 +357,11 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
             timerTextView.text = "00:00.00"
         }
         else {
-            timerTextView.text = NSString(format: "00:%.2f",  timeLeft)
+            timerTextView.text = NSString(format: "00:%.2f",  timeLeft) as String
             
             //animateQuarantine()
             
         }
-    }
-
-    func animateQuarantine() {
-        // test animating the overlay
-        var a :MKAnnotation = activePlayerIcons["location 3"]!
-        a.setCoordinate!(CLLocationCoordinate2D(latitude: a.coordinate.latitude + 0.00002, longitude: a.coordinate.longitude))
-        activePlayerIcons["location 3"] = a
-        
-        var coords = [CLLocationCoordinate2D]()
-        for player in activePlayerIcons {
-            coords.append(player.1.coordinate)
-        }
-        var polyLine:MKPolygon = MKPolygon(coordinates: &coords, count: coords.count)
-        self.mapView.addOverlay(polyLine)
-        self.mapView.removeOverlay(quarantinePolygon)
-        
-        quarantinePolygon = polyLine
     }
 
     override func didReceiveMemoryWarning() {
@@ -388,7 +371,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     
     
     func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [AnyObject]!) {
-        let location = locations.last as CLLocation
+        let location = locations.last as! CLLocation
         
         let center = CLLocationCoordinate2D(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
         let region = MKCoordinateRegion(center: center, span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
