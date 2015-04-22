@@ -168,7 +168,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     
     func updatePlayer(id: String, state: State){
         playerIcons[id]?.changeState(state)
-        var pinView = self.mapView.viewForAnnotation(playerIcons[id]!) as! PlayerAnnotationView
+        var pinView = self.mapView.viewForAnnotation(playerIcons[id]) as! PlayerAnnotationView
         pinView.pinColor = getColor(state)
 
     }
