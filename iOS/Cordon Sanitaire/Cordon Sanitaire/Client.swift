@@ -32,7 +32,7 @@ class Client: NSObject, PNDelegate, CLLocationManagerDelegate {
     }
     
     override init(){
-        
+
         super.init()
         
         PubNub.setDelegate(self)

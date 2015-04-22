@@ -12,6 +12,7 @@ import MapKit
 class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate{
 
     var mapView: MKMapView!
+    var notificationsView: UIView!
 
     let locationManager = CLLocationManager()
     
@@ -42,6 +43,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         
         // setup functions for GUI
         addMap()
+        addNotificationsView()
         addTimer()
         addButton()
         addStatus()
@@ -103,13 +105,13 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         locationManager.delegate = self
         // must request authorization to use location
         locationManager.requestWhenInUseAuthorization()
+        //locationManager.requestAlwaysAuthorization()    // Not sure if this is necessary, really only need location when in app
         
         // will cause map to zoom nicely to user location
         mapView.userTrackingMode = .Follow
         
         // center on the users location, determined already
         // TODO: return the map to the users location
-//        let location = CLLocationCoordinate2DMake(42.3601, -71.0589)
         let location = Game.singleton.myLocation
         
         // TODO: bring the players back to the map (currently the players array is empty)
@@ -219,6 +221,14 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         
         return view
     }
+
+    // notifications for actions in the Game
+    func addNotificationsView() {
+        notificationsView = UIView(frame: CGRectMake(0, 0, self.view.frame.width, 60.0))
+        notificationsView.backgroundColor = UIColor(netHex: cs_blue)
+        notificationsView.alpha = 0.9
+        //self.view.addSubview(notificationsView)
+    }
     
     func mapView(mapView: MKMapView!, regionDidChangeAnimated animated: Bool) {
         // if the region changes, let's bring us back to where we want to be
@@ -270,7 +280,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     
     // receive array of coordinates and update polygon of quarantine
     func updateQuarantine(quarantine:[CLLocationCoordinate2D]) {
-        
+
         if( quarantine.count < 2 ){
             // no quarantine to draw
             self.mapView.removeOverlay(quarantinePolygon)
@@ -344,9 +354,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     }
     
     func zoomOut() {
-//        
-//        let centerOfGameBoard = CLLocationCoordinate2DMake(42.3601, -71.0589)
-//        let span = MKCoordinateSpanMake(0.1, 0.1)
 
         let centerOfGameBoard = Game.singleton.getCenterOfGameMap()
         let span = Game.singleton.getWidthAndHeightOfGameMap()
@@ -388,10 +395,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
             timerTextView.text = "00:00.00"
         }
         else {
-            timerTextView.text = NSString(format: "00:%.2f",  timeLeft) as String
-            
-            //animateQuarantine()
-            
+            timerTextView.text = NSString(format: "00:%@%.2f", (timeLeft < 10.0) ? "0" : "", timeLeft) as String            
         }
     }
 
@@ -421,6 +425,9 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
                 println("JOIN")
                 theButton.setTitle("RELEASE", forState: UIControlState.Normal)
                 theButton.backgroundColor = UIColor(netHex: cs_blue)
+//                UIView.animateWithDuration(duration:.5 animation
+//                    
+//                }
                 if(Client.singleton.id != nil) {
                     Action.join(Client.singleton.id!)
                 }
