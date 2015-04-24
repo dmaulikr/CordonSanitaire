@@ -17,9 +17,12 @@ class Lobby: NSObject{
     
     var players: [String!] = [];
     var countdown_timer = NSTimer();
+    var viewController: LobbyViewController!
     
     override init(){
         super.init()
+        // creates a view controller for the Lobby
+        self.viewController = LobbyViewController()
         
         // get the start time from parse
         var startTime = Game.getStartTime()
