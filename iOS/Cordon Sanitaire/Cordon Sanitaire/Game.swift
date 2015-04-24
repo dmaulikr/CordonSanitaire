@@ -36,10 +36,10 @@ class Game: NSObject{
     // Start the game
     // seconds      -> how many seconds in the game we are in
     // players_ids -> an array of the ids of the users in this game
-    func start(seconds: Double, players_ids: [String!]){
+    func start(seconds: Double, players_usernames: [String!]){
         NSLog("Game is going to start")
         
-        getPlayers(players_ids)
+        getPlayers(players_usernames)
         
         self.timer = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: Selector("updateTimer"), userInfo: nil, repeats: true)
         self.start_time = NSDate().dateByAddingTimeInterval(-seconds)
@@ -63,11 +63,11 @@ class Game: NSObject{
     
     
     // Queries PubNub for the players in the game channel group
-    private func getPlayers(players_ids: [String!]){
+    private func getPlayers(players_usernames: [String!]){
         var userQuery = PFQuery(className: "SimpleUser")
-        userQuery.whereKey("gkId", containedIn: players_ids)
+        userQuery.whereKey("username", containedIn: players_usernames)
         var objects = userQuery.findObjects()
-        NSLog(players_ids.description)
+        NSLog(players_usernames.description)
         for obj in objects {
             NSLog(obj.description)
             if(obj.valueForKey("latitude") != nil && obj.valueForKey("longitude") != nil) {

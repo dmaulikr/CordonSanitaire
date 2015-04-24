@@ -69,11 +69,11 @@ class Lobby: NSObject{
     }
     
     func startGame(){
-        Game.singleton.start(0, players_ids: players)
+        Game.singleton.start(0, players_usernames: players)
     }
     
     func startGameAfter(seconds: Double){
-        Game.singleton.start(seconds, players_ids: players)
+        Game.singleton.start(seconds, players_usernames: players)
     }
     
 

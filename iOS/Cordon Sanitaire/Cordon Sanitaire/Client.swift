@@ -48,7 +48,7 @@ class Client: NSObject, PNDelegate, CLLocationManagerDelegate {
     func login(gkPlayer: GKLocalPlayer!){
         self.username = gkPlayer.alias         // set Client username to be the Game Center alias
         self.id = gkPlayer.playerID            // sets Client Id to be the Game Center Id
-        PubNub.setClientIdentifier(self.id)    // sets the Client's PubNub Id to be the GameCenter Id
+        PubNub.setClientIdentifier(self.username)    // sets the Client's PubNub Id to be the GameCenter Id
         NSLog(self.id!)
         
         // creates and subscribes to a private channel
