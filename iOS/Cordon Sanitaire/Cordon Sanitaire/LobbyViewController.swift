@@ -45,12 +45,10 @@ class LobbyViewController: UITableViewController, UITableViewDataSource, UITable
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete method implementation.
         // Return the number of rows in the section.
-        NSLog("LobbyVC: Im here! Uhul " + Lobby.singleton.players.count.description)
         return Lobby.singleton.players.count
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        NSLog("LobbyVC: Im here!")
         var cell = self.tableView.dequeueReusableCellWithIdentifier("cell") as! LobbyViewCell?
         
         if (cell == nil){
