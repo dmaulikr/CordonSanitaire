@@ -8,10 +8,19 @@
 
 import UIKit
 
-class LobbyViewController: UITableViewController {
+class LobbyViewController: UITableViewController, UITableViewDataSource, UITableViewDelegate {
 
+    var lobbyView: UITableView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.lobbyView = UITableView()
+
+        self.lobbyView.registerClass(LobbyViewCell.self, forCellReuseIdentifier: "cell")
+        
+        self.lobbyView.delegate = self
+        self.lobbyView.dataSource = self
 
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -30,25 +39,28 @@ class LobbyViewController: UITableViewController {
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         // #warning Potentially incomplete method implementation.
         // Return the number of sections.
-        return 0
+        return 1
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete method implementation.
         // Return the number of rows in the section.
-        return 0
+        return Lobby.singleton.players.count
     }
 
-    /*
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("reuseIdentifier", forIndexPath: indexPath) as UITableViewCell
-
-        // Configure the cell...
-
-        return cell
+        var cell = self.tableView.dequeueReusableCellWithIdentifier("cell") as! LobbyViewCell?
+        
+        if (cell == nil){
+            cell = LobbyViewCell()
+        }
+        
+        cell!.textLabel?.text = Lobby.singleton.players[indexPath.row]
+        
+        return cell!
+        
     }
-    */
-
+    
     /*
     // Override to support conditional editing of the table view.
     override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
