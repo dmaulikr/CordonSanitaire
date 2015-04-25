@@ -169,36 +169,37 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
             self.updatePlayer(id, state: player.state)
         }
     }
-    
+
+    // updates the annotations
     func updatePlayer(id: String, state: State){
         if( playerIcons[id] != nil ) {
             playerIcons[id]?.changeState(state)
-            var pinView = self.mapView.viewForAnnotation(playerIcons[id]) as! PlayerAnnotationView
-            pinView.pinColor = getColor(state)
+            var annotation = self.mapView.viewForAnnotation(playerIcons[id]) as! PlayerAnnotationView
+            annotation.setCustomMarkerColor(getMarkerColor(state))
         }
         else {
             println("Received message from player that we don't think exists!")
         }
 
     }
-    
-    func getColor(state: State) -> MKPinAnnotationColor {
-        var color = MKPinAnnotationColor.Red
+
+    func getMarkerColor(state: State) -> UIColor {
+        var color = UIColor.blackColor()
         switch(state){
         case State.Trapped:
-            color = MKPinAnnotationColor.Red
+            color = UIColor(netHex: cs_orange)
         case State.Active:
-            color = MKPinAnnotationColor.Purple
+            color = UIColor(netHex: cs_yellow)
         case State.Passive:
-            color = MKPinAnnotationColor.Green
+            color = UIColor(netHex: cs_blue)
         default:
             NSLog("No color associated with this state")
         }
         
         return color
-        
     }
     
+    // creates our initial annotations
     func mapView(mapView: MKMapView!, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView! {
         if !(annotation is PlayerAnnotation) {
             return nil
@@ -215,13 +216,15 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
             view!.annotation = annotation
         }
         
+        view!.image = UIImage(contentsOfFile: "blank")
+        
         switch((annotation as! PlayerAnnotation).state){
         case State.Trapped:
-            view!.pinColor = MKPinAnnotationColor.Red
+            view!.setCustomMarkerColor(UIColor(netHex: cs_orange))
         case State.Active:
-            view!.pinColor = MKPinAnnotationColor.Purple
+            view!.setCustomMarkerColor(UIColor(netHex: cs_yellow))
         case State.Passive:
-            view!.pinColor = MKPinAnnotationColor.Green
+            view!.setCustomMarkerColor(UIColor(netHex: cs_blue))
         default:
             NSLog("No color associated with this state")
         }
