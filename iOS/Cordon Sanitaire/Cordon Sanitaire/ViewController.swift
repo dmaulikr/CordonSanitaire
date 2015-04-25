@@ -47,6 +47,7 @@ class ViewController: UIViewController, GameDelegate {
     
     // listen to the game for when to start
     func startGame() {
+        self.dismissViewControllerAnimated(true, completion: nil)
         self.presentViewController(Game.singleton.viewController, animated: true, completion: nil)
     }
     
