@@ -47,7 +47,7 @@ class ViewController: UIViewController, GameDelegate {
     
     // listen to the game for when to start
     func startGame() {
-        createMapView()
+        self.presentViewController(Game.singleton.viewController, animated: true, completion: nil)
     }
     
     // handle the button presses (open the map view, or open the intro view)
@@ -67,12 +67,6 @@ class ViewController: UIViewController, GameDelegate {
         }
     }
     
-    // create an instance of the map view for the game and animate to display it
-    func createMapView() {
-        // display the map view
-        let mapViewController:MapViewController = MapViewController()
-        self.presentViewController(mapViewController, animated: true, completion: nil)
-    }
     
     //
     override func didReceiveMemoryWarning() {

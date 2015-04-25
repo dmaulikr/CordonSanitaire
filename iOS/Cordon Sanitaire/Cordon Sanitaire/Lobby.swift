@@ -34,7 +34,6 @@ class Lobby: NSObject{
                 var currentTime = Double(timetoken)/1e7 // convert timetoken to seconds from the epoch
                 var startTimeToken = startTime.timeIntervalSince1970 // convert start time to seconds from the epoch
                 var secondsUntilStart = startTimeToken - currentTime
-                
                 if (secondsUntilStart > 0){
                     NSLog("Game is going to start in " + secondsUntilStart.description + " seconds")
                     self.countdown_timer = NSTimer.scheduledTimerWithTimeInterval(secondsUntilStart, target: self, selector: Selector("startGame"), userInfo: nil, repeats: false)
@@ -72,10 +71,12 @@ class Lobby: NSObject{
     
     func startGame(){
         Game.singleton.start(0, players_usernames: players)
+        Game.singleton.delegate?.startGame()
     }
     
     func startGameAfter(seconds: Double){
         Game.singleton.start(seconds, players_usernames: players)
+        Game.singleton.delegate?.startGame()
     }
     
 

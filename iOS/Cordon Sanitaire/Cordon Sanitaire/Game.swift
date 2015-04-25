@@ -31,7 +31,7 @@ class Game: NSObject{
     var quarantine = Quarantine()
     
     var delegate:GameDelegate?
-    var viewController:MapViewController?
+    var viewController = MapViewController()
     
     // Start the game
     // seconds      -> how many seconds in the game we are in
@@ -44,7 +44,6 @@ class Game: NSObject{
         self.timer = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: Selector("updateTimer"), userInfo: nil, repeats: true)
         self.start_time = NSDate().dateByAddingTimeInterval(-seconds)
         
-        self.viewController = MapViewController()
         // notify the view controller of a started game
 //        delegate?.startGame()
     }
@@ -213,7 +212,7 @@ class Game: NSObject{
     
     func updateQuarantine(){
         quarantine.updateQuarantineOrder()
-        self.viewController?.updateQuarantine(quarantine.sortedQuarantineCoords)
+        self.viewController.updateQuarantine(quarantine.sortedQuarantineCoords)
     }
     
     func updatePlayers(){
@@ -224,17 +223,17 @@ class Game: NSObject{
                 self.players[id]!.changeState(State.Trapped)
                 if (id == myPlayer.id) {
                     myPlayer.changeState(State.Trapped)
-                    self.viewController?.showShoutButton() // if my player got trapped, show the shout button in the view
+                    self.viewController.showShoutButton() // if my player got trapped, show the shout button in the view
                 }
             } else if(player.isTrapped()) { // if player was trapped, but now is outside the quarantine, change its state to Passive
                 player.changeState(State.Passive)
                 if (id == myPlayer.id) {
                     myPlayer.changeState(State.Passive)
-                    self.viewController?.showJoinButton() // if my player got untrapped, show the join button in the view
+                    self.viewController.showJoinButton() // if my player got untrapped, show the join button in the view
                 }
             }
         }
-        self.viewController?.updatePlayers()
+        self.viewController.updatePlayers()
     }
     
     func update(){
