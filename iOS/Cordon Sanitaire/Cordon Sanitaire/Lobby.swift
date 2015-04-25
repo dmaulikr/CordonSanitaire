@@ -54,12 +54,14 @@ class Lobby: NSObject{
     
     func addPlayer(player: String){
         self.players.append(player)
+        self.viewController.update()
         NSLog("Player \(player) was added to the lobby")
         NSLog("The Players in the lobby are: " + self.players.description)
     }
     
     func addPlayers(newPlayers: [String!]){
         self.players.extend(newPlayers)
+        self.viewController.update()
         NSLog("Players \(newPlayers) were added to the lobby")
         NSLog("The Players in the lobby are: " + self.players.description)
     }

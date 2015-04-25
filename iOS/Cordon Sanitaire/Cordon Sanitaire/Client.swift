@@ -138,7 +138,7 @@ class Client: NSObject, PNDelegate, CLLocationManagerDelegate {
         case PNPresenceEventType.Join.rawValue:
             // should add event.client.identifier to list of usernames in the waiting area
             Lobby.singleton.addPlayer(event.client.identifier)
-            NSLog("User " + event.client.identifier + "joined channel " + event.channel.name)
+            NSLog("User " + event.client.identifier + " joined channel " + event.channel.name)
         default:
             NSLog("defaulted")
         }

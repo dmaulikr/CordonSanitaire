@@ -9,24 +9,24 @@
 import UIKit
 
 class LobbyViewController: UITableViewController, UITableViewDataSource, UITableViewDelegate {
-
-    var lobbyView: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        self.lobbyView = UITableView()
 
-        self.lobbyView.registerClass(LobbyViewCell.self, forCellReuseIdentifier: "cell")
+        self.tableView.registerClass(LobbyViewCell.self, forCellReuseIdentifier: "cell")
         
-        self.lobbyView.delegate = self
-        self.lobbyView.dataSource = self
+        self.tableView.delegate = self
+        self.tableView.dataSource = self
 
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+    }
+    
+    func update(){
+        self.tableView.reloadData()
     }
 
     override func didReceiveMemoryWarning() {
