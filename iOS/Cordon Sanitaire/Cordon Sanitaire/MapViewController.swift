@@ -55,7 +55,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     
     override func viewDidAppear(animated: Bool) {
         addNotificationsView()
-        addStatusAnimation()    // show the patient zero 
+        addStatusAnimation()    // show the patient zero
     }
     
     func addStatus() {
@@ -375,7 +375,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
             return
         }
         
-        //
+        // zoom out the map with an animation
         UIView.animateWithDuration(3.0,
             delay: 0.0,
             options: .CurveEaseInOut | .AllowUserInteraction,
@@ -388,7 +388,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
                 var gameTimer = NSTimer()
                 gameTimer = NSTimer.scheduledTimerWithTimeInterval(0.01, target: self, selector: Selector("updateTimer"), userInfo: nil, repeats: true)
                 
-                //        
+                // Animate the transition of an overlay, in this case the notification view.
+                // Animating takes place by simply setting the frame to a new location or size
                 UIView.animateWithDuration(1.0,
                 delay: 3.0,
                 options: .CurveEaseInOut | .AllowUserInteraction,
