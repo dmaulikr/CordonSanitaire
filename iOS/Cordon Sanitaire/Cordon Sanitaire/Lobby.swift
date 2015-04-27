@@ -24,9 +24,13 @@ class Lobby: NSObject{
         // creates a view controller for the Lobby
         self.viewController = LobbyViewController()
         
+        self.getNewGame()
+    }
+    
+    func getNewGame(){
         // get the start time from parse
         var startTime = Game.getStartTime()
-
+        
         // query pubnub time and set up the countdown timer
         PubNub.requestServerTimeTokenWithCompletionBlock({(timetoken: NSNumber!, error: PNError!) -> Void in
             // if successfully got the time
@@ -44,7 +48,7 @@ class Lobby: NSObject{
                 else {
                     NSLog("Game is already over :(")
                 }
-
+                
             } else {
                 NSLog("Problem getting the PubNub time")
             }

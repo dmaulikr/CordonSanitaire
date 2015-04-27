@@ -165,6 +165,9 @@ class Client: NSObject, PNDelegate, CLLocationManagerDelegate {
         case Headers.SubscribeToChannel:
             setGroupChannel(action.id)
             break
+        case Headers.AddGame:
+            Lobby.singleton.getNewGame()
+            break
         default:
             NSLog("Header: " + action.header.rawValue + message.message.description)
         }

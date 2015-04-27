@@ -15,6 +15,7 @@ enum Headers : String, RawRepresentable{
     case Release = "Release"
     case SubscribeToChannel = "SubscribeToChannel"
     case MalFormattedMessage = "MalFormattedMessage"
+    case AddGame = "AddGame"
 }
 
 class Action {
