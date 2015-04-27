@@ -15,7 +15,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     var notificationsView: UIView!
 
     let locationManager = CLLocationManager()
-    
+        
     // UI elements
     let timerTextView:UITextView = UITextView()
     let duration = 45.0
@@ -43,7 +43,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         
         // setup functions for GUI
         addMap()
-        addNotificationsView()
         addTimer()
         addButton()
         addStatus()
@@ -55,7 +54,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     }
     
     override func viewDidAppear(animated: Bool) {
-        addStatusAnimation()
+        addNotificationsView()
+        addStatusAnimation()    // show the patient zero 
     }
     
     func addStatus() {
@@ -234,10 +234,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 
     // notifications for actions in the Game
     func addNotificationsView() {
-        notificationsView = UIView(frame: CGRectMake(0, 0, self.view.frame.width, 60.0))
+        notificationsView = UIView(frame: CGRectMake(0, 0, self.view.frame.width, self.view.frame.height))
         notificationsView.backgroundColor = UIColor(netHex: cs_blue)
         notificationsView.alpha = 0.9
-        //self.view.addSubview(notificationsView)
+        self.view.addSubview(notificationsView)
     }
     
     func mapView(mapView: MKMapView!, regionDidChangeAnimated animated: Bool) {
@@ -387,6 +387,18 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
                 // start game timer
                 var gameTimer = NSTimer()
                 gameTimer = NSTimer.scheduledTimerWithTimeInterval(0.01, target: self, selector: Selector("updateTimer"), userInfo: nil, repeats: true)
+                
+                //        
+                UIView.animateWithDuration(1.0,
+                delay: 3.0,
+                options: .CurveEaseInOut | .AllowUserInteraction,
+                animations: {
+                    self.notificationsView.frame = CGRectMake(0, 0, self.view.frame.width, 60);
+                },
+                completion: { finished in
+                    println("transitioned!")
+                })
+
         })
     }
     
