@@ -47,8 +47,19 @@ class ViewController: UIViewController, GameDelegate {
     
     // listen to the game for when to start
     func startGame() {
-        self.dismissViewControllerAnimated(true, completion: nil)
-        self.presentViewController(Game.singleton.viewController, animated: true, completion: nil)
+//        self.dismissViewControllerAnimated(true, completion: nil)
+//        self.presentViewController(Game.singleton.viewController, animated: true, completion: nil)
+        UIView.animateWithDuration(1.0,
+            delay: 3.0,
+            options: .CurveEaseInOut | .AllowUserInteraction,
+            animations: {
+                Lobby.singleton.viewController.view.frame = CGRectMake(0, -self.view.frame.height, self.view.frame.width, self.view.frame.height);
+            },
+            completion: { finished in
+                Lobby.singleton.viewController.view.removeFromSuperview()
+        })
+
+
     }
     
     // handle the button presses (open the map view, or open the intro view)
@@ -57,9 +68,9 @@ class ViewController: UIViewController, GameDelegate {
        
         if(sender.titleLabel?.text == "PLAY"){
             // display the map view
-            self.presentViewController(Lobby.singleton.viewController!, animated: true, completion: nil)
-//            Lobby.singleton.startGame()
-//            self.presentViewController(Game.singleton.viewController!, animated: true, completion: nil)
+//            self.presentViewController(Lobby.singleton.viewController!, animated: true, completion: nil)
+            var gameVC = GameViewController()
+            self.presentViewController(Game.singleton.viewController, animated: true, completion: nil)
         }
         else if(sender.titleLabel?.text == "INTRO") {
             // display the map view
