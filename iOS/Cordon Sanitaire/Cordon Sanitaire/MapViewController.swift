@@ -46,6 +46,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         addTimer()
         addButton()
         addStatus()
+        self.view.addSubview(Lobby.singleton.viewController.view)
         
         // when the game starts, zoom out from your position on a 3 second countdown
         // here we simulate that by triggering the zoom out after 3 seconds of launch
@@ -54,7 +55,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     }
     
     override func viewDidAppear(animated: Bool) {
-        addNotificationsView()
+//        addNotificationsView()
+
         addStatusAnimation()    // show the patient zero
     }
     
@@ -178,7 +180,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
             annotation.setCustomMarkerColor(getMarkerColor(state))
         }
         else {
-            println("Received message from player that we don't think exists!")
+            println("Received message from player that we don't think exists! " + id)
         }
 
     }
@@ -290,35 +292,37 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     
     // receive array of coordinates and update polygon of quarantine
     func updateQuarantine(quarantine:[CLLocationCoordinate2D]) {
-
-        if( quarantine.count < 2 ){
-            // no quarantine to draw
-            self.mapView.removeOverlay(quarantinePolygon)
-            self.mapView.removeOverlay(quarantinePolyline)
-        }
-        else if( quarantine.count == 2){
-            // just a line to draw, getting closer
-            var coords = [CLLocationCoordinate2D]()
-            for player in quarantine {
-                coords.append(player)
+        
+        if (self.mapView != nil) {
+            if(quarantine.count < 2 ){
+                // no quarantine to draw
+                self.mapView.removeOverlay(quarantinePolygon)
+                self.mapView.removeOverlay(quarantinePolyline)
             }
-            let polyLine:MKPolyline = MKPolyline(coordinates: &coords, count: coords.count)
-            self.mapView.addOverlay(polyLine)
-            self.mapView.removeOverlay(quarantinePolygon)
-            self.mapView.removeOverlay(quarantinePolyline)
-            quarantinePolyline = polyLine
-        }
-        else {
-            // Houston, we have a quarantine! Let's draw it :)
-            var coords = [CLLocationCoordinate2D]()
-            for player in quarantine {
-                coords.append(player)
+            else if( quarantine.count == 2){
+                // just a line to draw, getting closer
+                var coords = [CLLocationCoordinate2D]()
+                for player in quarantine {
+                    coords.append(player)
+                }
+                let polyLine:MKPolyline = MKPolyline(coordinates: &coords, count: coords.count)
+                self.mapView.addOverlay(polyLine)
+                self.mapView.removeOverlay(quarantinePolygon)
+                self.mapView.removeOverlay(quarantinePolyline)
+                quarantinePolyline = polyLine
             }
-            let polygon:MKPolygon = MKPolygon(coordinates: &coords, count: coords.count)
-            self.mapView.addOverlay(polygon)
-            self.mapView.removeOverlay(quarantinePolygon)
-            self.mapView.removeOverlay(quarantinePolyline)
-            quarantinePolygon = polygon
+            else {
+                // Houston, we have a quarantine! Let's draw it :)
+                var coords = [CLLocationCoordinate2D]()
+                for player in quarantine {
+                    coords.append(player)
+                }
+                let polygon:MKPolygon = MKPolygon(coordinates: &coords, count: coords.count)
+                self.mapView.addOverlay(polygon)
+                self.mapView.removeOverlay(quarantinePolygon)
+                self.mapView.removeOverlay(quarantinePolyline)
+                quarantinePolygon = polygon
+            }
         }
     }
     
@@ -394,7 +398,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
                 delay: 3.0,
                 options: .CurveEaseInOut | .AllowUserInteraction,
                 animations: {
-                    self.notificationsView.frame = CGRectMake(0, 0, self.view.frame.width, 60);
+//                    self.notificationsView.frame = CGRectMake(0, 0, self.view.frame.width, 60);
+
                 },
                 completion: { finished in
                     println("transitioned!")
