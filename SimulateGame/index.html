@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cordon Sanitaire | Control Panel</title>
+    <script src="dependencies/pubnub-3.7.1.min.js"></script>
+    <script src="dependencies/jquery-1.11.2.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="dependencies/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="dependencies/flat-ui.min.css">
+    <script src="dependencies/flat-ui.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+
+    <script src="js/Messaging.js"></script>
+    <script src="js/Main.js"></script>
+</head>
+<body>
+<div id="mapView"></div>
+<div class="uiPanel">
+    <input id="playerName" type="text" value="" placeholder="NameyName" class="form-control">
+    <input id="playerLat" type="text" value="" placeholder="42.34556" class="form-control">
+    <input id="playerLon" type="text" value="" placeholder="-70.32456" class="form-control">
+    <a href="#" id="addPlayer" class="btn btn-block btn-lg btn-success">AddPlayer</a>
+    <h3>Players</h3>
+    <div id="players">
+        <!-- FOR PLACEMENT ONLY -->
+        <ul>
+            <li>player1<br>
+                <span>
+                    <a href="#" id="join" class="btn btn-inline btn-sm btn-inverse">join</a>
+                    <a href="#" id="release" class="btn btn-inline btn-sm btn-warning">release</a>
+                    <a href="#" id="shout" class="btn btn-inline btn-sm btn-danger">shout</a>
+                </span>
+            </li>
+            <li>player2<br>
+                <span>
+                    <a href="#" id="join" class="btn btn-inline btn-sm btn-inverse">join</a>
+                    <a href="#" id="release" class="btn btn-inline btn-sm btn-warning">release</a>
+                    <a href="#" id="shout" class="btn btn-inline btn-sm btn-danger">shout</a>
+                </span>
+            </li>
+            <li>player3<br>
+                <span>
+                    <a href="#" id="join" class="btn btn-inline btn-sm btn-inverse">join</a>
+                    <a href="#" id="release" class="btn btn-inline btn-sm btn-warning">release</a>
+                    <a href="#" id="shout" class="btn btn-inline btn-sm btn-danger">shout</a>
+                </span>
+            </li>
+        </ul>
+    </div>
+</div>
+</body>
+</html>
