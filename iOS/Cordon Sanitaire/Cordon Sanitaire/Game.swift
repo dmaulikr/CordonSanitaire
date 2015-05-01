@@ -188,7 +188,13 @@ class Game: NSObject{
         let latSpan = abs(bounds.topLeft.latitude - center.latitude) + 0.1  // padding
         let lonSpan = abs(bounds.topLeft.longitude - center.longitude) + 0.1 // padding
         
-        return MKCoordinateSpanMake(lonSpan, latSpan)
+        // ensure that the biggest dimension is accounted for in the window
+        if( latSpan > lonSpan) {
+            return MKCoordinateSpanMake(latSpan, latSpan)
+        }
+        else {
+            return MKCoordinateSpanMake(lonSpan, lonSpan)
+        }
     }
     
     func addPlayerToQuarantine(id: String){
