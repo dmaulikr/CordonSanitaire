@@ -15,7 +15,7 @@ class Lobby: NSObject{
         return _SingletonSharedInstance
     }
     
-    var players: [String!] = [];
+    var players: [String:Player!] = [:];
     var countdown_timer = NSTimer();
     var viewController: LobbyViewController!
     
@@ -35,7 +35,7 @@ class Lobby: NSObject{
         PubNub.requestServerTimeTokenWithCompletionBlock({(timetoken: NSNumber!, error: PNError!) -> Void in
             // if successfully got the time
             if (error == nil) {
-                var currentTime = Double(timetoken)/1e7 // convert timetoken to seconds from the epoch
+                var currentTime = Double(timetoken)/1e7 // convert timetokento seconds from the epoch
                 var startTimeToken = startTime.timeIntervalSince1970 // convert start time to seconds from the epoch
                 var secondsUntilStart = startTimeToken - currentTime
                 if (secondsUntilStart > 0){
@@ -55,31 +55,37 @@ class Lobby: NSObject{
         })
     }
     
-    func addPlayer(player: String){
-        self.players.append(player)
-        self.viewController.update()
+    // Add a player to the lobby
+    func addPlayer(player: Player){
+        self.players[player.username] = player // add player to the model
+        Game.singleton.viewController.addPlayerToMapFromLobby(player.getCoords(), playerID: player.id, state: player.state)
+        self.viewController.update() // update the view to show the added player
+        
         NSLog("Player \(player) was added to the lobby")
-        NSLog("The Players in the lobby are: " + self.players.description)
+        NSLog("The Players in the lobby are: " + self.players.keys.array.description)
     }
     
-    func addPlayers(newPlayers: [String!]){
-        self.players.extend(newPlayers)
+    // Add an array of players to the lobby #not in use
+    func addPlayers(newPlayers: [Player!]){
+        for player in newPlayers {
+            self.addPlayer(player)
+        }
         self.viewController.update()
         NSLog("Players \(newPlayers) were added to the lobby")
-        NSLog("The Players in the lobby are: " + self.players.description)
+        NSLog("The Players in the lobby are: " + self.players.keys.array.description)
     }
     
     func emptyLobby(){
-        self.players = []
+        self.players = [:]
     }
     
     func startGame(){
-        Game.singleton.start(0, players_usernames: players)
+        Game.singleton.start(self.players.values.array)
         Game.singleton.delegate?.startGame()
     }
     
     func startGameAfter(seconds: Double){
-        Game.singleton.start(seconds, players_usernames: players)
+        Game.singleton.startAfter(seconds, players_usernames: self.players.keys.array)
         Game.singleton.delegate?.startGame()
     }
     

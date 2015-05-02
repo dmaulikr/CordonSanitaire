@@ -88,7 +88,7 @@ Parse.Cloud.job("setGame", function(request, status) {
               startTime: start_time
               }, {
               success: function() {
-              sendMessage("AddGame fake_id", group_channel, function() {
+              sendMessage("AddGame", group_channel, function() {
                   status.success("Game is set to " + start_time);
               })
               },

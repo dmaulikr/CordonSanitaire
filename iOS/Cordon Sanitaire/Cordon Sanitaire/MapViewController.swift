@@ -118,6 +118,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         
         // TODO: bring the players back to the map (currently the players array is empty)
         self.addPlayersToMap()
+        self.addPlayersToMapFromLobby()
         
         // start at a zoomed in location on the player
         let span = MKCoordinateSpanMake(0.005, 0.005)
@@ -278,6 +279,30 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         timerTextView.text = "00:00.00"
         timerTextView.selectable = false
         timerTextView.editable = false
+    }
+
+    func addPlayersToMapFromLobby() {
+        // test adding players from Game
+        for player in Lobby.singleton.players.values {
+            
+            let lat = player.getCoords().latitude
+            let lon = player.getCoords().longitude
+            let loc = CLLocationCoordinate2D(latitude: lat, longitude: lon)
+            
+            addPlayerToMapFromLobby(loc, playerID: player.id, state: player.state)
+        }
+        
+    }
+    func addPlayerToMapFromLobby(location:CLLocationCoordinate2D, playerID:String, state: State) {
+        // place a pin to show that we can place annotations
+        if (mapView != nil){
+            let annotation = PlayerAnnotation(state: State.Passive, coordinate: location)
+            mapView.addAnnotation(annotation)
+            
+            // keey track of our players annotation
+            playerIcons[playerID] = annotation
+            activePlayerIcons[playerID] = annotation
+        }
     }
     
     func addPlayerToMap(location:CLLocationCoordinate2D, playerID:String) {

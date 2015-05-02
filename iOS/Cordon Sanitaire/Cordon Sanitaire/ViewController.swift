@@ -69,7 +69,6 @@ class ViewController: UIViewController, GameDelegate {
         if(sender.titleLabel?.text == "PLAY"){
             // display the map view
 //            self.presentViewController(Lobby.singleton.viewController!, animated: true, completion: nil)
-            var gameVC = GameViewController()
             self.presentViewController(Game.singleton.viewController, animated: true, completion: nil)
         }
         else if(sender.titleLabel?.text == "INTRO") {

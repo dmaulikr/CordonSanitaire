@@ -55,7 +55,7 @@ class LobbyViewController: UITableViewController, UITableViewDataSource, UITable
             cell = LobbyViewCell()
         }
         
-        cell!.textLabel?.text = Lobby.singleton.players[indexPath.row]
+        cell!.textLabel?.text = Lobby.singleton.players.keys.array[indexPath.row]
         
         return cell!
         

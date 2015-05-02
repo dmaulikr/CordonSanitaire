@@ -49,17 +49,15 @@ class Client: NSObject, PNDelegate, CLLocationManagerDelegate {
         self.username = gkPlayer.alias         // set Client username to be the Game Center alias
         self.id = gkPlayer.playerID            // sets Client Id to be the Game Center Id
         PubNub.setClientIdentifier(self.username)    // sets the Client's PubNub Id to be the GameCenter Id
-        NSLog(self.id!)
         
         // creates and subscribes to a private channel
         self.private_channel = PNChannel.channelWithName(self.username, shouldObservePresence: false) as! PNChannel
-        NSLog(self.private_channel.description)
         PubNub.subscribeOn([self.private_channel], withCompletionHandlingBlock: {(state: PNSubscriptionProcessState, object: [AnyObject]!, error: PNError!) -> Void in
             if (error == nil){
-                self.tellCloudCodeAboutMe()
                 NSLog("Successfuly subscribed to private channel")
+                self.tellCloudCodeAboutMe()
             }
-            else{
+            else {
                 NSLog("An error occured when subscribing to private channel: " + error.description)
             }
         })
@@ -112,9 +110,16 @@ class Client: NSObject, PNDelegate, CLLocationManagerDelegate {
             PubNub.unsubscribeFrom([self.group_channel])
         }
         self.group_channel = PNChannel.channelWithName(channel_name, shouldObservePresence: true) as! PNChannel
-        PubNub.subscribeOn([self.group_channel])
+        PubNub.subscribeOn([self.group_channel], withCompletionHandlingBlock: {(state: PNSubscriptionProcessState, object: [AnyObject]!, error: PNError!) -> Void in
+            if (error == nil){
+                Action.addToLobby(self.id!, username: self.username!, location: Game.singleton.myLocation)
+                NSLog("Successfuly subscribed to group channel")
+            }
+            else{
+                NSLog("An error occured when subscribing to private channel: " + error.description)
+            }
+        })
         PubNub.requestParticipantsListFor([self.group_channel])
-//        Lobby.singleton.addPlayers(players as [String])
     }
 
     //////////////////////
@@ -128,16 +133,26 @@ class Client: NSObject, PNDelegate, CLLocationManagerDelegate {
     
     func pubnubClient(client: PubNub!, didReceiveParticipants presenceInformation: PNHereNow!, forObjects channelObjects: [AnyObject]!){
         var clients = presenceInformation.participantsForChannel(self.group_channel) as! [PNClient]
-        var players = clients.map({ ($0).identifier })
-        Lobby.singleton.addPlayers(players)
+        var players_usernames = clients.map({ ($0).identifier })
         
+        // query users on Parse for their latitude and longitude in order to add to the lobby
+        var userQuery = PFQuery(className: "SimpleUser")
+        userQuery.whereKey("username", containedIn: players_usernames)
+        var objects = userQuery.findObjects()
+        for obj in objects {
+            NSLog(obj.description)
+            if(obj.valueForKey("latitude") != nil && obj.valueForKey("longitude") != nil) {
+                var player = Player(id: obj.valueForKey("gkId") as! String, username: obj.valueForKey("username") as! String, latitude: obj.valueForKey("latitude") as! CLLocationDegrees, longitude: obj.valueForKey("longitude") as! CLLocationDegrees, state: State.OnLobby)
+                Lobby.singleton.addPlayer(player)
+            }
+        }
     }
+    
+    
     
     func pubnubClient(client: PubNub!, didReceivePresenceEvent event: PNPresenceEvent!) {
         switch event.type.rawValue {
         case PNPresenceEventType.Join.rawValue:
-            // should add event.client.identifier to list of usernames in the waiting area
-            Lobby.singleton.addPlayer(event.client.identifier)
             NSLog("User " + event.client.identifier + " joined channel " + event.channel.name)
         default:
             NSLog("defaulted")
@@ -151,23 +166,26 @@ class Client: NSObject, PNDelegate, CLLocationManagerDelegate {
     func pubnubClient(client: PubNub!, didReceiveMessage message: PNMessage!) {
         var action = Action.parseMessage(message.message.description)
         switch action.header {
-        case Headers.Shout:
-            NSLog("Received " + action.header.rawValue + " from " + action.id)
+        case Header.Shout:
+            NSLog("Received " + action.header.rawValue + " from " + action.id!)
             break
-        case Headers.Join:
-            NSLog(action.id + " " + action.header.rawValue)
-            Game.singleton.addPlayerToQuarantine(action.id)
+        case Header.Join:
+            NSLog(action.id! + " " + action.header.rawValue)
+            Game.singleton.addPlayerToQuarantine(action.id!)
             break
-        case Headers.Release:
-            NSLog(action.id + " " + action.header.rawValue)
-            Game.singleton.removePlayerFromQuarantine(action.id)
+        case Header.Release:
+            NSLog(action.id! + " " + action.header.rawValue)
+            Game.singleton.removePlayerFromQuarantine(action.id!)
             break
-        case Headers.SubscribeToChannel:
-            setGroupChannel(action.id)
+        case Header.SubscribeToChannel:
+            setGroupChannel(action.channel!)
             break
-        case Headers.AddGame:
+        case Header.AddGame:
             Lobby.singleton.getNewGame()
             break
+        case Header.AddToLobby:
+            var newPlayer = Player(id: action.id!, username: action.username!, latitude: action.lat!, longitude: action.lon!, state: State.OnLobby)
+            Lobby.singleton.addPlayer(newPlayer)
         default:
             NSLog("Header: " + action.header.rawValue + message.message.description)
         }

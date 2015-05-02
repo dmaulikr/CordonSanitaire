@@ -36,10 +36,10 @@ class Game: NSObject{
     // Start the game
     // seconds      -> how many seconds in the game we are in
     // players_ids -> an array of the ids of the users in this game
-    func start(seconds: Double, players_usernames: [String!]){
+    func startAfter(seconds: Double, players_usernames: [String]){
         NSLog("Game is going to start")
         
-        getPlayers(players_usernames)
+        getPlayersState(players_usernames)
         
         self.timer = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: Selector("updateTimer"), userInfo: nil, repeats: true)
         self.start_time = NSDate().dateByAddingTimeInterval(-seconds)
@@ -48,6 +48,12 @@ class Game: NSObject{
 //        delegate?.startGame()
     }
     
+    func start(players: [Player!]){
+        NSLog("Game has started")
+        self.startingPlayers(players)
+        self.timer = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: Selector("updateTimer"), userInfo: nil, repeats: true)
+        self.start_time = NSDate()
+    }
     
     // Updates the game timer
     func updateTimer(){
@@ -60,18 +66,30 @@ class Game: NSObject{
         }
     }
     
+    // Starts all the players in a Passive state
+    private func startingPlayers(players: [Player!]){
+        for player in players {
+            player.changeState(State.Passive) // everyobody starts in a Passive State
+            self.players[player.id] = player
+            if (player.id == Client.singleton.id){
+                self.myPlayer = player
+                self.myLocation = player.getCoords()
+            }
+        }
+    }
     
     // Queries PubNub for the players in the game channel group
-    private func getPlayers(players_usernames: [String!]){
+    private func getPlayersState(players_usernames: [String]){
         var userQuery = PFQuery(className: "SimpleUser")
         userQuery.whereKey("username", containedIn: players_usernames)
         var objects = userQuery.findObjects()
         NSLog(players_usernames.description)
         for obj in objects {
-            NSLog(obj.description)
             if(obj.valueForKey("latitude") != nil && obj.valueForKey("longitude") != nil) {
-                var player = Player(id: obj.valueForKey("gkId") as! String, latitude: obj.valueForKey("latitude") as! CLLocationDegrees, longitude: obj.valueForKey("longitude") as! CLLocationDegrees)
-                players[player.id] = player
+                var state = State(rawValue: obj.valueForKey("state") as! String) ?? State.Passive // if there's a state on Parse for this player assign it, if assign its state to be Passive
+                var player = Player(id: obj.valueForKey("gkId") as! String, username: obj.valueForKey("username") as! String, latitude: obj.valueForKey("latitude") as! CLLocationDegrees, longitude: obj.valueForKey("longitude") as! CLLocationDegrees, state: state)
+                self.players[player.id] = player
+                
                 if (player.id == Client.singleton.id){
                     self.myPlayer = player
                     self.myLocation = player.getCoords()
@@ -195,8 +213,8 @@ class Game: NSObject{
         if (self.players[id] != nil) {
             self.players[id]?.changeState(State.Active)
             self.quarantine.addPlayer(self.players[id]!)
-            
         }
+        
         NSLog("Players in the quarantine: " + quarantine.quarantinePlayers.description)
         self.update()
     }
