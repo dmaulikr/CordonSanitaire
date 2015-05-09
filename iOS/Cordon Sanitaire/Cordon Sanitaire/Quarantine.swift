@@ -118,22 +118,15 @@ class Quarantine: NSObject {
         var next_player: Player?
         
         for other_player in quarantinePlayers.values.array {
-            println("Player being compared are: " + other_player.id + " " + player!.id)
             if (other_player.id != player!.id){
-                println("Inside if statement")
                 var next_theta = atan2((other_player.latitude - center.latitude),(other_player.longitude - center.longitude))
-                println("next theta: " + next_theta.description)
                 var diff = next_theta - start_theta
-                println("diff: " + diff.description)
                 
-                println("Set diff and next_theta")
                 if (diff < 0){
                     diff += 2 * M_PI
                 }
                 
-                println("diff: " + diff.description)
                 if (diff < min) {
-                    println("Set next_player")
                     next_player = other_player
                     min = diff
                 }

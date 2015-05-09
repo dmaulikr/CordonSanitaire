@@ -57,8 +57,8 @@ class Lobby: NSObject{
     
     // Add a player to the lobby
     func addPlayer(player: Player){
-        self.players[player.username] = player // add player to the model
-        Game.singleton.viewController.addPlayerToMapFromLobby(player.getCoords(), playerID: player.id, state: player.state)
+        self.players[player.username] = player // add players username to the list of players in the lobby
+        Game.singleton.addPlayer(player) // add player to map
         self.viewController.update() // update the view to show the added player
         
         NSLog("Player \(player) was added to the lobby")
@@ -80,7 +80,7 @@ class Lobby: NSObject{
     }
     
     func startGame(){
-        Game.singleton.start(self.players.values.array)
+        Game.singleton.start()
         Game.singleton.delegate?.startGame()
     }
     

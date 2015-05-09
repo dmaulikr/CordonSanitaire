@@ -37,7 +37,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     // Polyline handles line between 2 coordinates
     var quarantinePolygon:MKPolygon = MKPolygon()
     var quarantinePolyline:MKPolyline = MKPolyline()
-    
+        
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -47,17 +47,19 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         addButton()
         addStatus()
         self.view.addSubview(Lobby.singleton.viewController.view)
-        
-        // when the game starts, zoom out from your position on a 3 second countdown
-        // here we simulate that by triggering the zoom out after 3 seconds of launch
-        var timer = NSTimer()
-        timer = NSTimer.scheduledTimerWithTimeInterval(3, target: self, selector: Selector("zoomOut"), userInfo: nil, repeats: false)
     }
     
     override func viewDidAppear(animated: Bool) {
 //        addNotificationsView()
 
         addStatusAnimation()    // show the patient zero
+    }
+    
+    func start(){
+        // when the game starts, zoom out from your position on a 3 second countdown
+        // here we simulate that by triggering the zoom out after 3 seconds of launch
+        var timer = NSTimer()
+        timer = NSTimer.scheduledTimerWithTimeInterval(3, target: self, selector: Selector("zoomOut"), userInfo: nil, repeats: false)
     }
     
     func addStatus() {
@@ -118,7 +120,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         
         // TODO: bring the players back to the map (currently the players array is empty)
         self.addPlayersToMap()
-        self.addPlayersToMapFromLobby()
         
         // start at a zoomed in location on the player
         let span = MKCoordinateSpanMake(0.005, 0.005)
@@ -175,10 +176,14 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 
     // updates the annotations
     func updatePlayer(id: String, state: State){
-        if( playerIcons[id] != nil ) {
-            playerIcons[id]?.changeState(state)
-            var annotation = self.mapView.viewForAnnotation(playerIcons[id]) as! PlayerAnnotationView
-            annotation.setCustomMarkerColor(getMarkerColor(state))
+        if(playerIcons[id] != nil ) {
+            playerIcons[id]!.changeState(state)
+            if (mapView != nil){
+                var annotation = self.mapView.viewForAnnotation(playerIcons[id])
+                if (annotation is PlayerAnnotationView){
+                    (annotation as! PlayerAnnotationView).setCustomMarkerColor(getMarkerColor(state))
+                }
+            }
         }
         else {
             println("Received message from player that we don't think exists! " + id)
@@ -280,35 +285,17 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         timerTextView.selectable = false
         timerTextView.editable = false
     }
-
-    func addPlayersToMapFromLobby() {
-        // test adding players from Game
-        for player in Lobby.singleton.players.values {
-            
-            let lat = player.getCoords().latitude
-            let lon = player.getCoords().longitude
-            let loc = CLLocationCoordinate2D(latitude: lat, longitude: lon)
-            
-            addPlayerToMapFromLobby(loc, playerID: player.id, state: player.state)
-        }
-        
-    }
-    func addPlayerToMapFromLobby(location:CLLocationCoordinate2D, playerID:String, state: State) {
-        // place a pin to show that we can place annotations
-        if (mapView != nil){
-            let annotation = PlayerAnnotation(state: State.Passive, coordinate: location)
-            mapView.addAnnotation(annotation)
-            
-            // keey track of our players annotation
-            playerIcons[playerID] = annotation
-            activePlayerIcons[playerID] = annotation
-        }
-    }
     
     func addPlayerToMap(location:CLLocationCoordinate2D, playerID:String) {
         // place a pin to show that we can place annotations
         let annotation = PlayerAnnotation(state: Game.singleton.players[playerID]!.state, coordinate: location)
-        mapView.addAnnotation(annotation)
+        
+        if (mapView != nil) {
+            if (playerIcons[playerID] != nil){
+                mapView.removeAnnotation(playerIcons[playerID])
+            }
+            mapView.addAnnotation(annotation)
+        }
         
         // keey track of our players annotation
         playerIcons[playerID] = annotation
@@ -440,7 +427,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
             bStartOfTimer = true
         }
         
-        timeLeft = duration - (NSDate().timeIntervalSince1970 - startTime)        
+        timeLeft = duration - (NSDate().timeIntervalSince1970 - startTime)
         
         if(timeLeft < 0.0) {
             gameTimer.invalidate()

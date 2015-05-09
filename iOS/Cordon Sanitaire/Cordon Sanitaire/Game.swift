@@ -21,13 +21,13 @@ class Game: NSObject{
     class var singleton:Game! {
         return _SingletonSharedInstance
     }
-
+    class var duration:Double {
+        return 45.0
+    }
+    
     var players: [String: Player] = [:]; // Map of id -> players
     var myPlayer: Player!
     var myLocation: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude:51.5072, longitude:-0.1275)    // default the location to london (to avoid crash)
-    var timer = NSTimer() // game timer
-    class var duration: Double {return 45.0} // Default duration of a game.
-    var start_time: NSDate? // The actual time the game started for the client
     var quarantine = Quarantine()
     
     var delegate:GameDelegate?
@@ -41,41 +41,26 @@ class Game: NSObject{
         
         getPlayersState(players_usernames)
         
-        self.timer = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: Selector("updateTimer"), userInfo: nil, repeats: true)
-        self.start_time = NSDate().dateByAddingTimeInterval(-seconds)
         
         // notify the view controller of a started game
 //        delegate?.startGame()
     }
     
-    func start(players: [Player!]){
+    func start(){
         NSLog("Game has started")
-        self.startingPlayers(players)
-        self.timer = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: Selector("updateTimer"), userInfo: nil, repeats: true)
-        self.start_time = NSDate()
+        self.restartPlayersState()
+        self.viewController.start()
     }
     
-    // Updates the game timer
-    func updateTimer(){
-        var elapsed_time = Double(NSDate().timeIntervalSinceDate(start_time!))
-        if (elapsed_time > Game.duration) {
-            timer.invalidate()
-            NSLog("Time is up!")
-        } else {
-//            NSLog("Timer: \(Game.duration - elapsed_time)")
-        }
-    }
-    
-    // Starts all the players in a Passive state
-    private func startingPlayers(players: [Player!]){
-        for player in players {
-            player.changeState(State.Passive) // everyobody starts in a Passive State
-            self.players[player.id] = player
-            if (player.id == Client.singleton.id){
-                self.myPlayer = player
-                self.myLocation = player.getCoords()
+    // Sets all players state to Passive
+    private func restartPlayersState(){
+        for id in self.players.keys {
+            players[id]!.changeState(State.Passive) // everyobody starts in a Passive State
+            if (id == myPlayer.id){
+                self.myPlayer.changeState(State.Passive) // change the state of myPlayer to
             }
         }
+        self.updatePlayers()
     }
     
     // Queries PubNub for the players in the game channel group
@@ -83,19 +68,20 @@ class Game: NSObject{
         var userQuery = PFQuery(className: "SimpleUser")
         userQuery.whereKey("username", containedIn: players_usernames)
         var objects = userQuery.findObjects()
-        NSLog(players_usernames.description)
         for obj in objects {
             if(obj.valueForKey("latitude") != nil && obj.valueForKey("longitude") != nil) {
-                var state = State(rawValue: obj.valueForKey("state") as! String) ?? State.Passive // if there's a state on Parse for this player assign it, if assign its state to be Passive
-                var player = Player(id: obj.valueForKey("gkId") as! String, username: obj.valueForKey("username") as! String, latitude: obj.valueForKey("latitude") as! CLLocationDegrees, longitude: obj.valueForKey("longitude") as! CLLocationDegrees, state: state)
-                self.players[player.id] = player
+                var state = State(rawValue: obj.valueForKey("state") as! String) ?? State.Passive // if there's a state on Parse for this player assign it, if not assign its state to be Passive
+                var id = obj.valueForKey("gkId") as! String
+//                var player = Player(id: obj.valueForKey("gkId") as! String, username: obj.valueForKey("username") as! String, latitude: obj.valueForKey("latitude") as! CLLocationDegrees, longitude: obj.valueForKey("longitude") as! CLLocationDegrees, state: state)
+                self.players[id]?.changeState(state)
                 
-                if (player.id == Client.singleton.id){
-                    self.myPlayer = player
-                    self.myLocation = player.getCoords()
+                if (id == Client.singleton.id){
+                    self.myPlayer.changeState(state)
                 }
             }
         }
+        
+        self.updatePlayers()
         NSLog("The players in this game are: " + players.description)
     }
     
@@ -215,6 +201,16 @@ class Game: NSObject{
         }
     }
     
+    // Receives a Player and adds it to the Map
+    func addPlayer(player: Player){
+        self.players[player.id] = player
+        if (player.id == Client.singleton.id){
+            self.myPlayer = player
+            self.myLocation = player.getCoords()
+        }
+        self.viewController.addPlayerToMap(player.getCoords(), playerID: player.id)
+    }
+    
     func addPlayerToQuarantine(id: String){
         if (self.players[id] != nil) {
             self.players[id]?.changeState(State.Active)
@@ -261,8 +257,10 @@ class Game: NSObject{
     }
     
     func update(){
-        self.updateQuarantine() // updates the quarantine
-        self.updatePlayers() // updates the state of people: whether they are trapped or not
+        if (self.viewController.mapView != nil) {
+            self.updateQuarantine() // updates the quarantine
+            self.updatePlayers() // updates the state of people: whether they are trapped or not
+        }
     }
     
 }
