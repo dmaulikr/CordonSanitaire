@@ -55,6 +55,49 @@ class PlayerAnnotationView: MKPinAnnotationView {
         self.layer.addSublayer(customMarker)
     }
     
+    
+    func animateShout() {
+        var shout = CAShapeLayer()
+        
+        let radius:CGFloat = 10.0
+        let center:CGPoint = CGPointMake(8, 34) // offset for pin size
+        let startAngle = 0.0
+        let endAngle = 2.0 * Double(M_PI)
+        
+        shout.lineWidth = 4.0
+        shout.fillColor = UIColor(netHex: cs_orange).CGColor
+        shout.strokeColor = UIColor(netHex: cs_orange).CGColor
+        shout.path = UIBezierPath(arcCenter: center, radius: radius, startAngle: CGFloat(startAngle), endAngle: CGFloat(endAngle), clockwise: true).CGPath
+        self.layer.addSublayer(customMarker)
+        
+        // Create a blank animation using the keyPath "opacity", the property we want to animate
+        let opacityAnimation = CABasicAnimation(keyPath: "opacity")
+        
+        // Define the parameters for the tween
+        opacityAnimation.fromValue = 1.0
+        opacityAnimation.toValue = 0.0
+        opacityAnimation.duration = 1.5
+        opacityAnimation.removedOnCompletion = true
+        opacityAnimation.timingFunction = CAMediaTimingFunction(controlPoints: 0.25, 0, 0.75, 1)
+        
+        // Finally, add the animation to the layer
+        shout.addAnimation(opacityAnimation, forKey: "opacity")
+        
+        // Create a blank animation using the keyPath "lineWidth", the property we want to animate
+        let sizeAnimation = CABasicAnimation(keyPath: "lineWidth")
+        
+        // Define the parameters for the tween
+        sizeAnimation.fromValue = 10.0
+        sizeAnimation.toValue = 100.0
+        sizeAnimation.duration = 1.5
+        sizeAnimation.removedOnCompletion = true
+        sizeAnimation.timingFunction = CAMediaTimingFunction(controlPoints: 0.25, 0, 0.75, 1)
+        
+        // Finally, add the animation to the layer
+        shout.addAnimation(sizeAnimation, forKey: "lineWidth")
+
+    }
+
     // Only override drawRect: if you perform custom drawing.
     // An empty implementation adversely affects performance during animation.
 //    override func drawRect(rect: CGRect) {
