@@ -39,7 +39,7 @@ class Game: NSObject{
     func startAfter(seconds: Double, players_usernames: [String]){
         NSLog("Game is going to start")
         
-        getPlayersState(players_usernames)
+        setGameState(players_usernames)
         
         
         // notify the view controller of a started game
@@ -64,7 +64,7 @@ class Game: NSObject{
     }
     
     // Queries PubNub for the players in the game channel group
-    private func getPlayersState(players_usernames: [String]){
+    private func setGameState(players_usernames: [String]){
         var userQuery = PFQuery(className: "SimpleUser")
         userQuery.whereKey("username", containedIn: players_usernames)
         var objects = userQuery.findObjects()
@@ -74,6 +74,9 @@ class Game: NSObject{
                 var id = obj.valueForKey("gkId") as! String
 //                var player = Player(id: obj.valueForKey("gkId") as! String, username: obj.valueForKey("username") as! String, latitude: obj.valueForKey("latitude") as! CLLocationDegrees, longitude: obj.valueForKey("longitude") as! CLLocationDegrees, state: state)
                 self.players[id]?.changeState(state)
+                if (state == State.Active){
+                    self.quarantine.addPlayer(self.players[id]!)
+                }
                 
                 if (id == Client.singleton.id){
                     self.myPlayer.changeState(state)
@@ -81,7 +84,7 @@ class Game: NSObject{
             }
         }
         
-        self.updatePlayers()
+        self.update()
         NSLog("The players in this game are: " + players.description)
     }
     
