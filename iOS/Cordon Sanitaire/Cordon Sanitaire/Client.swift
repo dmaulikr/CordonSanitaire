@@ -164,7 +164,7 @@ class Client: NSObject, PNDelegate, CLLocationManagerDelegate {
     }
 
     func pubnubClient(client: PubNub!, didReceiveMessage message: PNMessage!) {
-        var action = Action.parseMessage(message.message.description)
+        var action = Action.parseMessage(message)
         switch action.header {
         case Header.Shout:
             NSLog("Received " + action.header.rawValue + " from " + action.id!)

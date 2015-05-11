@@ -11,7 +11,6 @@
     <link rel="stylesheet" type="text/css" href="css/main.css">
 
     <script src="js/Messaging.js"></script>
-    <script src="js/Main.js"></script>
 </head>
 <body>
 <div id="mapView"></div>
@@ -19,30 +18,30 @@
     <input id="playerName" type="text" value="" placeholder="NameyName" class="form-control">
     <input id="playerLat" type="text" value="" placeholder="42.34556" class="form-control">
     <input id="playerLon" type="text" value="" placeholder="-70.32456" class="form-control">
-    <a href="#" id="addPlayer" class="btn btn-block btn-lg btn-success">AddPlayer</a>
+    <a href="#" id="addPlayer" onClick="sendAddUserMessage()" class="btn btn-block btn-lg btn-success">AddPlayer</a>
     <h3>Players</h3>
     <div id="players">
         <!-- FOR PLACEMENT ONLY -->
         <ul>
             <li>player1<br>
                 <span>
-                    <a href="#" id="join" class="btn btn-inline btn-sm btn-inverse">join</a>
-                    <a href="#" id="release" class="btn btn-inline btn-sm btn-warning">release</a>
-                    <a href="#" id="shout" class="btn btn-inline btn-sm btn-danger">shout</a>
+                    <a href="#" id="join" class="btn btn-inline btn-sm btn-inverse" onClick="sendJoinMessage('player_one')">join</a>
+                    <a href="#" id="release" class="btn btn-inline btn-sm btn-warning" onClick="sendReleaseMessage('player_one')">release</a>
+                    <a href="#" id="shout" class="btn btn-inline btn-sm btn-danger onClick="sendShoutMessage('player_one')"">shout</a>
                 </span>
             </li>
             <li>player2<br>
                 <span>
-                    <a href="#" id="join" class="btn btn-inline btn-sm btn-inverse">join</a>
-                    <a href="#" id="release" class="btn btn-inline btn-sm btn-warning">release</a>
-                    <a href="#" id="shout" class="btn btn-inline btn-sm btn-danger">shout</a>
+                    <a href="#" id="join" class="btn btn-inline btn-sm btn-inverse" onClick="sendJoinMessage('player_two')">join</a>
+                    <a href="#" id="release" class="btn btn-inline btn-sm btn-warning" onClick="sendReleaseMessage('player_two')">release</a>
+                    <a href="#" id="shout" class="btn btn-inline btn-sm btn-danger" onClick="sendShoutMessage('player_two')">shout</a>
                 </span>
             </li>
             <li>player3<br>
                 <span>
-                    <a href="#" id="join" class="btn btn-inline btn-sm btn-inverse">join</a>
-                    <a href="#" id="release" class="btn btn-inline btn-sm btn-warning">release</a>
-                    <a href="#" id="shout" class="btn btn-inline btn-sm btn-danger">shout</a>
+                    <a href="#" id="join" class="btn btn-inline btn-sm btn-inverse" onClick="sendJoinMessage('player_three')">join</a>
+                    <a href="#" id="release" class="btn btn-inline btn-sm btn-warning" onClick="sendReleaseMessage('player_three')">release</a>
+                    <a href="#" id="shout" class="btn btn-inline btn-sm btn-danger" onClick="sendShoutMessage('player_three')">shout</a>
                 </span>
             </li>
         </ul>

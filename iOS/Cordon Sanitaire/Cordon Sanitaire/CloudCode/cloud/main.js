@@ -18,7 +18,10 @@ var group_channel = "group0"
 
 Parse.Cloud.define("dummyKMeans", function(request, response){
     var channel = request.params.id
-    sendMessage("SubscribeToChannel " + group_channel, channel, function() {
+                   sendMessage({
+                               "action": "SubscribeToChannel",
+                               "channel": group_channel
+                               }, channel, function() {
         response.success("Success")
     })
 });
@@ -88,7 +91,7 @@ Parse.Cloud.job("setGame", function(request, status) {
               startTime: start_time
               }, {
               success: function() {
-              sendMessage("AddGame", group_channel, function() {
+              sendMessage({"action": "AddGame"}, group_channel, function() {
                   status.success("Game is set to " + start_time);
               })
               },

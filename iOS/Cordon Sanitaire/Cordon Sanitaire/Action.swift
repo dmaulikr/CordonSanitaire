@@ -37,52 +37,61 @@ class Action {
     }
     
     class func shout(fromId: String){
-        PubNub.sendMessage(Header.Shout.rawValue + " " + fromId, toChannel: Client.singleton.group_channel)
+        PubNub.sendMessage(
+            [
+                "action": Header.Shout.rawValue,
+                "id": fromId],
+            toChannel: Client.singleton.group_channel)
     }
     
     class func join(fromId: String){
-        PubNub.sendMessage(Header.Join.rawValue + " " + fromId, toChannel: Client.singleton.group_channel)
+        PubNub.sendMessage(
+            [
+                "action": Header.Join.rawValue,
+                "id": fromId
+            ],
+            toChannel: Client.singleton.group_channel)
     }
     
     class func release(fromId: String){
-        PubNub.sendMessage(Header.Release.rawValue + " " + fromId, toChannel: Client.singleton.group_channel)
+        PubNub.sendMessage(
+            [
+                "action": Header.Release.rawValue,
+                "id": fromId
+            ],
+                toChannel: Client.singleton.group_channel)
     }
     
     class func addToLobby(id: String, username: String, location: CLLocationCoordinate2D){
-        PubNub.sendMessage(Header.AddToLobby.rawValue + " "
-            + id + " "
-            + username + " "
-            + location.latitude.description + " "
-            + location.longitude.description, toChannel: Client.singleton.group_channel)
+        PubNub.sendMessage(
+            [
+                "action": Header.AddToLobby.rawValue,
+                "id": id,
+                "username": username,
+                "latitude": location.latitude,
+                "longitude": location.longitude
+            ],
+                toChannel: Client.singleton.group_channel)
     }
     
-    class func parseMessage(message: String) -> Action{
+    class func parseMessage(message: PNMessage) -> Action{
         var header: Header;
         var id: String?
         var username: String?
         var channel: String?
         var lat: CLLocationDegrees?
         var lon: CLLocationDegrees?
-        var components = message.componentsSeparatedByString(" ")
         var action: Action
         
-        header = Action.getHeader(message)
-        switch header {
-        case Header.Shout, Header.Join, Header.Release:
-            id = components[1]
-            break
-        case Header.AddToLobby:
-            id = components[1]
-            username = components[2]
-            lat = NSString(string: components[3]).doubleValue
-            lon = NSString(string: components[4]).doubleValue
-            break
-        case Header.AddGame:
-            // AddGame only send the header
-            break
-        case Header.SubscribeToChannel:
-            channel = components[1]
-        default:
+        if (message.message is NSDictionary){
+            header = Header(rawValue: message.message["action"] as! String) ?? Header.MalFormattedMessage
+            id = message.message["id"] as! String?
+            username = message.message["username"] as! String?
+            lat = message.message["latitude"] as! CLLocationDegrees?
+            lon = message.message["longitude"] as! CLLocationDegrees?
+            channel = message.message["channel"] as! String?
+        }
+        else {
             header = Header.MalFormattedMessage
         }
         
@@ -98,3 +107,5 @@ class Action {
 }
 
 
+
+    
