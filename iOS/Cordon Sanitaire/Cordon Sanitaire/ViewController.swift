@@ -105,6 +105,14 @@ class ViewController: UIViewController, GameDelegate {
             }
         }
     }
+    
+    func showRetryAlert(){
+        let alertController = UIAlertController(title: "iOScreator", message:
+            "Hello, world!", preferredStyle: UIAlertControllerStyle.Alert)
+        alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default,handler: nil))
+        
+        self.presentViewController(alertController, animated: true, completion: nil)
+    }
 
 }
 

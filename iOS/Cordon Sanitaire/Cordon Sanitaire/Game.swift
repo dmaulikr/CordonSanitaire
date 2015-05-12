@@ -242,6 +242,7 @@ class Game: NSObject{
         for id in self.players.keys {
             var player = self.players[id]!
             var point = CGPoint(x: player.latitude, y: player.longitude)
+            
             if (quarantine.path.containsPoint(point) && self.players[id]!.isPassive()){
                 self.players[id]!.changeState(State.Trapped)
                 if (id == myPlayer.id) {

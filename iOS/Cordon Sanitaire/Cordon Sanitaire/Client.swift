@@ -12,7 +12,7 @@ import GameKit
 
 class Client: NSObject, PNDelegate, CLLocationManagerDelegate {
     
-    let global_channel = PNChannel.channelWithName("ios_development", shouldObservePresence: false) as! PNChannel // Global channel
+    let global_channel = PNChannel.channelWithName("ios_development", shouldObservePresence: true) as! PNChannel // Global channel
     var private_channel: PNChannel!
     var group_channel: PNChannel!
 
@@ -48,10 +48,10 @@ class Client: NSObject, PNDelegate, CLLocationManagerDelegate {
     func login(gkPlayer: GKLocalPlayer!){
         self.username = gkPlayer.alias         // set Client username to be the Game Center alias
         self.id = gkPlayer.playerID            // sets Client Id to be the Game Center Id
-        PubNub.setClientIdentifier(self.username)    // sets the Client's PubNub Id to be the GameCenter Id
-        
+
         // creates and subscribes to a private channel
         self.private_channel = PNChannel.channelWithName(self.username, shouldObservePresence: false) as! PNChannel
+
         PubNub.subscribeOn([self.private_channel], withCompletionHandlingBlock: {(state: PNSubscriptionProcessState, object: [AnyObject]!, error: PNError!) -> Void in
             if (error == nil){
                 NSLog("Successfuly subscribed to private channel")
@@ -59,6 +59,9 @@ class Client: NSObject, PNDelegate, CLLocationManagerDelegate {
             }
             else {
                 NSLog("An error occured when subscribing to private channel: " + error.description)
+                let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+                let viewController = appDelegate.window!.rootViewController as! ViewController
+                viewController.showRetryAlert()
             }
         })
         
@@ -75,6 +78,7 @@ class Client: NSObject, PNDelegate, CLLocationManagerDelegate {
                 myParseUser["present"] = true
                 myParseUser["gkId"] = self.id
                 myParseUser["role"] = "citizen"
+                myParseUser["pnId"] = PubNub.clientIdentifier()
                 
                 myParseUser.saveInBackgroundWithBlock({(success: Bool, error: NSError!) -> Void in
                     if (!success){
@@ -85,6 +89,7 @@ class Client: NSObject, PNDelegate, CLLocationManagerDelegate {
             } else { // if SimpleUser already exists, just updates username and presence status
                 user["username"] = self.username
                 user["present"] = true
+                user["pnId"] = PubNub.clientIdentifier()
                 user.saveInBackgroundWithBlock({(success: Bool, error: NSError!) -> Void in
                     if (!success){
                         NSLog("Failed to update user on Parse")
@@ -116,7 +121,7 @@ class Client: NSObject, PNDelegate, CLLocationManagerDelegate {
                 NSLog("Successfuly subscribed to group channel")
             }
             else{
-                NSLog("An error occured when subscribing to private channel: " + error.description)
+                NSLog("An error occured when subscribing to group channel: " + error.description)
             }
         })
         PubNub.requestParticipantsListFor([self.group_channel])
@@ -133,14 +138,13 @@ class Client: NSObject, PNDelegate, CLLocationManagerDelegate {
     
     func pubnubClient(client: PubNub!, didReceiveParticipants presenceInformation: PNHereNow!, forObjects channelObjects: [AnyObject]!){
         var clients = presenceInformation.participantsForChannel(self.group_channel) as! [PNClient]
-        var players_usernames = clients.map({ ($0).identifier })
+        var players_identifiers = clients.map({ ($0).identifier })
         
-        // query users on Parse for their latitude and longitude in order to add to the lobby
+        // query users by their PubNub Id on Parse for their username,latitude and longitude in order to add to the lobby
         var userQuery = PFQuery(className: "SimpleUser")
-        userQuery.whereKey("username", containedIn: players_usernames)
+        userQuery.whereKey("pnId", containedIn: players_identifiers)
         var objects = userQuery.findObjects()
         for obj in objects {
-            NSLog(obj.description)
             if(obj.valueForKey("latitude") != nil && obj.valueForKey("longitude") != nil) {
                 var player = Player(id: obj.valueForKey("gkId") as! String, username: obj.valueForKey("username") as! String, latitude: obj.valueForKey("latitude") as! CLLocationDegrees, longitude: obj.valueForKey("longitude") as! CLLocationDegrees, state: State.OnLobby)
                 Lobby.singleton.addPlayer(player)
@@ -148,19 +152,9 @@ class Client: NSObject, PNDelegate, CLLocationManagerDelegate {
         }
     }
     
-    
-    
-    func pubnubClient(client: PubNub!, didReceivePresenceEvent event: PNPresenceEvent!) {
-        switch event.type.rawValue {
-        case PNPresenceEventType.Join.rawValue:
-            NSLog("User " + event.client.identifier + " joined channel " + event.channel.name)
-        default:
-            NSLog("defaulted")
-        }
-    }
-    
     func pubnubClient(client: PubNub!, didSubscribeOn channelObjects: [AnyObject]!) {
         NSLog("Subscribed on " + channelObjects.description)
+        NSLog(client.subscribedObjectsList().description)
     }
 
     func pubnubClient(client: PubNub!, didReceiveMessage message: PNMessage!) {
@@ -218,7 +212,7 @@ class Client: NSObject, PNDelegate, CLLocationManagerDelegate {
     /////////////////////////////////
     
     func locationManager(manager: CLLocationManager!, didUpdateToLocation newLocation: CLLocation!, fromLocation oldLocation: CLLocation!) {
-        NSLog("LOCATION: " + newLocation.description)
+        // NSLog("LOCATION: " + newLocation.description)
         // set my location to the current location
         Game.singleton.myLocation = newLocation.coordinate
         
