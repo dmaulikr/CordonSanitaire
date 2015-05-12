@@ -248,7 +248,7 @@ class Game: NSObject{
                     myPlayer.changeState(State.Trapped)
                     self.viewController.showShoutButton() // if my player got trapped, show the shout button in the view
                 }
-            } else if(player.isTrapped()) { // if player was trapped, but now is outside the quarantine, change its state to Passive
+            } else if(!quarantine.path.containsPoint(point) && player.isTrapped()) { // if player was trapped, but now is outside the quarantine, change its state to Passive
                 player.changeState(State.Passive)
                 if (id == myPlayer.id) {
                     myPlayer.changeState(State.Passive)

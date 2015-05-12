@@ -96,6 +96,12 @@ function sendShoutMessage(id) {
     })
 }
 
+function clear(){
+    pubnub.unsubscribe({
+        channel: _channel
+    })
+}
+
 function showPlayersList(list){
 //   	var joinLink 	= "<a href="#" id="join" class="join btn btn-inline btn-sm btn-inverse">join</a></span><span>";
 //   	var releaseLink = "<a href="#" id="release" class="btn btn-inline btn-sm btn-warning">release</a></span><span>";

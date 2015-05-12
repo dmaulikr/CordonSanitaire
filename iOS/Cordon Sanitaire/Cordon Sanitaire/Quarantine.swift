@@ -102,7 +102,7 @@ class Quarantine: NSObject {
                 var nextPlayer = getNextPlayerCounterClockwise(lastPlayer)
                 coords = CGPoint(x: quarantinePlayers[nextPlayer]!.latitude, y: quarantinePlayers[nextPlayer]!.longitude)
                 sortedQuarantineCoords.append(quarantinePlayers[nextPlayer]!.getCoords())
-                self.path.moveToPoint(coords)
+                self.path.addLineToPoint(coords)
                 lastPlayer = nextPlayer
             }
         }
