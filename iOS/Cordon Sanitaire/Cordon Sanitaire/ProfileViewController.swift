@@ -8,7 +8,13 @@
 
 import UIKit
 
+protocol ProfileViewDelegate {
+   func didFinishViewingProfile()
+}
+
 class ProfileViewController: UIViewController {
+    
+    var delegate:ProfileViewDelegate!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -16,6 +22,18 @@ class ProfileViewController: UIViewController {
         // Do any additional setup after loading the view.
     }
 
+    
+    func show() {
+        // animate in the components of this view
+    }
+    
+    func hide() {
+        // animate out the components of this view
+        
+        // tell the delegate to remove us from the view
+        delegate.didFinishViewingProfile()
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

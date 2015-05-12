@@ -8,8 +8,15 @@
 
 import UIKit
 
+protocol HistoryViewDelegate {
+    func didFinishViewingHistory()
+    func didSelectGameInHistory(NSString)
+}
+
 class HistoryViewController: UITableViewController {
 
+    var delegate:HistoryViewDelegate!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -18,6 +25,18 @@ class HistoryViewController: UITableViewController {
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+    }
+    
+    
+    func show() {
+        // animate in the components of this view
+    }
+    
+    func hide() {
+        // animate out the components of this view
+        
+        // tell the delegate to remove us from the view
+        delegate.didFinishViewingHistory()
     }
 
     override func didReceiveMemoryWarning() {

@@ -9,10 +9,16 @@
 
 import UIKit
 
+protocol IntroViewDelegate {
+    func didFinishIntro();
+}
+
 class IntroViewController: UIViewController, UIScrollViewDelegate {
 
     var scrollView:UIScrollView!
     var container:UIView!
+    
+    var delegate: IntroViewDelegate!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,6 +61,17 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
         scrollView.maximumZoomScale = 1.0
         scrollView.zoomScale = 1.0
         
+    }
+    
+    func show() {
+        // animate in the components of this view
+    }
+    
+    func hide() {
+        // animate out the components of this view
+
+        // tell the delegate to remove us from the view
+        delegate.didFinishIntro()
     }
 
     override func didReceiveMemoryWarning() {
