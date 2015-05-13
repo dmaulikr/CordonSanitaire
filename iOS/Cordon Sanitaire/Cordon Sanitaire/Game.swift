@@ -67,36 +67,42 @@ class Game: NSObject{
     private func setGameState(players_usernames: [String]){
         var userQuery = PFQuery(className: "SimpleUser")
         userQuery.whereKey("username", containedIn: players_usernames)
-        var objects = userQuery.findObjects()
-        for obj in objects {
-            if(obj.valueForKey("latitude") != nil && obj.valueForKey("longitude") != nil) {
-                var state = State(rawValue: obj.valueForKey("state") as! String) ?? State.Passive // if there's a state on Parse for this player assign it, if not assign its state to be Passive
-                var id = obj.valueForKey("gkId") as! String
-//                var player = Player(id: obj.valueForKey("gkId") as! String, username: obj.valueForKey("username") as! String, latitude: obj.valueForKey("latitude") as! CLLocationDegrees, longitude: obj.valueForKey("longitude") as! CLLocationDegrees, state: state)
-                self.players[id]?.changeState(state)
-                if (state == State.Active){
-                    self.quarantine.addPlayer(self.players[id]!)
-                }
-                
-                if (id == Client.singleton.id){
-                    self.myPlayer.changeState(state)
+        userQuery.findObjectsInBackgroundWithBlock({(objects: [AnyObject]!, error: NSError!) -> Void in
+            for obj in objects {
+                if(obj.valueForKey("latitude") != nil && obj.valueForKey("longitude") != nil) {
+                    var state = State(rawValue: obj.valueForKey("state") as! String) ?? State.Passive // if there's a state on Parse for this player assign it, if not assign its state to be Passive
+                    var id = obj.valueForKey("gkId") as! String
+    //                var player = Player(id: obj.valueForKey("gkId") as! String, username: obj.valueForKey("username") as! String, latitude: obj.valueForKey("latitude") as! CLLocationDegrees, longitude: obj.valueForKey("longitude") as! CLLocationDegrees, state: state)
+                    self.players[id]?.changeState(state)
+                    if (state == State.Active){
+                        self.quarantine.addPlayer(self.players[id]!)
+                    }
+                    
+                    if (id == Client.singleton.id){
+                        self.myPlayer.changeState(state)
+                    }
                 }
             }
-        }
-        
+        })
         self.update()
         NSLog("The players in this game are: " + players.description)
     }
     
     
     // Get start game start time from Parse
-    class func getStartTime() -> NSDate{
+    class func getStartTime() -> Void{
         var query = PFQuery(className: "Game")
         query.orderByDescending("startTime")
-        var game = query.getFirstObject()
-        var startTime: AnyObject? = game.valueForKey("startTime")
-        NSLog("Game time is " + startTime!.description)
-        return startTime as! NSDate
+        query.getFirstObjectInBackgroundWithBlock({(game: PFObject!, error: NSError!) -> Void in
+            if (error == nil){
+                var startTime = game.valueForKey("startTime") as! NSDate
+                NSLog("GAME: Game time is " + startTime.description)
+                
+                Lobby.singleton.setTimerUntilGameStart(startTime)
+            } else {
+                NSLog("GAME: Problem getting the game time")
+            }
+        })
     }
     
     // Get center of players in the game

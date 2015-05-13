@@ -39,7 +39,11 @@ class Player:NSObject {
         query.getFirstObjectInBackgroundWithBlock({(obj: PFObject!, error: NSError!) -> Void in
             if (error == nil){
                 obj.setValue(newState.rawValue, forKey: "state")
-                obj.save()
+                obj.saveInBackgroundWithBlock({(success: Bool, error: NSError!) -> Void in
+                    if(!success) {
+                        NSLog("Failed to update user state on Parse")
+                    }
+                })
             }
         })
     }

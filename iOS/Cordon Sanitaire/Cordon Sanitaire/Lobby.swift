@@ -24,13 +24,10 @@ class Lobby: NSObject{
         // creates a view controller for the Lobby
         self.viewController = LobbyViewController()
         
-        self.getNewGame()
+        Game.getStartTime()
     }
     
-    func getNewGame(){
-        // get the start time from parse
-        var startTime = Game.getStartTime()
-        
+    func setTimerUntilGameStart(startTime: NSDate){
         // query pubnub time and set up the countdown timer
         PubNub.requestServerTimeTokenWithCompletionBlock({(timetoken: NSNumber!, error: PNError!) -> Void in
             // if successfully got the time
@@ -39,18 +36,18 @@ class Lobby: NSObject{
                 var startTimeToken = startTime.timeIntervalSince1970 // convert start time to seconds from the epoch
                 var secondsUntilStart = startTimeToken - currentTime
                 if (secondsUntilStart > 0){
-                    NSLog("Game is going to start in " + secondsUntilStart.description + " seconds")
+                    NSLog("GAME INFO: Game is going to start in " + secondsUntilStart.description + " seconds")
                     self.countdown_timer = NSTimer.scheduledTimerWithTimeInterval(secondsUntilStart, target: self, selector: Selector("startGame"), userInfo: nil, repeats: false)
                 } else if (abs(secondsUntilStart) < Game.duration){
-                    NSLog("Game in progress")
+                    NSLog("GAME INFO: Game in progress")
                     self.startGameAfter(abs(secondsUntilStart))
                 }
                 else {
-                    NSLog("Game is already over :(")
+                    NSLog("GAME INFO: Game is already over :(")
                 }
                 
             } else {
-                NSLog("Problem getting the PubNub time")
+                NSLog("LOBBY: Problem getting the PubNub time")
             }
         })
     }
@@ -61,8 +58,8 @@ class Lobby: NSObject{
         Game.singleton.addPlayer(player) // add player to map
         self.viewController.update() // update the view to show the added player
         
-        NSLog("Player \(player) was added to the lobby")
-        NSLog("The Players in the lobby are: " + self.players.keys.array.description)
+        NSLog("LOBBY: Player \(player) was added to the lobby")
+        NSLog("LOBBY: The Players in the lobby are: " + self.players.keys.array.description)
     }
     
     // Add an array of players to the lobby #not in use
@@ -71,8 +68,6 @@ class Lobby: NSObject{
             self.addPlayer(player)
         }
         self.viewController.update()
-        NSLog("Players \(newPlayers) were added to the lobby")
-        NSLog("The Players in the lobby are: " + self.players.keys.array.description)
     }
     
     func emptyLobby(){

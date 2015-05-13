@@ -54,11 +54,11 @@ class Client: NSObject, PNDelegate, CLLocationManagerDelegate {
 
         PubNub.subscribeOn([self.private_channel], withCompletionHandlingBlock: {(state: PNSubscriptionProcessState, object: [AnyObject]!, error: PNError!) -> Void in
             if (error == nil){
-                NSLog("Successfuly subscribed to private channel")
+                NSLog("PUBNUB: Successfuly subscribed to private channel")
                 self.tellCloudCodeAboutMe()
             }
             else {
-                NSLog("An error occured when subscribing to private channel: " + error.description)
+                NSLog("PUBNUB: An error occured when subscribing to private channel: " + error.description)
                 let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
                 let viewController = appDelegate.window!.rootViewController as! ViewController
                 viewController.showRetryAlert()
@@ -118,10 +118,10 @@ class Client: NSObject, PNDelegate, CLLocationManagerDelegate {
         PubNub.subscribeOn([self.group_channel], withCompletionHandlingBlock: {(state: PNSubscriptionProcessState, object: [AnyObject]!, error: PNError!) -> Void in
             if (error == nil){
                 Action.addToLobby(self.id!, username: self.username!, location: Game.singleton.myLocation)
-                NSLog("Successfuly subscribed to group channel")
+                NSLog("PUBNUB: Successfuly subscribed to group channel")
             }
             else{
-                NSLog("An error occured when subscribing to group channel: " + error.description)
+                NSLog("PUBNUB: An error occured when subscribing to group channel: " + error.description)
             }
         })
         PubNub.requestParticipantsListFor([self.group_channel])
@@ -143,25 +143,25 @@ class Client: NSObject, PNDelegate, CLLocationManagerDelegate {
         // query users by their PubNub Id on Parse for their username,latitude and longitude in order to add to the lobby
         var userQuery = PFQuery(className: "SimpleUser")
         userQuery.whereKey("pnId", containedIn: players_identifiers)
-        var objects = userQuery.findObjects()
-        for obj in objects {
-            if(obj.valueForKey("latitude") != nil && obj.valueForKey("longitude") != nil) {
-                var player = Player(id: obj.valueForKey("gkId") as! String, username: obj.valueForKey("username") as! String, latitude: obj.valueForKey("latitude") as! CLLocationDegrees, longitude: obj.valueForKey("longitude") as! CLLocationDegrees, state: State.OnLobby)
-                Lobby.singleton.addPlayer(player)
+        userQuery.findObjectsInBackgroundWithBlock({(objects: [AnyObject]!, error: NSError!) -> Void in
+            for obj in objects {
+                if(obj.valueForKey("latitude") != nil && obj.valueForKey("longitude") != nil) {
+                    var player = Player(id: obj.valueForKey("gkId") as! String, username: obj.valueForKey("username") as! String, latitude: obj.valueForKey("latitude") as! CLLocationDegrees, longitude: obj.valueForKey("longitude") as! CLLocationDegrees, state: State.OnLobby)
+                    Lobby.singleton.addPlayer(player)
+                }
             }
-        }
+        })
     }
     
     func pubnubClient(client: PubNub!, didSubscribeOn channelObjects: [AnyObject]!) {
-        NSLog("Subscribed on " + channelObjects.description)
-        NSLog(client.subscribedObjectsList().description)
+        NSLog("PUBNUB CHANNEL: Subscribed on " + channelObjects.description)
     }
 
     func pubnubClient(client: PubNub!, didReceiveMessage message: PNMessage!) {
         var action = Action.parseMessage(message)
         switch action.header {
         case Header.Shout:
-            NSLog("Received " + action.header.rawValue + " from " + action.id!)
+            NSLog("PUBNUB MESSAGE: Received " + action.header.rawValue + " from " + action.id!)
             break
         case Header.Join:
             NSLog(action.id! + " " + action.header.rawValue)
@@ -175,23 +175,22 @@ class Client: NSObject, PNDelegate, CLLocationManagerDelegate {
             setGroupChannel(action.channel!)
             break
         case Header.AddGame:
-            Lobby.singleton.getNewGame()
+            Game.getStartTime()
             break
         case Header.AddToLobby:
             var newPlayer = Player(id: action.id!, username: action.username!, latitude: action.lat!, longitude: action.lon!, state: State.OnLobby)
             Lobby.singleton.addPlayer(newPlayer)
         default:
-            NSLog("Header: " + action.header.rawValue + message.message.description)
+            NSLog("UNKNOWN ACTION: Header: " + action.header.rawValue + message.message.description)
         }
     }
     /////////////////////////////////////
     func tellCloudCodeAboutMe() {
-        NSLog(self.username!)
         PFCloud.callFunctionInBackground("dummyKMeans", withParameters: ["id": self.username!] , block: {(result: AnyObject!, error: NSError!) -> Void in
             if (error == nil){
                 NSLog("CLOUD CODE: successfully told Cloud Code about this user")
             } else {
-                NSLog("CLOUD CODE: An error has occured")
+                NSLog("CLOUD CODE: An error has occured when contacting Cloud Code")
             }
         })
     }
@@ -217,21 +216,21 @@ class Client: NSObject, PNDelegate, CLLocationManagerDelegate {
         Game.singleton.myLocation = newLocation.coordinate
         
         if (self.id != nil) {
+            self.location_manager.stopUpdatingLocation()
             var query = PFQuery(className: "SimpleUser")
             query.whereKey("gkId", equalTo: self.id)
-            var myParseUser = query.getFirstObject()
-            
-            if (myParseUser != nil){
-                myParseUser.setValuesForKeysWithDictionary(["latitude": newLocation.coordinate.latitude, "longitude": newLocation.coordinate.longitude])
-                myParseUser.saveInBackgroundWithBlock({(success: Bool, error: NSError!) -> Void in
-                    if (!success){
-                        NSLog("Failed to update user's location on Parse")
-                    } else {
-                        NSLog("Successfully updated user's location on Parse")
-                        self.location_manager.stopUpdatingLocation()
-                    }
-                })
-            }
+            query.getFirstObjectInBackgroundWithBlock({(myParseUser: PFObject!, error: NSError!) -> Void in
+                if (myParseUser != nil){
+                    myParseUser.setValuesForKeysWithDictionary(["latitude": newLocation.coordinate.latitude, "longitude": newLocation.coordinate.longitude])
+                    myParseUser.saveInBackgroundWithBlock({(success: Bool, error: NSError!) -> Void in
+                        if (!success){
+                            NSLog("PARSE: Failed to update user's location on Parse")
+                        } else {
+                            NSLog("PARSE: Successfully updated user's location on Parse")
+                        }
+                    })
+                }
+            })
         }
     }
     
