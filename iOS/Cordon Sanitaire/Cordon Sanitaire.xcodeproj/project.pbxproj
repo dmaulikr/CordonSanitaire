@@ -8,9 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		285177941B41CA070023CE96 /* Cutive-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 285177931B41CA070023CE96 /* Cutive-Regular.ttf */; };
-		285177981B41E9A40023CE96 /* australia.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 285177971B41E9A40023CE96 /* australia.jpg */; };
-		2851779C1B41FB940023CE96 /*  blue.png in Resources */ = {isa = PBXBuildFile; fileRef = 2851779B1B41FB940023CE96 /*  blue.png */; };
-		2851779E1B41FEA80023CE96 /* UROPjpgs.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2851779D1B41FEA80023CE96 /* UROPjpgs.jpg */; };
 		2B0AE3731AAA74E800C508C7 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B0AE3721AAA74E800C508C7 /* Utilities.swift */; };
 		2B0AE3751AAA7CD700C508C7 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B0AE3741AAA7CD700C508C7 /* MapKit.framework */; };
 		2B0AE3771AAA7D3900C508C7 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B0AE3761AAA7D3900C508C7 /* UIKit.framework */; };
@@ -170,10 +167,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		285177931B41CA070023CE96 /* Cutive-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Cutive-Regular.ttf"; path = "../../../../../Downloads/cutive/Cutive-Regular.ttf"; sourceTree = "<group>"; };
-		285177971B41E9A40023CE96 /* australia.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = australia.jpg; path = ../../../../../Desktop/Desktop/UROP/australia.jpg; sourceTree = "<group>"; };
-		2851779B1B41FB940023CE96 /*  blue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = " blue.png"; path = "../../../../../Desktop/Desktop/UROP/ blue.png"; sourceTree = "<group>"; };
-		2851779D1B41FEA80023CE96 /* UROPjpgs.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = UROPjpgs.jpg; path = ../../../../../Desktop/Desktop/UROP/UROPjpgs.jpg; sourceTree = "<group>"; };
+		285177931B41CA070023CE96 /* Cutive-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Cutive-Regular.ttf"; path = "../Assets/Fonts/Cutive/Cutive-Regular.ttf"; sourceTree = "<group>"; };
 		2B0AE3721AAA74E800C508C7 /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 		2B0AE3741AAA7CD700C508C7 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		2B0AE3761AAA7D3900C508C7 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -533,9 +527,6 @@
 			isa = PBXGroup;
 			children = (
 				2BA5D3981AB2E55800F2567E /* IntroViewController.swift */,
-				285177971B41E9A40023CE96 /* australia.jpg */,
-				2851779B1B41FB940023CE96 /*  blue.png */,
-				2851779D1B41FEA80023CE96 /* UROPjpgs.jpg */,
 				2BA5D39A1AB2E56700F2567E /* MapViewController.swift */,
 				6BE4B9F71AD5D54C00340E3C /* PlayerAnnotation.swift */,
 				6BE4B9F91AD5D6A700340E3C /* PlayerAnnotationView.swift */,
@@ -1177,13 +1168,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2851779C1B41FB940023CE96 /*  blue.png in Resources */,
-				2851779E1B41FEA80023CE96 /* UROPjpgs.jpg in Resources */,
 				6BD04D841AAE67E5003AE167 /* index.html in Resources */,
 				6BD04D831AAE67E5003AE167 /* global.json in Resources */,
 				2B487FEA1A95589200AB6375 /* Main.storyboard in Resources */,
 				2BD93CA21ACF5BBA0043BA20 /* Images.xcassets in Resources */,
-				285177981B41E9A40023CE96 /* australia.jpg in Resources */,
 				6B8C27E41A97E51C0084EB96 /* PNLoggerSymbols.plist in Resources */,
 				6BD04D821AAE67E5003AE167 /* main.js in Resources */,
 				285177941B41CA070023CE96 /* Cutive-Regular.ttf in Resources */,
