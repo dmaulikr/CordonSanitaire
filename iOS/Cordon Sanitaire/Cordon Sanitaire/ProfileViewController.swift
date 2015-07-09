@@ -18,10 +18,31 @@ class ProfileViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let background = UIView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height))
+        background.backgroundColor = UIColor.whiteColor()
+        self.view.addSubview(background)
 
         // Do any additional setup after loading the view.
+        
+        //Return to home screen.
+        let backButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
+        backButton.frame = CGRectMake(0, 0, self.view.frame.width - 100, 50)
+        backButton.center = self.view.center
+        backButton.setTitle("go back", forState: UIControlState.Normal)
+        backButton.setTitleColor(UIColor.blueColor(), forState: UIControlState.Normal)
+        backButton.titleLabel?.font = UIFont(name: "Cutive-Regular", size: 20)
+        backButton.alpha = 1.0
+        backButton.addTarget(self, action: "buttonPress:", forControlEvents: UIControlEvents.TouchUpInside)
+        self.view.addSubview(backButton)
+        //Play around with: font (cutive cuts off at top), alignment, button padding
+        
     }
 
+    func buttonPress(sender: UIButton!){
+        let rootViewController: UIViewController = ViewController()
+        self.presentViewController(rootViewController, animated: true, completion: nil)
+    }
     
     func show() {
         // animate in the components of this view

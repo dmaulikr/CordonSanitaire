@@ -22,7 +22,7 @@ class ViewController: UIViewController, GameDelegate {
         let playButton   = UIButton.buttonWithType(UIButtonType.System) as! UIButton
         
         playButton.frame = CGRectMake(0, 0, 300, 50)
-        playButton.center = self.view.center
+        playButton.center = CGPointMake(self.view.center.x, self.view.center.y - 75)
         playButton.setTitle("PLAY", forState: UIControlState.Normal)
         playButton.titleLabel?.textColor = UIColor.whiteColor()
         playButton.titleLabel?.font = UIFont(name: "helvetica neue", size: 48.0)
@@ -32,7 +32,7 @@ class ViewController: UIViewController, GameDelegate {
         let introButton   = UIButton.buttonWithType(UIButtonType.System) as! UIButton
         
         introButton.frame = CGRectMake(0, 0, 300, 50)
-        introButton.center = CGPointMake(self.view.center.x, self.view.center.y + 75)
+        introButton.center = CGPointMake(self.view.center.x, self.view.center.y)
         introButton.setTitle("INTRO", forState: UIControlState.Normal)
         introButton.titleLabel?.textColor = UIColor.whiteColor()
         introButton.titleLabel?.font = UIFont(name: "helvetica neue", size: 48.0)
@@ -42,6 +42,17 @@ class ViewController: UIViewController, GameDelegate {
         Game.singleton.delegate = self
         
         self.authenticateLocalPlayer()
+        
+        let profileButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
+        
+        profileButton.frame = CGRectMake(0, 0, 300, 50)
+        profileButton.center = CGPointMake(self.view.center.x, self.view.center.y + 75)
+        profileButton.setTitle("PROFILE", forState: UIControlState.Normal)
+        profileButton.titleLabel?.textColor = UIColor.whiteColor()
+        profileButton.titleLabel?.font = UIFont(name: "helvetica neue", size: 48.0)
+        profileButton.addTarget(self, action: "onButtonPress:", forControlEvents: UIControlEvents.TouchUpInside)
+        self.view.addSubview(profileButton)
+        
 
     }
     
@@ -75,6 +86,11 @@ class ViewController: UIViewController, GameDelegate {
             // display the map view
             let introViewController:IntroViewController = IntroViewController()
             self.presentViewController(introViewController, animated: true, completion: nil)
+        }
+        else if(sender.titleLabel?.text == "PROFILE") {
+            //go to ProfileViewController
+            let profileViewController:ProfileViewController = ProfileViewController()
+            self.presentViewController(profileViewController, animated: true, completion: nil)
         }
     }
     

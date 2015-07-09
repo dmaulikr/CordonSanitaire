@@ -104,6 +104,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
             self.patientZeroIndicator.addAnimation(pZeroAnimation, forKey: "lineWidth")
         })
     }
+
     
     func addMap() {
         self.view.backgroundColor = UIColor.blackColor()
@@ -315,11 +316,11 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
                 self.view.addSubview(endPopView)
 
                 var endTextView: UILabel = UILabel()
-                endTextView.frame = CGRectMake(25, 70, box.width, 50)
+                endTextView.frame = CGRectMake(25, 70, box.width-50, 50)
                 endTextView.text = "Sample Text"
                 endTextView.textColor = UIColor.blackColor()
                 endTextView.font = UIFont(name: "Cutive-Regular", size: 20)
-                endTextView.backgroundColor = UIColor.blackColor()
+                endTextView.backgroundColor = UIColor.clearColor()
                 endTextView.alpha = 0.0
                 endTextView.textAlignment = NSTextAlignment.Center
                 
@@ -330,7 +331,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 */
 
                 let backButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
-                backButton.frame = CGRectMake(0, 0, box.width, 50)
+                backButton.frame = CGRectMake(0, 0, box.width, 60)
                 backButton.center = self.view.center
                 backButton.setTitle("Go Back", forState: UIControlState.Normal)
                 backButton.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
