@@ -8,6 +8,7 @@
 
 import UIKit
 import MapKit
+import QuartzCore
 
 class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate{
 
@@ -25,6 +26,12 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     var startTime = 0.0
     
     var theButton = UIButton()
+    
+    var endPopView = UIView()
+    //let endBack = UIView()
+    //var endTextView: UITextView = UITextView()
+    var timeOver: Bool = false
+    
     
     var patientZeroIndicator:CAShapeLayer!
     
@@ -207,6 +214,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         return color
     }
     
+    
     // creates our initial annotations
     func mapView(mapView: MKMapView!, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView! {
         if !(annotation is PlayerAnnotation) {
@@ -248,6 +256,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         self.view.addSubview(notificationsView)
     }
     
+    
     func mapView(mapView: MKMapView!, regionDidChangeAnimated animated: Bool) {
         // if the region changes, let's bring us back to where we want to be
         
@@ -285,6 +294,78 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         timerTextView.selectable = false
         timerTextView.editable = false
     }
+    
+    //func endScreen(){
+        
+    func addPopover() {
+            if (timeOver == true){
+                /*endBack = UIView(frame: CGRectMake(0, 0, self.view.frame.width, self.view.frame.height))
+                endBack.backgroundColor = UIColor.blackColor()
+                endBack.alpha = 0.0
+                UIView.animateWithDuration(1.0, delay: 2.0, options: UIViewAnimationOptions.CurveEaseIn, animations: {self.endPop.alpha = 0.4}, completion: nil)
+                self.view.addSubview(endBack)
+                */
+                
+                let box = CGRectMake(20, 50, self.view.frame.width - 40, self.view.frame.height - 90)
+                endPopView = UIView(frame: box)
+                //endPop.center = CGPoint(x:self.view.center.x, y:self.view.frame.height)
+                endPopView.backgroundColor = UIColor.whiteColor()
+                endPopView.alpha = 0.0
+                endPopView.layer.cornerRadius = 25
+                self.view.addSubview(endPopView)
+
+                var endTextView: UILabel = UILabel()
+                endTextView.frame = CGRectMake(25, 70, box.width, 50)
+                endTextView.text = "Sample Text"
+                endTextView.textColor = UIColor.blackColor()
+                endTextView.font = UIFont(name: "Cutive-Regular", size: 20)
+                endTextView.backgroundColor = UIColor.blackColor()
+                endTextView.alpha = 0.0
+                endTextView.textAlignment = NSTextAlignment.Center
+                
+                /*//var endContentView: UIWebView = UIWebView()
+                let myWebView:UIWebView = UIWebView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.width, UIScreen.mainScreen().bounds.height))
+                myWebView.loadRequest(NSURLRequest(URL: NSURL(string: "http://www.sourcefreeze.com")!))
+                self.view.addSubview(myWebView)
+*/
+
+                let backButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
+                backButton.frame = CGRectMake(0, 0, box.width, 50)
+                backButton.center = self.view.center
+                backButton.setTitle("Go Back", forState: UIControlState.Normal)
+                backButton.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
+                backButton.titleLabel?.font = UIFont(name: "Cutive-Regular", size: 10)
+                backButton.alpha = 0.0
+                backButton.addTarget(self, action: "buttonPress:", forControlEvents: UIControlEvents.TouchUpInside)
+                
+                
+                //self.view.sendSubviewToBack(endPopView)
+                endPopView.addSubview(endTextView)
+                endPopView.addSubview(backButton)
+                
+                UIView.animateWithDuration(0.8,
+                    delay: 1.5,
+                    options: UIViewAnimationOptions.CurveEaseIn,
+                    animations: {
+                        self.endPopView.alpha = 1.0;
+                        endTextView.alpha = 1.0;
+                        backButton.alpha = 1.0;
+                    },
+                    
+                    completion: nil)
+                
+                endPopView.bringSubviewToFront(endTextView)
+                endPopView.bringSubviewToFront(backButton)
+                
+                
+                
+                //endPopView.addSubview(endTextView) //nested views
+                
+                //Close button, return to root view controller.
+                
+            }
+
+        }
     
     func addPlayerToMap(location:CLLocationCoordinate2D, playerID:String) {
         // place a pin to show that we can place annotations
@@ -433,11 +514,15 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
             gameTimer.invalidate()
             gameTimer.isEqual(nil)
             timerTextView.text = "00:00.00"
+            timeOver = true
+            addPopover()
         }
         else {
             timerTextView.text = NSString(format: "00:%@%.2f", (timeLeft < 10.0) ? "0" : "", timeLeft) as String            
         }
     }
+    
+    
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -494,6 +579,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         
         println("the button is actually pressed");
     }
+    
+    
     func showJoinButton(){
         theButton.setTitle("JOIN", forState: UIControlState.Normal)
         theButton.backgroundColor = UIColor(netHex: cs_yellow)
@@ -507,6 +594,12 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     func menuButtonPressed(sender: AnyObject) {
     }
     
+    func buttonPress(sender: UIButton!){
+        let rootViewController: UIViewController = ViewController()
+        self.presentViewController(rootViewController, animated: true, completion: nil)
+    }
+    
+
 
 
     /*
