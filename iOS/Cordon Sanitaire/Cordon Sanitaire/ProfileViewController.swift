@@ -25,7 +25,11 @@ class ProfileViewController: UIViewController {
         
         let background = UIView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height))
         background.backgroundColor = UIColor.whiteColor()
+        let backgroundHalf = UIView(frame: CGRect(x: self.view.frame.width/8, y: 0, width: 7*self.view.frame.width/8, height: self.view.frame.height))
+        backgroundHalf.backgroundColor = UIColor(netHex: cs_blue)
+        
         self.view.addSubview(background)
+        self.view.addSubview(backgroundHalf)
 
         // Do any additional setup after loading the view.
         
@@ -59,13 +63,20 @@ class ProfileViewController: UIViewController {
     func addGameCenterProfile(){
         //Displays Game Center username and image.
         let userNameDisplay = UILabel()
-        userNameDisplay.frame = CGRectMake(10, 0, self.view.frame.width - 20, 50)
-        userNameDisplay.font = UIFont(name: "helvetica neue", size: 20)
+        userNameDisplay.frame = CGRectMake(self.view.center.x/4 + 10, 0, self.view.frame.width - 20, 50)
+        userNameDisplay.font = UIFont(name: "helvetica neue", size: 30)
+        
+        let userImageBack = UIImageView()
+        userImageBack.frame = CGRectMake(0, 0, 200, 200)
+        userImageBack.center = CGPointMake(self.view.center.x + self.view.center.x/16, self.view.center.y - 120)
+        userImageBack.layer.cornerRadius = 100
+        userImageBack.backgroundColor = UIColor.whiteColor()
+        self.view.addSubview(userImageBack)
         
         var userImageDisplay = UIImageView(image: nil)
-        userImageDisplay.frame = CGRectMake(0, 0, 100, 100)
-        userImageDisplay.center = CGPointMake(self.view.center.x, self.view.center.y - 100)
-        userImageDisplay.layer.cornerRadius = 50
+        userImageDisplay.frame = CGRectMake(0, 0, 150, 150)
+        userImageDisplay.center = CGPointMake(self.view.center.x + self.view.center.x/16, self.view.center.y - 120)
+        userImageDisplay.layer.cornerRadius = 75
         userImageDisplay.clipsToBounds = true
         userImageDisplay.backgroundColor = UIColor.blueColor()
         
