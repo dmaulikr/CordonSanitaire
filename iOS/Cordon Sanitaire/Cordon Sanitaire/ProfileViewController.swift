@@ -7,6 +7,9 @@
 //
 
 import UIKit
+import GameKit
+
+
 
 protocol ProfileViewDelegate {
    func didFinishViewingProfile()
@@ -27,17 +30,31 @@ class ProfileViewController: UIViewController {
         
         //Return to home screen.
         let backButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
-        backButton.frame = CGRectMake(0, 0, self.view.frame.width - 100, 50)
-        backButton.center = self.view.center
+        backButton.frame = CGRectMake(self.view.frame.width/2, self.view.frame.height - 50, self.view.frame.width - 100, 50)
+        //backButton.center = self.view.center
         backButton.setTitle("go back", forState: UIControlState.Normal)
         backButton.setTitleColor(UIColor.blueColor(), forState: UIControlState.Normal)
-        backButton.titleLabel?.font = UIFont(name: "Cutive-Regular", size: 20)
+        backButton.titleLabel?.font = UIFont(name: "helvetica neue", size: 20)
         backButton.alpha = 1.0
         backButton.addTarget(self, action: "buttonPress:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(backButton)
         //Play around with: font (cutive cuts off at top), alignment, button padding
         
+        let userNameDisplay = UILabel()
+        userNameDisplay.frame = CGRectMake(10, 0, self.view.frame.width - 20, 50)
+        userNameDisplay.font = UIFont(name: "helvetica neue", size: 20)
+        var localPlayer = GKLocalPlayer.localPlayer()
+        if(localPlayer.authenticated) {
+            var userName: String = localPlayer.alias
+            userNameDisplay.text = userName
+            self.view.addSubview(userNameDisplay)
+        } else {
+            var userName: String = "Game Center Error"
+            userNameDisplay.text = userName
+            self.view.addSubview(userNameDisplay)
+        }
     }
+
 
     func buttonPress(sender: UIButton!){
         let rootViewController: UIViewController = ViewController()
@@ -72,3 +89,4 @@ class ProfileViewController: UIViewController {
     */
 
 }
+

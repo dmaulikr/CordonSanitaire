@@ -9,6 +9,7 @@
 import UIKit
 import GameKit
 
+
 class ViewController: UIViewController, GameDelegate {
     
     override func viewDidLoad() {
@@ -42,6 +43,7 @@ class ViewController: UIViewController, GameDelegate {
         Game.singleton.delegate = self
         
         self.authenticateLocalPlayer()
+        
         
         let profileButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
         
