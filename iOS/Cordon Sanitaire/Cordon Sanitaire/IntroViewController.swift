@@ -44,14 +44,8 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
         scrollView.contentSize = container.frame.size
         
         //button 
-        let backButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
-        backButton.frame = CGRectMake(0, 0, 200, 50)
-        backButton.center = self.view.center
-        backButton.setTitle("Go Back", forState: UIControlState.Normal)
-        backButton.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
-        //backButton.titleLabel?.font = UIFont(name: "Cutive-Regular", size: 30)
-        backButton.addTarget(self, action: "buttonPress:", forControlEvents: UIControlEvents.TouchUpInside)
-        self.view.addSubview(backButton)
+        addBackButton()
+        
         
         //add scene 1 - Britain
         let scene1 = UIView(frame: self.view.frame)
@@ -183,7 +177,18 @@ class IntroViewController: UIViewController, UIScrollViewDelegate {
         
     }
     
-    func buttonPress(sender: UIButton!){
+    func addBackButton(){
+        let backButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
+        backButton.frame = CGRectMake(0, 0, 200, 50)
+        backButton.center = self.view.center
+        backButton.setTitle("Go Back", forState: UIControlState.Normal)
+        backButton.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
+        //backButton.titleLabel?.font = UIFont(name: "Cutive-Regular", size: 30)
+        backButton.addTarget(self, action: "backButtonPress:", forControlEvents: UIControlEvents.TouchUpInside)
+        self.view.addSubview(backButton)
+    }
+    
+    func backButtonPress(sender: UIButton!){
         let rootViewController: UIViewController = ViewController()
         self.presentViewController(rootViewController, animated: true, completion: nil)
     }

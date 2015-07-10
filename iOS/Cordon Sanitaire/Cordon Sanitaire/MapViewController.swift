@@ -331,13 +331,13 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 */
 
                 let backButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
-                backButton.frame = CGRectMake(0, 0, box.width, 60)
-                backButton.center = self.view.center
+                backButton.frame = CGRectMake(0, 0, 100, 60)
+                //backButton.center = self.view.center
                 backButton.setTitle("Go Back", forState: UIControlState.Normal)
                 backButton.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
                 backButton.titleLabel?.font = UIFont(name: "Cutive-Regular", size: 10)
                 backButton.alpha = 0.0
-                backButton.addTarget(self, action: "buttonPress:", forControlEvents: UIControlEvents.TouchUpInside)
+                backButton.addTarget(self, action: "backButtonPress:", forControlEvents: UIControlEvents.TouchUpInside)
                 
                 
                 //self.view.sendSubviewToBack(endPopView)
@@ -595,7 +595,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     func menuButtonPressed(sender: AnyObject) {
     }
     
-    func buttonPress(sender: UIButton!){
+    func backButtonPress(sender: UIButton!){
         let rootViewController: UIViewController = ViewController()
         self.presentViewController(rootViewController, animated: true, completion: nil)
     }
