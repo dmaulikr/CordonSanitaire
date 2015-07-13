@@ -28,7 +28,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     var theButton = UIButton()
     
     var endPopView = UIView()
-    //let endBack = UIView()
+    var endBack = UIView()
     //var endTextView: UITextView = UITextView()
     var timeOver: Bool = false
     
@@ -86,7 +86,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     }
     
     func addStatusAnimation() {
-        
+        /*
         UIView.animateWithDuration( NSTimeInterval.infinity, animations: { () -> Void in
             
             // Create a blank animation using the keyPath "cornerRadius", the property we want to animate
@@ -102,7 +102,9 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
             
             // Finally, add the animation to the layer
             self.patientZeroIndicator.addAnimation(pZeroAnimation, forKey: "lineWidth")
-        })
+
+
+        }) */
     }
 
     
@@ -300,12 +302,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         
     func addPopover() {
             if (timeOver == true){
-                /*endBack = UIView(frame: CGRectMake(0, 0, self.view.frame.width, self.view.frame.height))
+                endBack.frame = CGRectMake(0, 0, self.view.frame.width, self.view.frame.height)
                 endBack.backgroundColor = UIColor.blackColor()
                 endBack.alpha = 0.0
-                UIView.animateWithDuration(1.0, delay: 2.0, options: UIViewAnimationOptions.CurveEaseIn, animations: {self.endPop.alpha = 0.4}, completion: nil)
-                self.view.addSubview(endBack)
-                */
+                
                 
                 let box = CGRectMake(20, 50, self.view.frame.width - 40, self.view.frame.height - 90)
                 endPopView = UIView(frame: box)
@@ -313,11 +313,13 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
                 endPopView.backgroundColor = UIColor.whiteColor()
                 endPopView.alpha = 0.0
                 endPopView.layer.cornerRadius = 25
+                self.view.addSubview(endBack)
                 self.view.addSubview(endPopView)
+                self.view.bringSubviewToFront(endPopView)
 
                 var endTextView: UILabel = UILabel()
                 endTextView.frame = CGRectMake(25, 70, box.width-50, 50)
-                endTextView.text = "Sample Text"
+                endTextView.text = "Game Over"
                 endTextView.textColor = UIColor.blackColor()
                 endTextView.font = UIFont(name: "Cutive-Regular", size: 20)
                 endTextView.backgroundColor = UIColor.clearColor()
@@ -335,22 +337,22 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
                 //backButton.center = self.view.center
                 backButton.setTitle("Go Back", forState: UIControlState.Normal)
                 backButton.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
-                backButton.titleLabel?.font = UIFont(name: "Cutive-Regular", size: 10)
+                backButton.titleLabel?.font = UIFont(name: "helvetica neue", size: 10)
                 backButton.alpha = 0.0
                 backButton.addTarget(self, action: "backButtonPress:", forControlEvents: UIControlEvents.TouchUpInside)
                 
                 
-                //self.view.sendSubviewToBack(endPopView)
                 endPopView.addSubview(endTextView)
                 endPopView.addSubview(backButton)
                 
                 UIView.animateWithDuration(0.8,
                     delay: 1.5,
-                    options: UIViewAnimationOptions.CurveEaseIn,
+                    options: nil,
                     animations: {
                         self.endPopView.alpha = 1.0;
                         endTextView.alpha = 1.0;
                         backButton.alpha = 1.0;
+                        self.endBack.alpha = 0.4;
                     },
                     
                     completion: nil)

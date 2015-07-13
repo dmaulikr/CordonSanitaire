@@ -35,6 +35,8 @@ class ProfileViewController: UIViewController {
         
         addBackButton()
         addGameCenterProfile()
+        addstatDots()
+        addStatistics()
         
     }
     
@@ -42,10 +44,10 @@ class ProfileViewController: UIViewController {
     func addBackButton(){
         //Button to return to home screen.
         let backButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
-        backButton.frame = CGRectMake(self.view.frame.width/2, self.view.frame.height - 50, self.view.frame.width - 100, 50)
+        backButton.frame = CGRectMake(self.view.frame.width/2, self.view.frame.height - 40, self.view.frame.width - 100, 40)
         //backButton.center = self.view.center
-        backButton.setTitle("go back", forState: UIControlState.Normal)
-        backButton.setTitleColor(UIColor.blueColor(), forState: UIControlState.Normal)
+        backButton.setTitle("Back", forState: UIControlState.Normal)
+        backButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
         backButton.titleLabel?.font = UIFont(name: "helvetica neue", size: 20)
         backButton.alpha = 1.0
         backButton.addTarget(self, action: "backButtonPress:", forControlEvents: UIControlEvents.TouchUpInside)
@@ -104,6 +106,69 @@ class ProfileViewController: UIViewController {
             userNameDisplay.text = userName
             self.view.addSubview(userNameDisplay)
         }
+    }
+    
+    func addstatDots() {
+        
+        let dotBack1 = UIView(frame: CGRectMake(self.view.frame.width/8 - 15, 3*self.view.frame.height/6 + 5, 30, 30))
+        let dotBack2 = UIView(frame: CGRectMake(self.view.frame.width/8 - 15, 2*self.view.frame.height/3 - 15, 30, 30))
+        let dotBack3 = UIView(frame: CGRectMake(self.view.frame.width/8 - 15, 5*self.view.frame.height/6 - 35, 30, 30))
+        dotBack1.backgroundColor = UIColor(netHex: cs_blue)
+        dotBack2.backgroundColor = UIColor(netHex: cs_blue)
+        dotBack3.backgroundColor = UIColor(netHex: cs_blue)
+        dotBack1.layer.cornerRadius = 16
+        dotBack2.layer.cornerRadius = 16
+        dotBack3.layer.cornerRadius = 16
+        
+        self.view.addSubview(dotBack1)
+        self.view.addSubview(dotBack2)
+        self.view.addSubview(dotBack3)
+        
+        let dot1 = UIView(frame: CGRectMake(self.view.frame.width/8 - 10, 1*self.view.frame.height/2 + 10, 20, 20))
+        let dot2 = UIView(frame: CGRectMake(self.view.frame.width/8 - 10, 2*self.view.frame.height/3 - 10, 20, 20))
+        let dot3 = UIView(frame: CGRectMake(self.view.frame.width/8 - 10, 5*self.view.frame.height/6 - 30, 20, 20))
+        dot1.backgroundColor = UIColor(netHex: cs_yellow)
+        dot2.backgroundColor = UIColor.whiteColor()
+        dot3.backgroundColor = UIColor(netHex: cs_orange)
+        dot1.layer.cornerRadius = 10
+        dot2.layer.cornerRadius = 10
+        dot3.layer.cornerRadius = 10
+        
+        self.view.addSubview(dot1)
+        self.view.addSubview(dot2)
+        self.view.addSubview(dot3)
+        
+    }
+    
+    func addStatistics() {
+        let blurb1 = UILabel(frame: CGRectMake(self.view.frame.width/8 + 30, 3*self.view.frame.height/6 + 10, 300, 20))
+        let blurb2 = UILabel(frame: CGRectMake(self.view.frame.width/8 + 30, 2*self.view.frame.height/3 - 10, 300, 20))
+        let blurb3 = UILabel(frame: CGRectMake(self.view.frame.width/8 + 30, 5*self.view.frame.height/6 - 30, 300, 20))
+        let blurb4 = UILabel(frame: CGRectMake(self.view.frame.width/8 + 30, 5*self.view.frame.height/6 - 10, 300, 20))
+        let blurb5 = UILabel(frame: CGRectMake(self.view.frame.width/8 + 30, 5*self.view.frame.height/6 + 10, 300, 20))
+        blurb1.textColor = UIColor.whiteColor()
+        blurb2.textColor = UIColor.whiteColor()
+        blurb3.textColor = UIColor.whiteColor()
+        blurb4.textColor = UIColor.whiteColor()
+        blurb5.textColor = UIColor.whiteColor()
+        blurb1.font = UIFont(name: "helvetica neue", size: 15)
+        blurb2.font = UIFont(name: "helvetica neue", size: 15)
+        blurb3.font = UIFont(name: "helvetica neue", size: 15)
+        blurb4.font = UIFont(name: "helvetica neue", size: 15)
+        blurb5.font = UIFont(name: "helvetica neue", size: 15)
+
+        blurb1.text = "# times engaged in front line"
+        blurb2.text = "# times assisted passively"
+        blurb3.text = "# times sacrificed self"
+        blurb4.text = "# people trapped"
+        blurb5.text = "# people saved"
+        
+        self.view.addSubview(blurb1)
+        self.view.addSubview(blurb2)
+        self.view.addSubview(blurb3)
+        self.view.addSubview(blurb4)
+        self.view.addSubview(blurb5)
+        
     }
     
     func show() {
