@@ -17,16 +17,18 @@ var pubnub = {
 var group_channel = "group0"
 
 Parse.Cloud.define("dummyKMeans", function(request, response){
+    
     var channel = request.params.id
-                   sendMessage({
-                               "action": "SubscribeToChannel",
-                               "channel": group_channel
-                               }, channel, function() {
-        response.success("Success")
+    sendMessage({
+       "action": "SubscribeToChannel",
+       "channel": group_channel
+       }, channel, function() {
+            response.success("Success")
     })
 });
 
 function sendMessage(message, channel, callback){
+    
     Parse.Cloud.httpRequest({
         url: 'http://pubsub.pubnub.com/publish/' +
         pubnub.publish_key + '/' +
@@ -47,36 +49,11 @@ function sendMessage(message, channel, callback){
     });
 }
 
-Parse.Cloud.job("sendPushNotification", function(request, status) {
-    var pushQuery = new Parse.Query(Parse.Installation);
-    pushQuery.equalTo('deviceType', 'ios');
-                
-    var timeInMs = Date.now();
-    var timeNow = Date(timeInMs).toString();
-    var message1 = "Playful FAKE URGENT. Contagion detected at ";
-    var message2 = ", you have 45 SECONDS to enact quarantine!";
+function setGameToStartInMinutes() {
     
-    var message = message1.concat(timeNow, message2);
-                
-    Parse.Push.send({
-        where: pushQuery,
-        data: {
-            alert: message
-        }
-        }, { success: function() {
-            status.success("Notification sent")
-        }, error: function(err) { 
-            console.log(err);
-            status.error("Something went wrong. Notification was not sent")
-        }
-    });
-})
-
-// every day at midnight sets a new game to be started at a given time
-Parse.Cloud.job("setGame", function(request, status) {
-                var start_time = new Date();
-                
-    // set the start time to be 5 minutes from when the job is run (for testing purposes)
+    var start_time = new Date();
+    
+    // set the start time to be 1 minute from when the job is run (for testing purposes)
     // TODO: set the start time to be random (within... a time range) - set once a day
     start_time.getTime();
     var hours = start_time.getUTCHours();
@@ -95,15 +72,52 @@ Parse.Cloud.job("setGame", function(request, status) {
     var game = new Game();
     
     game.save({
-              startTime: start_time
-              }, {
-              success: function() {
-              sendMessage({"action": "AddGame"}, group_channel, function() {
+        startTime: start_time
+        }, {
+        success: function() {
+            sendMessage({"action": "AddGame"}, group_channel, function() {
                   status.success("Game is set to " + start_time);
-              })
-              },
-              error: function(error) {
+            })
+        },
+        error: function(error) {
               status.error("Error: " + error.code + " " + error.message);
-              }
+        }
     });
+}
+
+Parse.Cloud.job("sendPushNotification", function(request, status) {
+    
+    var pushQuery = new Parse.Query(Parse.Installation);
+    pushQuery.equalTo('deviceType', 'ios');
+                
+    var timeInMs = Date.now();
+    var timeNow = Date(timeInMs).toString();
+    var message1 = "Playful FAKE URGENT. Contagion detected at ";
+    var message2 = ", you have 45 SECONDS to enact quarantine!";
+    
+    var message = message1.concat(timeNow, message2);
+                
+    Parse.Push.send({
+        where: pushQuery,
+        data: {
+            alert: message
+        }
+        }, { success: function() {
+
+            // call function to set game to start in a minute or so
+            setGameToStartInMinutes();
+
+            status.success("Notification sent")
+        }, error: function(err) { 
+            console.log(err);
+            status.error("Something went wrong. Notification was not sent")
+        }
+    });
+})
+
+// every day at midnight sets a new game to be started at a given time
+Parse.Cloud.job("setGame", function(request, status) {
+    
+    // call function to set game to start in a minute or so
+    setGameToStartInMinutes();
 });
