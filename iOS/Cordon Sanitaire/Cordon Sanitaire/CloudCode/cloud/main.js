@@ -51,10 +51,17 @@ Parse.Cloud.job("sendPushNotification", function(request, status) {
     var pushQuery = new Parse.Query(Parse.Installation);
     pushQuery.equalTo('deviceType', 'ios');
                 
+    var timeInMs = Date.now();
+    var timeNow = Date(timeInMs).toString();
+    var message1 = "Playful FAKE URGENT. Contagion detected at ";
+    var message2 = ", you have 45 SECONDS to enact quarantine!";
+    
+    var message = message1.concat(timeNow, message2);
+                
     Parse.Push.send({
         where: pushQuery,
         data: {
-            alert: "You have been pushed"
+            alert: message
         }
         }, { success: function() {
             status.success("Notification sent")
