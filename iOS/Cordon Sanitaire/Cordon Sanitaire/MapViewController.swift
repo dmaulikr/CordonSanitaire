@@ -86,7 +86,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     }
     
     func addStatusAnimation() {
-        /*
         UIView.animateWithDuration( NSTimeInterval.infinity, animations: { () -> Void in
             
             // Create a blank animation using the keyPath "cornerRadius", the property we want to animate
@@ -104,7 +103,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
             self.patientZeroIndicator.addAnimation(pZeroAnimation, forKey: "lineWidth")
 
 
-        }) */
+        }) 
     }
 
     
@@ -601,6 +600,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         let rootViewController: UIViewController = ViewController()
         self.presentViewController(rootViewController, animated: true, completion: nil)
     }
+        
     
 
 

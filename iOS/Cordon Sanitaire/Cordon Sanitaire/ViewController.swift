@@ -11,19 +11,20 @@ import GameKit
 
 
 class ViewController: UIViewController, GameDelegate {
+    var patientZeroIcon: CAShapeLayer!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // code goes here
         
         // set background color
-        self.view.backgroundColor = UIColor.blackColor()
+        self.view.backgroundColor = UIColor(netHex: cs_blue)
         
         // add buttons
         let playButton   = UIButton.buttonWithType(UIButtonType.System) as! UIButton
         
         playButton.frame = CGRectMake(0, 0, 300, 50)
-        playButton.center = CGPointMake(self.view.center.x, self.view.center.y - 75)
+        playButton.center = CGPointMake(self.view.center.x, self.view.center.y)
         playButton.setTitle("PLAY", forState: UIControlState.Normal)
         playButton.titleLabel?.textColor = UIColor.whiteColor()
         playButton.titleLabel?.font = UIFont(name: "helvetica neue", size: 48.0)
@@ -33,9 +34,9 @@ class ViewController: UIViewController, GameDelegate {
         let introButton   = UIButton.buttonWithType(UIButtonType.System) as! UIButton
         
         introButton.frame = CGRectMake(0, 0, 300, 50)
-        introButton.center = CGPointMake(self.view.center.x, self.view.center.y)
+        introButton.center = CGPointMake(self.view.center.x, self.view.center.y + 75)
         introButton.setTitle("INTRO", forState: UIControlState.Normal)
-        introButton.titleLabel?.textColor = UIColor.whiteColor()
+        introButton.titleLabel?.textColor = UIColor(netHex: cs_blue)
         introButton.titleLabel?.font = UIFont(name: "helvetica neue", size: 48.0)
         introButton.addTarget(self, action: "onButtonPress:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(introButton)
@@ -48,15 +49,18 @@ class ViewController: UIViewController, GameDelegate {
         let profileButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
         
         profileButton.frame = CGRectMake(0, 0, 300, 50)
-        profileButton.center = CGPointMake(self.view.center.x, self.view.center.y + 75)
+        profileButton.center = CGPointMake(self.view.center.x, self.view.center.y + 150)
         profileButton.setTitle("PROFILE", forState: UIControlState.Normal)
-        profileButton.titleLabel?.textColor = UIColor.whiteColor()
+        profileButton.titleLabel?.textColor = UIColor(netHex: cs_blue)
         profileButton.titleLabel?.font = UIFont(name: "helvetica neue", size: 48.0)
         profileButton.addTarget(self, action: "onButtonPress:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(profileButton)
         
+        addPZeroIcon()
+        animatePZero()
 
     }
+    
     
     // listen to the game for when to start
     func startGame() {
@@ -96,11 +100,49 @@ class ViewController: UIViewController, GameDelegate {
         }
     }
     
+    func addPZeroIcon() {
+        patientZeroIcon = CAShapeLayer()
+        
+        let radius: CGFloat = 50.0
+        let center: CGPoint = CGPointMake(self.view.center.x, self.view.center.y - 3*radius)
+        let startAngle = 0.0
+        let endAngle = 2.0 * Double(M_PI)
+        
+        patientZeroIcon.lineWidth = 20.0
+        patientZeroIcon.fillColor = UIColor(netHex: cs_red).CGColor
+        patientZeroIcon.strokeColor = UIColor.whiteColor().CGColor
+        patientZeroIcon.path = UIBezierPath(arcCenter: center, radius: radius, startAngle: CGFloat(startAngle), endAngle: CGFloat(endAngle), clockwise: true).CGPath
+        self.view.layer.addSublayer(patientZeroIcon)
+        
+    }
+    
+    func animatePZero() {
+        UIView.animateWithDuration(NSTimeInterval.infinity, animations: { () -> Void in
+            // Create a blank animation using keyPath "cornerRadius"
+            let pZeroAnimation = CABasicAnimation(keyPath: "lineWidth")
+            
+            //define parameters for tween
+            pZeroAnimation.fromValue = 15.0
+            pZeroAnimation.toValue = 7.5
+            pZeroAnimation.autoreverses = true
+            pZeroAnimation.duration = 4.0
+            pZeroAnimation.repeatDuration = CFTimeInterval.infinity
+            pZeroAnimation.timingFunction = CAMediaTimingFunction(controlPoints: 0.25, 0, 0.75, 1)
+            
+            self.patientZeroIcon.addAnimation(pZeroAnimation, forKey: "lineWidth")
+        })
+    }
+    
     
     //
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(false)
+        animatePZero()
     }
     
     // Gamekit authentication for player, displays the log in view for gamekit
@@ -131,6 +173,7 @@ class ViewController: UIViewController, GameDelegate {
         
         self.presentViewController(alertController, animated: true, completion: nil)
     }
+    
 
 }
 
