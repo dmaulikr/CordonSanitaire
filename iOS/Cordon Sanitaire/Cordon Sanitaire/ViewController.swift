@@ -15,46 +15,36 @@ class ViewController: UIViewController, GameDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // code goes here
         
-        // set background color
+        // set background
         self.view.backgroundColor = UIColor(netHex: cs_blue)
+        let mapBack = UIImageView(frame: self.view.frame)
+        mapBack.alpha = 0.5
+        mapBack.image = UIImage(named: "nyc_map.png")
+        self.view.addSubview(mapBack)
+        
+        
+        // add title
+        let gameName = UILabel()
+        gameName.frame = CGRectMake(50, 10, self.view.frame.width, 55)
+        gameName.text = "CORDON"
+        gameName.font = UIFont(name: "helvetica neue", size: 50.0)
+        gameName.textColor = UIColor.whiteColor()
+        self.view.addSubview(gameName)
+        let gameName2 = UILabel()
+        gameName2.frame = CGRectMake(35, 65, self.view.frame.width, 55)
+        gameName2.text = "SANITAIRE"
+        gameName2.font = UIFont(name: "helvetica neue", size: 50.0)
+        gameName2.textColor = UIColor.whiteColor()
+        self.view.addSubview(gameName2)
+        
         
         // add buttons
-        let playButton   = UIButton.buttonWithType(UIButtonType.System) as! UIButton
-        
-        playButton.frame = CGRectMake(0, 0, 300, 50)
-        playButton.center = CGPointMake(self.view.center.x, self.view.center.y)
-        playButton.setTitle("PLAY", forState: UIControlState.Normal)
-        playButton.titleLabel?.textColor = UIColor.whiteColor()
-        playButton.titleLabel?.font = UIFont(name: "helvetica neue", size: 48.0)
-        playButton.addTarget(self, action: "onButtonPress:", forControlEvents: UIControlEvents.TouchUpInside)
-        self.view.addSubview(playButton)
-        
-        let introButton   = UIButton.buttonWithType(UIButtonType.System) as! UIButton
-        
-        introButton.frame = CGRectMake(0, 0, 300, 50)
-        introButton.center = CGPointMake(self.view.center.x, self.view.center.y + 75)
-        introButton.setTitle("INTRO", forState: UIControlState.Normal)
-        introButton.titleLabel?.textColor = UIColor(netHex: cs_blue)
-        introButton.titleLabel?.font = UIFont(name: "helvetica neue", size: 48.0)
-        introButton.addTarget(self, action: "onButtonPress:", forControlEvents: UIControlEvents.TouchUpInside)
-        self.view.addSubview(introButton)
+        addButtons()
         
         Game.singleton.delegate = self
         
         self.authenticateLocalPlayer()
-        
-        
-        let profileButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
-        
-        profileButton.frame = CGRectMake(0, 0, 300, 50)
-        profileButton.center = CGPointMake(self.view.center.x, self.view.center.y + 150)
-        profileButton.setTitle("PROFILE", forState: UIControlState.Normal)
-        profileButton.titleLabel?.textColor = UIColor(netHex: cs_blue)
-        profileButton.titleLabel?.font = UIFont(name: "helvetica neue", size: 48.0)
-        profileButton.addTarget(self, action: "onButtonPress:", forControlEvents: UIControlEvents.TouchUpInside)
-        self.view.addSubview(profileButton)
         
         addPZeroIcon()
         animatePZero()
@@ -104,7 +94,7 @@ class ViewController: UIViewController, GameDelegate {
         patientZeroIcon = CAShapeLayer()
         
         let radius: CGFloat = 50.0
-        let center: CGPoint = CGPointMake(self.view.center.x, self.view.center.y - 3*radius)
+        let center: CGPoint = CGPointMake(self.view.center.x, self.view.center.y - 3*radius + 70)
         let startAngle = 0.0
         let endAngle = 2.0 * Double(M_PI)
         
@@ -122,8 +112,8 @@ class ViewController: UIViewController, GameDelegate {
             let pZeroAnimation = CABasicAnimation(keyPath: "lineWidth")
             
             //define parameters for tween
-            pZeroAnimation.fromValue = 15.0
-            pZeroAnimation.toValue = 7.5
+            pZeroAnimation.fromValue = 25.0
+            pZeroAnimation.toValue = 8.0
             pZeroAnimation.autoreverses = true
             pZeroAnimation.duration = 4.0
             pZeroAnimation.repeatDuration = CFTimeInterval.infinity
@@ -132,6 +122,49 @@ class ViewController: UIViewController, GameDelegate {
             self.patientZeroIcon.addAnimation(pZeroAnimation, forKey: "lineWidth")
         })
     }
+    
+    func addButtons() {
+        
+        let padding: CGFloat = 40.0
+        
+        let playButton   = UIButton.buttonWithType(UIButtonType.System) as! UIButton
+        
+        playButton.frame = CGRectMake(0, 0, self.view.frame.width - padding*2.0, 70)
+        playButton.center = CGPointMake(self.view.center.x, self.view.center.y + 50)
+        playButton.layer.cornerRadius = 35.0
+        playButton.backgroundColor = UIColor(netHex: cs_green)
+        playButton.setTitle("PLAY", forState: UIControlState.Normal)
+        playButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
+        playButton.titleLabel!.font = UIFont(name: "helvetica neue", size: 47.0)
+        playButton.addTarget(self, action: "onButtonPress:", forControlEvents: UIControlEvents.TouchUpInside)
+        self.view.addSubview(playButton)
+        
+        let introButton   = UIButton.buttonWithType(UIButtonType.System) as! UIButton
+        
+        introButton.frame = CGRectMake(0, 0, self.view.frame.width - padding*2.0, 70)
+        introButton.center = CGPointMake(self.view.center.x, self.view.center.y + 130)
+        introButton.layer.cornerRadius = 35.0
+        introButton.backgroundColor = UIColor(netHex: cs_yellow)
+        introButton.setTitle("INTRO", forState: UIControlState.Normal)
+        introButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
+        introButton.titleLabel?.font = UIFont(name: "helvetica neue", size: 47.0)
+        introButton.addTarget(self, action: "onButtonPress:", forControlEvents: UIControlEvents.TouchUpInside)
+        self.view.addSubview(introButton)
+        
+        let profileButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
+        
+        profileButton.frame = CGRectMake(0, 0, self.view.frame.width - padding*2.0, 70)
+        profileButton.center = CGPointMake(self.view.center.x, self.view.center.y + 210)
+        profileButton.layer.cornerRadius = 35.0
+        profileButton.backgroundColor = UIColor(netHex: cs_orange)
+        profileButton.setTitle("PROFILE", forState: UIControlState.Normal)
+        profileButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
+        profileButton.titleLabel?.font = UIFont(name: "helvetica neue", size: 47.0)
+        profileButton.addTarget(self, action: "onButtonPress:", forControlEvents: UIControlEvents.TouchUpInside)
+        self.view.addSubview(profileButton)
+
+    }
+
     
     
     //

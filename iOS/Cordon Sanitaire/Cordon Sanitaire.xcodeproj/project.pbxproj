@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		285177941B41CA070023CE96 /* Cutive-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 285177931B41CA070023CE96 /* Cutive-Regular.ttf */; };
 		28680BBA1B541B6600835C76 /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28680BB91B541B6600835C76 /* MenuViewController.swift */; };
+		28731D321B55A96A00D0E080 /* nyc_map.png in Resources */ = {isa = PBXBuildFile; fileRef = 28731D311B55A96A00D0E080 /* nyc_map.png */; };
 		2B0AE3731AAA74E800C508C7 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B0AE3721AAA74E800C508C7 /* Utilities.swift */; };
 		2B0AE3751AAA7CD700C508C7 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B0AE3741AAA7CD700C508C7 /* MapKit.framework */; };
 		2B0AE3771AAA7D3900C508C7 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B0AE3761AAA7D3900C508C7 /* UIKit.framework */; };
@@ -170,6 +171,7 @@
 /* Begin PBXFileReference section */
 		285177931B41CA070023CE96 /* Cutive-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Cutive-Regular.ttf"; path = "../Assets/Fonts/Cutive/Cutive-Regular.ttf"; sourceTree = "<group>"; };
 		28680BB91B541B6600835C76 /* MenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
+		28731D311B55A96A00D0E080 /* nyc_map.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = nyc_map.png; path = "Cordon Sanitaire.xcodeproj/../../../../../Desktop/nyc_map.png"; sourceTree = SOURCE_ROOT; };
 		2B0AE3721AAA74E800C508C7 /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 		2B0AE3741AAA7CD700C508C7 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		2B0AE3761AAA7D3900C508C7 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -619,6 +621,7 @@
 				285177931B41CA070023CE96 /* Cutive-Regular.ttf */,
 				2B487FE01A95589200AB6375 /* Info.plist */,
 				6BC0FB551A9562B700542CF0 /* Cordon Sanitaire-Bridging-Header.h */,
+				28731D311B55A96A00D0E080 /* nyc_map.png */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -1176,6 +1179,7 @@
 				2B487FEA1A95589200AB6375 /* Main.storyboard in Resources */,
 				2BD93CA21ACF5BBA0043BA20 /* Images.xcassets in Resources */,
 				6B8C27E41A97E51C0084EB96 /* PNLoggerSymbols.plist in Resources */,
+				28731D321B55A96A00D0E080 /* nyc_map.png in Resources */,
 				6BD04D821AAE67E5003AE167 /* main.js in Resources */,
 				285177941B41CA070023CE96 /* Cutive-Regular.ttf in Resources */,
 			);
