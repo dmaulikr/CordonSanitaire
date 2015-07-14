@@ -47,6 +47,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
         PFPush.handlePush(userInfo)
+        
+        // handle push notification here:
+        // launch into the lobby, a game is about to start
+        
     }
 
     func applicationWillResignActive(application: UIApplication) {
