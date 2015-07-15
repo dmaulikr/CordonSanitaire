@@ -14,79 +14,33 @@ class ViewController: UIViewController, GameDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // code goes here
         
         // set background color
         self.view.backgroundColor = UIColor.whiteColor()
         
-        //add title
+        //add title and buttons
         addTitle()
-
+        addButtons()
+        addStatDots()
         
-        // add buttons
+        //add image
+        /*
+        var icon = UIImageView(frame: CGRectMake(0, 0, 50, 50))
+        icon.image = UIImage(named: "AppIcon")
+        icon.layer.cornerRadius = 5.0
+        self.view.addSubview(icon)
+*/
         
-        let profileButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
-        
-        profileButton.frame = CGRectMake(20, 125, self.view.frame.width, 40)
-        profileButton.setTitle("Profile", forState: UIControlState.Normal)
-        profileButton.setTitleColor(UIColor(netHex: cs_blue), forState: UIControlState.Normal)
-        profileButton.titleLabel?.font = UIFont(name: "helvetica neue", size: 30.0)
-        profileButton.contentHorizontalAlignment = UIControlContentHorizontalAlignment.Left
-        profileButton.addTarget(self, action: "onButtonPress:", forControlEvents: UIControlEvents.TouchUpInside)
-        self.view.addSubview(profileButton)
-        
-        
-        let introButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
-        
-        introButton.frame = CGRectMake(20, 175, self.view.frame.width, 40)
-        introButton.setTitle("Intro", forState: UIControlState.Normal)
-        introButton.setTitleColor(UIColor(netHex: cs_blue), forState: UIControlState.Normal)
-        introButton.titleLabel?.font = UIFont(name: "helvetica neue", size: 30.0)
-        introButton.contentHorizontalAlignment = UIControlContentHorizontalAlignment.Left
-        introButton.addTarget(self, action: "onButtonPress:", forControlEvents: UIControlEvents.TouchUpInside)
-        self.view.addSubview(introButton)
-        
-        let aboutButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
-        
-        aboutButton.frame = CGRectMake(20, 225, self.view.frame.width, 40)
-        aboutButton.setTitle("About", forState: UIControlState.Normal)
-        aboutButton.setTitleColor(UIColor(netHex: cs_blue), forState: UIControlState.Normal)
-        aboutButton.titleLabel?.font = UIFont(name: "helvetica neue", size: 30.0)
-        aboutButton.contentHorizontalAlignment = UIControlContentHorizontalAlignment.Left
-        aboutButton.addTarget(self, action: "onButtonPress:", forControlEvents: UIControlEvents.TouchUpInside)
-        self.view.addSubview(aboutButton)
-        
-        let shareButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
-        
-        shareButton.frame = CGRectMake(20, 275, self.view.frame.width, 40)
-        shareButton.setTitle("Share", forState: UIControlState.Normal)
-        shareButton.setTitleColor(UIColor(netHex: cs_blue), forState: UIControlState.Normal)
-        shareButton.titleLabel?.font = UIFont(name: "helvetica neue", size: 30.0)
-        shareButton.contentHorizontalAlignment = UIControlContentHorizontalAlignment.Left
-        shareButton.addTarget(self, action: "onButtonPress:", forControlEvents: UIControlEvents.TouchUpInside)
-        self.view.addSubview(shareButton)
-        
-        let howToButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
-        
-        howToButton.frame = CGRectMake(20, 325, self.view.frame.width, 40)
-        howToButton.setTitle("How To", forState: UIControlState.Normal)
-        howToButton.setTitleColor(UIColor(netHex: cs_blue), forState: UIControlState.Normal)
-        howToButton.titleLabel?.font = UIFont(name: "helvetica neue", size: 30.0)
-        howToButton.contentHorizontalAlignment = UIControlContentHorizontalAlignment.Left
-        howToButton.addTarget(self, action: "onButtonPress:", forControlEvents: UIControlEvents.TouchUpInside)
-        self.view.addSubview(howToButton)
-        
-        let tcButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
-        
-        tcButton.frame = CGRectMake(20, 375, self.view.frame.width, 40)
-        tcButton.setTitle("Terms & Conditions", forState: UIControlState.Normal)
-        tcButton.setTitleColor(UIColor(netHex: cs_blue), forState: UIControlState.Normal)
-        tcButton.titleLabel?.font = UIFont(name: "helvetica neue", size: 30.0)
-        tcButton.contentHorizontalAlignment = UIControlContentHorizontalAlignment.Left
-        tcButton.addTarget(self, action: "onButtonPress:", forControlEvents: UIControlEvents.TouchUpInside)
-        self.view.addSubview(tcButton)
+        let credits = UILabel(frame: CGRectMake(0, self.view.frame.height - 30, 160, 20))
+        credits.center = CGPointMake(self.view.frame.width/2, self.view.frame.height - 15)
+        credits.text = "MIT Media Lab | Playful Systems"
+        credits.font = UIFont(name: "helvetica neue", size: 10)
+        credits.textColor = UIColor(netHex: cs_blue)
+        credits.alpha = 0.7
+        self.view.addSubview(credits)
         
         
+  
         Game.singleton.delegate = self
         
         self.authenticateLocalPlayer()
@@ -109,6 +63,104 @@ class ViewController: UIViewController, GameDelegate {
 
 
     }
+    
+    func addButtons() {
+        
+        let profileButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
+        
+        profileButton.frame = CGRectMake(20, 125, self.view.frame.width, 40)
+        profileButton.setTitle("Profile", forState: UIControlState.Normal)
+        profileButton.setTitleColor(UIColor(netHex: cs_blue), forState: UIControlState.Normal)
+        profileButton.titleLabel?.font = UIFont(name: "helvetica neue", size: 30.0)
+        profileButton.contentHorizontalAlignment = UIControlContentHorizontalAlignment.Left
+        profileButton.addTarget(self, action: "onButtonPress:", forControlEvents: UIControlEvents.TouchUpInside)
+        self.view.addSubview(profileButton)
+        
+        
+        let introButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
+        
+        introButton.frame = CGRectMake(20, 180, self.view.frame.width, 40)
+        introButton.setTitle("Intro", forState: UIControlState.Normal)
+        introButton.setTitleColor(UIColor(netHex: cs_blue), forState: UIControlState.Normal)
+        introButton.titleLabel?.font = UIFont(name: "helvetica neue", size: 30.0)
+        introButton.contentHorizontalAlignment = UIControlContentHorizontalAlignment.Left
+        introButton.addTarget(self, action: "onButtonPress:", forControlEvents: UIControlEvents.TouchUpInside)
+        self.view.addSubview(introButton)
+        
+        let aboutButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
+        
+        aboutButton.frame = CGRectMake(20, 235, self.view.frame.width, 40)
+        aboutButton.setTitle("About", forState: UIControlState.Normal)
+        aboutButton.setTitleColor(UIColor(netHex: cs_blue), forState: UIControlState.Normal)
+        aboutButton.titleLabel?.font = UIFont(name: "helvetica neue", size: 30.0)
+        aboutButton.contentHorizontalAlignment = UIControlContentHorizontalAlignment.Left
+        aboutButton.addTarget(self, action: "onButtonPress:", forControlEvents: UIControlEvents.TouchUpInside)
+        self.view.addSubview(aboutButton)
+        
+        let shareButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
+        
+        shareButton.frame = CGRectMake(20, 290, self.view.frame.width, 40)
+        shareButton.setTitle("Share", forState: UIControlState.Normal)
+        shareButton.setTitleColor(UIColor(netHex: cs_blue), forState: UIControlState.Normal)
+        shareButton.titleLabel?.font = UIFont(name: "helvetica neue", size: 30.0)
+        shareButton.contentHorizontalAlignment = UIControlContentHorizontalAlignment.Left
+        shareButton.addTarget(self, action: "onButtonPress:", forControlEvents: UIControlEvents.TouchUpInside)
+        self.view.addSubview(shareButton)
+        
+        let howToButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
+        
+        howToButton.frame = CGRectMake(20, 345, self.view.frame.width, 40)
+        howToButton.setTitle("How To", forState: UIControlState.Normal)
+        howToButton.setTitleColor(UIColor(netHex: cs_blue), forState: UIControlState.Normal)
+        howToButton.titleLabel?.font = UIFont(name: "helvetica neue", size: 30.0)
+        howToButton.contentHorizontalAlignment = UIControlContentHorizontalAlignment.Left
+        howToButton.addTarget(self, action: "onButtonPress:", forControlEvents: UIControlEvents.TouchUpInside)
+        self.view.addSubview(howToButton)
+        
+        let tcButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
+        
+        tcButton.frame = CGRectMake(20, 400, self.view.frame.width, 40)
+        tcButton.setTitle("Terms & Conditions", forState: UIControlState.Normal)
+        tcButton.setTitleColor(UIColor(netHex: cs_blue), forState: UIControlState.Normal)
+        tcButton.titleLabel?.font = UIFont(name: "helvetica neue", size: 30.0)
+        tcButton.contentHorizontalAlignment = UIControlContentHorizontalAlignment.Left
+        tcButton.addTarget(self, action: "onButtonPress:", forControlEvents: UIControlEvents.TouchUpInside)
+        self.view.addSubview(tcButton)
+        
+    }
+    
+    func addStatDots() {
+        
+        let dotBack1 = UIView(frame: CGRectMake(self.view.frame.width - 15, 3*self.view.frame.height/6 + 5, 30, 30))
+        let dotBack2 = UIView(frame: CGRectMake(self.view.frame.width - 15, 2*self.view.frame.height/3 - 15, 30, 30))
+        let dotBack3 = UIView(frame: CGRectMake(self.view.frame.width - 15, 5*self.view.frame.height/6 - 35, 30, 30))
+        dotBack1.backgroundColor = UIColor(netHex: cs_blue)
+        dotBack2.backgroundColor = UIColor(netHex: cs_blue)
+        dotBack3.backgroundColor = UIColor(netHex: cs_blue)
+        dotBack1.layer.cornerRadius = 16
+        dotBack2.layer.cornerRadius = 16
+        dotBack3.layer.cornerRadius = 16
+        
+        self.view.addSubview(dotBack1)
+        self.view.addSubview(dotBack2)
+        self.view.addSubview(dotBack3)
+        
+        let dot1 = UIView(frame: CGRectMake(self.view.frame.width - 10, 1*self.view.frame.height/2 + 10, 20, 20))
+        let dot2 = UIView(frame: CGRectMake(self.view.frame.width - 10, 2*self.view.frame.height/3 - 10, 20, 20))
+        let dot3 = UIView(frame: CGRectMake(self.view.frame.width - 10, 5*self.view.frame.height/6 - 30, 20, 20))
+        dot1.backgroundColor = UIColor(netHex: cs_yellow)
+        dot2.backgroundColor = UIColor.whiteColor()
+        dot3.backgroundColor = UIColor(netHex: cs_orange)
+        dot1.layer.cornerRadius = 10
+        dot2.layer.cornerRadius = 10
+        dot3.layer.cornerRadius = 10
+        
+        self.view.addSubview(dot1)
+        self.view.addSubview(dot2)
+        self.view.addSubview(dot3)
+        
+    }
+    
     
     // handle the button presses (open the map view, or open the intro view)
     func onButtonPress(sender:UIButton!) {
