@@ -17,26 +17,20 @@ class ViewController: UIViewController, GameDelegate {
         // code goes here
         
         // set background color
-        self.view.backgroundColor = UIColor.blackColor()
+        self.view.backgroundColor = UIColor.whiteColor()
+        
+        //add title
+        addTitle()
+
         
         // add buttons
-        let playButton   = UIButton.buttonWithType(UIButtonType.System) as! UIButton
-        
-        playButton.frame = CGRectMake(0, 0, 300, 50)
-        playButton.center = CGPointMake(self.view.center.x, self.view.center.y - 75)
-        playButton.setTitle("PLAY", forState: UIControlState.Normal)
-        playButton.titleLabel?.textColor = UIColor.whiteColor()
-        playButton.titleLabel?.font = UIFont(name: "helvetica neue", size: 48.0)
-        playButton.addTarget(self, action: "onButtonPress:", forControlEvents: UIControlEvents.TouchUpInside)
-        self.view.addSubview(playButton)
         
         let introButton   = UIButton.buttonWithType(UIButtonType.System) as! UIButton
         
-        introButton.frame = CGRectMake(0, 0, 300, 50)
-        introButton.center = CGPointMake(self.view.center.x, self.view.center.y)
-        introButton.setTitle("INTRO", forState: UIControlState.Normal)
-        introButton.titleLabel?.textColor = UIColor.whiteColor()
-        introButton.titleLabel?.font = UIFont(name: "helvetica neue", size: 48.0)
+        introButton.frame = CGRectMake(20, 125,65, 40)
+        introButton.setTitle("Intro", forState: UIControlState.Normal)
+        introButton.setTitleColor(UIColor(netHex: cs_blue), forState: UIControlState.Normal)
+        introButton.titleLabel?.font = UIFont(name: "helvetica neue", size: 30.0)
         introButton.addTarget(self, action: "onButtonPress:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(introButton)
         
@@ -47,11 +41,10 @@ class ViewController: UIViewController, GameDelegate {
         
         let profileButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
         
-        profileButton.frame = CGRectMake(0, 0, 300, 50)
-        profileButton.center = CGPointMake(self.view.center.x, self.view.center.y + 75)
-        profileButton.setTitle("PROFILE", forState: UIControlState.Normal)
-        profileButton.titleLabel?.textColor = UIColor.whiteColor()
-        profileButton.titleLabel?.font = UIFont(name: "helvetica neue", size: 48.0)
+        profileButton.frame = CGRectMake(20, 165, 85, 40)
+        profileButton.setTitle("Profile", forState: UIControlState.Normal)
+        profileButton.setTitleColor(UIColor(netHex: cs_blue), forState: UIControlState.Normal)
+        profileButton.titleLabel!.font = UIFont(name: "helvetica neue", size: 30.0)
         profileButton.addTarget(self, action: "onButtonPress:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(profileButton)
         
@@ -84,12 +77,12 @@ class ViewController: UIViewController, GameDelegate {
 //            self.presentViewController(Lobby.singleton.viewController!, animated: true, completion: nil)
             self.presentViewController(Game.singleton.viewController, animated: true, completion: nil)
         }
-        else if(sender.titleLabel?.text == "INTRO") {
+        else if(sender.titleLabel?.text == "Intro") {
             // display the map view
             let introViewController:IntroViewController = IntroViewController()
             self.presentViewController(introViewController, animated: true, completion: nil)
         }
-        else if(sender.titleLabel?.text == "PROFILE") {
+        else if(sender.titleLabel?.text == "Profile") {
             //go to ProfileViewController
             let profileViewController:ProfileViewController = ProfileViewController()
             self.presentViewController(profileViewController, animated: true, completion: nil)
@@ -132,6 +125,25 @@ class ViewController: UIViewController, GameDelegate {
         self.presentViewController(alertController, animated: true, completion: nil)
     }
 
+    func addTitle(){
+        let cordon = UILabel()
+        let sanitaire = UILabel()
+        cordon.frame = CGRectMake(20, 10, 300, 45)
+        cordon.font = UIFont(name: "helvetica neue", size: 45)
+        cordon.textColor = UIColor(netHex: cs_navy)
+        sanitaire.frame = CGRectMake(20, 55, 300, 45)
+        sanitaire.font = UIFont(name: "helvetica neue", size: 45)
+        sanitaire.textColor = UIColor(netHex: cs_navy)
+
+        cordon.text = "CORDON"
+        sanitaire.text = "SANITAIRE"
+        
+        self.view.addSubview(cordon)
+        self.view.addSubview(sanitaire)
+        
+        
+    }
+    
 }
 
 

@@ -14,6 +14,7 @@ let cs_orange   = 0xEE9036
 let cs_yellow   = 0xF7CC1D
 let cs_green    = 0x03C6AA  //0x55ffb9
 let cs_blue     = 0x405C72
+let cs_navy     = 0x2A4051
 
 // super handy for web colors
 extension UIColor {
