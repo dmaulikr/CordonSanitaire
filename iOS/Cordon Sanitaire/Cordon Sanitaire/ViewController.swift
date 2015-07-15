@@ -66,12 +66,17 @@ class ViewController: UIViewController, GameDelegate {
     
     func addButtons() {
         
+        let menuFontSize:CGFloat = 24.0
+        let menuLineHeight:CGFloat = 48.0
+        let menuTop:CGFloat = 125
+        
+        
         let profileButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
         
-        profileButton.frame = CGRectMake(20, 125, self.view.frame.width, 40)
+        profileButton.frame = CGRectMake(20, menuTop, self.view.frame.width, 40)
         profileButton.setTitle("Profile", forState: UIControlState.Normal)
         profileButton.setTitleColor(UIColor(netHex: cs_blue), forState: UIControlState.Normal)
-        profileButton.titleLabel?.font = UIFont(name: "helvetica neue", size: 30.0)
+        profileButton.titleLabel?.font = UIFont(name: "helvetica neue", size: menuFontSize)
         profileButton.contentHorizontalAlignment = UIControlContentHorizontalAlignment.Left
         profileButton.addTarget(self, action: "onButtonPress:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(profileButton)
@@ -79,50 +84,50 @@ class ViewController: UIViewController, GameDelegate {
         
         let introButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
         
-        introButton.frame = CGRectMake(20, 180, self.view.frame.width, 40)
+        introButton.frame = CGRectMake(20, menuTop + menuLineHeight, self.view.frame.width, 40)
         introButton.setTitle("Intro", forState: UIControlState.Normal)
         introButton.setTitleColor(UIColor(netHex: cs_blue), forState: UIControlState.Normal)
-        introButton.titleLabel?.font = UIFont(name: "helvetica neue", size: 30.0)
+        introButton.titleLabel?.font = UIFont(name: "helvetica neue", size: menuFontSize)
         introButton.contentHorizontalAlignment = UIControlContentHorizontalAlignment.Left
         introButton.addTarget(self, action: "onButtonPress:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(introButton)
         
         let aboutButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
         
-        aboutButton.frame = CGRectMake(20, 235, self.view.frame.width, 40)
+        aboutButton.frame = CGRectMake(20, menuTop + 2 * menuLineHeight, self.view.frame.width, 40)
         aboutButton.setTitle("About", forState: UIControlState.Normal)
         aboutButton.setTitleColor(UIColor(netHex: cs_blue), forState: UIControlState.Normal)
-        aboutButton.titleLabel?.font = UIFont(name: "helvetica neue", size: 30.0)
+        aboutButton.titleLabel?.font = UIFont(name: "helvetica neue", size: menuFontSize)
         aboutButton.contentHorizontalAlignment = UIControlContentHorizontalAlignment.Left
         aboutButton.addTarget(self, action: "onButtonPress:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(aboutButton)
         
         let shareButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
         
-        shareButton.frame = CGRectMake(20, 290, self.view.frame.width, 40)
+        shareButton.frame = CGRectMake(20, menuTop + 3 * menuLineHeight, self.view.frame.width, 40)
         shareButton.setTitle("Share", forState: UIControlState.Normal)
         shareButton.setTitleColor(UIColor(netHex: cs_blue), forState: UIControlState.Normal)
-        shareButton.titleLabel?.font = UIFont(name: "helvetica neue", size: 30.0)
+        shareButton.titleLabel?.font = UIFont(name: "helvetica neue", size: menuFontSize)
         shareButton.contentHorizontalAlignment = UIControlContentHorizontalAlignment.Left
         shareButton.addTarget(self, action: "onButtonPress:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(shareButton)
         
         let howToButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
         
-        howToButton.frame = CGRectMake(20, 345, self.view.frame.width, 40)
+        howToButton.frame = CGRectMake(20, menuTop + 4 * menuLineHeight, self.view.frame.width, 40)
         howToButton.setTitle("How To", forState: UIControlState.Normal)
         howToButton.setTitleColor(UIColor(netHex: cs_blue), forState: UIControlState.Normal)
-        howToButton.titleLabel?.font = UIFont(name: "helvetica neue", size: 30.0)
+        howToButton.titleLabel?.font = UIFont(name: "helvetica neue", size: menuFontSize)
         howToButton.contentHorizontalAlignment = UIControlContentHorizontalAlignment.Left
         howToButton.addTarget(self, action: "onButtonPress:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(howToButton)
         
         let tcButton = UIButton.buttonWithType(UIButtonType.System) as! UIButton
         
-        tcButton.frame = CGRectMake(20, 400, self.view.frame.width, 40)
+        tcButton.frame = CGRectMake(20, menuTop + 5 * menuLineHeight, self.view.frame.width, 40)
         tcButton.setTitle("Terms & Conditions", forState: UIControlState.Normal)
         tcButton.setTitleColor(UIColor(netHex: cs_blue), forState: UIControlState.Normal)
-        tcButton.titleLabel?.font = UIFont(name: "helvetica neue", size: 30.0)
+        tcButton.titleLabel?.font = UIFont(name: "helvetica neue", size: menuFontSize)
         tcButton.contentHorizontalAlignment = UIControlContentHorizontalAlignment.Left
         tcButton.addTarget(self, action: "onButtonPress:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(tcButton)
@@ -232,22 +237,18 @@ class ViewController: UIViewController, GameDelegate {
     }
 
     func addTitle(){
-        let cordon = UILabel()
-        let sanitaire = UILabel()
-        cordon.frame = CGRectMake(20, 10, 300, 45)
-        cordon.font = UIFont(name: "helvetica neue", size: 43)
-        cordon.textColor = UIColor(netHex: cs_navy)
-        sanitaire.frame = CGRectMake(20, 55, 300, 45)
-        sanitaire.font = UIFont(name: "helvetica neue", size: 43)
-        sanitaire.textColor = UIColor(netHex: cs_navy)
-
-        cordon.text = "CORDON"
-        sanitaire.text = "SANITAIRE"
         
-        self.view.addSubview(cordon)
-        self.view.addSubview(sanitaire)
+        let titleFontSize:CGFloat = 36.0
         
+        let title = UILabel()
+        title.frame = CGRectMake(20, 10, 300, 100)
+        title.font = UIFont(name: "HelveticaNeue-Bold", size: titleFontSize)
+        title.textColor = UIColor(netHex: cs_navy)
+        title.numberOfLines = 2
         
+        title.text = "Cordon\nSanitaire"
+        
+        self.view.addSubview(title)
     }
     
 }
