@@ -50,7 +50,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // handle push notification here:
         // launch into the lobby, a game is about to start
-        
+        var rootView = self.window?.rootViewController
+        rootView!.presentViewController(Game.singleton.viewController, animated: true, completion: nil)
+        // this successfully launches the lobby/game but could be cleaned up with some pacing if in the game :)
     }
 
     func applicationWillResignActive(application: UIApplication) {
