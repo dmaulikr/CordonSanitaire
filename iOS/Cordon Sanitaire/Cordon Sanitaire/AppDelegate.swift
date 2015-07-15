@@ -21,6 +21,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Parse.setApplicationId("XzPwPddo8UjT14oI14b69CPgq8bRFYsA9TrqeZTL",
             clientKey: "4ThcPZWeffGCaBjsjReXh5rtp0Ygxb7DOQ8PbiHa")
 
+        let notification = launchOptions?[UIApplicationLaunchOptionsLocalNotificationKey] as! UILocalNotification!
+        if (notification != nil) {
+            NSLog("app recieved notification from remote %@",notification);
+            
+            //TODO: Launch lobby here :)
+            
+        }else{
+            NSLog("app did not recieve notification");
+        }
+        
         // Override point for customization after application launch.
         return true
     }
@@ -47,6 +57,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
         PFPush.handlePush(userInfo)
+        
+        // handle push notification here:
+        // launch into the lobby, a game is about to start
+        var rootView = self.window?.rootViewController
+        rootView!.presentViewController(Game.singleton.viewController, animated: true, completion: nil)
+        // this successfully launches the lobby/game but could be cleaned up with some pacing if in the game :)
     }
 
     func applicationWillResignActive(application: UIApplication) {

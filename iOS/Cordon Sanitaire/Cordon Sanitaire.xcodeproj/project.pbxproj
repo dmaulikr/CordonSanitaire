@@ -1134,6 +1134,7 @@
 		2B487FD41A95589200AB6375 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 0700;
 				LastUpgradeCheck = 0610;
 				ORGANIZATIONNAME = "Playful Systems";
 				TargetAttributes = {
