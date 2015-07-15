@@ -21,6 +21,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Parse.setApplicationId("XzPwPddo8UjT14oI14b69CPgq8bRFYsA9TrqeZTL",
             clientKey: "4ThcPZWeffGCaBjsjReXh5rtp0Ygxb7DOQ8PbiHa")
 
+        let notification = launchOptions?[UIApplicationLaunchOptionsLocalNotificationKey] as! UILocalNotification!
+        if (notification != nil) {
+            NSLog("app recieved notification from remote %@",notification);
+            
+            //TODO: Launch lobby here :)
+            
+        }else{
+            NSLog("app did not recieve notification");
+        }
+        
         // Override point for customization after application launch.
         return true
     }
