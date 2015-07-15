@@ -124,12 +124,14 @@ class ViewController: UIViewController, GameDelegate {
         }
     }
     
+    
+    // TODO: why is this function here? left over from a tutorial? -jb
     func showRetryAlert(){
-        let alertController = UIAlertController(title: "iOScreator", message:
-            "Hello, world!", preferredStyle: UIAlertControllerStyle.Alert)
-        alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default,handler: nil))
-        
-        self.presentViewController(alertController, animated: true, completion: nil)
+//        let alertController = UIAlertController(title: "iOScreator", message:
+//            "Hello, world!", preferredStyle: UIAlertControllerStyle.Alert)
+//        alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default,handler: nil))
+//        
+//        self.presentViewController(alertController, animated: true, completion: nil)
     }
 
 }
