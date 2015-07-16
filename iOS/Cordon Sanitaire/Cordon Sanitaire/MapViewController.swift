@@ -297,8 +297,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         timerTextView.selectable = false
         timerTextView.editable = false
     }
-    
-    //func endScreen(){
         
     func addPopover() {
             if (timeOver == true){
