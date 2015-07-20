@@ -187,6 +187,8 @@ class ViewController: UIViewController, GameDelegate {
             self.presentViewController(profileViewController, animated: true, completion: nil)
         }
         else if(sender.titleLabel?.text == "About") {
+            let lobbyViewController:LobbyViewController = LobbyViewController()
+            self.presentViewController(lobbyViewController, animated: true, completion: nil)
             
         }
         else if(sender.titleLabel?.text == "Share"){
