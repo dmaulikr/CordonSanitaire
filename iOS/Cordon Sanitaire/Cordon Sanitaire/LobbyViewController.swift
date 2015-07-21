@@ -23,6 +23,21 @@ class LobbyViewController: UIViewController, UITableViewDataSource, UITableViewD
     var bStartOfTimer: Bool = false
     var timerTextView: UITextView = UITextView()
     
+    
+    //TABLE VIEW
+    func initTableView() {
+        lobbyView = UITableView(frame: CGRectMake(20, 150, self.view.frame.width - 40, 2*self.view.frame.height/3), style: UITableViewStyle.Plain)
+        lobbyView.layer.cornerRadius = 10
+        lobbyView.registerClass(LobbyViewCell.self, forCellReuseIdentifier: "cell")
+        
+        //lobbyView.frame = CGRectMake(20, self.view.frame.height/3, self.view.frame.width - 40, self.view.frame.height/3)
+        
+        lobbyView.delegate = self
+        lobbyView.dataSource = self
+        
+    }
+
+    
     override func viewDidLoad() {
         
         super.viewDidLoad()
@@ -34,16 +49,6 @@ class LobbyViewController: UIViewController, UITableViewDataSource, UITableViewD
         addText()
         lobbyTimer = NSTimer.scheduledTimerWithTimeInterval(0.01, target: self, selector: Selector("updateTimer"), userInfo: nil, repeats: true)
         
-        //TABLE VIEW
-        
-        lobbyView = UITableView(frame: CGRectMake(20, 150, self.view.frame.width - 40, 2*self.view.frame.height/3), style: UITableViewStyle.Plain)
-        lobbyView.layer.cornerRadius = 10
-        lobbyView.registerClass(LobbyViewCell.self, forCellReuseIdentifier: "cell")
-
-        //lobbyView.frame = CGRectMake(20, self.view.frame.height/3, self.view.frame.width - 40, self.view.frame.height/3)
-        
-        lobbyView.delegate = self
-        lobbyView.dataSource = self
         
         self.view.addSubview(lobbyView)
         
@@ -88,8 +93,9 @@ class LobbyViewController: UIViewController, UITableViewDataSource, UITableViewD
     
     
     func update(){
-        
-        //lobbyView.reloadData()
+        if (lobbyView != nil) {
+            self.lobbyView.reloadData()
+        }
     }
     
     func addText(){
