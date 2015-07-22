@@ -34,9 +34,7 @@ class LobbyViewController: UIViewController, UITableViewDataSource, UITableViewD
         
         lobbyView.delegate = self
         lobbyView.dataSource = self
-        
     }
-
     
     override func viewDidLoad() {
         
@@ -48,7 +46,7 @@ class LobbyViewController: UIViewController, UITableViewDataSource, UITableViewD
         
         addText()
         lobbyTimer = NSTimer.scheduledTimerWithTimeInterval(0.01, target: self, selector: Selector("updateTimer"), userInfo: nil, repeats: true)
-        
+        initTableView()
         
         self.view.addSubview(lobbyView)
         
@@ -86,6 +84,7 @@ class LobbyViewController: UIViewController, UITableViewDataSource, UITableViewD
         if (cell == nil){
             cell = LobbyViewCell()
         }
+        //cell!.cellName.text = Lobby.singleton.players.keys.array[indexPath.row]
         cell!.textLabel?.text = Lobby.singleton.players.keys.array[indexPath.row]
         return cell!
         
