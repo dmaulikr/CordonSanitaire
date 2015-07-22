@@ -10,6 +10,7 @@
 
 import UIKit
 import QuartzCore
+import GameKit
 
 
 
@@ -84,11 +85,27 @@ class LobbyViewController: UIViewController, UITableViewDataSource, UITableViewD
         if (cell == nil){
             cell = LobbyViewCell()
         }
-        //cell!.cellName.text = Lobby.singleton.players.keys.array[indexPath.row]
-        cell!.textLabel?.text = Lobby.singleton.players.keys.array[indexPath.row]
-        return cell!
+        cell!.cellName.text = Lobby.singleton.players.keys.array[indexPath.row]
         
+        var localPlayer = GKLocalPlayer.localPlayer()
+        
+        if(localPlayer.authenticated) {
+            
+            localPlayer.loadPhotoForSize(GKPhotoSizeNormal, withCompletionHandler: {(image, error) -> Void in
+                if let theError = error {
+                    println("Cannot load image.")
+                    
+                } else if let theImage = image {
+                    cell!.cellProfileImage.image = theImage
+                }
+                }
+            )
+        }
+        
+            
+        return cell!
     }
+    
     
     
     func update(){
@@ -102,7 +119,7 @@ class LobbyViewController: UIViewController, UITableViewDataSource, UITableViewD
         backBar.backgroundColor = UIColor(netHex: cs_blue)
         self.view.addSubview(backBar)
         
-
+        
         timerTextView.frame = CGRectMake(10, 10, self.view.frame.width/2, 60.0)
         self.view.addSubview(timerTextView)
         timerTextView.backgroundColor = UIColor(netHex: cs_blue)
@@ -143,6 +160,7 @@ class LobbyViewController: UIViewController, UITableViewDataSource, UITableViewD
         
     }
     
+
     func updateTimer() {
         
         if(!bStartOfTimer){
@@ -248,4 +266,5 @@ class LobbyViewController: UIViewController, UITableViewDataSource, UITableViewD
     
     
 }
+
 
