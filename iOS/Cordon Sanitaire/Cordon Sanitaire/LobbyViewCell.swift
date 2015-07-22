@@ -10,7 +10,6 @@ import UIKit
 
 class LobbyViewCell: UITableViewCell {
     
-    /*
     override func awakeFromNib() {
         super.awakeFromNib()
         
@@ -22,9 +21,9 @@ class LobbyViewCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
-    */
 
     // CONFIGURE CUSTOM UITABLEVIEW
+    /*
     
     var cellProfileImage = UIImageView()
     var cellName = UILabel()
@@ -50,5 +49,5 @@ class LobbyViewCell: UITableViewCell {
     fatalError("init(coder:) has not been implemented")
     }
     
-
+*/
 }
