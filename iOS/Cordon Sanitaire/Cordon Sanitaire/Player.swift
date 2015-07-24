@@ -34,6 +34,8 @@ class Player:NSObject {
     // changes the state of a player and updates Parse about the change
     func changeState(newState: State){
         self.state = newState;
+        
+        // update our current state in the user table
         var query = PFQuery(className: "SimpleUser")
         query.whereKey("gkId", equalTo: self.id)
         query.getFirstObjectInBackgroundWithBlock({(obj: PFObject!, error: NSError!) -> Void in
@@ -46,6 +48,9 @@ class Player:NSObject {
                 })
             }
         })
+        
+        // TODO: add this action to the Actions table in parse
+        
     }
     
     func getCoords() -> CLLocationCoordinate2D {
