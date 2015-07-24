@@ -28,11 +28,11 @@ class LobbyViewCell: UITableViewCell {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        cellProfileImage.frame = CGRectMake(12, 6, self.bounds.height-12, self.bounds.height-12)
-        cellProfileImage.layer.cornerRadius = (self.bounds.height-12)/2
+        cellProfileImage.frame = CGRectMake(14, 7.5, self.bounds.height-14.5, self.bounds.height-14.5)
+        cellProfileImage.layer.cornerRadius = (self.bounds.height-14.5)/2
         cellProfileImage.clipsToBounds = true
-        cellProfileBacking.frame = CGRectMake(10, 4, self.bounds.height-8, self.bounds.height-8)
-        cellProfileBacking.layer.cornerRadius = (self.bounds.height-8)/2
+        cellProfileBacking.frame = CGRectMake(12, 5.5, self.bounds.height-10.5, self.bounds.height-10.5)
+        cellProfileBacking.layer.cornerRadius = (self.bounds.height-10.5)/2
         cellName.frame = CGRectMake(self.bounds.height + 10, 0, self.bounds.width - 2*self.bounds.height - 10, self.bounds.height)
         
     }
