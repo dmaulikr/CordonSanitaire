@@ -55,7 +55,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         NSLog(error.description)
     }
     
-    func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
+    func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject], fetchCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
         PFPush.handlePush(userInfo)
         
         // handle push notification here:
