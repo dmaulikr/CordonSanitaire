@@ -22,8 +22,10 @@ class Lobby: NSObject{
     override init(){
         super.init()
         // creates a view controller for the Lobby
+
         self.viewController = LobbyViewController()
-        
+        self.viewController.initTableView()
+
         Game.getStartTime()
     }
     
