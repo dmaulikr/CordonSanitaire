@@ -35,13 +35,23 @@ class Action {
         self.lat = latitude
         self.lon = longitude
     }
-    
+  
     class func shout(fromId: String){
         PubNub.sendMessage(
             [
                 "action": Header.Shout.rawValue,
-                "id": fromId],
+                "id": fromId
+            ],
             toChannel: Client.singleton.group_channel)
+        
+        var parseShoutUpdate = PFObject(className: "Actions")
+        parseShoutUpdate["type"] = "Shout"
+        parseShoutUpdate["user"] = fromId
+        parseShoutUpdate.saveInBackgroundWithBlock({(success: Bool, error: NSError!) -> Void in
+                if(!success){
+                    NSLog("failed to update")
+                }
+            })
     }
     
     class func join(fromId: String){
@@ -51,6 +61,14 @@ class Action {
                 "id": fromId
             ],
             toChannel: Client.singleton.group_channel)
+        var parseJoinUpdate = PFObject(className: "Actions")
+        parseJoinUpdate["type"] = "Join"
+        parseJoinUpdate["user"] = fromId
+        parseJoinUpdate.saveInBackgroundWithBlock({(success: Bool, error: NSError!) -> Void in
+            if(!success){
+                NSLog("failed to update")
+            }
+        })
     }
     
     class func release(fromId: String){
@@ -60,6 +78,14 @@ class Action {
                 "id": fromId
             ],
                 toChannel: Client.singleton.group_channel)
+        var parseReleaseUpdate = PFObject(className: "Actions")
+        parseReleaseUpdate["type"] = "Release"
+        parseReleaseUpdate["user"] = fromId
+        parseReleaseUpdate.saveInBackgroundWithBlock({(success: Bool, error: NSError!) -> Void in
+            if(!success){
+                NSLog("failed to update")
+            }
+        })
     }
     
     class func addToLobby(id: String, username: String, location: CLLocationCoordinate2D){
