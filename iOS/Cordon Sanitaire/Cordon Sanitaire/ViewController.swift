@@ -52,7 +52,7 @@ class ViewController: UIViewController, GameDelegate {
 //        self.dismissViewControllerAnimated(true, completion: nil)
 //        self.presentViewController(Game.singleton.viewController, animated: true, completion: nil)
         UIView.animateWithDuration(1.0,
-            delay: 3.0,
+            delay: 0.0,
             options: .CurveEaseInOut | .AllowUserInteraction,
             animations: {
                 Lobby.singleton.viewController.view.frame = CGRectMake(0, -self.view.frame.height, self.view.frame.width, self.view.frame.height);
