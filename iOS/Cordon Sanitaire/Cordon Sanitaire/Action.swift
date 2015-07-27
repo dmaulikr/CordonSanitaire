@@ -37,6 +37,7 @@ class Action {
     }
   
     class func shout(fromId: String){
+        
         PubNub.sendMessage(
             [
                 "action": Header.Shout.rawValue,
@@ -46,7 +47,8 @@ class Action {
         
         var parseShoutUpdate = PFObject(className: "Actions")
         parseShoutUpdate["type"] = "Shout"
-        parseShoutUpdate["user"] = fromId
+        parseShoutUpdate["userID"] = fromId
+        parseShoutUpdate["SimpleUser"] = Client.singleton.userObject
         parseShoutUpdate.saveInBackgroundWithBlock({(success: Bool, error: NSError!) -> Void in
                 if(!success){
                     NSLog("failed to update")
@@ -55,15 +57,18 @@ class Action {
     }
     
     class func join(fromId: String){
+        
         PubNub.sendMessage(
             [
                 "action": Header.Join.rawValue,
                 "id": fromId
             ],
             toChannel: Client.singleton.group_channel)
+        
         var parseJoinUpdate = PFObject(className: "Actions")
         parseJoinUpdate["type"] = "Join"
-        parseJoinUpdate["user"] = fromId
+        parseJoinUpdate["userID"] = fromId
+        parseJoinUpdate["SimpleUser"] = Client.singleton.userObject
         parseJoinUpdate.saveInBackgroundWithBlock({(success: Bool, error: NSError!) -> Void in
             if(!success){
                 NSLog("failed to update")
@@ -78,9 +83,11 @@ class Action {
                 "id": fromId
             ],
                 toChannel: Client.singleton.group_channel)
+        
         var parseReleaseUpdate = PFObject(className: "Actions")
         parseReleaseUpdate["type"] = "Release"
-        parseReleaseUpdate["user"] = fromId
+        parseReleaseUpdate["userID"] = fromId
+        parseReleaseUpdate["SimpleUser"] = Client.singleton.userObject
         parseReleaseUpdate.saveInBackgroundWithBlock({(success: Bool, error: NSError!) -> Void in
             if(!success){
                 NSLog("failed to update")

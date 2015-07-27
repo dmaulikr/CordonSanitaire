@@ -187,11 +187,12 @@ class ViewController: UIViewController, GameDelegate {
             self.presentViewController(profileViewController, animated: true, completion: nil)
         }
         else if(sender.titleLabel?.text == "About") {
-            let lobbyViewController:LobbyViewController = LobbyViewController()
-            self.presentViewController(lobbyViewController, animated: true, completion: nil)
-            
+            self.presentViewController(Game.singleton.viewController, animated: true, completion: nil)
+
         }
         else if(sender.titleLabel?.text == "Share"){
+            let mapViewController: MapViewController = MapViewController()
+            self.presentViewController(mapViewController, animated: true, completion: nil)
             
         }
         else if(sender.titleLabel?.text == "How To"){
