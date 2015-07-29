@@ -33,6 +33,8 @@ class Game: NSObject{
     var delegate:GameDelegate?
     var viewController = MapViewController()
     
+    var globalTimeDifference:Double!
+    var startTime:NSDate!
     // Start the game
     // seconds      -> how many seconds in the game we are in
     // players_ids -> an array of the ids of the users in this game
@@ -95,14 +97,52 @@ class Game: NSObject{
         query.orderByDescending("startTime")
         query.getFirstObjectInBackgroundWithBlock({(game: PFObject!, error: NSError!) -> Void in
             if (error == nil){
-                var startTime = game.valueForKey("startTime") as! NSDate
-                NSLog("GAME: Game time is " + startTime.description)
+                self.singleton.startTime = game.valueForKey("startTime") as! NSDate
+                NSLog("GAME: Game time is " + self.singleton.startTime.description)
                 
-                Lobby.singleton.setTimerUntilGameStart(startTime)
+                Lobby.singleton.setTimerUntilGameStart(self.singleton.startTime) // TODO: maybe rename the function if this stays here :)
+                
             } else {
                 NSLog("GAME: Problem getting the game time")
             }
         })
+    }
+    
+    // Get difference in time from PubNub global time
+    class func getTimeDifferenceFromPubNub() -> Void {
+        
+        // query PubNub time and set up the countdown timer
+        PubNub.requestServerTimeTokenWithCompletionBlock({(timetoken: NSNumber!, error: PNError!) -> Void in
+            // if successfully got the time
+            if (error == nil) {
+                var currentTimePN = Double(timetoken)/1e7 // convert timetokento seconds from the epoch
+                let currentTimeLocal = NSDate.timeIntervalSinceReferenceDate() // convert local time to seconds from the epoch
+                
+                // for debug
+                println("current time local: " + currentTimeLocal.description)
+                
+                self.singleton.globalTimeDifference = currentTimePN - currentTimeLocal
+            }
+            else {
+                NSLog("GAME: Problem getting the PubNub time")
+            }
+        })
+    }
+    
+    // Get time until start of game (live update)
+    func getTimeUntilStartOfGame() -> Double {
+        
+        var timeTilStart:Double = 0.0
+
+        let currentTimeLocal = NSDate.timeIntervalSinceReferenceDate()
+        
+        if(self.startTime != nil && self.globalTimeDifference != nil) {
+            timeTilStart = self.startTime.timeIntervalSince1970 - (currentTimeLocal + self.globalTimeDifference)
+            
+            // for debug
+            println("current time: " + currentTimeLocal.description + " | til start: " + timeTilStart.description)
+        }
+        return timeTilStart
     }
     
     // Get center of players in the game

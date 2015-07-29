@@ -17,9 +17,6 @@ import GameKit
 class LobbyViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     var lobbyView: UITableView!
-    var startTime = 0.0
-    let duration = 60.0
-    var timeLeft = 60.0
     var lobbyTimer = NSTimer()
     var bStartOfTimer: Bool = false
     var timerTextView: UITextView = UITextView()
@@ -46,7 +43,7 @@ class LobbyViewController: UIViewController, UITableViewDataSource, UITableViewD
         self.view.addSubview(background)
         
         addText()
-        lobbyTimer = NSTimer.scheduledTimerWithTimeInterval(0.01, target: self, selector: Selector("updateTimer"), userInfo: nil, repeats: true)
+        lobbyTimer = NSTimer.scheduledTimerWithTimeInterval(0.02, target: self, selector: Selector("updateTimer"), userInfo: nil, repeats: true)
         initTableView()
         
         self.view.addSubview(lobbyView)
@@ -163,24 +160,19 @@ class LobbyViewController: UIViewController, UITableViewDataSource, UITableViewD
 
     func updateTimer() {
         
-        if(!bStartOfTimer){
-            startTime = NSDate().timeIntervalSince1970
-            bStartOfTimer = true
-        }
-    
-        timeLeft = duration - (NSDate().timeIntervalSince1970 - startTime)
-        
-        if(timeLeft < 0.0) {
-            lobbyTimer.invalidate()
+        // update our timer view
+        let timeTilStart = Game.singleton.getTimeUntilStartOfGame()
+        if(timeTilStart <= 0.0) {
             timerTextView.text = "00:00.00"
-            println("timer finished")
+            // hide lobby and show game
         }
         else {
-            timerTextView.text = NSString(format: "00:%@%.2f", (timeLeft < 10.0) ? "0" : "", timeLeft) as String
+            timerTextView.text = NSString(format: "00:%@%.2f", (Game.singleton.getTimeUntilStartOfGame() < 10.0) ? "0" : "", Game.singleton.getTimeUntilStartOfGame()) as String!
         }
-    }
+     }
 
-    
+
+
     /*
     
     // Override to support conditional editing of the table view.

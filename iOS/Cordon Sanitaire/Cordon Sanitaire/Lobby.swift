@@ -21,37 +21,32 @@ class Lobby: NSObject{
     
     override init(){
         super.init()
-        // creates a view controller for the Lobby
 
+        // initialize game time values
+        Game.getTimeDifferenceFromPubNub()
+        Game.getStartTime()
+        
+        // creates a view controller for the Lobby
         self.viewController = LobbyViewController()
         self.viewController.initTableView()
-
-        Game.getStartTime()
     }
     
     func setTimerUntilGameStart(startTime: NSDate){
-        // query pubnub time and set up the countdown timer
-        PubNub.requestServerTimeTokenWithCompletionBlock({(timetoken: NSNumber!, error: PNError!) -> Void in
-            // if successfully got the time
-            if (error == nil) {
-                var currentTime = Double(timetoken)/1e7 // convert timetokento seconds from the epoch
-                var startTimeToken = startTime.timeIntervalSince1970 // convert start time to seconds from the epoch
-                var secondsUntilStart = startTimeToken - currentTime
-                if (secondsUntilStart > 0){
-                    NSLog("GAME INFO: Game is going to start in " + secondsUntilStart.description + " seconds")
-                    self.countdown_timer = NSTimer.scheduledTimerWithTimeInterval(secondsUntilStart, target: self, selector: Selector("startGame"), userInfo: nil, repeats: false)
-                } else if (abs(secondsUntilStart) < Game.duration){
-                    NSLog("GAME INFO: Game in progress")
-                    self.startGameAfter(abs(secondsUntilStart))
-                }
-                else {
-                    NSLog("GAME INFO: Game is already over :(")
-                }
-                
-            } else {
-                NSLog("LOBBY: Problem getting the PubNub time")
-            }
-        })
+        
+        let timeTilStart = Game.singleton.getTimeUntilStartOfGame()
+
+        if (timeTilStart > 0){
+            NSLog("GAME INFO: Game is going to start in " + timeTilStart.description + " seconds")
+            self.countdown_timer = NSTimer.scheduledTimerWithTimeInterval(timeTilStart, target: self, selector: Selector("startGame"), userInfo: nil, repeats: false)
+        }
+        else if (abs(timeTilStart) < Game.duration){
+            NSLog("GAME INFO: Game in progress")
+            self.startGameAfter(abs(timeTilStart))
+        }
+        else {
+            NSLog("GAME INFO: Game is already over :(")
+        }
+
     }
     
     // Add a player to the lobby
