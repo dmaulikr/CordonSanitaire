@@ -1,3 +1,5 @@
+
+// types for player status
 var TypeEnum = {
   INFECTIOUS: "infectious",
   HEALED:     "healed",
