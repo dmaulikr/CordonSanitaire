@@ -61,12 +61,9 @@ if (typeof document.addEventListener === "undefined" ||
 //----------------------------
 
 // Init
-// Live Database
-// Parse.initialize("Og1SUamdseHSQXnX940SK3DrVVJHtb3efFyv4sqO", "f0R0Nv8JMxOrU5VoPnGrR43C5iFcJomeTIVnJi1J");
-
 // Development Database
-// Parse.initialize("se41N3nzbLBJ9oZFHrvhun7dGPK3tiLsj1mrey49", "ptVDEW3c1A3rGCotPgbBswc8Z0GtYrYIjvxDpZLn");// NOT IN USE
-Parse.initialize("R2T7ReO7LkHmM8ASf11pqjyNJcYXPdVqAD09wWvC", "VLVfcK4ttzTdPo7fwXtexEbA6VnZ8wShmVhodTpE"); // CLONE
+// Application ID | JavaScript Key
+Parse.initialize("19YpaULveFMX1b6KUJBcSFeA2w25m8pPv2TUvJ8d", "V0UzvaJeICf0GJ37irtDA2KLLcKXCUSOMj74UWVA"); // CLONE
 if (Parse.User.current() == null || !Parse.User.current().authenticated()){
     alert('You are not logged in');
     Parse.User.logOut();
