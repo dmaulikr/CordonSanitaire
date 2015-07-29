@@ -1,0 +1,3 @@
+READ ME for Web version of Cordon Sanitaire
+
+Add information on installation, setup, structure, gameplay...
