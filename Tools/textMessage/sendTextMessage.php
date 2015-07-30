@@ -16,15 +16,21 @@
 			
 		// pass this page some values, such as group to message, message text, and time to send text
 		
-		$sms_group = 'Play Test 01';
-		$sms_time = '17:30';
+		$sms_group = 'no_group';
+		$sms_time =  '00:00';
+		$sms_url = 'bit.ly/playCSbeta';
 		
 		if (isset($_GET['group'])) {
 		     $sms_group = $_GET['group'];
-		}else{
-		    // Fallback behaviour goes here
+		}
+		if (isset($_GET['time'])) {
+		     $sms_time = $_GET["time"];
+		}	
+		if (isset($_GET['sms_url'])) {
+		     $sms_url = $_GET["sms_url"];
 		}	
 		
+		$message = 'FAKE URGENT. Patient Zero detected - ' . $sms_time . ' - but no one knows where! USE YOUR PHONE to enact quarantine ' . $sms_url;
 		/*
 		 *	A nice GitHub page with all EZ-Text PHP examples - source code
 		 *	
@@ -37,7 +43,7 @@
 		    'Password'      => 'dmiHQzPp6Kxt3q',
 		    'Groups'        => array($sms_group),
 		    'Subject'       => '',
-		    'Message'       => 'FAKE URGENT. Patient Zero detected - 4:52PM - but no one knows where! USE YOUR PHONE to enact quarantine bit.ly/cordonsans',
+		    'Message'       => $message,
 		    'MessageTypeID' => 1
 		);
 		$curl = curl_init('https://app.eztexting.com/sending/messages?format=json');
