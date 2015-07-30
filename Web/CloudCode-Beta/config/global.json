@@ -1,0 +1,14 @@
+{
+  "global": {
+    "parseVersion": "1.5.0"
+  },
+  "applications": {
+    "CS - Web - Dev": {
+      "applicationId": "19YpaULveFMX1b6KUJBcSFeA2w25m8pPv2TUvJ8d",
+      "masterKey": "DTMZIHRsqUNDnCV4tgOM4u0Vf39UKpORsqOaOITb"
+    },
+    "_default": {
+      "link": "CS - Web - Dev"
+    }
+  }
+}
