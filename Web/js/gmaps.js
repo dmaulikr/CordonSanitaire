@@ -27,6 +27,7 @@ var _numActive = 0;
 
 var _myPrevType = 'passive';
 
+//Get google map based on preset coordinates and zoom appropriately
 function drawMap() {
     var centerMap = new google.maps.LatLng(40.776779, -73.969699);
 
@@ -60,6 +61,7 @@ function drawMap() {
 	});
 }
 
+//Setup game: get center of active population, sort people, draw map, update everything once.
 function setGameBoard() {
 
     console.log("setting up game board");
@@ -105,7 +107,6 @@ function setGameBoard() {
 
 function updateGameBoard() {
 
-
     if (!hasReceivedJoinedMessage) return;
 
     console.log("updating population")
@@ -147,6 +148,7 @@ function updateGameBoard() {
     console.log("board updated");
 }
 
+//Create quarantine polygon based on active quarantiners
 function setQuarantine(){
     var q_stroke, q_fill;
 
@@ -182,12 +184,13 @@ function drawQuarantine() {
     quarantine.setMap(map);
 }
 
-
+//boolean, if x and y coordinates are inside the quarantine.
 function isInsideQuarantine(x, y) {
     var coords = getLatLngCoords(x, y);
     return (google.maps.geometry.poly.containsLocation(coords, quarantine) && !google.maps.geometry.poly.isLocationOnEdge(coords, quarantine, 0));
 }
 
+//checks the type of everybody in people list 
 function updatePopulation() {
     for (var i = 0; i < people.length; i++) {
         people[i].type = getType(people[i]);
@@ -197,6 +200,7 @@ function updatePopulation() {
     }
 }
 
+//creates a list of trapped people
 function getTrappedPopulationMarkers() {
     var trapped = [];
 
@@ -209,6 +213,7 @@ function getTrappedPopulationMarkers() {
     return trapped;
 }
 
+//creates a list of trapped npcs
 function getTrappedNPCMarkers() {
     var trapped = [];
 
@@ -351,7 +356,7 @@ function animatePatientZero(icon) {
 }
 
 
-//
+//Get all parameters necessary to update score
 function updateScoreboard() {
     //check status of patient zero
     if (_patientZeroContained)
@@ -372,6 +377,7 @@ function updateScoreboard() {
 
 }
 
+//Toggles buttons showing based on user's type
 function updateButtonAvailable() {
     if (myUser.type == TypeEnum.TRAPPED) {
         document.getElementById('buttons').style.visibility = 'hidden';
@@ -460,7 +466,7 @@ function updateNotifications() {
     _prevPatientZeroContained = _patientZeroContained;
     _myPrevType = myUser.type;
 }
-
+//boolean value checking status of patient zero
 function isPatientZeroContained() {
 
     if (patient_zero == null)

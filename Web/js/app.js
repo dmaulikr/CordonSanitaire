@@ -20,7 +20,7 @@ function sortPeople() {
     people = sortedPeople;
 }
 
-
+//returns the next person in a counterclockwise direction
 function getNextPersonCounterClockwise(p) {
 
     var min = 2 * Math.PI; // max angle
@@ -48,7 +48,7 @@ function getNextPersonCounterClockwise(p) {
     return people[index];
 }
 
-
+//pass debugging data -center coordinates and people's locations as html code.
 var printDebugData = function() {
 
     var string = "<ol><li>center: " + center.x + ", " + center.y + "</li>";
@@ -211,6 +211,7 @@ var showMissedGameMessage = function() {
 //      General Actions
 //----------------------------
 
+//Changes user's state to Active.
 function flipUserActiveState() {
     // something with parse to set the value inactive
     console.log("flipping user state");

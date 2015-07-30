@@ -1,5 +1,6 @@
 var settings = new Settings();
 var listener = null;
+//Set all values and colors
 function Settings(){
     this.duration = 120;
     this.distance = 20;
@@ -61,8 +62,9 @@ function Settings(){
         npc.pushToDatabase();
     };
 
+    //adds a patient zero to map, removing previous ones/ensuring p0 is quarantinable
     this.addPatientZero = function(){
-        // checks if there's already a patient zero, if there's remove it locally and from the database
+        // checks if there's already a patient zero, if there is, remove it locally and from the database
         if (patient_zero != undefined){
             console.log("there's already a patient zero");
             // erase patient zero's marker if there's one.
