@@ -3,13 +3,12 @@
 //----------------------------
 
 // Development Database
-// Parse.initialize("se41N3nzbLBJ9oZFHrvhun7dGPK3tiLsj1mrey49", "KVhOztk5uviXDqaeQHzRa8GhgA0YjtPz9awX5gvC");
-Parse.initialize("R2T7ReO7LkHmM8ASf11pqjyNJcYXPdVqAD09wWvC", "VLVfcK4ttzTdPo7fwXtexEbA6VnZ8wShmVhodTpE");
-// Javascript key: ptVDEW3c1A3rGCotPgbBswc8Z0GtYrYIjvxDpZLn
+// Application ID | JavaScript Key
+Parse.initialize("19YpaULveFMX1b6KUJBcSFeA2w25m8pPv2TUvJ8d", "V0UzvaJeICf0GJ37irtDA2KLLcKXCUSOMj74UWVA"); // CLONE
 
 if (Parse.User.current() != null) {
     alert("You are already logged in! Let's play!")
-    window.location = "/prototypes/cordonsans/index.html"	// this path is necessary for the online location
+    window.location = "/cs_beta/index.html"	// this path is necessary for the online location
 }
 
 // check start time from parse
@@ -81,7 +80,7 @@ function login(evnt) {
                 type: "passive"
             });
             user.save();
-            window.location = "/prototypes/cordonsans/index.html";	// this path is necessary for the online location
+            window.location = "/cs_beta/index.html";	// this path is necessary for the online location
         },
         error: function(user, error) {
             // The login failed. Check error to see why.
@@ -111,7 +110,7 @@ function signUp(evnt) {
         success: function(user) {
             console.log("a new user signed up");
             alert("Thank you for signning up. You will now be redirected to Cordon Sanitaire!");
-            window.location = "/prototypes/cordonsans/index.html";	// this path is necessary for the online location
+            window.location = "/cs_beta/index.html";	// this path is necessary for the online location
         },
         error: function(user, error) {
             // Show the error message somewhere and let the user try again.

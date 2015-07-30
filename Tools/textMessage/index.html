@@ -1,0 +1,54 @@
+<html lang="en" class="no-js">
+	<head>
+		<meta charset="utf-8">
+		<title>Cordon Sanitaire | EZ Text Send</title>
+		<meta name="description" content="">
+		<meta name="keywords" content="" />
+		<meta name="author" content="">
+		<meta http-equiv='cache-control' content='no-cache'>
+		<meta http-equiv='expires' content='0'>
+		<meta http-equiv='pragma' content='no-cache'>
+		<!-- !CSS -->
+		<style>
+			*{
+				font-family: sans-serif;
+				background: #FFF;
+			};
+
+			body{
+				margin: 20px;
+				padding: 20px;
+			}
+		</style>
+	</head>
+	<body>
+		<h2>Cordon Sanitaire | Beta Text Message</h2>		
+		<form action="sendTextMessage.php" method="get" enctype="multipart/form-data">
+			<span>Group: </span>
+			<select name="group">
+				<option value="Personal">Personal</option>
+				<option value="Internal">Internal</option>
+				<option value="Playful_2015">Playful_2015</option>
+				<option value="Beta">Beta</option>
+			</select>
+			<br><br>
+			<span>Time: </span>
+			<input type="text" id="formValueTime" name="time" value="5:45 PM EST"/>
+			<br><br>
+			<span>URL: </span>
+			<input type="text" id="formValueURL" name="sms_url" value="bit.ly/playCSbeta"/>
+			<br><br>
+			<input type="submit" value="send text message">
+		</form>
+<!-- 		<form>
+			<input type="text" id="formValueGroup" name="group"/>
+			<input type="text" id="formValueTime" name="time"/>
+			<input type="button" id="theButton"/>
+		</form>
+ -->		<!--<button onclick="makeCorsRequest()">Make CORS Request</button>-->
+<!-- 		<button onclick="sendTextMessage()">Send Text Message</button>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+		<script>!window.jQuery && document.write('<script src="js/jquery-1.4.2.min.js"><\/script>')</script>
+		<script type="text/javascript" src="../js/eztext.js"></script>
+ -->	</body>
+</html>
