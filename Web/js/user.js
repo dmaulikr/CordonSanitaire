@@ -11,6 +11,7 @@ var User = function(id, x, y, role, type, isPatientZero) {
     this.type = type;
     this.isPatientZero = isPatientZero;
     this.marker = null;
+    this.score = 0; // used for keeping track of how well they do
 };
 
 /**
@@ -21,14 +22,14 @@ User.prototype.draw = function() {
 
     // if there's no marker, create one.
     if (this.marker == null) {
-        // creates a new marker for the npc and adds it to the map
+        // creates a new marker for the users and adds it to the map
         var marker_obj = new google.maps.Marker({
             position: coords,
-            icon: getMarkerIcon(this.type), // depends on the type of the npc
+            icon: getMarkerIcon(this.type), // depends on the type of the users
             map: map,
         });
 
-        // sets the npc marker to the created marker
+        // sets the users marker to the created marker
         this.marker = marker_obj;
 
     }
@@ -38,14 +39,14 @@ User.prototype.draw = function() {
 };
 
 /**
- * Erases an User from the map
+ * Erases a User from the map
  */
 User.prototype.erase = function() {
     this.marker.setMap(null);
 };
 
 /**
- * Returns wheter an user is active or not.
+ * Returns whether a user is active or not.
  * @return boolean [true if the the user is active, false otherwise]
  */
 User.prototype.isActive = function() {
@@ -57,7 +58,7 @@ User.prototype.isUserMe = function() {
 }
 
 /**
- * Updates the type of this NPC
+ * Updates the type of this user
  * @param  {TypeEnum} type
  */
 User.prototype.updateType = function(type) {
