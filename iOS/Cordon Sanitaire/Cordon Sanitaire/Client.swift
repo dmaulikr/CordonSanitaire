@@ -26,6 +26,7 @@ class Client: NSObject, PNDelegate, CLLocationManagerDelegate {
     
     var id: String?
     var username: String?
+    var userObject: PFObject?
     
     class var singleton :Client! {
         return _SingletonSharedInstance
@@ -96,6 +97,8 @@ class Client: NSObject, PNDelegate, CLLocationManagerDelegate {
                     }
                 })
             }
+            //store user object
+            self.userObject = user
         })
         
         // at last, get the geolocation of the player

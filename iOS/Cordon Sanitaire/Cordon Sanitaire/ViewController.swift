@@ -165,8 +165,7 @@ class ViewController: UIViewController, GameDelegate {
         self.view.addSubview(dot3)
         
     }
-    
-    
+     
     // handle the button presses (open the map view, or open the intro view)
     func onButtonPress(sender:UIButton!) {
         println("button pressed")
@@ -175,6 +174,7 @@ class ViewController: UIViewController, GameDelegate {
             // display the map view
 //            self.presentViewController(Lobby.singleton.viewController!, animated: true, completion: nil)
             self.presentViewController(Game.singleton.viewController, animated: true, completion: nil)
+
         }
         else if(sender.titleLabel?.text == "Intro") {
             // display the map view
@@ -187,11 +187,12 @@ class ViewController: UIViewController, GameDelegate {
             self.presentViewController(profileViewController, animated: true, completion: nil)
         }
         else if(sender.titleLabel?.text == "About") {
-            let lobbyViewController:LobbyViewController = LobbyViewController()
-            self.presentViewController(lobbyViewController, animated: true, completion: nil)
-            
+            self.presentViewController(Game.singleton.viewController, animated: true, completion: nil)
+
         }
         else if(sender.titleLabel?.text == "Share"){
+            let mapViewController: MapViewController = MapViewController()
+            self.presentViewController(mapViewController, animated: true, completion: nil)
             
         }
         else if(sender.titleLabel?.text == "How To"){
