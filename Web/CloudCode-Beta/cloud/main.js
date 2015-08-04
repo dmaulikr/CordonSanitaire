@@ -130,53 +130,28 @@ Parse.Cloud.job('selectPatientZero', function(request, status) {
     var userArray = [];
     userQuery.each(function(user) {
         userArray.push(user);
-    })
+    }).then(function() {
 
     shuffle(userArray);
     console.log("shuffled");
 
-    var randomUsers = [(userArray[0].get('x'), (userArray[0].get('y')), (userArray[1].get('x'), (userArray[1].get('y'), (userArray[2].get('x'), (userArray[2].get('y')];
-    var pos = getCenter(randomUsers);
-
-    setPatientZeroPosition(pos, function() {
-    status.success("Patient Zero position was set to " + pos[0] + ", " + pos[1]);
-
-    }, function(error) {
-        status.error("Error:" + error.code + " " error.message);
-    });
-
-    /*
-    var count = 0;
-    var total = { x: 0, y: 0 };
-    var pos = { x: 0, y: 0 };
-
-    var userQuery = new Parse.Query(Parse.User);
-    userQuery.equalTo('present', true);
-    userQuery.each(function(user) {
-        var rnd = Math.round(Math.random());
-        if (rnd == 1) {
-            total.x += user.get('x');
-            total.y += user.get('y');
-            count++;
-        }
-    }).then(function() {
-        if (count != 0){
-            pos.x = total.x / count;
-            pos.y = total.y / count;
-        } else {
-            pos.x = Math.random();
-            pos.y = Math.random();
-        }
+    if (userArray.length >= 3) {
+        var randomUsers = [(userArray[0].get('x'), userArray[0].get('y')), 
+                       (userArray[1].get('x'), userArray[1].get('y')), 
+                       (userArray[2].get('x'), userArray[2].get('y'))];
+        var pos = getCenter(randomUsers);
 
         setPatientZeroPosition(pos, function() {
-            status.success("Patient Zero position was set to " + pos.x + ", " + pos.y);
+        status.success("Patient Zero position was set to " + pos[0] + ", " + pos[1]);
+
+        }, function(error) {
+            status.error("Error:" + error.code + " " error.message);
         });
-
-    }, function(error) {
-        status.error("Error: " + error.code + " " + error.message);
+    }
+    else {
+        console.log("Not enough players.");
+        }   
     });
-}); */
-
 });
 
 // every day at midnight sets a new game to be started at a given time
