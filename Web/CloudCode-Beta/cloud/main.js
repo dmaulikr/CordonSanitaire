@@ -132,24 +132,23 @@ Parse.Cloud.job('selectPatientZero', function(request, status) {
         userArray.push(user);
     }).then(function() {
 
-    shuffle(userArray);
-    console.log("shuffled");
+        shuffle(userArray);
+        console.log("shuffled");
 
-    if (userArray.length >= 3) {
-        var randomUsers = [(userArray[0].get('x'), userArray[0].get('y')), 
-                       (userArray[1].get('x'), userArray[1].get('y')), 
-                       (userArray[2].get('x'), userArray[2].get('y'))];
-        var pos = getCenter(randomUsers);
+        if (userArray.length >= 3) {
+            var randomUsers = [(userArray[0].get('x'), userArray[0].get('y')), 
+                           (userArray[1].get('x'), userArray[1].get('y')), 
+                           (userArray[2].get('x'), userArray[2].get('y'))];
+            var pos = getCenter(randomUsers);
 
-        setPatientZeroPosition(pos, function() {
-        status.success("Patient Zero position was set to " + pos[0] + ", " + pos[1]);
-
-        }, function(error) {
-            status.error("Error:" + error.code + " " error.message);
-        });
-    }
-    else {
-        console.log("Not enough players.");
+            setPatientZeroPosition(pos, function() {
+               status.success("Patient Zero position was set to " + pos[0] + ", " + pos[1]);
+            }, function(error) {
+                status.error("Error:" + error.code + " " error.message);
+            });
+        }
+        else {
+            console.log("Not enough players.");
         }   
     });
 });
