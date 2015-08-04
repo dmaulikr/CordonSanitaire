@@ -184,22 +184,28 @@ function getBounds(users) {
     var maxLon = -90;
     var minLat = users[0].coords[0];
     var minLon = users[0].coords[1];
-        for (var i = 0; i < users.length; i++) {
-            if (users[i].coords[0] < minLat) {
-                minLat = users[i].coords[0];
-            }
-            else if (users[i].coords[0] > maxLat) {
-                maxLat = users[i].coords[0];
-            }
-            if (users[i].coords[1] < minLon) {
-                minLon = users[i].coords[0];
-            }
-            else if (users[i].coords[1] > maxLon) {
-                maxLon = users[i].coords[0];
-            }
 
+    // look through all users to find the outer bounds of all players
+    for (var i = 0; i < users.length; i++) {
+        if (users[i].coords[0] < minLat) {
+            minLat = users[i].coords[0];
         }
-    var bounds = new google.maps.LatLngBounds();
+        else if (users[i].coords[0] > maxLat) {
+            maxLat = users[i].coords[0];
+        }
+        if (users[i].coords[1] < minLon) {
+            minLon = users[i].coords[0];
+        }
+        else if (users[i].coords[1] > maxLon) {
+            maxLon = users[i].coords[0];
+        }
+
+    }
+
+    // create google lat lng coordinates for bounds
+    var sw = new google.maps.LatLng(minLat, minLon);
+    var ne = new google.maps.LatLng(maxLat, maxLon);
+    var bounds = new google.maps.LatLngBounds(sw, ne);
 
     return bounds;
 }
