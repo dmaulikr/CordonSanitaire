@@ -85,36 +85,71 @@ Parse.Cloud.job("updateUsersPresent", function(request, status) {
     })
 });
 
+//shuffling of an array
+function shuffle(array){
+    var currentIndex = array.length, temporaryValue, randomIndex;
+
+    while (0!== currentIndex) {
+        randomIndex = Math.floor(Math.random()*currentIndex);
+        currentIndex -= 1;
+
+        temporaryValue = array[currentIndex];
+        array[currentIndex] = array[randomIndex];
+        array[randomIndex] = temporaryValue;
+    }
+    return array;
+}
+
+function getCenter(coordinates) {
+    if (coordinates === undefined) {
+        console.log("No coordinates passed");
+        return;
+    }
+    else {
+        var avgLat = 0;
+        var avgLon = 0;
+        //loops through and adds all coordinate values
+        for (var i = 0; i < coordinates.length; i++){
+            avgLat += coordinates[i][0];
+            avgLon += coordinates[i][1];
+        }
+        //returns the average.
+        avgLat = avgLat/double(coordinates.length);
+        avgLon = avgLon/double(coordinates.length);
+        return (avgLat, avgLon);
+    }
+}
+
 // selects the position of patient zero one minute before a game starts
 Parse.Cloud.job('selectPatientZero', function(request, status) {
-    var count = 0;
-    var total = { x: 0, y: 0 };
-    var pos = { x: 0, y: 0 };
+    //Randomly select 3 names: scramble an array and choose first 3,
+    //place patient zero in the middle.
 
     var userQuery = new Parse.Query(Parse.User);
     userQuery.equalTo('present', true);
+    var userArray = [];
     userQuery.each(function(user) {
-        var rnd = Math.round(Math.random());
-        if (rnd == 1) {
-            total.x += user.get('x');
-            total.y += user.get('y');
-            count++;
-        }
+        userArray.push(user);
     }).then(function() {
-        if (count != 0){
-            pos.x = total.x / count;
-            pos.y = total.y / count;
-        } else {
-            pos.x = Math.random();
-            pos.y = Math.random();
+
+        shuffle(userArray);
+        console.log("shuffled");
+
+        if (userArray.length >= 3) {
+            var randomUsers = [(userArray[0].get('x'), userArray[0].get('y')), 
+                           (userArray[1].get('x'), userArray[1].get('y')), 
+                           (userArray[2].get('x'), userArray[2].get('y'))];
+            var pos = getCenter(randomUsers);
+
+            setPatientZeroPosition(pos, function() {
+               status.success("Patient Zero position was set to " + pos[0] + ", " + pos[1]);
+            }, function(error) {
+                status.error("Error:" + error.code + " " error.message);
+            });
         }
-
-        setPatientZeroPosition(pos, function() {
-            status.success("Patient Zero position was set to " + pos.x + ", " + pos.y);
-        });
-
-    }, function(error) {
-        status.error("Error: " + error.code + " " + error.message);
+        else {
+            console.log("Not enough players.");
+        }   
     });
 });
 
