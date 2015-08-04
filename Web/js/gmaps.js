@@ -552,3 +552,14 @@ function revealPatientZero() {
     // pan to show the patient zero centered in the screen
     map.panTo(patient_zero_coords);
 }
+
+// update the bounds of the map to show all players
+function updateBounds() {
+    console.log("updating bounds for new player added");
+
+    var bounds = getBounds(people);
+
+    map.fitBounds(bounds);
+
+    console.log("finished fitting bounds");
+}

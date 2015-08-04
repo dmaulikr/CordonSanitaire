@@ -52,6 +52,9 @@ pubnub.subscribe({
             case "addNPC":
                 if (!NPC.isIdPresent(m.id)) {
                     NPC.addToLocalArray(m.id);
+                    // also update the map to include all markers
+                    updateBounds();
+                    
                 } else {
                     console.log("npc " + m.id + " was already present in the local array");
                 }
@@ -64,6 +67,9 @@ pubnub.subscribe({
             case "addUser":
                 if (!User.isIdPresent(m.id) && hasReceivedJoinedMessage) {
                     User.addToLocalArray(m.id);
+                    // also update the map to include all markers
+                    updateBounds();
+
                 } else {
                     console.log("User " + m.id + " was already present in the local array.");
                 }
