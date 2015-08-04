@@ -177,3 +177,29 @@ function getCenter(users) {
 
     return loc;
 }
+
+//return a google maps LatLngBounds object, containing the minimum and maximum latitudes/longitudes, from which 4 boundary points can be extrapolated
+function getBounds(users) {
+    var maxLat = -180;
+    var maxLon = -90;
+    var minLat = users[0].coords[0];
+    var minLon = users[0].coords[1];
+        for (var i = 0; i < users.length; i++) {
+            if (users[i].coords[0] < minLat) {
+                minLat = users[i].coords[0];
+            }
+            else if (users[i].coords[0] > maxLat) {
+                maxLat = users[i].coords[0];
+            }
+            if (users[i].coords[1] < minLon) {
+                minLon = users[i].coords[0];
+            }
+            else if (users[i].coords[1] > maxLon) {
+                maxLon = users[i].coords[0];
+            }
+
+        }
+    var bounds = new google.maps.LatLngBounds();
+
+    return bounds;
+}
