@@ -144,7 +144,7 @@ Parse.Cloud.job('selectPatientZero', function(request, status) {
             setPatientZeroPosition(pos, function() {
                status.success("Patient Zero position was set to " + pos[0] + ", " + pos[1]);
             }, function(error) {
-                status.error("Error:" + error.code + " " error.message);
+                status.error("Error:" + error.code + " " + error.message);
             });
         }
         else {
