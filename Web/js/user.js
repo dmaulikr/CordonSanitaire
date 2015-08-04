@@ -7,6 +7,7 @@ var User = function(id, x, y, role, type, isPatientZero) {
     this.id = id; // id will be attributed once the object is pushed to the database
     this.x = x;
     this.y = y;
+    this.coords = getLatLngCoords(this.x, this.y);
     this.role = role;
     this.type = type;
     this.isPatientZero = isPatientZero;

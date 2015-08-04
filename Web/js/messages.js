@@ -64,6 +64,8 @@ pubnub.subscribe({
             case "addUser":
                 if (!User.isIdPresent(m.id) && hasReceivedJoinedMessage) {
                     User.addToLocalArray(m.id);
+                    // also update the map to include all markers
+
                 } else {
                     console.log("User " + m.id + " was already present in the local array.");
                 }
