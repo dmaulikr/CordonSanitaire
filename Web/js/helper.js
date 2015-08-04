@@ -182,22 +182,22 @@ function getCenter(users) {
 function getBounds(users) {
     var maxLat = -180;
     var maxLon = -90;
-    var minLat = users[0].coords[0];
-    var minLon = users[0].coords[1];
+    var minLat = users[0].coords.lat();
+    var minLon = users[0].coords.lng();
 
     // look through all users to find the outer bounds of all players
     for (var i = 0; i < users.length; i++) {
-        if (users[i].coords[0] < minLat) {
-            minLat = users[i].coords[0];
+        if (users[i].coords.lat() < minLat) {
+            minLat = users[i].coords.lat();
         }
-        else if (users[i].coords[0] > maxLat) {
-            maxLat = users[i].coords[0];
+        else if (users[i].coords.lat() > maxLat) {
+            maxLat = users[i].coords.lat();
         }
-        if (users[i].coords[1] < minLon) {
-            minLon = users[i].coords[0];
+        if (users[i].coords.lng() < minLon) {
+            minLon = users[i].coords.lng();
         }
-        else if (users[i].coords[1] > maxLon) {
-            maxLon = users[i].coords[0];
+        else if (users[i].coords.lng() > maxLon) {
+            maxLon = users[i].coords.lng();
         }
 
     }
