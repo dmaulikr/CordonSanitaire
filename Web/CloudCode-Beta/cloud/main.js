@@ -156,7 +156,7 @@ Parse.Cloud.job('selectPatientZero', function(request, status) {
 
 
 //reset all players to Passive.
-Parse.Cloud.job('SetAllUsersPassive', function(request, response){
+Parse.Cloud.job('setAllUsersPassive', function(request, response){
     Parse.Cloud.useMasterKey();
     var query = new Parse.Query(Parse.User);
     query.equalTo("type", "active");query.each(function(user){
