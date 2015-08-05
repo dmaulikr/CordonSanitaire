@@ -35,10 +35,16 @@ function drawMap() {
     if ($(window).width() < 480)
         centerMap = getLatLngCoords(myUser.x, myUser.y);
 
+    var layer = "toner-background";
+
     var mapOptions = {
         zoom: 12,
         center: centerMap,
-        mapTypeId: google.maps.MapTypeId.ROADMAP,
+        //mapTypeId: google.maps.MapTypeId.ROADMAP,
+        mapTypeId: layer,
+        mapTypeControlOptions: {
+            mapTypeIds: [layer]
+        },
         disableDefaultUI: true,
         scrollwheel: false,
         disableDoubleClickZoom: true,
@@ -47,6 +53,9 @@ function drawMap() {
     };
 
     map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+
+    // set the map layer to show toner
+    map.mapTypes.set(layer, new google.maps.StamenMapType(layer));
     
     // Listen for map zoom events and resize the markers as needed
 	google.maps.event.addListener(map, 'zoom_changed', function() {
