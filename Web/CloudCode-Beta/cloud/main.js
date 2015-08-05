@@ -70,7 +70,7 @@ Parse.Cloud.job("updateUsersPresent", function(request, status) {
                 });
                 user.save();
 
-                var message = {
+                var message2 = {
                     action: 'addUser',
                     id: user.id
                 };
@@ -104,7 +104,6 @@ function shuffle(array){
 function getCenter(coordinates) {
     if (coordinates === undefined) {
         console.log("No coordinates passed");
-        return;
     }
     else {
         var avgLat = 0;
@@ -257,11 +256,11 @@ function setPatientZeroPosition(pos, callback){
                 patient_zero.save({
                     x : pos.x,
                     y : pos.y
-                })
+                });
                 message = {
                     action: 'setPatientZeroPosition',
                     pos: pos
-                }
+                };
                 sendMessage(message);
             } else {
                 patient_zero = new NPC();
@@ -276,7 +275,7 @@ function setPatientZeroPosition(pos, callback){
                         message = {
                             action: 'addNPC',
                             id: npc.id
-                        }
+                        };
 
                     sendMessage(message);
                     },
