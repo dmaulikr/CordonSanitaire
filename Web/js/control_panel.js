@@ -18,8 +18,8 @@ function Settings(){
 
     this.color_border_not_contained_stroke = '#000000';
     this.color_border_not_contained_fill = '#ff2222';
-    this.color_border_casualty_stroke = '#663300';
-    this.color_border_casualty_fill = '#ffa352';
+    this.color_border_casualty_stroke = '#000000';
+    this.color_border_casualty_fill = '#ffcc33';
     this.color_border_contained_stroke = '#006666';
     this.color_border_contained_fill = '#55ffb9';
     this.color_border_opacity = .4;

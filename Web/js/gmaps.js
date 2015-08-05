@@ -178,9 +178,18 @@ function drawQuarantine() {
     var q_stroke, q_fill;
 
     if (isPatientZeroContained()) {
-        q_stroke = settings.color_border_contained_stroke;
-        q_fill = settings.color_border_contained_fill;
-    } else {
+
+        // check to see if other people are trapped inside
+        if (countCasualties() > 0) {
+            q_stroke = settings.color_border_casualty_stroke;
+            q_fill = settings.color_border_casualty_fill;
+        }
+        else {
+            q_stroke = settings.color_border_contained_stroke;
+            q_fill = settings.color_border_contained_fill;
+        }
+    }
+    else {
         q_stroke = settings.color_border_not_contained_stroke;
         q_fill = settings.color_border_not_contained_fill;
     }
