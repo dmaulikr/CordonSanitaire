@@ -1,7 +1,7 @@
 // set pubnub
 var pubnub = {
     publish_key: 'pub-c-cc12e9c4-752b-4216-872c-12ec350ab404',
-    subscribe_key: 'sub-c-92bfbb92-357a-11e5-9004-02ee2ddab7fe',
+    subscribe_key: 'sub-c-92bfbb92-357a-11e5-9004-02ee2ddab7fe'
 };
 
 // var _channel = 'production'; // Dev Channel vs. Production Channel
@@ -44,11 +44,11 @@ Parse.Cloud.job("updateUsersPresent", function(request, status) {
 
     var query = new Parse.Query(Parse.User);
     query.each(function(user) {
-        var timestamp = user.get('ping')
+        var timestamp = user.get('ping');
 
         var cur_date = new Date();
 
-        var total_seconds = (cur_date - timestamp) / 1000
+        var total_seconds = (cur_date - timestamp) / 1000;
         if (total_seconds > 120) {
             if (user.get("present")){
                 user.set({
@@ -59,7 +59,7 @@ Parse.Cloud.job("updateUsersPresent", function(request, status) {
                 var message = {
                     action: 'removeUser',
                     id: user.id
-                }
+                };
 
                 sendMessage(message);
             }
@@ -73,7 +73,7 @@ Parse.Cloud.job("updateUsersPresent", function(request, status) {
                 var message = {
                     action: 'addUser',
                     id: user.id
-                }
+                };
 
                 sendMessage(message);
             }
@@ -115,9 +115,9 @@ function getCenter(coordinates) {
             avgLon += coordinates[i][1];
         }
         //returns the average.
-        avgLat = avgLat/double(coordinates.length);
-        avgLon = avgLon/double(coordinates.length);
-        return (avgLat, avgLon);
+        avgLat = avgLat/coordinates.length;
+        avgLon = avgLon/coordinates.length;
+        return [avgLat, avgLon];
     }
 }
 
@@ -137,9 +137,9 @@ Parse.Cloud.job('selectPatientZero', function(request, status) {
         console.log("shuffled");
 
         if (userArray.length >= 3) {
-            var randomUsers = [(userArray[0].get('x'), userArray[0].get('y')), 
-                           (userArray[1].get('x'), userArray[1].get('y')), 
-                           (userArray[2].get('x'), userArray[2].get('y'))];
+            var randomUsers = [[userArray[0].get('x'), userArray[0].get('y')],
+                           [userArray[1].get('x'), userArray[1].get('y')],
+                           [userArray[2].get('x'), userArray[2].get('y')]];
             var pos = getCenter(randomUsers);
 
             setPatientZeroPosition(pos, function() {
@@ -221,7 +221,7 @@ Parse.Cloud.job('resetUsersPosition', function(request, status) {
     }).then (function() {
         status.success("Users' position have been reseted");
     }, function(error) {
-        statur.error("Error: " + error.code + " " + error.message);
+        status.error("Error: " + error.code + " " + error.message);
     });
 });
 
