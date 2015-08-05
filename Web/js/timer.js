@@ -136,6 +136,11 @@ var timerStartGame = function() {
 	startTheClock();
 	console.log("On Time User - Start Game.");
 	window.clearInterval(statusInterval);
+
+	// zoom to fit all players after 2 seconds
+	var zoomTimeout = setTimeout(function () {
+		updateBounds();
+  	}, 2000);	// 2000 milliseconds
 }
 
 var timerMissedGame = function() {
