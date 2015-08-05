@@ -17,10 +17,12 @@ function Settings(){
     this.color_casualty_stroke = '#000000';
 
     this.color_border_not_contained_stroke = '#000000';
-    this.color_border_not_contained_fill = '#000000';
+    this.color_border_not_contained_fill = '#ff2222';
+    this.color_border_casualty_stroke = '#000000';
+    this.color_border_casualty_fill = '#ffcc33';
     this.color_border_contained_stroke = '#006666';
     this.color_border_contained_fill = '#55ffb9';
-    this.color_border_opacity = .2;
+    this.color_border_opacity = .4;
 
     this.chat = false;
     this.gmaps = false;
@@ -171,6 +173,8 @@ f1.closed = true;
 var f4 = gui.addFolder('border');
 var color_border_not_contained_stroke_control = f4.addColor(settings, 'color_border_not_contained_stroke');
 var color_border_not_contained_fill_control = f4.addColor(settings, 'color_border_not_contained_fill');
+var color_border_casualty_stroke_control = f4.addColor(settings, 'color_border_casualty_stroke');
+var color_border_casualty_fill_control = f4.addColor(settings, 'color_border_casualty_fill');
 var color_border_contained_stroke_control = f4.addColor(settings, 'color_border_contained_stroke');
 var color_border_contained_fill_control = f4.addColor(settings, 'color_border_contained_fill');
 var color_border_opacity_control = f4.add(settings, 'color_border_opacity', 0, 1);
@@ -215,6 +219,14 @@ color_border_not_contained_stroke_control.onChange(function(value) {
 });
 
 color_border_not_contained_fill_control.onChange(function(value) {
+    updateGameBoard();
+});
+
+color_border_casualty_stroke_control.onChange(function(value) {
+    updateGameBoard();
+});
+
+color_border_casualty_fill_control.onChange(function(value) {
     updateGameBoard();
 });
 
