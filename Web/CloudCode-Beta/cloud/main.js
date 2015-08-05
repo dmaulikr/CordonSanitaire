@@ -25,6 +25,7 @@ Parse.Cloud.define("setAllUsersNotPresent", function(request, response) {
     });
 });
 
+
 // an user ping
 Parse.Cloud.define("ping", function(request, response) {
     var cur_date = new Date();
@@ -150,6 +151,42 @@ Parse.Cloud.job('selectPatientZero', function(request, status) {
         else {
             console.log("Not enough players.");
         }   
+    });
+});
+
+
+//reset all players to Passive.
+Parse.Cloud.job('SetAllUsersPassive', function(request, response){
+    Parse.Cloud.useMasterKey();
+    var query = new Parse.Query(Parse.User);
+    query.equalTo("type", "active");query.each(function(user){
+        if (!user.get('admin')) {
+            console.log("resetting passivity of " + user.id);
+            user.set("type", "passive");
+            return user.save();
+        }
+    }).then(function(){
+        response.success("Users reset to passive");
+    }, function(error) {
+        response.error("Error: " + error.code + " " + error.message);
+    });
+});
+
+//Set all users to Present: false
+Parse.Cloud.job('setAllUsersNotPresent', function(request, response) {
+    Parse.Cloud.useMasterKey();
+    var query = new Parse.Query(Parse.User);
+    query.equalTo("present", true);
+    query.each(function(user) {
+        if (!user.get('admin')) {
+            console.log("resetting " + user.id);
+            user.set("present", false);
+            return user.save();
+        }
+    }).then(function() {
+        response.success("Users reset");
+    }, function(error) {
+        response.error("Error: " + error.code + " " + error.message);
     });
 });
 
