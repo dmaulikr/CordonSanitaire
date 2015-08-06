@@ -231,7 +231,7 @@ Parse.Cloud.job('refreshPage', function (request, status) {
         action: 'refreshPage',
     };
     sendMessage(message);
-}
+});
 
 
 // publish message to pubnub from cloud code
