@@ -25,7 +25,6 @@ Parse.Cloud.define("setAllUsersNotPresent", function (request, response) {
     });
 });
 
-
 // an user ping
 Parse.Cloud.define("ping", function (request, response) {
     var cur_date = new Date();
@@ -70,7 +69,7 @@ Parse.Cloud.job("updateUsersPresent", function (request, status) {
                 });
                 user.save();
 
-                var message2 = {
+                var message = {
                     action: 'addUser',
                     id: user.id
                 };
@@ -121,7 +120,7 @@ function getCenter(coordinates) {
 }
 
 // selects the position of patient zero one minute before a game starts
-Parse.Cloud.job('selectPatientZero', function (request, status) {
+function selectPatientZero(status) {
     //Randomly select 3 names: scramble an array and choose first 3,
     //place patient zero in the middle.
 
@@ -151,11 +150,10 @@ Parse.Cloud.job('selectPatientZero', function (request, status) {
             console.log("Not enough players.");
         }
     });
-});
-
+}
 
 //reset all players to Passive.
-Parse.Cloud.job('setAllUsersPassive', function (request, response) {
+function setAllUsersPassive(response) {
     Parse.Cloud.useMasterKey();
     var query = new Parse.Query(Parse.User);
     query.equalTo("type", "active");
@@ -170,10 +168,9 @@ Parse.Cloud.job('setAllUsersPassive', function (request, response) {
     }, function (error) {
         response.error("Error: " + error.code + " " + error.message);
     });
-});
-
+}
 //Set all users to Present: false
-Parse.Cloud.job('setAllUsersNotPresent', function (request, response) {
+function setAllUsersNotPresent(response) {
     Parse.Cloud.useMasterKey();
     var query = new Parse.Query(Parse.User);
     query.equalTo("present", true);
@@ -188,10 +185,9 @@ Parse.Cloud.job('setAllUsersNotPresent', function (request, response) {
     }, function (error) {
         response.error("Error: " + error.code + " " + error.message);
     });
-});
-
+}
 // every day at midnight sets a new game to be started at a given time
-Parse.Cloud.job('setGame', function (request, status) {
+function setGame(request, status) {
     var start_time = new Date();
     start_time.setHours(request.params.hours, request.params.minutes, request.params.seconds);
     var Game = Parse.Object.extend("Game");
@@ -207,10 +203,9 @@ Parse.Cloud.job('setGame', function (request, status) {
             status.error("Error: " + error.code + " " + error.message);
         }
     });
-});
-
+}
 // every day at midnight reset the position of the users
-Parse.Cloud.job('resetUsersPosition', function (request, status) {
+function resetUsersPosition(status) {
     Parse.Cloud.useMasterKey();
     var query = new Parse.Query(Parse.User);
     query.each(function (user) {
@@ -219,10 +214,52 @@ Parse.Cloud.job('resetUsersPosition', function (request, status) {
             y: Math.random()
         });
     }).then(function () {
-        status.success("Users' position have been reseted");
+        status.success("Users' position have been reset");
     }, function (error) {
         status.error("Error: " + error.code + " " + error.message);
     });
+}
+
+
+Parse.Cloud.job('selectPatientZero', selectPatientZero(status));
+
+Parse.Cloud.job("setAllUsersNotPresent", setAllUsersNotPresent(response));
+
+Parse.Cloud.job("setAllUsersPassive", setAllUsersPassive(response));
+
+Parse.Cloud.job('setGame', setGame(request, status));
+
+Parse.Cloud.job('resetUsersPosition', resetUsersPosition(status));
+
+
+//Master button
+Parse.Cloud.job('setNewGame', function (request, response) {
+
+    Parse.Cloud.useMasterKey();
+    //Sets new location for all users
+    resetUsersPosition(status);
+    //resets all users
+    setAllUsersPassive(request, response);
+
+    //sets game time for 5 minutes from now
+    var currentTime = Date.now();
+    var start_time = currentTime + 5 * 60 * 1000; // sets start time to 5 minutes.
+    var Game = Parse.Object.extend("Game");
+    var game = new Game();
+
+    game.save({
+        startTime: start_time
+    }, {
+        success: function () {
+            status.success("Game is set to " + start_time);
+        },
+        error: function (error) {
+            status.error("Error: " + error.code + " " + error.message);
+        }
+    });
+//Text message beta, sends text notifications (playful urgent)
+
+    setTimeout(selectPatientZero(request, status), 4.5 * 60 * 1000); // 4:30 minutes.
 });
 
 // send a message to all clients refreshing their webpage
@@ -300,6 +337,7 @@ function setPatientZeroPosition(pos, callback) {
         error: function (error) {
             status.error("Error: " + error.code + " " + error.message);
         }
-    })
+    });
 }
+
 

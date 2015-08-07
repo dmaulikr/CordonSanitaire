@@ -56,18 +56,18 @@ function drawMap() {
 
     // set the map layer to show toner
     map.mapTypes.set(layer, new google.maps.StamenMapType(layer));
-    
+
     // Listen for map zoom events and resize the markers as needed
-	google.maps.event.addListener(map, 'zoom_changed', function() {
-	    
-	    //update the marker size based on the map zoom
-		var zoom = map.getZoom();
-		if (zoom >= 12) markerSize = 8;
-		else if (zoom < 12 && zoom >= 8) markerSize = 4;
-		else if (zoom < 8) markerSize = 2;
-	 
-		updateGameBoard();
-	});
+    google.maps.event.addListener(map, 'zoom_changed', function () {
+
+        //update the marker size based on the map zoom
+        var zoom = map.getZoom();
+        if (zoom >= 12) markerSize = 8;
+        else if (zoom < 12 && zoom >= 8) markerSize = 4;
+        else if (zoom < 8) markerSize = 2;
+
+        updateGameBoard();
+    });
 }
 
 //Setup game: get center of active population, sort people, draw map, update everything once.
@@ -118,7 +118,7 @@ function updateGameBoard() {
 
     if (!hasReceivedJoinedMessage) return;
 
-    console.log("updating population")
+    console.log("updating population");
 
     center = getCenter(getActivePopulation());
 
@@ -158,7 +158,7 @@ function updateGameBoard() {
 }
 
 //Create quarantine polygon based on active quarantiners
-function setQuarantine(){
+function setQuarantine() {
     var q_stroke, q_fill;
 
     quarantine = new google.maps.Polygon({
@@ -212,7 +212,7 @@ function isInsideQuarantine(x, y) {
 function updatePopulation() {
     for (var i = 0; i < people.length; i++) {
         people[i].type = getType(people[i]);
-        if (people[i].isUserMe()){
+        if (people[i].isUserMe()) {
             myUser.type = people[i].type
         }
     }
@@ -275,7 +275,7 @@ function drawPopulation() {
             myUser.marker = people[i].marker;
         }
     }
-    // label wiht you are here
+    // label with you are here
     myUser.labelWithYouAreHere();
     // start the recurring animations
 }
@@ -285,16 +285,16 @@ function startAnimations() {
     var count = 0;
     var period = 150;
 
-    my_animation_interval = window.setInterval(function() {
+    my_animation_interval = window.setInterval(function () {
 
         count = (count + 1) % period;
 
         var icon;
         // animate my icon so I know who I am
         if (myUser.marker == null)
-            throw "My marker is null"
+            throw "My marker is null";
         icon = myUser.marker.icon;
-        icon.scale = markerSize + (1 + Math.sin(2 * Math.PI * count/period)) * markerSize/2;
+        icon.scale = markerSize + (1 + Math.sin(2 * Math.PI * count / period)) * markerSize / 2;
         myUser.marker.setIcon(icon);
     }, 20);
 }
@@ -312,7 +312,7 @@ function animateShout(id) {
 
     window.clearInterval(shout_intervals[id]);
 
-    shout_intervals[id] = window.setInterval(function() {
+    shout_intervals[id] = window.setInterval(function () {
 
         count = (count + 1);
 
@@ -337,7 +337,7 @@ function animateTrapped() {
     var count = 0;
     var period = 20;
 
-    trapped_interval = window.setInterval(function() {
+    trapped_interval = window.setInterval(function () {
 
         count = (count + 1);
 
@@ -352,7 +352,7 @@ function animateTrapped() {
             if (trapped[i].isUserMe()) continue; // skip my already animating icon
             marker = trapped[i].marker;
             icon = marker.icon;
-            icon.scale = markerSize + markerSize/4 * Math.sin( Math.PI * (count/period));
+            icon.scale = markerSize + markerSize / 4 * Math.sin(Math.PI * (count / period));
             marker.setIcon(icon);
         }
     }, 20);
@@ -363,13 +363,13 @@ function animateTrapped() {
 // animate Patient Zero
 function animatePatientZero(icon) {
     var count = 0;
-    window.setInterval(function() {
+    window.setInterval(function () {
         count = (count + 1) % 200;
         /*
-     icons[0].offset = (count / 2) + '%';
-      line.set('icons', icons);
+         icons[0].offset = (count / 2) + '%';
+         line.set('icons', icons);
 
-*/
+         */
     }, 20);
 }
 
@@ -405,10 +405,10 @@ function updateButtonAvailable() {
         document.getElementById('buttons').style.visibility = 'visible';
     }
 
-    if(myUser.type == TypeEnum.ACTIVE){
+    if (myUser.type == TypeEnum.ACTIVE) {
         document.getElementById('myonoffswitch').checked = true;
     }
-    else if (myUser.type == TypeEnum.PASSIVE){
+    else if (myUser.type == TypeEnum.PASSIVE) {
         document.getElementById('myonoffswitch').checked = false;
     }
 }
@@ -488,7 +488,7 @@ function updateNotifications() {
 function isPatientZeroContained() {
 
     if (patient_zero == null)
-        return true
+        return true;
 
     if (quarantine == null || quarantine.length < 3) { // can't do it with less than 3
         console.log("heere");
@@ -505,7 +505,7 @@ function isPatientZeroContained() {
 function countCasualties() {
     var count = 0;
 
-    // count players casualities
+    // count players casualties
     for (var i = 0; i < people.length; i++) {
         if (!people[i].isPatientZero) {
             if (getType(people[i]) == TypeEnum.TRAPPED)
@@ -514,9 +514,9 @@ function countCasualties() {
     }
 
     // count npcs casualities
-    for (var i = 0; i < npcs.length; i++) {
-        if (!npcs[i].isPatientZero) {
-            if (getType(npcs[i]) == TypeEnum.TRAPPED)
+    for (var b = 0; b < npcs.length; b++) {
+        if (!npcs[b].isPatientZero) {
+            if (getType(npcs[b]) == TypeEnum.TRAPPED)
                 count++;
         }
     }
@@ -558,11 +558,11 @@ function revealPatientZero() {
 
     // creates a new marker for the npc if there isnt already one
     if (patient_zero.marker == null) {
-        console.log("create a new marker")
+        console.log("create a new marker");
         var marker_obj = new google.maps.Marker({
             position: patient_zero_coords,
             icon: getMarkerIcon(patient_zero.type), // depends on the type of the npc
-            map: map,
+            map: map
         });
         patient_zero.marker = marker_obj;
     }
