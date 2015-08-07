@@ -11,15 +11,15 @@ function Settings(){
     this.color_healed_stroke = '#550000'; //'#005533';
     this.color_active_fill = '#fff341';
     this.color_active_stroke = '#000000';
-    this.color_passive_fill = '#ffffff';
+    this.color_passive_fill = '#55ffb9';
     this.color_passive_stroke = '#000000';
-    this.color_casualty_fill = '#ffa352';
+    this.color_casualty_fill = '#ff5555';
     this.color_casualty_stroke = '#000000';
 
     this.color_border_not_contained_stroke = '#000000';
     this.color_border_not_contained_fill = '#ff2222';
     this.color_border_casualty_stroke = '#000000';
-    this.color_border_casualty_fill = '#ffcc33';
+    this.color_border_casualty_fill = '#ffe100';
     this.color_border_contained_stroke = '#006666';
     this.color_border_contained_fill = '#55ffb9';
     this.color_border_opacity = .4;
