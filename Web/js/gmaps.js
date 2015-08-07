@@ -275,7 +275,7 @@ function drawPopulation() {
             myUser.marker = people[i].marker;
         }
     }
-    // label wiht you are here
+    // label with you are here
     myUser.labelWithYouAreHere();
     // start the recurring animations
 }
