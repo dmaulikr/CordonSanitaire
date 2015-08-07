@@ -1,9 +1,17 @@
-#svg1{
+#svg1 {
     width="300px";
 }
 
-#svg2{
+#svg2 {
     width="300px";
 }
 
-#svg3 img { width: 50%; height: auto; }
+#svg3 img {
+    width: 50%;
+    height: auto;
+}
+
+#svg4 img {
+    width: 50%;
+    height: auto;
+}
