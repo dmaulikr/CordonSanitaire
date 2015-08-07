@@ -3,7 +3,7 @@
 /**
  * Constructor for User Class
  */
-var User = function(id, x, y, role, type, isPatientZero) {
+var User = function (id, x, y, role, type, isPatientZero) {
     this.id = id; // id will be attributed once the object is pushed to the database
     this.x = x;
     this.y = y;
@@ -18,7 +18,7 @@ var User = function(id, x, y, role, type, isPatientZero) {
 /**
  * Draws a User into the map
  */
-User.prototype.draw = function() {
+User.prototype.draw = function () {
     var coords = getLatLngCoords(this.x, this.y);
 
     // if there's no marker, create one.
@@ -42,7 +42,7 @@ User.prototype.draw = function() {
 /**
  * Erases a User from the map
  */
-User.prototype.erase = function() {
+User.prototype.erase = function () {
     this.marker.setMap(null);
 };
 
@@ -50,24 +50,55 @@ User.prototype.erase = function() {
  * Returns whether a user is active or not.
  * @return boolean [true if the the user is active, false otherwise]
  */
-User.prototype.isActive = function() {
+User.prototype.isActive = function () {
     return this.type == TypeEnum.ACTIVE
 };
 
-User.prototype.isUserMe = function() {
+User.prototype.isUserMe = function () {
     return this.id == myUser.id;
-}
+};
 
 /**
  * Updates the type of this user
  * @param  {TypeEnum} type
  */
-User.prototype.updateType = function(type) {
+User.prototype.updateType = function (type) {
     this.type = type;
 };
 
+User.prototype.actionLabel = function (text, color, hidden) {
+    var coords = getLatLngCoords(this.x, this.y);
+    var labelText = text;
+    var labelColor = color;
+    var vis = hidden;
 
-User.prototype.labelWithYouAreHere = function() {
+    var labelOptions = {
+        content: labelText,
+        boxStyle: {
+            textAlign: "center",
+            fontSize: "8pt",
+            fontWeight: "bold",
+            backgroundColor: labelColor,
+            border: "4px solid rgba(0,0,0,.8)",
+            borderRadius: "10px",
+            padding: "5px 0 5px 0",
+            width: "100 px"
+        },
+        disableAutoPan: true,
+        pixelOffset: new google.maps.Size(-55, 20),
+        position: coords,
+        closeBoxURL: "",
+        isHidden: vis,
+        pane: "mapPane",
+        enableEventPropagation: true
+    };
+
+    var userLabel = new InfoBox(labelOptions);
+    userLabel.open(map);
+};
+
+
+User.prototype.labelWithYouAreHere = function () {
 
     var coords = getLatLngCoords(this.x, this.y);
     var labelText = "YOU ARE HERE";
@@ -96,19 +127,19 @@ User.prototype.labelWithYouAreHere = function() {
     var ibLabel = new InfoBox(myOptions);
     ibLabel.open(map);
 
-}
+};
 
 /**
  * Repopulates the local array of Users with all the entries from the database.
  */
-User.getAllFromDatabase = function(callback) {
+User.getAllFromDatabase = function (callback) {
     User.eraseAll();
     people.clear;
     var user = Parse.Object.extend("_User");
     var query = new Parse.Query(user);
     query.equalTo('present', true);
     query.find({
-        success: function(results) {
+        success: function (results) {
             console.log("Success: Getting people");
             // draw this list of players across the screen.
             for (var i = 0; i < results.length; i++) {
@@ -133,37 +164,37 @@ User.getAllFromDatabase = function(callback) {
                 callback();
             }
         },
-        error: function(object, error) {
+        error: function (object, error) {
             // The object was not retrieved successfully.
             // error is a Parse.Error with an error code and message.
             console.log("Error: " + error.code + " " + error.message);
         }
     });
-}
+};
 
 /**
  * Checks wheter an certain ID exists in the local array of Users.
  * @param  id [the id to be found]
  * @return boolean [wheter the id exist or not]
  */
-User.isIdPresent = function(id) {
+User.isIdPresent = function (id) {
     for (var i = 0; i < people.length; i++) {
         if (people[i].id == id) {
             return true;
         }
     }
     return false;
-}
+};
 
 /**
  * Adds an User to the local array of Users.
  * @param id [id of the User in the database]
  */
-User.addToLocalArray = function(id) {
+User.addToLocalArray = function (id) {
     var user = Parse.Object.extend("_User");
     var query = new Parse.Query(user);
     query.get(id, {
-        success: function(object) {
+        success: function (object) {
             console.log("Success: Getting User");
 
             // create a local user
@@ -184,19 +215,19 @@ User.addToLocalArray = function(id) {
             updateGameBoard();
 
         },
-        error: function(object, error) {
+        error: function (object, error) {
             // The object was not retrieved successfully.
             // error is a Parse.Error with an error code and message.
             console.log("Error: " + error.code + " " + error.message);
         }
     });
-}
+};
 
 /**
  * Removes an User from the local array of people.
  * @param id [id of the User to be removed]
  */
-User.removeFromLocalArray = function(id) {
+User.removeFromLocalArray = function (id) {
     for (var i = 0; i < people.length; i++) {
         if (people[i].id == id) {
             if (people[i].marker != null) {
@@ -207,7 +238,7 @@ User.removeFromLocalArray = function(id) {
             updateGameBoard();
         }
     }
-}
+};
 
 /**
  * Changes the type of an User in the local array of Users.
@@ -215,9 +246,9 @@ User.removeFromLocalArray = function(id) {
  * @param   type    [the new type of the User]
  * @return  boolean [true if the change was successful, false otherwise]
  */
-User.changeUserType = function(id, type){
-    for (var i = 0; i < people.length; i++){
-        if(people[i].id == id){
+User.changeUserType = function (id, type) {
+    for (var i = 0; i < people.length; i++) {
+        if (people[i].id == id) {
             people[i].type = type;
             updateGameBoard();
             return true;
@@ -225,22 +256,22 @@ User.changeUserType = function(id, type){
     }
 
     return false;
-}
+};
 
-User.getPersonById = function(id) {
+User.getPersonById = function (id) {
     for (var i = 0; i < people.length; i++) {
         if (people[i].id == id)
             return people[i];
     }
 
     console.log("DID NOT FIND PERSON FOR UUID");
-}
+};
 
 /**
  * Erase all users from the map (delete their markers).
  */
-User.eraseAll = function() {
-    for (var i = 0; i < people.length; i++){
+User.eraseAll = function () {
+    for (var i = 0; i < people.length; i++) {
         people[i].erase();
     }
-}
+};
