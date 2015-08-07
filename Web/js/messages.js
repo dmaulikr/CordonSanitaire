@@ -117,6 +117,10 @@ pubnub.subscribe({
                 updateGameBoard();
                 break;
 
+            case "refreshPage":
+                window.location.reload();
+                break;
+
             default:
                 console.log(m);
         }

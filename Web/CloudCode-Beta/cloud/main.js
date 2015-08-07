@@ -262,6 +262,14 @@ Parse.Cloud.job('setNewGame', function (request, response) {
     setTimeout(selectPatientZero(request, status), 4.5 * 60 * 1000); // 4:30 minutes.
 });
 
+// send a message to all clients refreshing their webpage
+Parse.Cloud.job('refreshPage', function (request, status) {
+    var message = {
+        action: 'refreshPage',
+    };
+    sendMessage(message);
+});
+
 
 // publish message to pubnub from cloud code
 function sendMessage(message) {

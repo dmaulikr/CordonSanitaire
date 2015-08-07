@@ -59,7 +59,7 @@ var printDebugData = function() {
     string += "</ol>";
     document.getElementById("debug_data").innerHTML = string;
 
-}
+};
 
 
 //----------------------------
@@ -190,7 +190,7 @@ var showEndGameMessage = function() {
     document.getElementById("end_game").style.visibility = "visible";
     document.getElementById("patient_zero").style.visibility = 'hidden';
 
-}
+};
 
 // missed the game pop up
 var showMissedGameMessage = function() {
@@ -204,7 +204,7 @@ var showMissedGameMessage = function() {
     document.getElementById("end_game").innerHTML = missed_game_text;
     document.getElementById("end_game").style.visibility = "visible";
     document.getElementById("patient_zero").style.visibility = 'hidden';
-}
+};
 
 
 //----------------------------
