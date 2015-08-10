@@ -303,7 +303,7 @@ function startAnimations() {
 function animateShout(id) {
     var shoutPerson = User.getPersonById(id);
     var shoutMarker = shoutPerson.marker;
-
+    console.log(id);
     // testing the notifications
     shoutPerson.actionLabel("Hello! Is anybody out there?", "#FFAA00", 2000);
 

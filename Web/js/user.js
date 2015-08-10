@@ -83,7 +83,7 @@ User.prototype.actionLabel = function (text, color, duration) {
             width: "100 px"
         },
         disableAutoPan: true,
-        pixelOffset: new google.maps.Size(-55, -45),
+        pixelOffset: new google.maps.Size(0, -45),
         position: coords,
         closeBoxURL: "",
         isHidden: false,
