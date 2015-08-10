@@ -83,7 +83,7 @@ User.prototype.actionLabel = function (text, color, duration) {
             width: "100 px"
         },
         disableAutoPan: true,
-        pixelOffset: new google.maps.Size(-55, -45),
+        pixelOffset: new google.maps.Size(-60, -45),
         position: coords,
         closeBoxURL: "",
         isHidden: false,
@@ -91,12 +91,11 @@ User.prototype.actionLabel = function (text, color, duration) {
         enableEventPropagation: true
     };
 
-    // add a timed animation for show and hide that lasts the "duration"
-
+    // add the label to the screen
     var userLabel = new InfoBox(labelOptions);
     userLabel.open(map);
 
-
+    // add a timed animation for show and hide that lasts the "duration"
     window.setInterval(function() {
         userLabel.close(map);
         },
