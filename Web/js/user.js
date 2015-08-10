@@ -83,7 +83,11 @@ User.prototype.actionLabel = function (text, color, duration) {
             width: "100 px"
         },
         disableAutoPan: true,
+<<<<<<< HEAD
         pixelOffset: new google.maps.Size(0, -45),
+=======
+        pixelOffset: new google.maps.Size(-60, -45),
+>>>>>>> cb5deddf3218ca11520dd20625d25f3943c1c478
         position: coords,
         closeBoxURL: "",
         isHidden: false,
@@ -91,12 +95,11 @@ User.prototype.actionLabel = function (text, color, duration) {
         enableEventPropagation: true
     };
 
-    // add a timed animation for show and hide that lasts the "duration"
-
+    // add the label to the screen
     var userLabel = new InfoBox(labelOptions);
     userLabel.open(map);
 
-
+    // add a timed animation for show and hide that lasts the "duration"
     window.setInterval(function() {
         userLabel.close(map);
         },
@@ -222,6 +225,11 @@ User.addToLocalArray = function (id) {
 
             updateGameBoard();
 
+            // anounce I am here to help
+            var usr = User.getPersonById(id);
+            usr.actionLabel("I'm here to help!", settings.color_passive_fill, 2000);
+
+
         },
         error: function (object, error) {
             // The object was not retrieved successfully.
@@ -256,23 +264,31 @@ User.removeFromLocalArray = function (id) {
  */
 User.changeUserType = function (id, type) {
 
-    // add a notification to the user letting people know what's up
-    var usr = User.getPersonById(id);
-    //switch(type){
-    //    case "active": break;
-    //    case "passive": break;
-    //    case "contained": break;
-    //    default: break;
-    //}
-    usr.actionLabel("Hello! Is anybody out there? Testing, 1, 2...", "#FFAA00", 2000);
-
-
     for (var i = 0; i < people.length; i++) {
         if (people[i].id == id) {
             people[i].type = type;
             updateGameBoard();
             return true;
         }
+    }
+
+    // add a notification to the user letting people know what's up
+    var usr = User.getPersonById(id);
+    switch(type){
+        case "active":
+            usr.actionLabel("JOIN", settings.color_active_fill, 2000);
+            break;
+
+        case "passive":
+            //usr.actionLabel("RELEASE", settings.color_passive_fill, 2000);
+            break;
+
+        case "contained":
+            // not possible
+            usr.actionLabel("HELP!", settings.color_casualty_fill, 2000);
+            break;
+
+        default: break;
     }
 
     return false;

@@ -13,7 +13,7 @@ function Settings(){
     this.color_active_stroke = '#000000';
     this.color_passive_fill = '#55ffb9';
     this.color_passive_stroke = '#000000';
-    this.color_casualty_fill = '#ff5555';
+    this.color_casualty_fill = '#ffaa55';
     this.color_casualty_stroke = '#000000';
 
     this.color_border_not_contained_stroke = '#000000';
