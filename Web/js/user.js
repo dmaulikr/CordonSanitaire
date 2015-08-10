@@ -66,32 +66,31 @@ User.prototype.updateType = function (type) {
     this.type = type;
 };
 
-User.prototype.actionLabel = function (text, color, hidden) {
+User.prototype.actionLabel = function (text, color, duration) {
     var coords = getLatLngCoords(this.x, this.y);
-    var labelText = text;
-    var labelColor = color;
-    var vis = hidden;
 
     var labelOptions = {
-        content: labelText,
+        content: text,
         boxStyle: {
             textAlign: "center",
             fontSize: "8pt",
             fontWeight: "bold",
-            backgroundColor: labelColor,
+            backgroundColor: color,
             border: "4px solid rgba(0,0,0,.8)",
             borderRadius: "10px",
             padding: "5px 0 5px 0",
             width: "100 px"
         },
         disableAutoPan: true,
-        pixelOffset: new google.maps.Size(-55, 20),
+        pixelOffset: new google.maps.Size(-55, -40),
         position: coords,
         closeBoxURL: "",
-        isHidden: vis,
+        isHidden: false,
         pane: "mapPane",
         enableEventPropagation: true
     };
+
+    // add a timed animation for show and hide that lasts the "duration"
 
     var userLabel = new InfoBox(labelOptions);
     userLabel.open(map);
@@ -247,6 +246,18 @@ User.removeFromLocalArray = function (id) {
  * @return  boolean [true if the change was successful, false otherwise]
  */
 User.changeUserType = function (id, type) {
+
+    // add a notification to the user letting people know what's up
+    var usr = User.getPersonById(id);
+    //switch(type){
+    //    case "active": break;
+    //    case "passive": break;
+    //    case "contained": break;
+    //    default: break;
+    //}
+    usr.actionLabel("Hello! Is anybody out there? Testing, 1, 2...", "#FFAA00", 2);
+
+
     for (var i = 0; i < people.length; i++) {
         if (people[i].id == id) {
             people[i].type = type;

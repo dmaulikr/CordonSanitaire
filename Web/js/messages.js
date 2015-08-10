@@ -47,6 +47,7 @@ pubnub.subscribe({
             case "shout":
                 //console.log("received SHOUT message from " + m.uuid);
                 animateShout(m.id);
+
                 break;
 
             case "addNPC":
@@ -81,6 +82,7 @@ pubnub.subscribe({
 
             case "changeUserType":
                 User.changeUserType(m.id, m.type);
+
                 break;
 
             case "resetPlayers":
