@@ -72,6 +72,7 @@ User.prototype.actionLabel = function (text, color, duration) {
     var labelOptions = {
         content: text,
         boxStyle: {
+
             textAlign: "center",
             fontSize: "8pt",
             fontWeight: "bold",
@@ -87,13 +88,14 @@ User.prototype.actionLabel = function (text, color, duration) {
         closeBoxURL: "",
         isHidden: false,
         pane: "mapPane",
-        enableEventPropagation: true
+        enableEventPropagation: true,
     };
 
     // add a timed animation for show and hide that lasts the "duration"
 
     var userLabel = new InfoBox(labelOptions);
     userLabel.open(map);
+
 
     window.setInterval(function() {
         userLabel.close(map);
