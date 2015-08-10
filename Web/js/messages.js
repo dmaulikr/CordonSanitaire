@@ -20,8 +20,8 @@ pubnub.subscribe({
                 // set the UUID here
                 console.log("received JOIN message - " + m.uuid);
                 if (m.uuid == _uuid) {
-                    console.log("start setup");
-                    setup();
+                    console.log("start setup (after receiving message of myself joining)");
+                    //setup();  // removing this because I believe this is causing major hold ups (sometimes not receiving this message)
                 }
                 break;
 

@@ -326,7 +326,7 @@ function animateShout(id) {
                 startAnimations();
         }
 
-        shoutMarkerIcon.scale = markerSize + 2 * markerSize * Math.pow(.9, count);
+        shoutMarker.icon.scale = markerSize + 2 * markerSize * Math.pow(.9, count);
         shoutMarker.setIcon(shoutMarker.icon);
 
     }, 20);
@@ -400,7 +400,7 @@ function updateScoreboard() {
 
 //Toggles buttons showing based on user's type
 function updateButtonAvailable() {
-    if (myUser.type == TypeEnum.TRAPPED) {
+    if (myUser.type == TypeEnum.TRAPPED || bGameOver) { // only allow shouting after the game is over
         document.getElementById('buttons').style.visibility = 'hidden';
         document.getElementById('shoutButton').style.visibility = 'visible';
     } else {

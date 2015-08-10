@@ -9,6 +9,7 @@ var total_seconds = 1;
 var bUserAllowedToStart = false;
 var bShouldShowMissedGameMessage = false;
 var bUpdatedDialogText = false;
+var bGameOver = false;
 
 var bAlertedUserOfGameStart = false;
 var bShown10SecondMessage = false;
@@ -152,6 +153,8 @@ var timerMissedGame = function() {
 	// close the intro screen
 	document.getElementById("overlay").style.visibility = 'hidden';
 
+	bGameOver = true;
+
 	bShouldShowMissedGameMessage = true;
 }
 
@@ -289,6 +292,8 @@ var timePassedSince = function(start_date) {
         isRunning = false;
 
         // send a message for game over and end of game state here
+		bGameOver = true;
+		updateButtonAvailable();	// change button to shout at the end of the game
         showEndGameMessage();
         revealPatientZero();
     }
