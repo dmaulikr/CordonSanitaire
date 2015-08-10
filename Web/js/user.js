@@ -260,11 +260,13 @@ User.removeFromLocalArray = function (id) {
  */
 User.changeUserType = function (id, type) {
 
+    var didChangeUserType = false;
+
     for (var i = 0; i < people.length; i++) {
         if (people[i].id == id) {
             people[i].type = type;
             updateGameBoard();
-            return true;
+            didChangeUserType = true;
         }
     }
 
@@ -287,7 +289,7 @@ User.changeUserType = function (id, type) {
         default: break;
     }
 
-    return false;
+    return didChangeUserType;
 };
 
 User.getPersonById = function (id) {

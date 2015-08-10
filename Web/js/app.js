@@ -240,35 +240,36 @@ function flipUserActiveState() {
                 success: function(object) {
                     // then update pubnub
                     sendChangeUserTypeMessage(object.id, type);
+
+                    // TODO: Change these calls to use "then" in sequence
+                    // test save to the actions table before relying on this table for current state
+                    //var user_relation = Parse.Relation(User, myUser.id);
+                    var Action = Parse.Object.extend("Actions");
+                    var action_obj = new Action();
+
+                    action_obj.save({
+                        user: Parse.User.current(),
+                        type: type,
+                        x: myUser.x,    // updated position...
+                        y: myUser.y		// updated position...
+                    }, {
+                        success: function(action_obj) {
+                            // The object was saved successfully.
+                            console.log("Success: Added a log of user's action");
+                        },
+                        error: function(action_obj, error) {
+                            // The save failed.
+                            // error is a Parse.Error with an error code and message.
+                            console.log("Error: " + error.code + " " + error.message);
+                        }
+                    });
+
                 },
                 error: function(object) {
                     console.log("WOAAAAHHHH NOOOOOOO!", object);
                     console.log("Error: " + error.code + " " + error.message);
                 }
             });
-            
-            // test save to the actions table before relying on this table for current state
-            // Then add new user
-            //var user_relation = Parse.Relation(User, myUser.id);
-			var Action = Parse.Object.extend("Actions");
-			var action_obj = new Action();
-			 
-			action_obj.save({
-				user: Parse.User.current(),
-				type: type,
-				x: myUser.x,    // updated position...
-				y: myUser.y		// updated position...
-			}, {
-			  success: function(action_obj) {
-			    // The object was saved successfully.
-			    console.log("Success: Added a log of user's action");
-			  },
-			  error: function(action_obj, error) {
-			    // The save failed.
-			    // error is a Parse.Error with an error code and message.
-				console.log("Error: " + error.code + " " + error.message);
-			  }
-			});
 
         },
         error: function(error) {
