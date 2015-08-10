@@ -400,7 +400,7 @@ function updateScoreboard() {
 
 //Toggles buttons showing based on user's type
 function updateButtonAvailable() {
-    if (myUser.type == TypeEnum.TRAPPED || bGameOver) { // only allow shouting after the game is over
+    if (myUser.type == TypeEnum.TRAPPED ) {//|| bGameOver) { // only allow shouting after the game is over
         document.getElementById('buttons').style.visibility = 'hidden';
         document.getElementById('shoutButton').style.visibility = 'visible';
     } else {
@@ -447,41 +447,41 @@ function updateNotifications() {
         _prevNumActive = _numActive;
     }
 
-    // if numTrapped == 1 &&  prev numTrapped == 0
-    //HEALTHY PEOPLE ARE INSIDE THE QUARANTINE
-    else if (_numTrapped == 1 && _prevNumTrapped == 0) {
-        ohSnap('HEALTHY PEOPLE ARE INSIDE THE QUARANTINE', 'orange');
-        _prevNumTrapped = _numTrapped;
-    }
-
-    // else if numTrapped != prev numTrapped
-    //ANOTHER HEALTHY PERSON GOT TRAPPED!
-    else if (_numTrapped > _prevNumTrapped) {
-        ohSnap('ANOTHER HEALTHY PERSON GOT TRAPPED!', 'orange');
-        _prevNumTrapped = _numTrapped;
-    }
+    //// if numTrapped == 1 &&  prev numTrapped == 0
+    ////HEALTHY PEOPLE ARE INSIDE THE QUARANTINE
+    //else if (_numTrapped == 1 && _prevNumTrapped == 0) {
+    //    ohSnap('HEALTHY PEOPLE ARE INSIDE THE QUARANTINE', 'orange');
+    //    _prevNumTrapped = _numTrapped;
+    //}
+    //
+    //// else if numTrapped != prev numTrapped
+    ////ANOTHER HEALTHY PERSON GOT TRAPPED!
+    //else if (_numTrapped > _prevNumTrapped) {
+    //    ohSnap('ANOTHER HEALTHY PERSON GOT TRAPPED!', 'orange');
+    //    _prevNumTrapped = _numTrapped;
+    //}
 
 
     // if active count is > prev active count
     //ADDITIONAL PLAYER ON THE QUARANTINE LINE
-    else if (_numActive > _prevNumActive) {
-        ohSnap('ADDITIONAL PLAYER ON THE QUARANTINE LINE', 'yellow');
-        _prevNumActive = _numActive;
-    }
-
-    // if active count < prev active count
-    //LOST A PLAYER FROM THE QUARANTINE LINE
-    else if (_numActive < _prevNumActive) {
-        ohSnap('LOST A PLAYER FROM THE QUARANTINE LINE', 'yellow');
-        _prevNumActive = _numActive;
-    }
+    //else if (_numActive > _prevNumActive) {
+    //    ohSnap('ADDITIONAL PLAYER ON THE QUARANTINE LINE', 'yellow');
+    //    _prevNumActive = _numActive;
+    //}
+    //
+    //// if active count < prev active count
+    ////LOST A PLAYER FROM THE QUARANTINE LINE
+    //else if (_numActive < _prevNumActive) {
+    //    ohSnap('LOST A PLAYER FROM THE QUARANTINE LINE', 'yellow');
+    //    _prevNumActive = _numActive;
+    //}
 
     // sends additional notifications about being trapped/free from a quarantine
-    if (myUser.type == TypeEnum.TRAPPED && _myPrevType != TypeEnum.TRAPPED) {
-        ohSnap('YOU ARE TRAPPED INSIDE THE QUARANTINE', 'red');
-    } else if (myUser.type != TypeEnum.TRAPPED && _myPrevType == TypeEnum.TRAPPED) {
-        ohSnap('YOU ARE OUT OF THE QUARANTINE', 'green');
-    }
+    //if (myUser.type == TypeEnum.TRAPPED && _myPrevType != TypeEnum.TRAPPED) {
+    //    ohSnap('YOU ARE TRAPPED INSIDE THE QUARANTINE', 'red');
+    //} else if (myUser.type != TypeEnum.TRAPPED && _myPrevType == TypeEnum.TRAPPED) {
+    //    ohSnap('YOU ARE OUT OF THE QUARANTINE', 'green');
+    //}
 
     // update status of previous values
     _prevPatientZeroContained = _patientZeroContained;
