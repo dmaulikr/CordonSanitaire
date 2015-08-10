@@ -88,7 +88,7 @@ User.prototype.actionLabel = function (text, color, duration) {
         closeBoxURL: "",
         isHidden: false,
         pane: "mapPane",
-        enableEventPropagation: true,
+        enableEventPropagation: true
     };
 
     // add a timed animation for show and hide that lasts the "duration"
