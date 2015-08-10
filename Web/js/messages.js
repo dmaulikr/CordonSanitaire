@@ -134,7 +134,7 @@ window.onbeforeunload = function() {
     return pubnub.unsubscribe({
         channel: _channel
     });
-}
+};
 
 // window.onunload = function() {
 //     return pubnub.unsubscribe({

@@ -78,11 +78,11 @@ User.prototype.actionLabel = function (text, color, duration) {
             backgroundColor: color,
             border: "4px solid rgba(0,0,0,.8)",
             borderRadius: "10px",
-            padding: "5px 0 5px 0",
+            padding: "5px 5px 5px 5px",
             width: "100 px"
         },
         disableAutoPan: true,
-        pixelOffset: new google.maps.Size(-55, -40),
+        pixelOffset: new google.maps.Size(-55, -45),
         position: coords,
         closeBoxURL: "",
         isHidden: false,
@@ -94,6 +94,13 @@ User.prototype.actionLabel = function (text, color, duration) {
 
     var userLabel = new InfoBox(labelOptions);
     userLabel.open(map);
+
+    window.setInterval(function() {
+        userLabel.close(map);
+        },
+        duration);
+
+    //delete(userLabel);
 };
 
 
@@ -255,7 +262,7 @@ User.changeUserType = function (id, type) {
     //    case "contained": break;
     //    default: break;
     //}
-    usr.actionLabel("Hello! Is anybody out there? Testing, 1, 2...", "#FFAA00", 2);
+    usr.actionLabel("Hello! Is anybody out there? Testing, 1, 2...", "#FFAA00", 2000);
 
 
     for (var i = 0; i < people.length; i++) {
