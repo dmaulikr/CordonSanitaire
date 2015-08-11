@@ -559,7 +559,7 @@ function revealPatientZero() {
     console.log("revealing patient zero");
     var patient_zero_coords = getLatLngCoords(patient_zero.x, patient_zero.y);
 
-    // creates a new marker for the npc if there isnt already one
+    // creates a new marker for the npc if there isn't already one
     if (patient_zero.marker == null) {
         console.log("create a new marker");
         var marker_obj = new google.maps.Marker({
