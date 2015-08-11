@@ -44,6 +44,47 @@ NPC.prototype.erase = function() {
     this.marker.setMap(null);
 };
 
+NPC.prototype.actionLabel = function (text, color, alignment, duration) {
+    var coords = getLatLngCoords(this.x, this.y);
+
+    var labelOptions = {
+        content: text,
+        boxStyle: {
+
+            textAlign: "center",
+            fontSize: "8pt",
+            fontWeight: "bold",
+            backgroundColor: color,
+            border: "4px solid rgba(0,0,0,.8)",
+            borderRadius: "10px",
+            padding: "5px 5px 5px 5px",
+            width: "100 px"
+        },
+        disableAutoPan: true,
+        pixelOffset: new google.maps.Size(-alignment, -50),
+        position: coords,
+        closeBoxURL: "",
+        isHidden: false,
+        pane: "mapPane",
+        enableEventPropagation: true
+    };
+
+    // add the label to the screen
+    var userLabel = new InfoBox(labelOptions);
+    userLabel.open(map);
+
+    // add a timed animation for show and hide that lasts the "duration"
+    window.setInterval(function() {
+            userLabel.close(map);
+        },
+        duration);
+
+    //delete(userLabel);
+};
+
+
+
+
 /**
  * Creates a new NPC in the database with the same info of this NPC.
  * Also assigns the UUID from the database to this NPC.

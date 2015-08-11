@@ -107,6 +107,8 @@ function setGameBoard() {
     // update notifications
     updateNotifications();
 
+    //revealPatientZero();
+
     //show missed game message after updating gameboard if need be
     if (bShouldShowMissedGameMessage)
         showMissedGameMessage();
@@ -305,7 +307,7 @@ function animateShout(id) {
     var shoutMarker = shoutPerson.marker;
 
     // show shout notification
-    shoutPerson.actionLabel("HELP!", settings.color_casualty_fill, 2000);
+    shoutPerson.actionLabel("HELP!", settings.color_casualty_fill, 60, 2000);
 
     var count = 0;
     var dur = 50;
@@ -495,7 +497,7 @@ function isPatientZeroContained() {
 
     if (quarantine == null || quarantine.length < 3) { // can't do it with less than 3
         console.log("heere");
-        _patientZeroContained = false;
+        patientZeroContained = false;
         return false;
     }
 
@@ -570,8 +572,11 @@ function revealPatientZero() {
         patient_zero.marker = marker_obj;
     }
 
+    patient_zero.actionLabel("P0", settings.color_casualty_fill, 20, 100000);
+    //
     // pan to show the patient zero centered in the screen
     map.panTo(patient_zero_coords);
+    console.log("reveal completed");
 }
 
 // update the bounds of the map to show all players
