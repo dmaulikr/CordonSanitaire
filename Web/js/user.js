@@ -66,7 +66,7 @@ User.prototype.updateType = function (type) {
     this.type = type;
 };
 
-User.prototype.actionLabel = function (text, color, duration) {
+User.prototype.actionLabel = function (text, color, alignment, duration) {
     var coords = getLatLngCoords(this.x, this.y);
 
     var labelOptions = {
@@ -83,7 +83,7 @@ User.prototype.actionLabel = function (text, color, duration) {
             width: "100 px"
         },
         disableAutoPan: true,
-        pixelOffset: new google.maps.Size(-60, -45),
+        pixelOffset: new google.maps.Size(-alignment, -50),
         position: coords,
         closeBoxURL: "",
         isHidden: false,
@@ -223,7 +223,7 @@ User.addToLocalArray = function (id) {
 
             // anounce I am here to help
             var usr = User.getPersonById(id);
-            usr.actionLabel("I'm here to help!", settings.color_passive_fill, 2000);
+            usr.actionLabel("I'm here to help!", settings.color_passive_fill, 60, 2000);
 
 
         },
@@ -274,7 +274,7 @@ User.changeUserType = function (id, type) {
     var usr = User.getPersonById(id);
     switch(type){
         case "active":
-            usr.actionLabel("JOIN", settings.color_active_fill, 2000);
+            usr.actionLabel("JOIN", settings.color_active_fill, 60, 2000);
             break;
 
         case "passive":
@@ -283,7 +283,7 @@ User.changeUserType = function (id, type) {
 
         case "contained":
             // not possible
-            usr.actionLabel("HELP!", settings.color_casualty_fill, 2000);
+            usr.actionLabel("HELP!", settings.color_casualty_fill, 60, 2000);
             break;
 
         default: break;
