@@ -265,7 +265,7 @@ Parse.Cloud.job('setNewGame', function (request, response) {
 // send a message to all clients refreshing their webpage
 Parse.Cloud.job('refreshPage', function (request, status) {
     var message = {
-        action: 'refreshPage',
+        action: 'refreshPage'
     };
     sendMessage(message);
 });
