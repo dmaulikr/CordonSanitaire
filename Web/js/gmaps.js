@@ -400,7 +400,7 @@ function updateScoreboard() {
 
 //Toggles buttons showing based on user's type
 function updateButtonAvailable() {
-    if (myUser.type == TypeEnum.TRAPPED ) {//|| bGameOver) { // only allow shouting after the game is over
+    if (myUser.type == TypeEnum.TRAPPED || bGameOver) { // only allow shouting after the game is over
         document.getElementById('buttons').style.visibility = 'hidden';
         document.getElementById('shoutButton').style.visibility = 'visible';
     } else {
