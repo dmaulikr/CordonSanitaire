@@ -22,7 +22,7 @@
 
         <div id="timerbox">
             <div id="intro_message" style="text-align:center">
-                <h2><span class="countdown_til_start">00:00.00</span></h2>
+                <h2><span class="countdown_til_start">00:00:00</span></h2>
             </div>
         </div>
         <p><span style="float:right;color:white;">til the search begins</span></p>
@@ -110,7 +110,7 @@
     $(document).ready(function (e) {
         var win = {
             width: $(window).width(),
-            height: $(window).height() - 80
+            height: $(window).height()
         };
         $('#map-canvas').css('height', win.height);
         $('#map-canvas').css('width', win.width);
@@ -118,7 +118,7 @@
         $(window).resize(function () {
             var win = {
                 width: $(window).width(),
-                height: $(window).height() - 80
+                height: $(window).height()
             };
             $('#map-canvas').css('height', win.height);
             $('#map-canvas').css('width', win.width);
