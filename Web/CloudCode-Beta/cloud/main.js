@@ -207,7 +207,7 @@ function setGame(request, status) {
 }
 
 // every day at midnight reset the position of the users
-function resetUsersPosition(request, response) {
+function resetUsersPosition(request, status) {
     Parse.Cloud.useMasterKey();
     var query = new Parse.Query(Parse.User);
     query.each(function (user) {
@@ -230,13 +230,13 @@ function resetUsersPosition(request, response) {
 // 3) creates a new game
 // 4) sends a text message to anounce the game (5 minutes away)
 
-function launchGame(request, response) {
+function launchGame(request, status) {
 
     Parse.Cloud.useMasterKey();
     //Sets new location for all users
-    resetUsersPosition(request, response);
+    resetUsersPosition(request, status);
     //resets all users
-    setAllUsersPassive(request, response);
+    setAllUsersPassive(request, status);
 
     //sets game time for 5 minutes from now
     var currentTime = Date.now();
@@ -253,10 +253,41 @@ function launchGame(request, response) {
         error: function (error) {
             status.error("Error: " + error.code + " " + error.message);
         }
-    });
-//Text message beta, sends text notifications (playful urgent)
+    }).then(
+        function (result) {
+        //Text message, sends text notifications (playful urgent)
+            Parse.Cloud.httpRequest({
+                    method: 'GET',
+                    url: 'http://playful.jonathanbobrow.com/cs_beta/sms/sendTextMessage.php',
+                    headers: {
+                        'Content-Type': "application/json",
+                    },
+                    body: {
+                        'group': "Personal",
+                        'time': "4:30PM EST",
+                        'sms_url': "bit.ly/playCSbeta"
+                    },
+                    success: function(httpResponse) {
 
-    setTimeout(selectPatientZero(request, status), 4.5 * 60 * 1000); // 4:30 minutes.
+                        console.log(httpResponse.text);
+                    },
+                    error: function(httpResponse) {
+
+                        console.error('Request failed with response code ' + httpResponse.status);
+                    }
+            })
+        }).then(
+                function (result) {
+                    // Set a timer to set patient zero before the game starts
+                    setTimeout(function () {
+                            selectPatientZero(request, status)
+                        }
+                        , 4.5 * 60 * 1000); // 4:30 minutes.
+                },
+                function (error) {
+                    status.error("didn't send text message");
+                }
+            );
 }
 
 // send a message to all clients refreshing their webpage
