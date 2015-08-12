@@ -46,7 +46,8 @@ body {
     top: 2px;
     right: 2px
 }
-
+ /* An invisible full screen object that serves as a container for the info box - hidden at
+ start of game */
 #overlay {
     visibility: visible;
     position: fixed;
@@ -66,9 +67,10 @@ body {
     background-color: black;
     max-width: 50%;
     max-height: 30%;
-    margin: 150px auto 0 auto;
+    margin: 160px auto 0 auto;
 }
 
+/* White box that holds updating timer text*/
 #timerbox {
     visibility: visible;
     z-index: 1001;
@@ -121,6 +123,7 @@ body {
 }
 
 #countdown {
+    visibility: hidden;
     position: absolute;
     top: 0;
     left: 0;
@@ -152,6 +155,7 @@ body {
 }
 
 #scoreboard {
+    visibility: hidden;
     position: absolute;
     top: 0;
     float: right;
@@ -180,12 +184,13 @@ body {
 
 #map-canvas {
     position: absolute;
-    top: 80px;
+    bottom: 0px;
     z-index: -1;
 }
 
 /* End Game Message */
 #top_container {
+    visibility: hidden;
     z-index: 99;
     width: 100%;
     position: absolute;
@@ -195,7 +200,7 @@ body {
 
 #patient_zero {
     z-index: 99;
-    visibility: visible;
+    visibility: hidden;
     position: absolute;
     width: 100%;
     color: white;

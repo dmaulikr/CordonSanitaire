@@ -196,6 +196,12 @@ var showEndGameMessage = function () {
 var showMissedGameMessage = function () {
     var missed_game_text = "";
 
+    //make sure text and background are visible before displaying end of game text.
+    document.getElementById("top_container").style.visibility = "visible";
+    //Display timer and things for a missed game.
+    document.getElementById("countdown").style.visibility = "visible";
+    document.getElementById("scoreboard").style.visibility = "visible";
+
     if (isPatientZeroContained()) {
         missed_game_text = "Too Late! Quarantines depend on everyone... The next outbreak is tomorrow.";
     } else {

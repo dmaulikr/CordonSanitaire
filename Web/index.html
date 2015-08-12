@@ -15,13 +15,14 @@
 </head>
 
 <body>
+<!-- Container for timer and intro text. Reminder to move span styling to mobile.css-->
 <div id="overlay">
     <div id="intro">
         <h1>CORDON SANITAIRE <span style="color:yellow; font-size:8px">v.433</span></h1>
 
         <div id="timerbox">
             <div id="intro_message" style="text-align:center">
-                <h2><span class="countdown_til_start">0</span></h2>
+                <h2><span class="countdown_til_start">00:00.00</span></h2>
             </div>
         </div>
         <p><span style="float:right;color:white">til the search begins</span></p>
@@ -63,7 +64,7 @@
             </label>
         </div>
     </div>
-    <a href="#" id="shoutButton" class="shoutButton" onclick="sendShout()">SHOUT!!!</a>
+    <a href="#" id="shoutButton" class="shoutButton" onclick="sendShout()">SHOUT!</a>
 </div>
 
 <!-- container for pop up notifications -->

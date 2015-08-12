@@ -124,14 +124,25 @@ var timerStartGame = function () {
     var intro_message = "<p>BEGIN!</p>";
     document.getElementById("intro_message").innerHTML = intro_message;
 
-
     document.getElementById("start_button").innerHTML = "Let's Go!";
     var spans = document.getElementsByClassName("countdown_til_start");
     for (var i = 0; i < spans.length; i++) {
         spans[i].innerHTML = 0;
     }
+
+    //Change button to "Join"
+    document.getElementById("shoutButton").innerHTML = "JOIN";
+
+    //Show scoreboard and timers
+    document.getElementById("top_container").style.visibility = 'visible';
+    document.getElementById("countdown").style.visibility = 'visible';
+    document.getElementById("scoreboard").style.visibility = 'visible';
+
     // close the intro screen
     document.getElementById("overlay").style.visibility = 'hidden';
+    // make sure everything is hidden
+    document.getElementById("intro").style.visibility = 'hidden';
+    document.getElementById("timerbox").style.visibilty = 'hidden';
 
     // start the clock
     startTheClock();
@@ -186,7 +197,9 @@ var timerEarlyEnoughToWatchVideo = function () {
 
     var spans = document.getElementsByClassName("countdown_til_start");
     for (var i = 0; i < spans.length; i++) {
-        spans[i].innerHTML = total_seconds;
+        var millis = total_seconds * 1000;
+        spans[i].innerHTML = getTimeInStringFormatFromMillis(millis);
+
     }
     var start_button_text = "Wait ";
     start_button_text += total_seconds;
@@ -195,12 +208,13 @@ var timerEarlyEnoughToWatchVideo = function () {
     //console.log("Early - Show YouTube Vid.");
 }
 
+//NOT UPDATED YET
 var timerWaitTilGameStart = function () {
     // user showed up early, let's keep them in the waiting room and display a countdown til the start of the game
     // console.log("Early User - (" + dif_hour + ":" + dif_min + ":" + dif_sec + ") --- Seconds left: " + total_seconds);
     var spans = document.getElementsByClassName("countdown_til_start");
     for (var i = 0; i < spans.length; i++) {
-        spans[i].innerHTML = total_seconds;
+        spans[i].innerHTML =  total_seconds;
     }
     var start_button_text = "Wait ";
     start_button_text += total_seconds;
