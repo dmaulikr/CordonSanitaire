@@ -49,7 +49,7 @@ function getNextPersonCounterClockwise(p) {
 }
 
 //pass debugging data -center coordinates and people's locations as html code.
-var printDebugData = function() {
+var printDebugData = function () {
 
     var string = "<ol><li>center: " + center.x + ", " + center.y + "</li>";
 
@@ -66,22 +66,22 @@ var printDebugData = function() {
 //      Modal Window
 //----------------------------
 /*
-var dialog = document.querySelector('dialog');
-dialog.showModal();
-*/
+ var dialog = document.querySelector('dialog');
+ dialog.showModal();
+ */
 
-
-var close = document.querySelector('#close');
-close.onclick = function() {
-    if (isUserAllowedToStart()) {
-        // hide intro view
-        document.getElementById("overlay").style.visibility = 'hidden';
-    }
-};
-
+/*
+ var close = document.querySelector('#close');
+ close.onclick = function() {
+ if (isUserAllowedToStart()) {
+ // hide intro view
+ document.getElementById("overlay").style.visibility = 'hidden';
+ }
+ };
+ */
 
 // end of game pop up
-var showEndGameMessage = function() {
+var showEndGameMessage = function () {
 
     var end_game_text = "";
     var numTrapped = countCasualties();
@@ -108,16 +108,16 @@ var showEndGameMessage = function() {
 
         // comment on quarantine total area
         /*
-                if(totalArea < 11) {
-                    end_game_text += " You also managed to contain the patient in an area less than half the size of Manhattan.";
-                }
-                else if(totalArea >= 11 && totalArea <= 22.7) {
-                    end_game_text += " It took a quarantine nearly the size of Manhattan to contain patient zero.";
-                }
-                else if(totalArea >= 22.7) {
-                    end_game_text += " 9 million people could be affected, the quarantine amasses larger than the size of Manhattan.";
-                }
-        */
+         if(totalArea < 11) {
+         end_game_text += " You also managed to contain the patient in an area less than half the size of Manhattan.";
+         }
+         else if(totalArea >= 11 && totalArea <= 22.7) {
+         end_game_text += " It took a quarantine nearly the size of Manhattan to contain patient zero.";
+         }
+         else if(totalArea >= 22.7) {
+         end_game_text += " 9 million people could be affected, the quarantine amasses larger than the size of Manhattan.";
+         }
+         */
 
         // comment on number of people quarantining
         if (numJoined < 3) {
@@ -128,10 +128,10 @@ var showEndGameMessage = function() {
             end_game_text += " people successfully formed the front line.";
         }
         /*
-                else if(numJoined > 8) {
-                    end_game_text += " Remember, you don't need that many people to contain the outbreak, just the right ones!";
-                }
-        */
+         else if(numJoined > 8) {
+         end_game_text += " Remember, you don't need that many people to contain the outbreak, just the right ones!";
+         }
+         */
 
         end_game_text += " Quarantines depend on everyone... The next outbreak is tomorrow.";
 
@@ -149,38 +149,38 @@ var showEndGameMessage = function() {
             end_game_text += " people are trapped inside inside the quarantine."
         }
         /*
-                else if(numTrapped > 5) {
-                    end_game_text += "With ";
-                    end_game_text += numTrapped;
-                    end_game_text += " healthy people trapped inside, the team needs to work better together."
-                }
-        */
+         else if(numTrapped > 5) {
+         end_game_text += "With ";
+         end_game_text += numTrapped;
+         end_game_text += " healthy people trapped inside, the team needs to work better together."
+         }
+         */
 
         /*
-                // comment on quarantine total area
-                if(totalArea < 11) {
-                    end_game_text += " You also managed to contain the patient in an area less than half the size of Manhattan.";
-                }
-                else if(totalArea >= 11 && totalArea <= 22.7) {
-                    end_game_text += " It took a quarantine nearly the size of Manhattan to contain patient zero.";
-                }
-                else if(totalArea >= 22.7) {
-                    end_game_text += " 9 million people could be affected, the quarantine amasses larger than the size of Manhattan.";
-                }
-        */
+         // comment on quarantine total area
+         if(totalArea < 11) {
+         end_game_text += " You also managed to contain the patient in an area less than half the size of Manhattan.";
+         }
+         else if(totalArea >= 11 && totalArea <= 22.7) {
+         end_game_text += " It took a quarantine nearly the size of Manhattan to contain patient zero.";
+         }
+         else if(totalArea >= 22.7) {
+         end_game_text += " 9 million people could be affected, the quarantine amasses larger than the size of Manhattan.";
+         }
+         */
 
         // comment on number of people quarantining
         if (numJoined < 3) {
             end_game_text += " Looks like a quarantine wasn’t formed. We need 3 people to form it.";
         }
         /*
-                else if(numJoined >= 3 && numJoined <= 8) {
-                    end_game_text += " You had the right idea, the fewer people on the front lines, the fewer in contact with patient zero.";
-                }
-                else if(numJoined > 8) {
-                    end_game_text += " Remember, you don't need that many people to contain the outbreak, <b>just the right ones!</b>";
-                }
-        */
+         else if(numJoined >= 3 && numJoined <= 8) {
+         end_game_text += " You had the right idea, the fewer people on the front lines, the fewer in contact with patient zero.";
+         }
+         else if(numJoined > 8) {
+         end_game_text += " Remember, you don't need that many people to contain the outbreak, <b>just the right ones!</b>";
+         }
+         */
 
 
         end_game_text += " This particular infection wasn’t contained. But there’s a new one tomorrow.";
@@ -193,7 +193,7 @@ var showEndGameMessage = function() {
 };
 
 // missed the game pop up
-var showMissedGameMessage = function() {
+var showMissedGameMessage = function () {
     var missed_game_text = "";
 
     if (isPatientZeroContained()) {
@@ -219,7 +219,7 @@ function flipUserActiveState() {
     var User = Parse.Object.extend("_User");
     var query = new Parse.Query(User);
     query.get(myUser.id, {
-        success: function(object) {
+        success: function (object) {
             var type = object.get("type");
             console.log(type);
             if (type == TypeEnum.PASSIVE)
@@ -229,15 +229,15 @@ function flipUserActiveState() {
             else
                 throw "The flip state button is not supposed to be available."
 
-			// save the state in parse and then notify players via pubnub
-			// currently saves the type over its previous type
-			// ----------------------------------------------------------------
-			// change this to save a history by adding a new and latest value to 
-			// the running log of actions with a reference to the table of users
+            // save the state in parse and then notify players via pubnub
+            // currently saves the type over its previous type
+            // ----------------------------------------------------------------
+            // change this to save a history by adding a new and latest value to
+            // the running log of actions with a reference to the table of users
 
             object.set("type", type);
             object.save(null, {
-                success: function(object) {
+                success: function (object) {
                     // then update pubnub
                     sendChangeUserTypeMessage(object.id, type);
 
@@ -253,11 +253,11 @@ function flipUserActiveState() {
                         x: myUser.x,    // updated position...
                         y: myUser.y		// updated position...
                     }, {
-                        success: function(action_obj) {
+                        success: function (action_obj) {
                             // The object was saved successfully.
                             console.log("Success: Added a log of user's action");
                         },
-                        error: function(action_obj, error) {
+                        error: function (action_obj, error) {
                             // The save failed.
                             // error is a Parse.Error with an error code and message.
                             console.log("Error: " + error.code + " " + error.message);
@@ -265,14 +265,14 @@ function flipUserActiveState() {
                     });
 
                 },
-                error: function(object) {
+                error: function (object) {
                     console.log("WOAAAAHHHH NOOOOOOO!", object);
                     console.log("Error: " + error.code + " " + error.message);
                 }
             });
 
         },
-        error: function(error) {
+        error: function (error) {
             console.log("Error: " + error.message);
         }
 
@@ -280,12 +280,10 @@ function flipUserActiveState() {
 }
 
 
-
-
 //----------------------------
 //          Utility
 //----------------------------
-Array.prototype.clear = function() {
+Array.prototype.clear = function () {
     while (this.length > 0) {
         this.pop();
     }
