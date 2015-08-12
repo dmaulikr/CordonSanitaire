@@ -197,8 +197,7 @@ var timerEarlyEnoughToWatchVideo = function () {
 
     var spans = document.getElementsByClassName("countdown_til_start");
     for (var i = 0; i < spans.length; i++) {
-        var millis = total_seconds * 1000;
-        spans[i].innerHTML = getTimeInStringFormatFromMillis(millis);
+        spans[i].innerHTML = getTimeInStringFormatFromSeconds(total_seconds);
 
     }
     var start_button_text = "Wait ";
@@ -317,7 +316,6 @@ var timePassedSince = function (start_date) {
 }
 
 var getTimeInStringFormatFromMillis = function (millis) {
-    var string = "";
 
     var minutes = Math.floor(millis / (60 * 1000));
     var seconds = Math.floor((millis / 1000) % 60);
@@ -328,7 +326,20 @@ var getTimeInStringFormatFromMillis = function (millis) {
     if (hundredths < 10) hundredths = '0' + hundredths;
 
     return minutes + ':' + seconds + '.' + hundredths;
-}
+};
+
+var getTimeInStringFormatFromSeconds = function (seconds) {
+    var hours = Math.floor(seconds / (60* 60));
+    var minutes = Math.floor((seconds -(hours*3600))/60);
+    var seconds = Math.floor(seconds - (hours*3600) - (minutes*60));
+
+    if (hours < 10) hours = '0' + hours;
+    if (minutes < 10) minutes = '0' + minutes;
+    if (seconds < 10) seconds = '0' + seconds;
+
+    return hours + ":" + minutes + ":" + seconds;
+
+};
 
 // function updateClock() {
 //     document.getElementById('countdown').innerHTML =  minutes+':'+seconds+':'+millis;
