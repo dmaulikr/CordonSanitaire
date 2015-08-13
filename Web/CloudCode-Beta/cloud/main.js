@@ -222,6 +222,27 @@ function resetUsersPosition(request, status) {
     });
 }
 
+// send a text message to players of the game
+function sendTextMessage(request, status) {
+    Parse.Cloud.httpRequest({
+        method: 'GET',
+        url: 'http://playful.jonathanbobrow.com/cs_beta/sms/sendTextMessage.php',
+        headers: {
+            'Content-Type': "application/x-www-form-urlencoded" //application/json",
+        },
+        body: {
+            'group': "Personal",
+            'time': "4:30PM EST",
+            'sms_url': "bit.ly/playCSbeta"
+        },
+        success: function (httpResponse) {
+            status.success(httpResponse.text);
+        },
+        error: function (httpResponse) {
+            status.error('Request failed with response code ' + httpResponse.status);
+        }
+    })
+}
 
 // Master button function
 //
@@ -351,6 +372,8 @@ function setPatientZeroPosition(pos, request, status) {
                     pos: pos
                 };
                 sendMessage(message);
+                status.success("Published P0 location");
+
             } else {
                 patient_zero = new NPC();
                 patient_zero.save({
@@ -367,6 +390,7 @@ function setPatientZeroPosition(pos, request, status) {
                         };
 
                         sendMessage(message);
+                        status.success("Published P0 location");
                     },
                     error: function (error) {
                         status.error("Error: " + error.code + " " + error.message);
@@ -393,7 +417,7 @@ Parse.Cloud.job('refreshPage', function (request, status) {
     sendRefreshPageMessage(request, status);
 });
 
-    Parse.Cloud.job('selectPatientZero', function (request, status) {
+Parse.Cloud.job('selectPatientZero', function (request, status) {
     selectPatientZero(request, status);
 });
 
@@ -416,6 +440,11 @@ Parse.Cloud.job('resetUsersPosition', function (request, status) {
 //Master button
 Parse.Cloud.job('launchGameMasterButton', function (request, status) {
     launchGame(request, status);
+});
+
+//Text Message button
+Parse.Cloud.job('sendTextMessage', function (request, status) {
+    sendTextMessage(request, status);
 });
 
 

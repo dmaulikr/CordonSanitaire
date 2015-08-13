@@ -67,7 +67,27 @@ body {
     background-color: black;
     max-width: 50%;
     max-height: 30%;
-    margin: 160px auto 0 auto;
+    margin: 10% auto 0 auto;
+}
+
+#intro h1 {
+    font-size: 1.5em;
+    font-weight: lighter;
+    padding: 0 0 12px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    color: white;
+}
+
+#version {
+    font-size: .5em;
+    color: #ffff00;
+}
+
+#wait_text {
+    text-align: center;
+    padding: 0px;
+    color: #ffffff;
+    font-size: .8em;
 }
 
 /* White box that holds updating timer text*/
@@ -81,46 +101,13 @@ body {
 
 }
 
-#introwindow {
-    z-index: 1000;
-    border-radius: 30px;
-    padding: 30px;
-    background-color: rgba(255, 255, 255, 0.95);
-    max-width: 600px;
-    margin: 10px auto 0 auto;
+#timerbox h2{
+    font-size: 2em;
+    font-weight: bold;
+    text-align: center;
+    color: #000000;
 }
 
-#intro h1 {
-    font-size: 1.5em;
-    font-weight: lighter;
-    padding: 0 0 12px 0;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    color: white;
-}
-
-#intro h2 {
-    font-size: .8em;
-    padding: 12px 0 12px 0;
-}
-
-#intro p {
-    padding: 0 0 12px 0;
-    font-size: .8em;
-    line-height: 1.5em;
-    color: black;
-}
-
-#intro b {
-    font-weight: 500;
-}
-
-#close {
-    padding: 10px;
-    font-weight: lighter;
-    font-size: 1.4em;
-    border-radius: 15px;
-    background-color: #FFD500;
-}
 
 #countdown {
     visibility: hidden;
@@ -224,6 +211,46 @@ body {
     height: 80px;
     position: absolute;
     bottom: 0px;
+}
+
+/* Hello button styling */
+.helloButton {
+    visibility: hidden;
+    z-index: 99;
+    position: absolute;
+    bottom: 20px;
+    width: 40%;
+    height: 50px;
+    margin: 0 30% 0 30%;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+
+    background-color: #ffffff;
+    -moz-border-radius: 40px;
+    -webkit-border-radius: 40px;
+    border-radius: 40px;
+    border: 3px solid #000000;
+    display: inline-block;
+    cursor: pointer;
+    font-size: 24px;
+    color: #000000;
+    font-family: Trebuchet, Arial, sans-serif;
+    font-weight: bold;
+    padding: 0px;
+    text-decoration: none;
+    text-align: center;
+    line-height: 50px;
+}
+
+.helloButton:hover {
+    background-color: #ffff66;
+}
+
+.helloButton:active {
+    background-color: #000000;
+    color: #ffffff;
+    border: 3px solid #ffffff;
 }
 
 /* Shout button styling */

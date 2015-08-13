@@ -146,6 +146,10 @@ var timerMissedGame = function () {
 var timerLateToGame = function () {
     var new_duration = DEFAULT_DURATION + total_seconds;
 
+    exitLobbyAndEnterGame();
+    // in case of late to game don't allow player to play, only spectate
+    // replace button with only spectate message
+
     updateDuration(new_duration);
     startTheClock();
     console.log("Late User - Update duration. Start Game.");

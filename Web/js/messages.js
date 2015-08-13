@@ -118,8 +118,8 @@ pubnub.subscribe({
                     patient_zero.marker.setMap(null);
                     patient_zero.marker = null;
                 }
-                patient_zero.x = m.pos.x
-                patient_zero.y = m.pos.y
+                patient_zero.x = m.pos[0];
+                patient_zero.y = m.pos[1];
                 updateGameBoard();
                 break;
 

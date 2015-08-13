@@ -10,22 +10,20 @@
     <meta http-equiv='pragma' content='no-cache'>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
     <link rel="stylesheet" type="text/css" media="only screen and (max-device-width: 480px)"
-          href="css/mobile.css?v433"/>
-    <link rel="stylesheet" type="text/css" media="only screen and (min-device-width: 481px)" href="css/style.css?v433"/>
+          href="css/mobile.css?v434"/>
+    <link rel="stylesheet" type="text/css" media="only screen and (min-device-width: 481px)" href="css/style.css?v434"/>
 </head>
 
 <body>
 <!-- Container for timer and intro text. Reminder to move span styling to mobile.css-->
 <div id="overlay">
     <div id="intro">
-        <h1>CORDON SANITAIRE <span style="color:yellow; font-size:8px">v.433</span></h1>
+        <h1>CORDON SANITAIRE <span id="version">v.434</span></h1>
 
         <div id="timerbox">
-            <div id="intro_message" style="text-align:center">
-                <h2><span class="countdown_til_start">00:00:00</span></h2>
-            </div>
+			<h2><span class="countdown_til_start">00:00:00</span></h2>
         </div>
-        <p><span style="float:right;color:white;">til the search begins</span></p>
+        <p><span id="wait_text">til the search begins</span></p>
         <!--<button class="float_right" id="close"><span id="start_button">Let's Go!</span></button>-->
     </div>
 </div>
@@ -65,6 +63,7 @@
         </div>
     </div>
     <a href="#" id="shoutButton" class="shoutButton" onclick="sendShout()">SHOUT!</a>
+	<a href="#" id="helloButton" class="helloButton" onclick="sendHello()">HELLO!</a>
 </div>
 
 <!-- container for pop up notifications -->
@@ -90,20 +89,20 @@
 <script type="text/javascript" src="dependencies/dat.gui.min.js?"></script>
 
 <!-- my code -->
-<script type="text/javascript" src="js/constants.js?v433"></script>
-<script type="text/javascript" src="js/helper.js?v433"></script>
-<script type="text/javascript" src="js/npc.js?v433"></script>
-<script type="text/javascript" src="js/user.js?v433"></script>
+<script type="text/javascript" src="js/constants.js?v434"></script>
+<script type="text/javascript" src="js/helper.js?v434"></script>
+<script type="text/javascript" src="js/npc.js?v434"></script>
+<script type="text/javascript" src="js/user.js?v434"></script>
 
-<script type="text/javascript" src="js/setup.js?v433"></script>
-<script type="text/javascript" src="js/control_panel.js?v433"></script>
+<script type="text/javascript" src="js/setup.js?v434"></script>
+<script type="text/javascript" src="js/control_panel.js?v434"></script>
 
-<script type="text/javascript" src="js/app.js?v433"></script>
-<script type="text/javascript" src="js/messages.js?v433"></script>
-<script type="text/javascript" src="js/timer.js?v433"></script>
-<script type="text/javascript" src="js/logout.js?v433"></script>
+<script type="text/javascript" src="js/app.js?v434"></script>
+<script type="text/javascript" src="js/messages.js?v434"></script>
+<script type="text/javascript" src="js/timer.js?v434"></script>
+<script type="text/javascript" src="js/logout.js?v434"></script>
 
-<script type="text/javascript" src="js/gmaps.js?v433"></script>
+<script type="text/javascript" src="js/gmaps.js?v434"></script>
 <script type="text/javascript" src="dependencies/jquery.min.js"></script>
 
 <script type="text/javascript">
