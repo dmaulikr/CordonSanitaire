@@ -8,7 +8,7 @@ var pubnub = {
 var _channel = 'development'; // Dev Channel vs. Production Channel
 
 // reset all of the players back to no-one playing
-Parse.Cloud.define("setAllUsersNotPresent", function (request, response) {
+Parse.Cloud.define("setAllUsersNotPresent", function (request, status) {
     Parse.Cloud.useMasterKey();
     var query = new Parse.Query(Parse.User);
     query.equalTo("present", true);
@@ -19,24 +19,26 @@ Parse.Cloud.define("setAllUsersNotPresent", function (request, response) {
             return user.save();
         }
     }).then(function () {
-        response.success("Users reset");
+        status.success("Users reset");
     }, function (error) {
-        response.error("Error: " + error.code + " " + error.message);
+        status.error("Error: " + error.code + " " + error.message);
     });
 });
 
-// an user ping
-Parse.Cloud.define("ping", function (request, response) {
+// logs a ping from a user to say, "hey, I am still here"
+Parse.Cloud.define("ping", function (request, status) {
     var cur_date = new Date();
     request.user.set('ping', cur_date);
     request.user.save().then(function () {
-        response.success("User " + request.user.id + " pinged");
+        status.success("User " + request.user.id + " pinged");
     }, function (error) {
-        response.error("Error: " + error.code + " " + error.message);
+        status.error("Error: " + error.code + " " + error.message);
     });
 });
 
-// every 2 minutes checks which users are present according to their pings
+// Look at all players and if the player has not pinged in the last 2 minutes,
+// set them to not present.
+// This can be checked at any point, might make sense to look at before a play test
 Parse.Cloud.job("updateUsersPresent", function (request, status) {
     console.log("Updating users present");
     Parse.Cloud.useMasterKey();
@@ -120,13 +122,14 @@ function getCenter(coordinates) {
 }
 
 // selects the position of patient zero one minute before a game starts
-function selectPatientZero(status) {
+function selectPatientZero(request, status) {
     //Randomly select 3 names: scramble an array and choose first 3,
     //place patient zero in the middle.
 
     var userQuery = new Parse.Query(Parse.User);
     userQuery.equalTo('present', true);
     var userArray = [];
+
     userQuery.each(function (user) {
         userArray.push(user);
     }).then(function () {
@@ -140,20 +143,16 @@ function selectPatientZero(status) {
                 [userArray[2].get('x'), userArray[2].get('y')]];
             var pos = getCenter(randomUsers);
 
-            setPatientZeroPosition(pos, function () {
-                status.success("Patient Zero position was set to " + pos[0] + ", " + pos[1]);
-            }, function (error) {
-                status.error("Error:" + error.code + " " + error.message);
-            });
+            setPatientZeroPosition(pos, request, status);
         }
         else {
-            console.log("Not enough players.");
+            status.error("Not enough players. Only " + userArray.length + " players present.");
         }
     });
 }
 
 //reset all players to Passive.
-function setAllUsersPassive(response) {
+function setAllUsersPassive(request, status) {
     Parse.Cloud.useMasterKey();
     var query = new Parse.Query(Parse.User);
     query.equalTo("type", "active");
@@ -164,13 +163,14 @@ function setAllUsersPassive(response) {
             return user.save();
         }
     }).then(function () {
-        response.success("Users reset to passive");
+        status.success("Users reset to passive");
     }, function (error) {
-        response.error("Error: " + error.code + " " + error.message);
+        status.error("Error: " + error.code + " " + error.message);
     });
 }
+
 //Set all users to Present: false
-function setAllUsersNotPresent(response) {
+function setAllUsersNotPresent(request, status) {
     Parse.Cloud.useMasterKey();
     var query = new Parse.Query(Parse.User);
     query.equalTo("present", true);
@@ -181,11 +181,12 @@ function setAllUsersNotPresent(response) {
             return user.save();
         }
     }).then(function () {
-        response.success("Users reset");
+        status.success("Users reset");
     }, function (error) {
-        response.error("Error: " + error.code + " " + error.message);
+        status.error("Error: " + error.code + " " + error.message);
     });
 }
+
 // every day at midnight sets a new game to be started at a given time
 function setGame(request, status) {
     var start_time = new Date();
@@ -204,8 +205,9 @@ function setGame(request, status) {
         }
     });
 }
+
 // every day at midnight reset the position of the users
-function resetUsersPosition(status) {
+function resetUsersPosition(request, status) {
     Parse.Cloud.useMasterKey();
     var query = new Parse.Query(Parse.User);
     query.each(function (user) {
@@ -221,54 +223,95 @@ function resetUsersPosition(status) {
 }
 
 
-Parse.Cloud.job('selectPatientZero', selectPatientZero(status));
+// Master button function
+//
+// 1) sets new locations
+// 2) sets all users to passive
+// 3) creates a new game
+// 4) sends a text message to anounce the game (5 minutes away)
 
-Parse.Cloud.job("setAllUsersNotPresent", setAllUsersNotPresent(response));
-
-Parse.Cloud.job("setAllUsersPassive", setAllUsersPassive(response));
-
-Parse.Cloud.job('setGame', setGame(request, status));
-
-Parse.Cloud.job('resetUsersPosition', resetUsersPosition(status));
-
-
-//Master button
-Parse.Cloud.job('setNewGame', function (request, response) {
+function launchGame(request, status) {
 
     Parse.Cloud.useMasterKey();
-    //Sets new location for all users
-    resetUsersPosition(status);
-    //resets all users
-    setAllUsersPassive(request, response);
 
-    //sets game time for 5 minutes from now
-    var currentTime = Date.now();
-    var start_time = currentTime + 5 * 60 * 1000; // sets start time to 5 minutes.
-    var Game = Parse.Object.extend("Game");
-    var game = new Game();
+    Parse.Promise.when(
+        function () {
+            //Sets new location for all users
+            console.log("set location");
+            resetUsersPosition(request, status);
+        }).then(function () {
+            //sets all users to passive state
+            console.log("set passive");
+            setAllUsersPassive(request, status);
+        }).then(function () {
+            //sets game time for 5 minutes from now
+            var currentTime = Date.now();
+            var start_time = currentTime + 5 * 60 * 1000; // sets start time to 5 minutes.
+            var Game = Parse.Object.extend("Game");
+            var game = new Game();
 
-    game.save({
-        startTime: start_time
-    }, {
-        success: function () {
-            status.success("Game is set to " + start_time);
+            game.save({
+                startTime: start_time
+            });
         },
-        error: function (error) {
+        function(error) {
             status.error("Error: " + error.code + " " + error.message);
-        }
-    });
-//Text message beta, sends text notifications (playful urgent)
+        });
 
-    setTimeout(selectPatientZero(request, status), 4.5 * 60 * 1000); // 4:30 minutes.
-});
+        //.then(function () {
+        //    //sets game time for 5 minutes from now
+        //    var currentTime = Date.now();
+        //    var start_time = currentTime + 5 * 60 * 1000; // sets start time to 5 minutes.
+        //    var Game = Parse.Object.extend("Game");
+        //    var game = new Game();
+        //
+        //    game.save({
+        //        startTime: start_time
+        //    }).then(
+        //        function (result) {
+        //            //Text message, sends text notifications (playful urgent)
+        //            Parse.Cloud.httpRequest({
+        //                method: 'GET',
+        //                url: 'http://playful.jonathanbobrow.com/cs_beta/sms/sendTextMessage.php',
+        //                headers: {
+        //                    'Content-Type': "application/json",
+        //                },
+        //                body: {
+        //                    'group': "Personal",
+        //                    'time': "4:30PM EST",
+        //                    'sms_url': "bit.ly/playCSbeta"
+        //                },
+        //                success: function (httpResponse) {
+        //
+        //                    console.log(httpResponse.text);
+        //                },
+        //                error: function (httpResponse) {
+        //
+        //                    console.error('Request failed with response code ' + httpResponse.status);
+        //                }
+        //            })
+        //        }).then(
+        //        function (result) {
+        //            // Set a timer to set patient zero before the game starts
+        //            setTimeout(function () {
+        //                    selectPatientZero(request, status)
+        //                }
+        //                , 4.5 * 60 * 1000); // 4:30 minutes.
+        //        },
+        //        function (error) {
+        //            status.error("didn't send text message");
+        //        });
+        //});
+}
 
 // send a message to all clients refreshing their webpage
-Parse.Cloud.job('refreshPage', function (request, status) {
+function sendRefreshPageMessage(request, status) {
     var message = {
-        action: 'refreshPage',
+        action: 'refreshPage'
     };
     sendMessage(message);
-});
+    status.success();
+}
 
 
 // publish message to pubnub from cloud code
@@ -291,7 +334,7 @@ function sendMessage(message) {
     });
 }
 
-function setPatientZeroPosition(pos, callback) {
+function setPatientZeroPosition(pos, request, status) {
     var message;
     var NPC = Parse.Object.extend("NPC");
     var query = new Parse.Query(NPC);
@@ -331,13 +374,48 @@ function setPatientZeroPosition(pos, callback) {
                     }
                 });
             }
-
-            callback();
         },
         error: function (error) {
             status.error("Error: " + error.code + " " + error.message);
         }
     });
 }
+
+/*
+ *
+ *  JOBS for Cloud Code
+ *
+ */
+
+// Create jobs here, call other functions that have been defined to perform our ask
+
+Parse.Cloud.job('refreshPage', function (request, status) {
+    sendRefreshPageMessage(request, status);
+});
+
+    Parse.Cloud.job('selectPatientZero', function (request, status) {
+    selectPatientZero(request, status);
+});
+
+Parse.Cloud.job("setAllUsersNotPresent", function (request, status) {
+    setAllUsersNotPresent(request, status)
+});
+
+Parse.Cloud.job("setAllUsersPassive", function (request, status) {
+    setAllUsersPassive(request, status)
+});
+
+Parse.Cloud.job('setGame', function (request, status) {
+    setGame(request, status)
+});
+
+Parse.Cloud.job('resetUsersPosition', function (request, status) {
+    resetUsersPosition(request, status)
+});
+
+//Master button
+Parse.Cloud.job('launchGameMasterButton', function (request, status) {
+    launchGame(request, status);
+});
 
 
