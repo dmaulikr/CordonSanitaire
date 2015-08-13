@@ -47,7 +47,11 @@ pubnub.subscribe({
             case "shout":
                 //console.log("received SHOUT message from " + m.uuid);
                 animateShout(m.id);
+                break;
 
+            case "messaging":
+                console.log("user messaging sent");
+                sendEmoji();
                 break;
 
             case "addNPC":
@@ -161,6 +165,17 @@ function sendShout() {
         channel: _channel,
         message: {
             action: 'shout',
+            id: myUser.id
+        }
+    });
+}
+
+// send emoji message.
+function sendEmoji() {
+    pubnub.publish({
+        channel: _channel,
+        message: {
+            action: 'displayEmoji',
             id: myUser.id
         }
     });
