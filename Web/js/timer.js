@@ -130,19 +130,18 @@ var timerStartGame = function () {
         spans[i].innerHTML = 0;
     }
 
-    //Change button to "Join"
-    document.getElementById("shoutButton").innerHTML = "JOIN";
-
+    //AT START OF GAME:
     //Show scoreboard and timers
     document.getElementById("top_container").style.visibility = 'visible';
     document.getElementById("countdown").style.visibility = 'visible';
     document.getElementById("scoreboard").style.visibility = 'visible';
 
-    // close the intro screen
+    // close the overlay, hide black/white boxes, as well as text.
     document.getElementById("overlay").style.visibility = 'hidden';
-    // make sure everything is hidden
     document.getElementById("intro").style.visibility = 'hidden';
     document.getElementById("timerbox").style.visibilty = 'hidden';
+    document.getElementById("intro_message").style.visibility = 'hidden';
+
 
     // start the clock
     startTheClock();
@@ -161,8 +160,15 @@ var timerMissedGame = function () {
     window.clearInterval(statusInterval);
 
     // possibly send to new page that notifies you missed the game
-    // close the intro screen
+    //LOADING WHEN GAME IS OVER:
+    // close the intro screen, overlay, and message.
     document.getElementById("overlay").style.visibility = 'hidden';
+    document.getElementById("intro").style.visibility = 'hidden';
+    document.getElementById("timerbox").style.visibilty = 'hidden';
+    document.getElementById("intro_message").style.visibility = 'hidden';
+    //Open the missed game message and background boxes:
+    //top_container, messages, timer, and scoreboard. hide patient zero.
+
 
     bGameOver = true;
 
