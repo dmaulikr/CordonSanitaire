@@ -233,61 +233,75 @@ function resetUsersPosition(request, status) {
 function launchGame(request, status) {
 
     Parse.Cloud.useMasterKey();
-    //Sets new location for all users
-    resetUsersPosition(request, status);
-    //resets all users
-    setAllUsersPassive(request, status);
 
-    //sets game time for 5 minutes from now
-    var currentTime = Date.now();
-    var start_time = currentTime + 5 * 60 * 1000; // sets start time to 5 minutes.
-    var Game = Parse.Object.extend("Game");
-    var game = new Game();
+    Parse.Promise.when(
+        function () {
+            //Sets new location for all users
+            console.log("set location");
+            resetUsersPosition(request, status);
+        }).then(function () {
+            //sets all users to passive state
+            console.log("set passive");
+            setAllUsersPassive(request, status);
+        }).then(function () {
+            //sets game time for 5 minutes from now
+            var currentTime = Date.now();
+            var start_time = currentTime + 5 * 60 * 1000; // sets start time to 5 minutes.
+            var Game = Parse.Object.extend("Game");
+            var game = new Game();
 
-    game.save({
-        startTime: start_time
-    }, {
-        success: function () {
-            status.success("Game is set to " + start_time);
+            game.save({
+                startTime: start_time
+            });
         },
-        error: function (error) {
+        function(error) {
             status.error("Error: " + error.code + " " + error.message);
-        }
-    }).then(
-        function (result) {
-        //Text message, sends text notifications (playful urgent)
-            Parse.Cloud.httpRequest({
-                    method: 'GET',
-                    url: 'http://playful.jonathanbobrow.com/cs_beta/sms/sendTextMessage.php',
-                    headers: {
-                        'Content-Type': "application/json",
-                    },
-                    body: {
-                        'group': "Personal",
-                        'time': "4:30PM EST",
-                        'sms_url': "bit.ly/playCSbeta"
-                    },
-                    success: function(httpResponse) {
+        });
 
-                        console.log(httpResponse.text);
-                    },
-                    error: function(httpResponse) {
-
-                        console.error('Request failed with response code ' + httpResponse.status);
-                    }
-            })
-        }).then(
-                function (result) {
-                    // Set a timer to set patient zero before the game starts
-                    setTimeout(function () {
-                            selectPatientZero(request, status)
-                        }
-                        , 4.5 * 60 * 1000); // 4:30 minutes.
-                },
-                function (error) {
-                    status.error("didn't send text message");
-                }
-            );
+        //.then(function () {
+        //    //sets game time for 5 minutes from now
+        //    var currentTime = Date.now();
+        //    var start_time = currentTime + 5 * 60 * 1000; // sets start time to 5 minutes.
+        //    var Game = Parse.Object.extend("Game");
+        //    var game = new Game();
+        //
+        //    game.save({
+        //        startTime: start_time
+        //    }).then(
+        //        function (result) {
+        //            //Text message, sends text notifications (playful urgent)
+        //            Parse.Cloud.httpRequest({
+        //                method: 'GET',
+        //                url: 'http://playful.jonathanbobrow.com/cs_beta/sms/sendTextMessage.php',
+        //                headers: {
+        //                    'Content-Type': "application/json",
+        //                },
+        //                body: {
+        //                    'group': "Personal",
+        //                    'time': "4:30PM EST",
+        //                    'sms_url': "bit.ly/playCSbeta"
+        //                },
+        //                success: function (httpResponse) {
+        //
+        //                    console.log(httpResponse.text);
+        //                },
+        //                error: function (httpResponse) {
+        //
+        //                    console.error('Request failed with response code ' + httpResponse.status);
+        //                }
+        //            })
+        //        }).then(
+        //        function (result) {
+        //            // Set a timer to set patient zero before the game starts
+        //            setTimeout(function () {
+        //                    selectPatientZero(request, status)
+        //                }
+        //                , 4.5 * 60 * 1000); // 4:30 minutes.
+        //        },
+        //        function (error) {
+        //            status.error("didn't send text message");
+        //        });
+        //});
 }
 
 // send a message to all clients refreshing their webpage
