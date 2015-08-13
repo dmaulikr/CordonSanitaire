@@ -420,6 +420,8 @@ function updateButtonAvailable() {
 
 function updateNotifications() {
 
+    if(!isRunning) return;  // don't show these notifications outside of gameplay
+
     // IN ORDER OF PRIORITY
     // Only a single message each action
 

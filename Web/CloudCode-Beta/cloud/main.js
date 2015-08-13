@@ -372,6 +372,8 @@ function setPatientZeroPosition(pos, request, status) {
                     pos: pos
                 };
                 sendMessage(message);
+                status.success("Published P0 location");
+
             } else {
                 patient_zero = new NPC();
                 patient_zero.save({
@@ -388,6 +390,7 @@ function setPatientZeroPosition(pos, request, status) {
                         };
 
                         sendMessage(message);
+                        status.success("Published P0 location");
                     },
                     error: function (error) {
                         status.error("Error: " + error.code + " " + error.message);
@@ -414,7 +417,7 @@ Parse.Cloud.job('refreshPage', function (request, status) {
     sendRefreshPageMessage(request, status);
 });
 
-    Parse.Cloud.job('selectPatientZero', function (request, status) {
+Parse.Cloud.job('selectPatientZero', function (request, status) {
     selectPatientZero(request, status);
 });
 
