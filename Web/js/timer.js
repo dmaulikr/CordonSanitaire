@@ -6,7 +6,6 @@ var statusInterval;
 var isRunning = false;
 var total_seconds = 1;
 
-var bUserAllowedToStart = false;
 var bShouldShowMissedGameMessage = false;
 var bUpdatedDialogText = false;
 var bGameOver = false;
@@ -101,10 +100,6 @@ var timerStatusUpdate = function () {
             // user showed up late, let's update the duration and start the game
             timerLateToGame();
         }
-        else if (total_seconds > 20) {
-            // user showed up more than 20 seconds before start
-            timerEarlyEnoughToWatchVideo();
-        }
         else {
             // wait til game start, no video
             timerWaitTilGameStart();
@@ -118,31 +113,8 @@ var timerStartGame = function () {
     // Bring window into focus when game starts
     window.focus();
 
-    // user was present on time, let's start the game
-    bUserAllowedToStart = true;
-
-    var intro_message = "<p>BEGIN!</p>";
-    document.getElementById("intro_message").innerHTML = intro_message;
-
-    document.getElementById("start_button").innerHTML = "Let's Go!";
-    var spans = document.getElementsByClassName("countdown_til_start");
-    for (var i = 0; i < spans.length; i++) {
-        spans[i].innerHTML = 0;
-    }
-
-    //Change button to "Join"
-    document.getElementById("shoutButton").innerHTML = "JOIN";
-
-    //Show scoreboard and timers
-    document.getElementById("top_container").style.visibility = 'visible';
-    document.getElementById("countdown").style.visibility = 'visible';
-    document.getElementById("scoreboard").style.visibility = 'visible';
-
-    // close the intro screen
-    document.getElementById("overlay").style.visibility = 'hidden';
-    // make sure everything is hidden
-    document.getElementById("intro").style.visibility = 'hidden';
-    document.getElementById("timerbox").style.visibilty = 'hidden';
+	// change gui from waiting room to in game state
+	exitLobbyAndEnterGame();
 
     // start the clock
     startTheClock();
@@ -162,7 +134,7 @@ var timerMissedGame = function () {
 
     // possibly send to new page that notifies you missed the game
     // close the intro screen
-    document.getElementById("overlay").style.visibility = 'hidden';
+    exitLobbyAndEnterGame();
 
     bGameOver = true;
 
@@ -171,40 +143,11 @@ var timerMissedGame = function () {
 
 var timerLateToGame = function () {
     var new_duration = DEFAULT_DURATION + total_seconds;
-    bUserAllowedToStart = true;
 
-    if (!bUpdatedDialogText) {
-        var intro_message = "<p>Game in progress</p>";
-        //"<p>Game is in progress!</p><p><b>The game only lasts 45 seconds!</b></p><p><b>You have one job: join the quarantine line, or not.</b> Just press the <b>JOIN/RELEASE</b> button on the upper right. You can do this as many times as you like.</p><p>You will be on a map of a world in which Patient Zero(<b>P0</b>) has a lethal infectious disease. You -- and everyone -- will work together to contain  by drawing a quarantine line around them.</p><p>At the end of the game, we will all have drawn a quarantine line. It will contain <b>P0</b> (hopefully!) or not. It will trap 'healthy' players inside with <b>P0</b>, or not. Hopefully not.</p><p>That’s up to you … all of you.</p>";
-        document.getElementById("intro_message").innerHTML = intro_message;
-
-        bUpdatedDialogText = true;
-    }
     updateDuration(new_duration);
     startTheClock();
     console.log("Late User - Update duration. Start Game.");
     window.clearInterval(statusInterval);
-}
-
-var timerEarlyEnoughToWatchVideo = function () {
-    if (!bUpdatedDialogText) {
-        var intro_message = "<p><span class='countdown_til_start'>0</span></p>";
-        //"<p>Once the game starts <b>it will only last 45 seconds!</b> You’ll be playing with everyone else who jumps in.</p><p>You will be on a map of a world in which Patient Zero(<b>P0</b>)  has a lethal infectious disease. You -- and everyone -- will work together to contain  by drawing a quarantine line around them.</p><p><b>You have one job: join the quarantine line, or not.</b> Just press the <b>JOIN/RELEASE</b> button on the upper right. You can do this as many times as you like.</p><p>At the end of the game, we will all have drawn a quarantine line. It will contain <b>P0</b> (hopefully!) or not. It will trap 'healthy' players inside with <b>P0</b>, or not. Hopefully not.</p><p>That’s up to you … all of you.</p>";
-        document.getElementById("intro_message").innerHTML = intro_message;
-
-        bUpdatedDialogText = true;
-    }
-
-    var spans = document.getElementsByClassName("countdown_til_start");
-    for (var i = 0; i < spans.length; i++) {
-        spans[i].innerHTML = getTimeInStringFormatFromSeconds(total_seconds);
-
-    }
-    var start_button_text = "Wait ";
-    start_button_text += total_seconds;
-    start_button_text += " seconds";
-    //document.getElementById("start_button").innerHTML = start_button_text;
-    //console.log("Early - Show YouTube Vid.");
 }
 
 //NOT UPDATED YET
@@ -215,28 +158,14 @@ var timerWaitTilGameStart = function () {
     for (var i = 0; i < spans.length; i++) {
         spans[i].innerHTML =  total_seconds;
     }
-    var start_button_text = "Wait ";
-    start_button_text += total_seconds;
-    start_button_text += " seconds";
-    document.getElementById("start_button").innerHTML = start_button_text;
 
     //alert at 5 seconds til
     // if the page is not in focus, send an alert!
     if (total_seconds == 5 && !isWindowInFocus && !bAlertedUserOfGameStart) {
-        var intro_message = "<p>Game is starting</p>";
-        //"<p>The game is starting!</p><p>Once the game starts <b>it will only last 45 seconds!</b> You’ll be playing with everyone else who jumps in.</p><p>You will be on a map of a world in which Patient Zero(<b>P0</b>)  has a lethal infectious disease. You -- and everyone -- will work together to contain  by drawing a quarantine line around them.</p><p><b>You have one job: join the quarantine line, or not.</b> Just press the <b>JOIN/RELEASE</b> button on the upper right. You can do this as many times as you like.</p><p>At the end of the game, we will all have drawn a quarantine line. It will contain <b>P0</b> (hopefully!) or not. It will trap 'healthy' players inside with <b>P0</b>, or not. Hopefully not.</p><p>That’s up to you … all of you.</p>";
-        document.getElementById("intro_message").innerHTML = intro_message;
-        document.getElementById("start_button").innerHTML = "Let's Go!";
-
         alert("PLAYFUL ALERT!!! CORDON SANITAIRE IS ABOUT TO START!!!");
         window.focus();
     }
 }
-
-var isUserAllowedToStart = function () {
-    return bUserAllowedToStart;
-}
-
 
 //
 var timePassedSince = function (start_date) {
@@ -344,6 +273,16 @@ var getTimeInStringFormatFromSeconds = function (seconds) {
 // function updateClock() {
 //     document.getElementById('countdown').innerHTML =  minutes+':'+seconds+':'+millis;
 // }
+
+var exitLobbyAndEnterGame = function() {
+	//Show scoreboard and timers
+	document.getElementById("top_container").style.visibility = 'visible';
+	document.getElementById("countdown").style.visibility = 'visible';
+	document.getElementById("scoreboard").style.visibility = 'visible';
+
+	// close the intro screen
+	document.getElementById("overlay").style.display = 'none';
+}
 
 var startTheClock = function () {
 
