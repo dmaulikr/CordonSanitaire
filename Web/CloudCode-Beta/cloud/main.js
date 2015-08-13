@@ -222,6 +222,27 @@ function resetUsersPosition(request, status) {
     });
 }
 
+// send a text message to players of the game
+function sendTextMessage(request, status) {
+    Parse.Cloud.httpRequest({
+        method: 'GET',
+        url: 'http://playful.jonathanbobrow.com/cs_beta/sms/sendTextMessage.php',
+        headers: {
+            'Content-Type': "application/x-www-form-urlencoded" //application/json",
+        },
+        body: {
+            'group': "Personal",
+            'time': "4:30PM EST",
+            'sms_url': "bit.ly/playCSbeta"
+        },
+        success: function (httpResponse) {
+            status.success(httpResponse.text);
+        },
+        error: function (httpResponse) {
+            status.error('Request failed with response code ' + httpResponse.status);
+        }
+    })
+}
 
 // Master button function
 //
@@ -416,6 +437,11 @@ Parse.Cloud.job('resetUsersPosition', function (request, status) {
 //Master button
 Parse.Cloud.job('launchGameMasterButton', function (request, status) {
     launchGame(request, status);
+});
+
+//Text Message button
+Parse.Cloud.job('sendTextMessage', function (request, status) {
+    sendTextMessage(request, status);
 });
 
 
