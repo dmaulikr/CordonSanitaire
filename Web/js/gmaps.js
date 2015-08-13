@@ -309,8 +309,19 @@ function animateShout(id) {
     var shoutPerson = User.getPersonById(id);
     var shoutMarker = shoutPerson.marker;
 
-    // show shout notification
-    shoutPerson.actionLabel("HELP!", settings.color_casualty_fill, 60, 50, 2000);
+    var help = ["HELP!", "HELP!", "HELP!", "GET ME OUT!", "NOOOO!", "!!!!!!"];
+    var celebrate = ["WOOT!", "VICTORY!", "AH YEAH!", "YAY!", "MEH.", "GOOD JOB!"];
+    var defeat = ["BOO!", "BOO!", "NEXT TIME!", "!!!!", "OH NO!", "SO CLOSE"];
+    var idx = Math.floor((Math.random() * 6));
+
+    if(isRunning) {
+        // show shout notification
+        shoutPerson.actionLabel(help[idx], settings.color_casualty_fill, 60, 50, 2000);
+    } else if(isPatientZeroContained()) {
+        shoutPerson.actionLabel(celebrate[idx], settings.color_casualty_fill, 60, 50, 2000);
+    } else {
+        shoutPerson.actionLabel(defeat[idx], settings.color_casualty_fill, 60, 50, 2000);
+    }
 
     var count = 0;
     var dur = 50;
@@ -600,4 +611,12 @@ function displayEmoji(id, emoji) {
     console.log("displaying emoji comm");
     var commPerson = User.getPersonById(id);
     commPerson.actionLabel(emoji, '#ffffff', 0, 50, 2000);
+}
+
+function displayHello(id) {
+    console.log("displaying hello");
+    var commPerson = User.getPersonById(id);
+    var hello = ["Hello!", "Hi!", "Hey there!", "Here to help!", "Let's do this!"];
+    var idx = Math.floor((Math.random() * 5));
+    commPerson.actionLabel(hello[idx], '#ffffff', 40, 50, 2000);
 }

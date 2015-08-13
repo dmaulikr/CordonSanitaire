@@ -281,6 +281,9 @@ var getTimeInStringFormatFromSeconds = function (seconds) {
 // }
 
 var exitLobbyAndEnterGame = function() {
+    // hide hello button
+    document.getElementById("helloButton").style.display = 'none';
+
 	//Show scoreboard and timers
 	document.getElementById("top_container").style.visibility = 'visible';
 	document.getElementById("countdown").style.visibility = 'visible';

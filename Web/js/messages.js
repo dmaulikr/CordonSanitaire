@@ -49,6 +49,10 @@ pubnub.subscribe({
                 animateShout(m.id);
                 break;
 
+            case "hello":
+                displayHello(m.id);
+                break;
+
             case "comm":
                 console.log("received comms");
                 //receives sender id and emoji type then displays it above that player
@@ -166,6 +170,17 @@ function sendShout() {
         channel: _channel,
         message: {
             action: 'shout',
+            id: myUser.id
+        }
+    });
+}
+
+// send hello message
+function sendHello() {
+    pubnub.publish({
+        channel: _channel,
+        message: {
+            action: 'hello',
             id: myUser.id
         }
     });

@@ -51,17 +51,17 @@ body {
 #overlay {
     visibility: visible;
     position: fixed;
-    z-index: 999;
+    z-index: 900;
     top: 0;
     left: 0;
     right: 0;
-    bottom: 0;
+    bottom: 80px;
     /*background-color: rgba(0, 0, 0, 0.85);*/
 }
 
 #intro {
     visibility: visible;
-    z-index: 1000;
+    z-index: 901;
     border-radius: 5px;
     padding: 20px;
     background-color: black;
@@ -267,8 +267,7 @@ body {
 
 /* Hello button styling */
 .helloButton {
-    visibility: hidden;
-    z-index: 99;
+    z-index: 999;
     position: absolute;
     bottom: 20px;
     width: 40%;
@@ -293,10 +292,6 @@ body {
     text-decoration: none;
     text-align: center;
     line-height: 50px;
-}
-
-.helloButton:hover {
-    background-color: #ffff66;
 }
 
 .helloButton:active {
