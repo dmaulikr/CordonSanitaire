@@ -49,9 +49,10 @@ pubnub.subscribe({
                 animateShout(m.id);
                 break;
 
-            case "messaging":
-                console.log("user messaging sent");
-                sendEmoji();
+            case "comm":
+                console.log("received comms");
+                //receives sender id and emoji type then displays it above that player
+                displayEmoji(m.id, m.emoji);
                 break;
 
             case "addNPC":
@@ -170,13 +171,14 @@ function sendShout() {
     });
 }
 
-// send emoji message.
-function sendEmoji() {
+// lets other players know emoji comm.
+function sendEmoji(emojiType) {
     pubnub.publish({
         channel: _channel,
         message: {
-            action: 'displayEmoji',
-            id: myUser.id
+            action: 'comm',
+            id: myUser.id,
+            emoji: emojiType
         }
     });
 }

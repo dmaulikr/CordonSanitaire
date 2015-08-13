@@ -498,7 +498,7 @@ function isPatientZeroContained() {
         return true;
 
     if (quarantine == null || quarantine.length < 3) { // can't do it with less than 3
-        console.log("heere");
+        console.log("here");
         patientZeroContained = false;
         return false;
     }
@@ -590,4 +590,11 @@ function updateBounds() {
     map.fitBounds(bounds);
 
     console.log("finished fitting bounds");
+}
+
+//displays the chosen emoji in a notification above the player.
+function displayEmoji(id, emoji) {
+    console.log("displaying emoji comm");
+    var commPerson = User.getPersonById(id);
+    commPerson.actionLabel(emoji, white, 0, 2000);
 }
