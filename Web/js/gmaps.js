@@ -596,5 +596,5 @@ function updateBounds() {
 function displayEmoji(id, emoji) {
     console.log("displaying emoji comm");
     var commPerson = User.getPersonById(id);
-    commPerson.actionLabel(emoji, white, 0, 2000);
+    commPerson.actionLabel(emoji, '#ffffff', 0, 2000);
 }
