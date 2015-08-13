@@ -44,7 +44,7 @@ NPC.prototype.erase = function() {
     this.marker.setMap(null);
 };
 
-NPC.prototype.actionLabel = function (text, color, alignment, duration) {
+NPC.prototype.actionLabel = function (text, color, xoffset, yoffset, duration) {
     var coords = getLatLngCoords(this.x, this.y);
 
     var labelOptions = {
@@ -61,7 +61,7 @@ NPC.prototype.actionLabel = function (text, color, alignment, duration) {
             width: "100 px"
         },
         disableAutoPan: true,
-        pixelOffset: new google.maps.Size(-alignment, -50),
+        pixelOffset: new google.maps.Size(-xoffset, -yoffset),
         position: coords,
         closeBoxURL: "",
         isHidden: false,
