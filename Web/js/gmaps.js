@@ -269,16 +269,19 @@ function drawNPCs() {
 
 function drawPopulation() {
     for (var i = 0; i < people.length; i++) {
+        //switched order of if statements to ensure the player's background animation draws behind their marker.
+        if (people[i].isUserMe()) {
+            //draws myUser
+            myUser.marker = people[i].marker;
+            myUser.draw();
+            myUser.actionLabel("You Are Here", '#ffffff', 47, -25, 5000);
+        }
         // hide patient zero
         if (!people[i].isPatientZero) {
             people[i].draw();
         }
-        if (people[i].isUserMe()) {
-            myUser.marker = people[i].marker;
-        }
+
     }
-    // label with you are here
-    myUser.labelWithYouAreHere();
     // start the recurring animations
 }
 
@@ -293,11 +296,11 @@ function startAnimations() {
 
         var icon;
         // animate my icon so I know who I am
-        if (myUser.marker == null)
+        if (myUser.markerBackdrop == null)
             throw "My marker is null";
-        icon = myUser.marker.icon;
-        icon.scale = markerSize + (1 + Math.sin(2 * Math.PI * count / period)) * markerSize / 2;
-        myUser.marker.setIcon(icon);
+        icon = myUser.markerBackdrop.icon;
+        icon.scale = markerSize + (1 + Math.sin(2 * Math.PI * count / period)) * (markerSize); //adjusted size to 3/2 of previous size.
+        myUser.markerBackdrop.setIcon(icon);
     }, 20);
 }
 
@@ -307,7 +310,7 @@ function animateShout(id) {
     var shoutMarker = shoutPerson.marker;
 
     // show shout notification
-    shoutPerson.actionLabel("HELP!", settings.color_casualty_fill, 60, 2000);
+    shoutPerson.actionLabel("HELP!", settings.color_casualty_fill, 60, 50, 2000);
 
     var count = 0;
     var dur = 50;
@@ -574,7 +577,7 @@ function revealPatientZero() {
         patient_zero.marker = marker_obj;
     }
 
-    patient_zero.actionLabel("P0", settings.color_casualty_fill, 20, 100000);
+    patient_zero.actionLabel("P0", settings.color_casualty_fill, 20, 50, 100000);
     //
     // pan to show the patient zero centered in the screen
     map.panTo(patient_zero_coords);
@@ -596,5 +599,5 @@ function updateBounds() {
 function displayEmoji(id, emoji) {
     console.log("displaying emoji comm");
     var commPerson = User.getPersonById(id);
-    commPerson.actionLabel(emoji, '#ffffff', 0, 2000);
+    commPerson.actionLabel(emoji, '#ffffff', 0, 50, 2000);
 }

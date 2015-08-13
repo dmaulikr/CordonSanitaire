@@ -12,6 +12,7 @@ var User = function (id, x, y, role, type, isPatientZero) {
     this.type = type;
     this.isPatientZero = isPatientZero;
     this.marker = null;
+    this.markerBackdrop = null; //background for your marker
     this.score = 0; // used for keeping track of how well they do
 };
 
@@ -20,6 +21,25 @@ var User = function (id, x, y, role, type, isPatientZero) {
  */
 User.prototype.draw = function () {
     var coords = getLatLngCoords(this.x, this.y);
+
+    // if this user is me, draw an animating circle below
+    if (this.isUserMe()) {
+    // if no marker, create one
+        if (this.markerBackdrop == null) {
+            this.markerBackdrop = new google.maps.Marker({
+                position: coords,
+                map: map,
+                icon: {
+                    path: google.maps.SymbolPath.CIRCLE,
+                    fillColor: '#0089FF',
+                    fillOpacity: 0.5,
+                    scale: markerSize,
+                    strokeOpacity: 0.0
+                }
+            });
+        }
+    // add animation loop to marker for size in gmaps.js
+    }
 
     // if there's no marker, create one.
     if (this.marker == null) {
@@ -66,7 +86,7 @@ User.prototype.updateType = function (type) {
     this.type = type;
 };
 
-User.prototype.actionLabel = function (text, color, alignment, duration) {
+User.prototype.actionLabel = function (text, color, xoffset, yoffset, duration) {
     var coords = getLatLngCoords(this.x, this.y);
 
     var labelOptions = {
@@ -83,7 +103,7 @@ User.prototype.actionLabel = function (text, color, alignment, duration) {
             width: "100 px"
         },
         disableAutoPan: true,
-        pixelOffset: new google.maps.Size(-alignment, -50),
+        pixelOffset: new google.maps.Size(-xoffset, -yoffset),
         position: coords,
         closeBoxURL: "",
         isHidden: false,
@@ -102,38 +122,6 @@ User.prototype.actionLabel = function (text, color, alignment, duration) {
         duration);
 
     //delete(userLabel);
-};
-
-
-User.prototype.labelWithYouAreHere = function () {
-
-    var coords = getLatLngCoords(this.x, this.y);
-    var labelText = "YOU ARE HERE";
-
-    var myOptions = {
-        content: labelText,
-        boxStyle: {
-            textAlign: "center",
-            fontSize: "8pt",
-            fontWeight: "bold",
-            backgroundColor: "white",
-            border: "4px solid rgba(0,0,0,.8)",
-            borderRadius: "10px",
-            padding: "5px 0 5px 0",
-            width: "100px"
-        },
-        disableAutoPan: true,
-        pixelOffset: new google.maps.Size(-55, 20),
-        position: coords,
-        closeBoxURL: "",
-        isHidden: false,
-        pane: "mapPane",
-        enableEventPropagation: true
-    };
-
-    var ibLabel = new InfoBox(myOptions);
-    ibLabel.open(map);
-
 };
 
 /**
@@ -274,16 +262,16 @@ User.changeUserType = function (id, type) {
     var usr = User.getPersonById(id);
     switch(type){
         case "active":
-            usr.actionLabel("JOIN", settings.color_active_fill, 60, 2000);
+            usr.actionLabel("JOIN", settings.color_active_fill, 60, 50, 2000);
             break;
 
         case "passive":
-            //usr.actionLabel("RELEASE", settings.color_passive_fill, 2000);
+            //usr.actionLabel("RELEASE", settings.color_passive_fill, 60, 50, 2000);
             break;
 
         case "contained":
             // not possible
-            usr.actionLabel("HELP!", settings.color_casualty_fill, 60, 2000);
+            usr.actionLabel("HELP!", settings.color_casualty_fill, 60, 50, 2000);
             break;
 
         default: break;
