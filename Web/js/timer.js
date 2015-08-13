@@ -107,7 +107,7 @@ var timerStatusUpdate = function () {
 
     }, 100);
 
-}
+};
 
 var timerStartGame = function () {
     // Bring window into focus when game starts
@@ -115,6 +115,7 @@ var timerStartGame = function () {
 
 	// change gui from waiting room to in game state
 	exitLobbyAndEnterGame();
+
 
     // start the clock
     startTheClock();
@@ -133,6 +134,7 @@ var timerMissedGame = function () {
     window.clearInterval(statusInterval);
 
     // possibly send to new page that notifies you missed the game
+
     // close the intro screen
     exitLobbyAndEnterGame();
 
@@ -169,7 +171,7 @@ var timerWaitTilGameStart = function () {
         alert("PLAYFUL ALERT!!! CORDON SANITAIRE IS ABOUT TO START!!!");
         window.focus();
     }
-}
+};
 
 //
 var timePassedSince = function (start_date) {
@@ -246,7 +248,7 @@ var timePassedSince = function (start_date) {
         revealPatientZero();
     }
 
-}
+};
 
 var getTimeInStringFormatFromMillis = function (millis) {
 
@@ -302,12 +304,12 @@ var startTheClock = function () {
     countdownTimer = setInterval(function () {
         timePassedSince(synchedTime)
     }, 10);
-}
+};
 
 var stopTheClock = function () {
     window.clearInterval(countdownTimer);
     isRunning = false;
-}
+};
 
 var resetTheClock = function () {
 
@@ -316,14 +318,14 @@ var resetTheClock = function () {
     document.getElementById('countdown').innerHTML = getTimeInStringFormatFromMillis(duration * 1000);
 
     isRunning = false;
-}
+};
 
 var updateDuration = function (seconds) {
     if (!isRunning) {
         duration = seconds;
         resetTheClock();
     }
-}
+};
 
 // start the clock refreshed
 resetTheClock();

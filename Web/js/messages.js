@@ -47,7 +47,12 @@ pubnub.subscribe({
             case "shout":
                 //console.log("received SHOUT message from " + m.uuid);
                 animateShout(m.id);
+                break;
 
+            case "comm":
+                console.log("received comms");
+                //receives sender id and emoji type then displays it above that player
+                displayEmoji(m.id, m.emoji);
                 break;
 
             case "addNPC":
@@ -162,6 +167,18 @@ function sendShout() {
         message: {
             action: 'shout',
             id: myUser.id
+        }
+    });
+}
+
+// lets other players know emoji comm.
+function sendEmoji(emojiType) {
+    pubnub.publish({
+        channel: _channel,
+        message: {
+            action: 'comm',
+            id: myUser.id,
+            emoji: emojiType
         }
     });
 }
