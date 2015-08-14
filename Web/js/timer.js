@@ -162,7 +162,7 @@ var timerWaitTilGameStart = function () {
     // console.log("Early User - (" + dif_hour + ":" + dif_min + ":" + dif_sec + ") --- Seconds left: " + total_seconds);
     var spans = document.getElementsByClassName("countdown_til_start");
     for (var i = 0; i < spans.length; i++) {
-        spans[i].innerHTML =  total_seconds;
+        spans[i].innerHTML =  getTimeInStringFormatFromSeconds(total_seconds);
     }
 
     //alert at 5 seconds til
