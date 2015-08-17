@@ -395,14 +395,32 @@ function animatePatientZero(icon) {
 
 //Get all parameters necessary to update score
 function updateScoreboard() {
+
+    var numPeopleTrapped = countCasualties();
+
     //check status of patient zero
-    if (_patientZeroContained)
-        document.getElementById('patient_status').innerHTML = 'contained';
-    else
-        document.getElementById('patient_status').innerHTML = 'not contained';
+    if (isPatientZeroContained()) {
+
+        // check to see if other people are trapped inside
+        if (numPeopleTrapped > 0) {
+            document.getElementById('p0_loose').style.display = "none";
+            document.getElementById('p0_contained').style.display = "block";
+            document.getElementById('p0_isolated').style.display = "none";
+        }
+        else {
+            document.getElementById('p0_loose').style.display = "none";
+            document.getElementById('p0_contained').style.display = "none";
+            document.getElementById('p0_isolated').style.display = "block";
+        }
+    }
+    else {
+        document.getElementById('p0_loose').style.display = "block";
+        document.getElementById('p0_contained').style.display = "none";
+        document.getElementById('p0_isolated').style.display = "none";
+    }
 
     // update count of casualties
-    document.getElementById('casualty_count').innerHTML = countCasualties();
+    document.getElementById('casualty_count').innerHTML = numPeopleTrapped;
 
     // calculate the sq mi of quarantine...
     document.getElementById('area_quarantined').innerHTML = getAreaQuarantined();

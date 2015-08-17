@@ -11,7 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
     <link rel="stylesheet" type="text/css" media="only screen and (max-device-width: 480px)"
           href="css/mobile.css?v436"/>
-    <link rel="stylesheet" type="text/css" media="only screen and (min-device-width: 481px)" href="css/style.css?v436"/>
+    <link rel="stylesheet" type="text/css" media="only screen and (min-device-width: 481px)" href="css/mobile.css?v436"/>
 </head>
 
 <body>
@@ -29,7 +29,7 @@
 </div>
 
 <!-- Container for countdown -->
-<div id="countdown">00:00:00</div>
+<div id="countdown"><span id="seconds">00</span>.<span id="hundredths">00</span></div>
 
 <!-- Logout button for player | Not currently necessary -->
 <!--<input type="button" value="Log Out" class="logoutButton" onclick="userLogout()" />-->
@@ -44,11 +44,16 @@
     </ul>
 </div>
 
+<!-- Container for Patient Zero status -->
+<div id="p0_status">
+    <img id="p0_isolated" src="assets/pzero_status_isolated.svg"/>
+    <img id="p0_contained" src="assets/pzero_status_contained.svg"/>
+    <img id="p0_loose" src="assets/pzero_status_loose.svg"/>
+</div>
+
 <!-- Container for End of game message -->
 <div id="top_container">
-    <div id="patient_zero">patient zero is <span id="patient_status">contained</span></div>
-    <div id="end_game">
-    </div>
+    <div id="end_game"></div>
 </div>
 
 <div id="bottom_container">

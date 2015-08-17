@@ -133,14 +133,20 @@ var timerMissedGame = function () {
     console.log("Latest User - Show End Game.");
     window.clearInterval(statusInterval);
 
+    bShouldShowMissedGameMessage = true;
+    bGameOver = true;
+
     // possibly send to new page that notifies you missed the game
 
     // close the intro screen
     exitLobbyAndEnterGame();
 
-    bGameOver = true;
+    // show end of game message
+    document.getElementById('top_container').style.visibility = 'visible';
 
-    bShouldShowMissedGameMessage = true;
+    // set the clock to 00:00
+    document.getElementById('seconds').innerHTML = getSecondsInStringFormatFromMillis(0);
+    document.getElementById('hundredths').innerHTML = getHundredthsInStringFormatFromMillis(0);
 }
 
 var timerLateToGame = function () {
@@ -204,7 +210,9 @@ var timePassedSince = function (start_date) {
     //console.log("mil: " + millis_remaining);
 
     if (minutes_remaining >= 0 && seconds_remaining >= 0) {
-        document.getElementById('countdown').innerHTML = getTimeInStringFormatFromMillis(time_remaining);
+        document.getElementById('seconds').innerHTML = getSecondsInStringFormatFromMillis(time_remaining);
+        document.getElementById('hundredths').innerHTML = getHundredthsInStringFormatFromMillis(time_remaining);
+        //document.getElementById('countdown').innerHTML = getTimeInStringFormatFromMillis(time_remaining);
 
 
         // send message at 20 seconds remaining
@@ -237,7 +245,8 @@ var timePassedSince = function (start_date) {
     else {
 
         // time is up
-        document.getElementById('countdown').innerHTML = '00:00.00';
+        document.getElementById('seconds').innerHTML = "00";
+        document.getElementById('hundredths').innerHTML = "00";
         window.clearInterval(countdownTimer);
         isRunning = false;
 
@@ -248,6 +257,24 @@ var timePassedSince = function (start_date) {
         revealPatientZero();
     }
 
+};
+
+var getSecondsInStringFormatFromMillis = function (millis) {
+
+    var seconds = Math.floor((millis / 1000) % 60);
+
+    if (seconds < 10) seconds = '0' + seconds;
+
+    return seconds;
+};
+
+var getHundredthsInStringFormatFromMillis = function (millis) {
+
+    var hundredths = Math.floor((millis % 1000) / 10);
+
+    if (hundredths < 10) hundredths = '0' + hundredths;
+
+    return hundredths;
 };
 
 var getTimeInStringFormatFromMillis = function (millis) {
@@ -285,9 +312,7 @@ var exitLobbyAndEnterGame = function() {
     document.getElementById("helloButton").style.display = 'none';
 
 	//Show scoreboard and timers
-	document.getElementById("top_container").style.visibility = 'visible';
 	document.getElementById("countdown").style.visibility = 'visible';
-	document.getElementById("scoreboard").style.visibility = 'visible';
 
 	// close the intro screen
 	document.getElementById("overlay").style.display = 'none';
@@ -316,9 +341,8 @@ var stopTheClock = function () {
 
 var resetTheClock = function () {
 
-
-    // document.getElementById('countdown').innerHTML =  '00:00.00';
-    document.getElementById('countdown').innerHTML = getTimeInStringFormatFromMillis(duration * 1000);
+    document.getElementById('seconds').innerHTML = getSecondsInStringFormatFromMillis(duration *1000);
+    document.getElementById('hundredths').innerHTML = getHundredthsInStringFormatFromMillis(duration *1000);
 
     isRunning = false;
 };

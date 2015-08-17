@@ -187,9 +187,8 @@ var showEndGameMessage = function () {
     }
 
     document.getElementById("end_game").innerHTML = end_game_text;
+    document.getElementById("top_container").style.visibility = 'visible';
     document.getElementById("end_game").style.visibility = "visible";
-    document.getElementById("patient_zero").style.visibility = 'hidden';
-
 };
 
 // missed the game pop up
@@ -209,7 +208,6 @@ var showMissedGameMessage = function () {
     }
     document.getElementById("end_game").innerHTML = missed_game_text;
     document.getElementById("end_game").style.visibility = "visible";
-    document.getElementById("patient_zero").style.visibility = 'hidden';
 };
 
 
@@ -231,9 +229,9 @@ function flipUserActiveState() {
             if (type == TypeEnum.PASSIVE)
                 type = TypeEnum.ACTIVE;
             else if (type == TypeEnum.ACTIVE)
-                type = TypeEnum.PASSIVE
+                type = TypeEnum.PASSIVE;
             else
-                throw "The flip state button is not supposed to be available."
+                throw "The flip state button is not supposed to be available.";
 
             // save the state in parse and then notify players via pubnub
             // currently saves the type over its previous type
