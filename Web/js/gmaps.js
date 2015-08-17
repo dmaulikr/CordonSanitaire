@@ -512,44 +512,6 @@ function isPatientZeroContained() {
     return _patientZeroContained
 }
 
-//copied and pasted into scoring.js
-//function countCasualties() {
-//    var count = 0;
-//
-//    // count players casualties
-//    for (var i = 0; i < people.length; i++) {
-//        if (!people[i].isPatientZero) {
-//            if (getType(people[i]) == TypeEnum.TRAPPED)
-//                count++;
-//        }
-//    }
-//
-//    // count npcs casualities
-//    for (var b = 0; b < npcs.length; b++) {
-//        if (!npcs[b].isPatientZero) {
-//            if (getType(npcs[b]) == TypeEnum.TRAPPED)
-//                count++;
-//        }
-//    }
-//
-//    _numTrapped = count;
-//
-//    return count;
-//}
-//
-//
-//function countActivePeople() {
-//    var count = 0;
-//
-//    for (var i = 0; i < people.length; i++) {
-//        if (people[i].isActive())
-//            count++;
-//    }
-//
-//    return count;
-//}
-
-
 // calculate the total area quarantined
 function getAreaQuarantined() {
     if (quarantine.getPath()) { // only compute quarantine area if a path exists (even of one point :)
