@@ -13,7 +13,7 @@ var User = function (id, x, y, role, type, isPatientZero) {
     this.isPatientZero = isPatientZero;
     this.marker = null;
     this.markerBackdrop = null; //background for your marker
-    this.score = 0; // used for keeping track of how well they do
+    this.score = Score(id); // used for keeping track of how well they do
 };
 
 /**
