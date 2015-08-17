@@ -129,8 +129,7 @@ pubnub.subscribe({
                 break;
 
             case "updateLobby":
-                document.getElementById("num_present").innerHTML = m.present;
-                document.getElementById("num_required").innerHTML = m.needed;
+                updateLobby(m.num_present, m.num_required);
                 break;
 
             case "setGame":
@@ -286,4 +285,9 @@ function sendSetPatientZeroPositionMessage(pos) {
             pos: pos
         }
     })
+}
+
+function updateLobby(present, required){
+    document.getElementById("num_present").innerHTML = present.toString();
+    document.getElementById("num_needed").innerHTML = (required - present).toString();
 }
