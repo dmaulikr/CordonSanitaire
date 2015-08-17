@@ -78,6 +78,10 @@ body {
     color: white;
 }
 
+#intro p{
+    color:white;
+}
+
 #version {
     font-size: .5em;
     color: #ffff00;
@@ -91,7 +95,7 @@ body {
 }
 
 /* White box that holds updating timer text*/
-#timerbox {
+#minibox {
     visibility: visible;
     z-index: 1001;
     border-radius: 1px;
@@ -101,12 +105,13 @@ body {
 
 }
 
-#timerbox h2{
+#minibox h2{
     font-size: 2em;
     font-weight: bold;
     text-align: center;
     color: #000000;
 }
+
 
 
 #countdown {
