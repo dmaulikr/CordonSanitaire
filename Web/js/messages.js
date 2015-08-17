@@ -13,7 +13,7 @@ var pubnub = PUBNUB.init({
 // Subscribe
 pubnub.subscribe({
     channel: _channel,
-    presence: function(m) {
+    presence: function (m) {
         //console.log(m)
         switch (m.action) {
             case "join":
@@ -32,7 +32,7 @@ pubnub.subscribe({
                 break;
         }
     },
-    message: function(m) {
+    message: function (m) {
         switch (m.action) {
 
             case "start":
@@ -64,7 +64,7 @@ pubnub.subscribe({
                     NPC.addToLocalArray(m.id);
                     // also update the map to include all markers
                     updateBounds();
-                    
+
                 } else {
                     console.log("npc " + m.id + " was already present in the local array");
                 }
@@ -102,7 +102,7 @@ pubnub.subscribe({
                 // update the game board
                 updateGameBoard();
 
-                if(!Parse.User.current().get('admin')){
+                if (!Parse.User.current().get('admin')) {
                     alert("For some reason you were logged out.")
                     Parse.User.logOut();
                     window.location.href = 'login.html';
@@ -111,7 +111,7 @@ pubnub.subscribe({
                 break;
 
             case "logOut":
-                if(myUser.id == m.id){
+                if (myUser.id == m.id) {
                     Parse.User.logOut();
                     window.location.href = 'login.html';
                 }
@@ -119,13 +119,22 @@ pubnub.subscribe({
                 break;
 
             case "setPatientZeroPosition":
-                if (patient_zero.marker != null){
+                if (patient_zero.marker != null) {
                     patient_zero.marker.setMap(null);
                     patient_zero.marker = null;
                 }
                 patient_zero.x = m.pos[0];
                 patient_zero.y = m.pos[1];
                 updateGameBoard();
+                break;
+
+            case "updateLobby":
+                document.getElementById("num_present").innerHTML = m.present;
+                document.getElementById("num_required").innerHTML = m.needed;
+                break;
+
+            case "setGame":
+                timerSetGameStart(m.time);
                 break;
 
             case "refreshPage":
@@ -139,7 +148,7 @@ pubnub.subscribe({
 });
 
 // Unsubscribe when closing the window
-window.onbeforeunload = function() {
+window.onbeforeunload = function () {
     return pubnub.unsubscribe({
         channel: _channel
     });
@@ -259,7 +268,7 @@ function sendResetPlayersMessage() {
     })
 }
 
-function sendLogOutMessage(id){
+function sendLogOutMessage(id) {
     pubnub.publish({
         channel: _channel,
         message: {
@@ -269,7 +278,7 @@ function sendLogOutMessage(id){
     })
 }
 
-function sendSetPatientZeroPositionMessage(pos){
+function sendSetPatientZeroPositionMessage(pos) {
     pubnub.publish({
         channel: _channel,
         message: {

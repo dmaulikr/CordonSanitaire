@@ -160,7 +160,7 @@ var timerLateToGame = function () {
     startTheClock();
     console.log("Late User - Update duration. Start Game.");
     window.clearInterval(statusInterval);
-}
+};
 
 //NOT UPDATED YET
 var timerWaitTilGameStart = function () {
@@ -177,6 +177,17 @@ var timerWaitTilGameStart = function () {
         alert("PLAYFUL ALERT!!! CORDON SANITAIRE IS ABOUT TO START!!!");
         window.focus();
     }
+};
+
+var timerSetGameStart = function(time) {
+    document.getElementsById("num_present").innerHTML = "";
+    document.getElementById("num_required").innerHTML = "";
+    var spans = document.getElementsByClassName("minibox");
+    for (var i = 0; i < spans.length; i++) {
+        spans[i].innerHTML =  getTimeInStringFormatFromSeconds(total_seconds);
+    }
+
+    document.getElementById("description").innerHTML = "til the search begins"
 };
 
 //
