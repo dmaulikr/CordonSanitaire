@@ -311,8 +311,11 @@ var exitLobbyAndEnterGame = function() {
     // hide hello button
     document.getElementById("helloButton").style.display = 'none';
 
-	//Show scoreboard and timers
+	// Show scoreboard and timers
 	document.getElementById("countdown").style.visibility = 'visible';
+
+    // Show p0 status
+    document.getElementById("p0_status").style.display = 'block';
 
 	// close the intro screen
 	document.getElementById("overlay").style.display = 'none';
