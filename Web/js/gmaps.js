@@ -29,7 +29,7 @@ var _myPrevType = 'passive';
 
 //Get google map based on preset coordinates and zoom appropriately
 function drawMap() {
-    var centerMap = new google.maps.LatLng(40.776779, -73.969699);
+    var centerMap = new google.maps.LatLng(LAT_CENTER, LON_CENTER);
 
     // center the map on user
     if ($(window).width() < 480)
@@ -38,7 +38,7 @@ function drawMap() {
     var layer = "toner-background";
 
     var mapOptions = {
-        zoom: 12,
+        zoom: 14,
         center: centerMap,
         //mapTypeId: google.maps.MapTypeId.ROADMAP,
         mapTypeId: layer,

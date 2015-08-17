@@ -126,28 +126,20 @@ function getActivePopulationAsGoogleCoords() {
  */
 function getLatLngCoords(x, y) {
 
-    var begLat = 40.704204;
-    var endLat = 40.829535;
-    var begLng = -74.096729;
-    var endLng = -73.834258;
-    var diffLat = endLat - begLat;
-    var diffLng = endLng - begLng;
+    var diffLat = LAT_MAX - LAT_MIN;
+    var diffLng = LON_MAX - LON_MIN;
 
-    var latlng = new google.maps.LatLng(begLat + diffLat * x, begLng + diffLng * y);
+    var latlng = new google.maps.LatLng(LAT_MIN + diffLat * x, LON_MIN + diffLng * y);
 
     return latlng;
 }
 
 function getPositionFromGoogleCoords(coords){
-    var begLat = 40.704204;
-    var endLat = 40.829535;
-    var begLng = -74.096729;
-    var endLng = -73.834258;
-    var diffLat = endLat - begLat;
-    var diffLng = endLng - begLng;
+    var diffLat = LAT_MAX - LAT_MIN;
+    var diffLng = LON_MAX - LON_MIN;
 
-    var x = (coords.k - begLat) / diffLat
-    var y = (coords.D - begLng) / diffLng
+    var x = (coords.k - LAT_MIN) / diffLat
+    var y = (coords.D - LON_MIN) / diffLng
 
     return {x: x, y: y}
 }

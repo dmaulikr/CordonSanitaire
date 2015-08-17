@@ -1,9 +1,18 @@
-
 // map limits
-var LAT_MIN = 40.704204;
-var LAT_MAX = 40.829535;
-var LON_MIN = -74.096729;
-var LON_MAX = -73.834258;
+// BOSTON
+var LAT_MIN = 42.354485;
+var LAT_MAX = 42.365140;
+var LON_MIN = -71.069870;
+var LON_MAX = -71.051245;
+
+// NYC
+//40.704204;
+//40.829535;
+//-74.096729;
+//-73.834258;
+
+var LAT_CENTER = (LAT_MAX + LAT_MIN)/2;
+var LON_CENTER = (LON_MAX + LON_MIN)/2;
 
 // types for player status
 var TypeEnum = {
