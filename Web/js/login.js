@@ -97,9 +97,11 @@ function signUp(evnt) {
     var username = document.getElementById('username-signup').value;
     var password = document.getElementById('password-signup').value;
     var email = document.getElementById('email-signup').value;
+    var phone = document.getElementById('phone-signup').value;
 
     Parse.User.signUp(username, password, {
         email: email,
+        phone: phone,
         x: Math.random(0, 1),
         y: Math.random(0, 1),
         role: "citizen",
@@ -109,7 +111,7 @@ function signUp(evnt) {
     }, {
         success: function(user) {
             console.log("a new user signed up");
-            alert("Thank you for signning up. You will now be redirected to Cordon Sanitaire!");
+            alert("Welcome to the team. Get ready for the next Cordon Sanitaire!");
             window.location = "/cs_beta/index.html";	// this path is necessary for the online location
         },
         error: function(user, error) {
