@@ -390,7 +390,7 @@ function updateScoreboard() {
     else
         document.getElementById('patient_status').innerHTML = 'not contained';
 
-    // update count of casualties
+    // update count of casualties. function in scoring.js
     document.getElementById('casualty_count').innerHTML = countCasualties();
 
     // calculate the sq mi of quarantine...

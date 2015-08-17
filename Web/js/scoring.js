@@ -6,7 +6,7 @@ var Score = function(id){
     this.pZeroStatus = isPatientZeroContained();
     this.casualties = countCasualties();
     this.isGameOver = false;
-    
+
     //score
     this.score = 0;
     //in gmaps.js, updates the scores of first 3 individuals who join
@@ -116,7 +116,7 @@ Score.prototype.resetScore = function(){
     this.releasedPZero = 0;
 };
 
-//returns User score
+//returns User scoreg
 Score.prototype.getScore = function(){
     return this.score;
 };
