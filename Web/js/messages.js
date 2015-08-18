@@ -132,7 +132,7 @@ pubnub.subscribe({
                 updateLobby(m.num_present, m.num_required);
                 break;
 
-            case "setGame":
+            case "setGameTime":
                 timerSetGameStart(m.time);
                 break;
 

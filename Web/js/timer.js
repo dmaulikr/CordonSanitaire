@@ -56,7 +56,7 @@ query.find({
         console.log(parse_start_date);
 
         // create a timer status loop
-        timerStatusUpdate();
+        //timerStatusUpdate();
     },
     error: function (object, error) {
         // The object was not retrieved successfully.
@@ -170,7 +170,6 @@ var timerWaitTilGameStart = function () {
     for (var i = 0; i < spans.length; i++) {
         spans[i].innerHTML =  getTimeInStringFormatFromSeconds(total_seconds);
     }
-
     //alert at 5 seconds til
     // if the page is not in focus, send an alert!
     if (total_seconds == 5 && !isWindowInFocus && !bAlertedUserOfGameStart) {
@@ -180,14 +179,12 @@ var timerWaitTilGameStart = function () {
 };
 
 var timerSetGameStart = function(time) {
-    document.getElementsById("num_present").innerHTML = "";
-    document.getElementById("num_required").innerHTML = "";
-    var spans = document.getElementsByClassName("minibox");
-    for (var i = 0; i < spans.length; i++) {
-        spans[i].innerHTML =  getTimeInStringFormatFromSeconds(total_seconds);
-    }
+    document.getElementById("lobby_count").style.display = "none";
+    document.getElementById("lobby_wait").style.display = "block";
+    parse_start_date = new Date(time);
 
-    document.getElementById("description").innerHTML = "til the search begins"
+    // start timer loop for game start
+    timerStatusUpdate();
 };
 
 //

@@ -87,6 +87,21 @@ body {
     color: #ffff00;
 }
 
+#lobby_count {
+    display: block;
+}
+
+#lobby_wait {
+    display: none;
+}
+
+#timerbox {
+    font-size: 2em;
+    font-weight: bold;
+    text-align: center;
+    color: #000000;
+}
+
 #wait_text {
     text-align: center;
     padding: 0px;
@@ -95,7 +110,7 @@ body {
 }
 
 /* White box that holds updating timer text*/
-#minibox {
+.minibox {
     visibility: visible;
     z-index: 1001;
     border-radius: 1px;
@@ -105,13 +120,12 @@ body {
 
 }
 
-#minibox h2{
+.minibox h2{
     font-size: 2em;
     font-weight: bold;
     text-align: center;
     color: #000000;
 }
-
 
 
 #countdown {
