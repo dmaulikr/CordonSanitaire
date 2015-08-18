@@ -7,6 +7,64 @@ var pubnub = {
 // var _channel = 'production'; // Dev Channel vs. Production Channel
 var _channel = 'development'; // Dev Channel vs. Production Channel
 
+var _numPlayersRequired = 20;
+
+// update lobby after player has joined
+Parse.Cloud.afterSave("_User", function (request) {
+    Parse.Cloud.useMasterKey();
+    var query = new Parse.Query(Parse.User);
+    query.equalTo("present", true);
+    query.count({
+        success: function(count) {
+
+            var message;
+
+            if(count == _numPlayersRequired) {
+                // set a game
+                var Game = Parse.Object.extend("Game");
+                var game = new Game();
+                var startTime = Date.now() + 20 * 1000;
+
+                game.save({
+                    startTime: start_time
+                }, {
+                    success: function () {
+                        // then publish a message
+                        message = {
+                            action: 'setGameTime',
+                            time: Date.now() + 20 * 1000
+                        };
+                        sendMessage(message);
+
+                        status.success("Game is set to " + start_time);
+                    },
+                    error: function (error) {
+                        status.error("Error: " + error.code + " " + error.message);
+                    }
+                });
+            }
+
+            else if(count < _numPlayersRequired) {
+                // update lobby with latest values
+                message = {
+                    action: 'updateLobby',
+                    num_required: _numPlayersRequired,
+                    num_present: count
+                };
+                sendMessage(message);
+            }
+            status.success("Users present counted and published");
+
+        },
+        error: function(error) {
+            status.error("Error: " + error.code + " " + error.message);
+        }
+    });
+});
+
+
+
+
 // reset all of the players back to no-one playing
 Parse.Cloud.define("setAllUsersNotPresent", function (request, status) {
     Parse.Cloud.useMasterKey();
