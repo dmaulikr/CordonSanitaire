@@ -1,3 +1,7 @@
+// Global Variables
+var DEFAULT_DURATION = 45;
+var NUM_REQUIRED_PLAYERS = 5;
+
 // map limits
 // BOSTON
 var LAT_MIN = 42.354485;

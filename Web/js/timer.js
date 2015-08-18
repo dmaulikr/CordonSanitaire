@@ -14,8 +14,6 @@ var bAlertedUserOfGameStart = false;
 var bShown10SecondMessage = false;
 var bShown20SecondMessage = false;
 
-var DEFAULT_DURATION = 45;
-
 var duration = DEFAULT_DURATION;
 
 // might not be a bad idea to look into using this http://keith-wood.name/countdown.html
@@ -56,7 +54,7 @@ query.find({
         console.log(parse_start_date);
 
         // create a timer status loop
-        //timerStatusUpdate();
+        timerStatusUpdate();
     },
     error: function (object, error) {
         // The object was not retrieved successfully.
@@ -69,7 +67,9 @@ query.find({
 //
 var timerStatusUpdate = function () {
 
-    //
+    // Clear interval if it already exists
+    window.clearInterval(statusInterval);
+
     statusInterval = setInterval(function () {
 
         var cur_date = new Date();
