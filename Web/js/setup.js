@@ -124,6 +124,8 @@ function setup() {
             hasReceivedJoinedMessage = true; // with the game board set, we are allowed to update it.
             console.log("allowed to update");
             sendAddUserMessage(myUser.id);
+
+            ping(); // let parse know we just loaded the page
         });
     });
 }

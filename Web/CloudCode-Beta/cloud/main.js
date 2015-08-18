@@ -12,23 +12,30 @@ var _numPlayersRequired = 20;
 // update lobby after player has joined
 Parse.Cloud.afterSave("_User", function (request) {
     Parse.Cloud.useMasterKey();
-    var query = new Parse.Query(Parse.User);
-    query.equalTo("present", true);
-    query.count({
-        success: function(count) {
 
-            var message;
+    var gameStartDelay;
+    var numRequiredPlayers;
+    var startTime;
 
-            if(count == _numPlayersRequired) {
-                // set a game
-                var Game = Parse.Object.extend("Game");
-                var game = new Game();
+    // Get the game configs from Parse
+    Parse.Config.get().then(function(config) {
 
-                // Get the game configs from Parse
-                Parse.Config.get().then(function(config) {
+        gameStartDelay = config.get("gameStartDelay");
+        numRequiredPlayers = config.get("numRequiredPlayers");
 
-                    var gameStartDelay = config.get("gameStartDelay");
-                    var startTime = Date.now() + gameStartDelay * 1000;
+        startTime = Date.now() + gameStartDelay * 1000;
+
+        var query = new Parse.Query(Parse.User);
+        query.equalTo("present", true);
+        query.count({
+            success: function(count) {
+
+                var message;
+
+                if(count == _numPlayersRequired) {
+                    // set a game
+                    var Game = Parse.Object.extend("Game");
+                    var game = new Game();
 
                     game.save({
                         startTime: startTime
@@ -40,26 +47,15 @@ Parse.Cloud.afterSave("_User", function (request) {
                                 time: startTime
                             };
                             sendMessage(message);
-
-                            status.success("Game is set to " + startTime);
+                            console.log("Game is set to " + startTime);
                         },
                         error: function (error) {
-                            status.error("Error: " + error.code + " " + error.message);
+                            console.error("Error: " + error.code + " " + error.message);
                         }
                     });
+                }
 
-                }, function(error) {
-                    status.error("failed to load config from Parse.");
-                });
-            }
-
-            else if(count < _numPlayersRequired) {
-
-                // Get the game configs from Parse
-                Parse.Config.get().then(function(config) {
-
-                    var numRequiredPlayers = config.get("numRequiredPlayers");
-
+                else if(count < _numPlayersRequired) {
                     // update lobby with latest values
                     message = {
                         action: 'updateLobby',
@@ -67,19 +63,16 @@ Parse.Cloud.afterSave("_User", function (request) {
                         num_present: count
                     };
                     sendMessage(message);
-
-                    status.success("Users present counted and published");
-
-                }, function(error) {
-                    status.error("failed to load config from Parse.");
-                });
-
+                    console.log("Users present counted and published");
+                }
+            },
+            error: function(error) {
+                console.error("Error: " + error.code + " " + error.message);
             }
+        });
 
-        },
-        error: function(error) {
-            status.error("Error: " + error.code + " " + error.message);
-        }
+    }, function(error) {
+        console.error("failed to load config from Parse.");
     });
 });
 

@@ -30,24 +30,26 @@ function userLogout() {
     }
 }
 
-function ping(){
-    console.log("ping called");
+function pingLoop() {
     var pingInterval = setInterval( function() {
-        Parse.Cloud.run('ping', {}, {
-            success: function(){
-                console.log("ping sent");
-            },
-            error: function(error){
-                console.log("Error: " + error.code + " " + error.message);
-            }
-        });
-    }, 60 * 1000)
+            ping();
+    }, 60 * 1000);
+}
+
+function ping() {
+    console.log("ping called");
+
+    Parse.Cloud.run('ping', {}, {
+        success: function(){
+            console.log("ping successfully sent");
+        },
+        error: function(error){
+            console.log("Error: " + error.code + " " + error.message);
+        }
+    });
 }
 
 // run idle log out loop 
 // NOTE: JB - do we ever need to log someone out?
 // 
 // idleLogout();
-
-// run ping loop
-ping();
