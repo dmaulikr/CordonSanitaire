@@ -23,37 +23,58 @@ Parse.Cloud.afterSave("_User", function (request) {
                 // set a game
                 var Game = Parse.Object.extend("Game");
                 var game = new Game();
-                var startTime = Date.now() + 20 * 1000;
 
-                game.save({
-                    startTime: start_time
-                }, {
-                    success: function () {
-                        // then publish a message
-                        message = {
-                            action: 'setGameTime',
-                            time: Date.now() + 20 * 1000
-                        };
-                        sendMessage(message);
+                // Get the game configs from Parse
+                Parse.Config.get().then(function(config) {
 
-                        status.success("Game is set to " + start_time);
-                    },
-                    error: function (error) {
-                        status.error("Error: " + error.code + " " + error.message);
-                    }
+                    var gameStartDelay = config.get("gameStartDelay");
+                    var startTime = Date.now() + gameStartDelay * 1000;
+
+                    game.save({
+                        startTime: startTime
+                    }, {
+                        success: function () {
+                            // then publish a message
+                            message = {
+                                action: 'setGameTime',
+                                time: startTime
+                            };
+                            sendMessage(message);
+
+                            status.success("Game is set to " + startTime);
+                        },
+                        error: function (error) {
+                            status.error("Error: " + error.code + " " + error.message);
+                        }
+                    });
+
+                }, function(error) {
+                    status.error("failed to load config from Parse.");
                 });
             }
 
             else if(count < _numPlayersRequired) {
-                // update lobby with latest values
-                message = {
-                    action: 'updateLobby',
-                    num_required: _numPlayersRequired,
-                    num_present: count
-                };
-                sendMessage(message);
+
+                // Get the game configs from Parse
+                Parse.Config.get().then(function(config) {
+
+                    var numRequiredPlayers = config.get("numRequiredPlayers");
+
+                    // update lobby with latest values
+                    message = {
+                        action: 'updateLobby',
+                        num_required: numRequiredPlayers,
+                        num_present: count
+                    };
+                    sendMessage(message);
+
+                    status.success("Users present counted and published");
+
+                }, function(error) {
+                    status.error("failed to load config from Parse.");
+                });
+
             }
-            status.success("Users present counted and published");
 
         },
         error: function(error) {
