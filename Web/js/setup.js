@@ -115,7 +115,7 @@ Parse.User.current().fetch().then( function(current_user){
     // run setup after existing :)
     console.log("setting up after creating my own object from Parse")
     setup();
-})
+});
 
 function setup() {
     NPC.getAllFromDatabase(function() { // populate the npc array with the entries in the Database

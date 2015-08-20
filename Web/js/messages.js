@@ -103,11 +103,11 @@ pubnub.subscribe({
                 updateGameBoard();
 
                 if (!Parse.User.current().get('admin')) {
-                    alert("For some reason you were logged out.")
+                    alert("For some reason you were logged out.");
                     Parse.User.logOut();
                     window.location.href = 'login.html';
                 } else
-                    window.location.reload()
+                    window.location.reload();
                 break;
 
             case "logOut":

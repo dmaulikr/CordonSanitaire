@@ -141,12 +141,15 @@ var timerMissedGame = function () {
     // close the intro screen
     exitLobbyAndEnterGame();
 
-    // show end of game message
-    document.getElementById('top_container').style.visibility = 'visible';
+    //show the introduction page
+    document.getElementById("intro_container").style.display = 'block';
 
-    // set the clock to 00:00
-    document.getElementById('seconds').innerHTML = getSecondsInStringFormatFromMillis(0);
-    document.getElementById('hundredths').innerHTML = getHundredthsInStringFormatFromMillis(0);
+    //// show end of game message
+    //document.getElementById('top_container').style.visibility = 'visible';
+    //
+    //// set the clock to 00:00
+    //document.getElementById('seconds').innerHTML = getSecondsInStringFormatFromMillis(0);
+    //document.getElementById('hundredths').innerHTML = getHundredthsInStringFormatFromMillis(0);
 };
 
 var timerLateToGame = function () {
@@ -181,6 +184,7 @@ var timerWaitTilGameStart = function () {
 var timerSetGameStart = function(time) {
     document.getElementById("lobby_count").style.display = "none";
     document.getElementById("lobby_wait").style.display = "block";
+
     parse_start_date = new Date(time);
 
     // start timer loop for game start
@@ -327,7 +331,7 @@ var exitLobbyAndEnterGame = function() {
 
 	// close the intro screen
 	document.getElementById("overlay").style.display = 'none';
-}
+};
 
 var startTheClock = function () {
 
