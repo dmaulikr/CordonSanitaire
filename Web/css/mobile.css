@@ -486,6 +486,24 @@ body {
     right: 0px;
 }
 
+
+/* introduction screen styling*/
+#intro_container {
+    width: 100%;
+    height: 100%;
+    background-color: black;
+}
+
+#title{
+
+}
+img{
+    width: 100%;
+}
+#text{
+
+}
+
 /* Oh Snap Notifications styling */
 /* ALERTS */
 /* inspired by Twitter Bootstrap */

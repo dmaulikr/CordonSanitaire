@@ -126,7 +126,7 @@ var timerStartGame = function () {
     var zoomTimeout = setTimeout(function () {
         updateBounds();
     }, 2000);	// 2000 milliseconds
-}
+};
 
 var timerMissedGame = function () {
 
@@ -147,7 +147,7 @@ var timerMissedGame = function () {
     // set the clock to 00:00
     document.getElementById('seconds').innerHTML = getSecondsInStringFormatFromMillis(0);
     document.getElementById('hundredths').innerHTML = getHundredthsInStringFormatFromMillis(0);
-}
+};
 
 var timerLateToGame = function () {
     var new_duration = DEFAULT_DURATION + total_seconds;
