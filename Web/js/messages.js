@@ -33,6 +33,9 @@ pubnub.subscribe({
         }
     },
     message: function (m) {
+        //console.log("received from pubnub:");
+        //console.log(m);
+
         switch (m.action) {
 
             case "start":
@@ -147,11 +150,11 @@ pubnub.subscribe({
 });
 
 // Unsubscribe when closing the window
-window.onbeforeunload = function () {
-    return pubnub.unsubscribe({
-        channel: _channel
-    });
-};
+//window.onbeforeunload = function () {
+//    return pubnub.unsubscribe({
+//        channel: _channel
+//    });
+//};
 
 // window.onunload = function() {
 //     return pubnub.unsubscribe({
@@ -288,6 +291,13 @@ function sendSetPatientZeroPositionMessage(pos) {
 }
 
 function updateLobby(present, required){
-    document.getElementById("num_present").innerHTML = present.toString();
-    document.getElementById("num_needed").innerHTML = (required - present).toString();
+    if(present == 1)
+        document.getElementById("num_present").innerHTML = present.toString() + " person";
+    else
+        document.getElementById("num_present").innerHTML = present.toString() + " people";
+
+    if((required - present) == 1)
+       document.getElementById("num_needed").innerHTML = (required - present).toString() + " person";
+    else
+        document.getElementById("num_needed").innerHTML = (required - present).toString() + " people";
 }

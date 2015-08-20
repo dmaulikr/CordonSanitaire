@@ -54,7 +54,7 @@ query.find({
         console.log(parse_start_date);
 
         // create a timer status loop
-        timerStatusUpdate();
+        //timerStatusUpdate();
     },
     error: function (object, error) {
         // The object was not retrieved successfully.

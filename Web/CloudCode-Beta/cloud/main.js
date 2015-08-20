@@ -23,61 +23,92 @@ Parse.Cloud.afterSave("_User", function (request) {
         gameStartDelay = config.get("gameStartDelay");
         numRequiredPlayers = config.get("numRequiredPlayers");
 
-        startTime = Date.now() + gameStartDelay * 1000;
-
         var query = new Parse.Query(Parse.User);
         query.equalTo("present", true);
         query.count({
             success: function(count) {
 
-                var message;
+                console.log("counted " + count.toString() + " players present");
 
-                if(count == _numPlayersRequired) {
-                    // set a game
-                    var Game = Parse.Object.extend("Game");
-                    var game = new Game();
+                if(count == numRequiredPlayers) {
 
-                    game.save({
-                        startTime: startTime
-                    }, {
-                        success: function () {
-                            // then publish a message
-                            message = {
-                                action: 'setGameTime',
-                                time: startTime
-                            };
-                            sendMessage(message);
-                            console.log("Game is set to " + startTime);
-                        },
-                        error: function (error) {
-                            console.error("Error: " + error.code + " " + error.message);
-                        }
-                    });
+                    var start_time = new Date();
+
+                    // set the start time to be 1 minute from when the job is run (for testing purposes)
+                    // TODO: set the start time to be random (within... a time range) - set once a day
+                    start_time.getTime();
+                    var hours = start_time.getUTCHours();
+                    var minutes = start_time.getUTCMinutes();
+                    var seconds = start_time.getUTCSeconds();
+
+                    // set the time 10 seconds away from now
+                    seconds += gameStartDelay;
+                    if(seconds  >= 60) {
+                        seconds  = seconds - 60;
+                        minutes += 1;
+                    }
+                    if(minutes  >= 60) {
+                        minutes = minutes - 60;
+                        hours += 1;
+                    }
+                    if(hours >= 24) {
+                        hours = hours - 24;
+                    }
+
+                    start_time.setHours(hours, minutes, seconds);
+                    console.log("setting start time: " + start_time.toString());
+                    saveStartGameAndPublish(start_time);
                 }
 
-                else if(count < _numPlayersRequired) {
-                    // update lobby with latest values
-                    message = {
-                        action: 'updateLobby',
-                        num_required: numRequiredPlayers,
-                        num_present: count
-                    };
-                    sendMessage(message);
-                    console.log("Users present counted and published");
+                else if(count < numRequiredPlayers) {
+                    sendUpdateLobby(count, numRequiredPlayers);
                 }
+
+                else
+                    console.log("already have enough players, let them spectate");
             },
             error: function(error) {
-                console.error("Error: " + error.code + " " + error.message);
+                console.log("Error in the count method");
+                console.log("Error: " + error.code + " " + error.message);
             }
         });
 
     }, function(error) {
-        console.error("failed to load config from Parse.");
+        console.log("failed to load config from Parse.");
     });
 });
 
 
+function saveStartGameAndPublish(startTime) {
+    // set a game
+    var Game = Parse.Object.extend("Game");
+    var game = new Game();
+    game.set('startTime', startTime);
+    game.save().then(function () {
+        // then publish a message
+        var message = {
+            action: 'setGameTime',
+            time: startTime
+        };
+        sendMessage(message);
+        console.log("Game is set to " + startTime);
+    }, function(error) {
+        console.log("Error in the game save with game time: " + startTime);
+        console.log("Error: " + error.code + " " + error.message);
+    });
+}
 
+
+function sendUpdateLobby(numPlayers, numRequired) {
+    // update lobby with latest values
+    var message = {
+        action: 'updateLobby',
+        num_required: numRequired,
+        num_present: numPlayers
+    };
+    sendMessage(message);
+    console.log("Users present counted and published");
+}
 
 // reset all of the players back to no-one playing
 Parse.Cloud.define("setAllUsersNotPresent", function (request, status) {
