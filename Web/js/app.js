@@ -200,7 +200,6 @@ var showMissedGameMessage = function () {
     //Display timer and things for a missed game.
     document.getElementById("countdown").style.visibility = "visible";
     document.getElementById("scoreboard").style.visibility = "visible";
-
     if (isPatientZeroContained()) {
         missed_game_text = "Too Late! Quarantines depend on everyone... The next outbreak is tomorrow.";
     } else {

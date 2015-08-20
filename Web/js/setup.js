@@ -113,7 +113,7 @@ Parse.User.current().fetch().then( function(current_user){
     );
 
     // run setup after existing :)
-    console.log("setting up after creating my own object from Parse")
+    console.log("setting up after creating my own object from Parse");
     setup();
 });
 
