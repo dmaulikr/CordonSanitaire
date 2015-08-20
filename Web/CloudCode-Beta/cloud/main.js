@@ -12,53 +12,67 @@ var _numPlayersRequired = 20;
 // update lobby after player has joined
 Parse.Cloud.afterSave("_User", function (request) {
     Parse.Cloud.useMasterKey();
-    var query = new Parse.Query(Parse.User);
-    query.equalTo("present", true);
-    query.count({
-        success: function(count) {
 
-            var message;
+    var gameStartDelay;
+    var numRequiredPlayers;
+    var startTime;
 
-            if(count == _numPlayersRequired) {
-                // set a game
-                var Game = Parse.Object.extend("Game");
-                var game = new Game();
-                var startTime = Date.now() + 20 * 1000;
+    // Get the game configs from Parse
+    Parse.Config.get().then(function(config) {
 
-                game.save({
-                    startTime: start_time
-                }, {
-                    success: function () {
-                        // then publish a message
-                        message = {
-                            action: 'setGameTime',
-                            time: Date.now() + 20 * 1000
-                        };
-                        sendMessage(message);
+        gameStartDelay = config.get("gameStartDelay");
+        numRequiredPlayers = config.get("numRequiredPlayers");
 
-                        status.success("Game is set to " + start_time);
-                    },
-                    error: function (error) {
-                        status.error("Error: " + error.code + " " + error.message);
-                    }
-                });
+        startTime = Date.now() + gameStartDelay * 1000;
+
+        var query = new Parse.Query(Parse.User);
+        query.equalTo("present", true);
+        query.count({
+            success: function(count) {
+
+                var message;
+
+                if(count == _numPlayersRequired) {
+                    // set a game
+                    var Game = Parse.Object.extend("Game");
+                    var game = new Game();
+
+                    game.save({
+                        startTime: startTime
+                    }, {
+                        success: function () {
+                            // then publish a message
+                            message = {
+                                action: 'setGameTime',
+                                time: startTime
+                            };
+                            sendMessage(message);
+                            console.log("Game is set to " + startTime);
+                        },
+                        error: function (error) {
+                            console.error("Error: " + error.code + " " + error.message);
+                        }
+                    });
+                }
+
+                else if(count < _numPlayersRequired) {
+                    // update lobby with latest values
+                    message = {
+                        action: 'updateLobby',
+                        num_required: numRequiredPlayers,
+                        num_present: count
+                    };
+                    sendMessage(message);
+                    console.log("Users present counted and published");
+                }
+            },
+            error: function(error) {
+                console.error("Error: " + error.code + " " + error.message);
             }
+        });
 
-            else if(count < _numPlayersRequired) {
-                // update lobby with latest values
-                message = {
-                    action: 'updateLobby',
-                    num_required: _numPlayersRequired,
-                    num_present: count
-                };
-                sendMessage(message);
-            }
-            status.success("Users present counted and published");
-
-        },
-        error: function(error) {
-            status.error("Error: " + error.code + " " + error.message);
-        }
+    }, function(error) {
+        console.error("failed to load config from Parse.");
     });
 });
 

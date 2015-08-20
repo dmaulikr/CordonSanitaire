@@ -73,6 +73,21 @@ if (Parse.User.current() == null || !Parse.User.current().authenticated()){
     Parse.User.current().save();
 }
 
+
+// Get the game configs from Parse
+Parse.Config.get().then(function(config) {
+
+    NUM_REQUIRED_PLAYERS = config.get("numRequiredPlayers");
+    DEFAULT_DURATION = config.get("gameDuration");
+
+    console.log("loaded configuration from Parse.");
+}, function(error) {
+    // Something went wrong (e.g. request timed out)
+    console.log("failed to load config from Parse.")
+});
+
+
+
 // sets Pubnub channel
 // var _channel = 'production'; // Dev Channel vs. Production Channel
 var _channel = 'development'; // Dev Channel vs. Production Channel
@@ -109,6 +124,8 @@ function setup() {
             hasReceivedJoinedMessage = true; // with the game board set, we are allowed to update it.
             console.log("allowed to update");
             sendAddUserMessage(myUser.id);
+
+            ping(); // let parse know we just loaded the page
         });
     });
 }
