@@ -41,28 +41,32 @@ calculateClockOffset();
 
 
 // check start time from parse
-var game = Parse.Object.extend("Game");
-var query = new Parse.Query(game);
-query.find({
-    success: function (results) {
+var getGameStartTimeFromParse = function() {
+    var game = Parse.Object.extend("Game");
+    var query = new Parse.Query(game);
+    query.find({
+        success: function (results) {
 // 	  		console.log(results);
 
-        // get the last time in the stack
-        // TODO: get the next time i.e. smallest positive difference from now and then use that time and the start time. This will allow setting up days worth of playtest start times, without having to change anything
-        var gameObject = results[results.length - 1];
-        parse_start_date = gameObject.get('startTime');
-        console.log("Start time from parse: " + parse_start_date);
+            // get the last time in the stack
+            // TODO: get the next time i.e. smallest positive difference from now and then use that time and the start time. This will allow setting up days worth of playtest start times, without having to change anything
+            var gameObject = results[results.length - 1];
+            parse_start_date = gameObject.get('startTime');
+            console.log("Start time from parse: " + parse_start_date);
 
-        // create a timer status loop
-        timerStatusUpdate();
-    },
-    error: function (object, error) {
-        // The object was not retrieved successfully.
-        // error is a Parse.Error with an error code and message.
-        console.log("Error: " + error.code + " " + error.message);
-    }
-});
+            // create a timer status loop
+            timerStatusUpdate();
+        },
+        error: function (object, error) {
+            // The object was not retrieved successfully.
+            // error is a Parse.Error with an error code and message.
+            console.log("Error: " + error.code + " " + error.message);
+        }
+    });
+};
 
+// call this on launch
+getGameStartTimeFromParse();
 
 //
 var timerStatusUpdate = function () {

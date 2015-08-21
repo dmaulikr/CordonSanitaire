@@ -136,7 +136,13 @@ function getNumberOfPlayersPresentFromParse() {
     query.equalTo("present", true);
     query.count({
         success: function(count) {
-            updateLobby(count, NUM_REQUIRED_PLAYERS);
+            if(count >= NUM_REQUIRED_PLAYERS) {
+                getGameStartTimeFromParse();
+                displayCountdown();
+            }
+            else {
+                updateLobby(count, NUM_REQUIRED_PLAYERS);
+            }
         },
         error: function(error) {
             console.log("Error: couldn't count present people from parse");
