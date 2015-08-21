@@ -80,6 +80,7 @@ Parse.Config.get().then(function(config) {
     NUM_REQUIRED_PLAYERS = config.get("numRequiredPlayers");
     DEFAULT_DURATION = config.get("gameDuration");
     DEFAULT_DELAY_START_GAME = config.get("gameStartDelay");
+    DEFAULT_GAME_PADDING = config.get("gamePadding");
 
     console.log("loaded configuration from Parse.");
 }, function(error) {

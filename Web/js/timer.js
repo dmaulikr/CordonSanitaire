@@ -94,7 +94,7 @@ var timerStatusUpdate = function () {
         }
         else if (total_seconds + duration < 0) {
 
-            if((total_seconds + duration) > (-60 * 10)) {
+            if((total_seconds + duration) > (-60 * DEFAULT_GAME_PADDING)) {
                 // user missed the game, within 10 minutes, display the end result of the game
                 timerMissedGame();
             }
@@ -110,9 +110,9 @@ var timerStatusUpdate = function () {
             // user showed up late, let's update the duration and start the game
             timerLateToGame();
         }
-        else if(total_seconds > 5*60) {
-            // more than 5 minutes before a game time, so lets show instructions
-            console.log("TOO EARLY: (>5 min before start time) show overlay for description of game here");
+        else if(total_seconds > DEFAULT_GAME_PADDING*60) {
+            // more than 10 minutes before a game time, so lets show instructions
+            console.log("TOO EARLY: (>10 min before start time) show overlay for description of game here");
             showIntroduction();
             //intro_container
             window.clearInterval(statusInterval);   // no need to loop until we get a new game time published
