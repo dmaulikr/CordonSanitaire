@@ -122,6 +122,23 @@ function setup() {
         User.getAllFromDatabase(function() { // populate the people array with the entries in the Database
             setGameBoard(); // set the game board
             sendAddUserMessage(myUser.id);  // let other players know I am here
+
+            // update the players needed value
+            getNumberOfPlayersPresentFromParse();
         });
+    });
+}
+
+function getNumberOfPlayersPresentFromParse() {
+
+    var query = new Parse.Query(Parse.User);
+    query.equalTo("present", true);
+    query.count({
+        success: function(count) {
+            updateLobby(count, NUM_REQUIRED_PLAYERS);
+        },
+        error: function(error) {
+            console.log("Error: couldn't count present people from parse");
+        }
     });
 }
