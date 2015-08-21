@@ -2,6 +2,18 @@
 // Map stuffs
 //----------------------------
 
+// set Patient Zero location
+function setPatientZeroPosition(x, y) {
+    if (patient_zero.marker != null) {
+        patient_zero.marker.setMap(null);
+        patient_zero.marker = null;
+    }
+    patient_zero.x = x;
+    patient_zero.y = y;
+    updateGameBoard();  // to show new location of patient zero
+}
+
+
 // sort people
 function sortPeople() {
 

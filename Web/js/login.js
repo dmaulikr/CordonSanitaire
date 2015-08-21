@@ -11,61 +11,6 @@ if (Parse.User.current() != null) {
     window.location = "/cs_beta/index.html"	// this path is necessary for the online location
 }
 
-// check start time from parse
-var game = Parse.Object.extend("Game");
-var query = new Parse.Query(game);
-query.find({
-    success: function(results) {
-        //        console.log(results);
-
-        // get the last time in the stack
-        // TODO: get the next time i.e. smallest positive difference from now and then use that time and the start time. This will allow setting up days worth of playtest start times, without having to change anything
-        var gameObject = results[results.length - 1];
-        parse_start_date = gameObject.get('startTime');
-        console.log(parse_start_date);
-
-        // create a timer status loop
-        timerStatusUpdate();
-    },
-    error: function(object, error) {
-        // The object was not retrieved successfully.
-        // error is a Parse.Error with an error code and message.
-        console.log("Error: " + error.code + " " + error.message);
-    }
-});
-
-function timerStatusUpdate() {
-
-    //
-    statusInterval = setInterval(function() {
-
-        var cur_date = new Date();
-        var synchedTime = new Date(cur_date.getTime())
-        var cur_hour = synchedTime.getUTCHours();
-        var cur_min = synchedTime.getUTCMinutes();
-        var cur_sec = synchedTime.getUTCSeconds();
-
-        var start_hour = parse_start_date.getUTCHours();
-        var start_min = parse_start_date.getUTCMinutes();
-        var start_sec = parse_start_date.getUTCSeconds();
-
-        var dif_hour = start_hour - cur_hour;
-        var dif_min = start_min - cur_min;
-        var dif_sec = start_sec - cur_sec;
-
-        total_seconds = dif_hour * 60 * 60 + dif_min * 60 + dif_sec;
-
-        if (total_seconds > 0)
-            document.getElementById("first_line").innerHTML = "The next game starts in <b>" + total_seconds + "</b> seconds.";
-        else if (total_seconds <= 0 && total_seconds > -45)
-            document.getElementById("first_line").innerHTML = "Hurry up! The game is in progress!";
-        else
-            document.getElementById("first_line").innerHTML = "There's no game scheduled, but stay tuned - the next infection is coming!";
-
-    }, 100);
-
-}
-
 function login(evnt) {
     evnt = evnt || window.event;
 

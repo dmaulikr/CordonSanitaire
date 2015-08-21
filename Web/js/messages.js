@@ -13,26 +13,10 @@ var pubnub = PUBNUB.init({
 // Subscribe
 pubnub.subscribe({
     channel: _channel,
-    presence: function (m) {
-        //console.log(m)
-        switch (m.action) {
-            case "join":
-                // set the UUID here
-                console.log("received JOIN message - " + m.uuid);
-                if (m.uuid == _uuid) {
-                    console.log("start setup (after receiving message of myself joining)");
-                    //setup();  // removing this because I believe this is causing major hold ups (sometimes not receiving this message)
-                }
-                break;
-
-            case "leave":
-                // set this user to no longer focussed...
-                console.log("received LEAVE message - " + m.uuid);
-                // updatePopulation();
-                break;
-        }
-    },
     message: function (m) {
+        //console.log("received from pubnub:");
+        //console.log(m);
+
         switch (m.action) {
 
             case "start":
@@ -75,7 +59,7 @@ pubnub.subscribe({
                 break;
 
             case "addUser":
-                if (!User.isIdPresent(m.id) && hasReceivedJoinedMessage) {
+                if (!User.isIdPresent(m.id)) {
                     User.addToLocalArray(m.id);
                     // also update the map to include all markers
                     updateBounds();
@@ -119,13 +103,7 @@ pubnub.subscribe({
                 break;
 
             case "setPatientZeroPosition":
-                if (patient_zero.marker != null) {
-                    patient_zero.marker.setMap(null);
-                    patient_zero.marker = null;
-                }
-                patient_zero.x = m.pos[0];
-                patient_zero.y = m.pos[1];
-                updateGameBoard();
+                setPatientZeroPosition(m.pos[0], m.pos[1]);
                 break;
 
             case "updateLobby":
@@ -133,7 +111,8 @@ pubnub.subscribe({
                 break;
 
             case "setGameTime":
-                timerSetGameStart(m.time);
+                setGameStartTime (m.time);
+                displayCountdown();
                 break;
 
             case "refreshPage":
@@ -147,11 +126,11 @@ pubnub.subscribe({
 });
 
 // Unsubscribe when closing the window
-window.onbeforeunload = function () {
-    return pubnub.unsubscribe({
-        channel: _channel
-    });
-};
+//window.onbeforeunload = function () {
+//    return pubnub.unsubscribe({
+//        channel: _channel
+//    });
+//};
 
 // window.onunload = function() {
 //     return pubnub.unsubscribe({
@@ -161,16 +140,6 @@ window.onbeforeunload = function () {
 
 
 // Publish
-
-// send start message
-function sendStartOfGame() {
-    pubnub.publish({
-        channel: _channel,
-        message: {
-            action: 'start'
-        }
-    });
-}
 
 // send shout message
 function sendShout() {
@@ -206,6 +175,19 @@ function sendEmoji(emojiType) {
     });
 }
 
+function sendChangeUserTypeMessage(id, type) {
+    pubnub.publish({
+        channel: _channel,
+        message: {
+            action: 'changeUserType',
+            id: id,
+            type: type
+        }
+    })
+}
+
+// ADMIN PUBLISH MESSAGES
+// this is for use from admin only to manage the game or players if need be
 function sendAddNPCMessage(id) {
     pubnub.publish({
         channel: _channel,
@@ -247,17 +229,6 @@ function sendAddUserMessage(id) {
     });
 }
 
-function sendChangeUserTypeMessage(id, type) {
-    pubnub.publish({
-        channel: _channel,
-        message: {
-            action: 'changeUserType',
-            id: id,
-            type: type
-        }
-    })
-}
-
 function sendResetPlayersMessage() {
     pubnub.publish({
         channel: _channel,
@@ -285,9 +256,4 @@ function sendSetPatientZeroPositionMessage(pos) {
             pos: pos
         }
     })
-}
-
-function updateLobby(present, required){
-    document.getElementById("num_present").innerHTML = present.toString();
-    document.getElementById("num_needed").innerHTML = (required - present).toString();
 }

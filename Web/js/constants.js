@@ -1,5 +1,6 @@
 // Global Variables
 var DEFAULT_DURATION = 45;
+var DEFAULT_DELAY_START_GAME = 10;
 var NUM_REQUIRED_PLAYERS = 5;
 
 // map limits

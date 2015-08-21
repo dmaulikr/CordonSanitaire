@@ -30,7 +30,7 @@ var calculateClockOffset = function () {
             console.log("system time: " + system_time);
 
             offset_system_date = system_time - pubnub_time;
-            console.log("offset amount: " + offset_system_date);
+            console.log("offset millis: " + offset_system_date);
         }
     );
 }
@@ -51,7 +51,7 @@ query.find({
         // TODO: get the next time i.e. smallest positive difference from now and then use that time and the start time. This will allow setting up days worth of playtest start times, without having to change anything
         var gameObject = results[results.length - 1];
         parse_start_date = gameObject.get('startTime');
-        console.log(parse_start_date);
+        console.log("Start time from parse: " + parse_start_date);
 
         // create a timer status loop
         timerStatusUpdate();
@@ -93,15 +93,28 @@ var timerStatusUpdate = function () {
             timerStartGame();
         }
         else if (total_seconds + duration < 0) {
-            // user missed the game, display the end result of the game
-            timerMissedGame();
+
+            if(total_seconds + duration < -60 * 10) {
+                // user missed the game, within 10 minutes, display the end result of the game
+                timerMissedGame();
+            }
+            else {
+                // user missed the game, show the description overlay
+                console.log("MISSED GAME: (>10 min late) show overlay for description of game here");
+                window.clearInterval(statusInterval);   // no need to loop, they missed the game, no need to kill their battery too!
+            }
         }
         else if (total_seconds < 0) {
             // user showed up late, let's update the duration and start the game
             timerLateToGame();
         }
+        else if(total_seconds > 5*60) {
+            // more than 5 minutes before a game time, so lets show instructions
+            console.log("TOO EARLY: (>5 min before start time) show overlay for description of game here");
+            window.clearInterval(statusInterval);   // no need to loop until we get a new game time published
+        }
         else {
-            // wait til game start, no video
+            // wait til game start
             timerWaitTilGameStart();
         }
 
@@ -167,28 +180,28 @@ var timerLateToGame = function () {
 
 //NOT UPDATED YET
 var timerWaitTilGameStart = function () {
-    // user showed up early, let's keep them in the waiting room and display a countdown til the start of the game
-    // console.log("Early User - (" + dif_hour + ":" + dif_min + ":" + dif_sec + ") --- Seconds left: " + total_seconds);
+
+    // hide instructions to show countdown
+    console.log("GAME ABOUT TO START: hide overlay for description");
+
+    // keep track of countdown til game starts
+    // only displayed when the game has received a published game start time message
     var spans = document.getElementsByClassName("countdown_til_start");
     for (var i = 0; i < spans.length; i++) {
         spans[i].innerHTML =  getTimeInStringFormatFromSeconds(total_seconds);
     }
-    //alert at 5 seconds til
-    // if the page is not in focus, send an alert!
-    if (total_seconds == 5 && !isWindowInFocus && !bAlertedUserOfGameStart) {
-        alert("PLAYFUL ALERT!!! CORDON SANITAIRE IS ABOUT TO START!!!");
-        window.focus();
-    }
 };
 
-var timerSetGameStart = function(time) {
-    document.getElementById("lobby_count").style.display = "none";
-    document.getElementById("lobby_wait").style.display = "block";
+var setGameStartTime = function(time) {
 
     parse_start_date = new Date(time);
-
-    // start timer loop for game start
+    // start/reset timer loop for game start
     timerStatusUpdate();
+};
+
+var displayCountdown = function() {
+    document.getElementById("lobby_count").style.display = "none";
+    document.getElementById("lobby_wait").style.display = "block";
 };
 
 //
@@ -315,10 +328,6 @@ var getTimeInStringFormatFromSeconds = function (seconds) {
 
 };
 
-// function updateClock() {
-//     document.getElementById('countdown').innerHTML =  minutes+':'+seconds+':'+millis;
-// }
-
 var exitLobbyAndEnterGame = function() {
     // hide hello button
     document.getElementById("helloButton").style.display = 'none';
@@ -368,6 +377,19 @@ var updateDuration = function (seconds) {
         resetTheClock();
     }
 };
+
+var updateLobby = function (present, required) {
+    if(present == 1)
+        document.getElementById("num_present").innerHTML = present.toString() + " person";
+    else
+        document.getElementById("num_present").innerHTML = present.toString() + " people";
+
+    if((required - present) == 1)
+        document.getElementById("num_needed").innerHTML = (required - present).toString() + " person";
+    else
+        document.getElementById("num_needed").innerHTML = (required - present).toString() + " people";
+};
+
 
 // start the clock refreshed
 resetTheClock();
