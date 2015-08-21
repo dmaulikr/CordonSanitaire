@@ -94,13 +94,15 @@ var timerStatusUpdate = function () {
         }
         else if (total_seconds + duration < 0) {
 
-            if(total_seconds + duration < -60 * 10) {
+            if((total_seconds + duration) > (-60 * 10)) {
                 // user missed the game, within 10 minutes, display the end result of the game
                 timerMissedGame();
             }
             else {
                 // user missed the game, show the description overlay
+                console.log("seconds late: " + total_seconds);
                 console.log("MISSED GAME: (>10 min late) show overlay for description of game here");
+                showIntroduction();
                 window.clearInterval(statusInterval);   // no need to loop, they missed the game, no need to kill their battery too!
             }
         }
@@ -111,6 +113,8 @@ var timerStatusUpdate = function () {
         else if(total_seconds > 5*60) {
             // more than 5 minutes before a game time, so lets show instructions
             console.log("TOO EARLY: (>5 min before start time) show overlay for description of game here");
+            showIntroduction();
+            //intro_container
             window.clearInterval(statusInterval);   // no need to loop until we get a new game time published
         }
         else {
@@ -149,20 +153,14 @@ var timerMissedGame = function () {
     bShouldShowMissedGameMessage = true;
     bGameOver = true;
 
-    // possibly send to new page that notifies you missed the game
-
     // close the intro screen
     exitLobbyAndEnterGame();
 
-    //show the introduction page
-    document.getElementById("intro_container").style.display = 'block';
-
     //// show end of game message
-    //document.getElementById('top_container').style.visibility = 'visible';
-    //
+    document.getElementById('top_container').style.visibility = 'visible';
     //// set the clock to 00:00
-    //document.getElementById('seconds').innerHTML = getSecondsInStringFormatFromMillis(0);
-    //document.getElementById('hundredths').innerHTML = getHundredthsInStringFormatFromMillis(0);
+    document.getElementById('seconds').innerHTML = getSecondsInStringFormatFromMillis(0);
+    document.getElementById('hundredths').innerHTML = getHundredthsInStringFormatFromMillis(0);
 };
 
 var timerLateToGame = function () {
@@ -183,6 +181,7 @@ var timerWaitTilGameStart = function () {
 
     // hide instructions to show countdown
     console.log("GAME ABOUT TO START: hide overlay for description");
+    hideIntroduction();
 
     // keep track of countdown til game starts
     // only displayed when the game has received a published game start time message
@@ -377,6 +376,15 @@ var updateDuration = function (seconds) {
         resetTheClock();
     }
 };
+
+var showIntroduction = function () {
+    document.getElementById("intro_container").style.display = 'block';
+}
+
+var hideIntroduction = function () {
+    document.getElementById("intro_container").style.display = 'none';
+}
+
 
 var updateLobby = function (present, required) {
     if(present == 1)

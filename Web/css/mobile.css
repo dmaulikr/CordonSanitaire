@@ -489,34 +489,32 @@ body {
 
 /* introduction screen styling*/
 #intro_container {
-    display: block;
-    visibility: visible;
+    display: none;
     position: fixed;
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: black;
+    background-color: #111111;
     z-index: 1100;
 }
 
 #title{
-    font-size: 1.5em;
-    font-weight: lighter;
-    padding: 5px 0 15px 5px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    font-size: .67em;
+    padding: 20px 30px;
     color: white;
 }
 
-img{
-    width: 100%;
+#intro_container img{
+    width: 85%;
+    margin: 0 7.5%;
 }
 
-#text{
-    font-size: .6em;
+#intro_text{
+    font-size: .7em;
     font-weight: lighter;
-    /*text-align: center;*/
-    line-height: 150%;
-    padding: 35px 60px 12px 60px;
+    text-align: left;
+    line-height: 1.2em;
+    padding: 20px 30px;
     color: white;
 }
 
