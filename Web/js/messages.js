@@ -103,13 +103,7 @@ pubnub.subscribe({
                 break;
 
             case "setPatientZeroPosition":
-                if (patient_zero.marker != null) {
-                    patient_zero.marker.setMap(null);
-                    patient_zero.marker = null;
-                }
-                patient_zero.x = m.pos[0];
-                patient_zero.y = m.pos[1];
-                updateGameBoard();
+                setPatientZeroPosition(m.pos[0], m.pos[1]);
                 break;
 
             case "updateLobby":
