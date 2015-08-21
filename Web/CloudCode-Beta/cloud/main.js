@@ -155,6 +155,18 @@ function sendUpdateLobby(numPlayers, numRequired) {
     sendMessage(message);
     console.log("Users present counted and published - sent UpdateLobby");
 }
+//sends a message containing the new Patient zero destination and how long the local user should take to get there.
+function sendNewPatientZeroDestination() {
+    var dist = getNewPatientZeroDestination(request, status);
+    var message = {
+        action:'updateP0',
+        dest: dist[0],
+        dist: dist[1],
+        time: dist[1] //time is same as distance, so it travels at a constant pace
+    };
+    sendMessage(message);
+    console.log("Sent new patient zero position");
+}
 
 // reset all of the players back to no-one playing
 Parse.Cloud.define("setAllUsersNotPresent", function (request, status) {
@@ -270,10 +282,9 @@ function getCenter(coordinates) {
     }
 }
 
-// selects the position of patient zero one minute before a game starts
-function selectPatientZero(request, status) {
+function getRandomCenter(request, status){
     //Randomly select 3 names: scramble an array and choose first 3,
-    //place patient zero in the middle.
+    //return middle coordinates.
 
     var userQuery = new Parse.Query(Parse.User);
     userQuery.equalTo('present', true);
@@ -291,13 +302,43 @@ function selectPatientZero(request, status) {
                 [userArray[1].get('x'), userArray[1].get('y')],
                 [userArray[2].get('x'), userArray[2].get('y')]];
             var pos = getCenter(randomUsers);
+            return pos;
 
-            setPatientZeroPosition(pos, request, status);
         }
         else {
             status.error("Not enough players. Only " + userArray.length + " players present.");
+            return [-1, -1];
         }
     });
+}
+
+function getNewPatientZeroDestination(request, status){
+    Parse.Cloud.useMasterKey();
+    //get patient zero
+    var query = new Parse.Query(Parse.User);
+    query.equalTo("isPatientZero", "true");
+    //needs to update in case there are multiple patient zeroes.
+    var x = query.x;
+    var y = query.y;
+    var newdest = getRandomCenter(request, status);
+    //sets cloudcode NPC's destination.
+    query.set("destinationx", newdest[0]);
+    query.set("destinationy", newdest[1]);
+    var dist = Math.sqrt(Math.pow((x+newdest[0]), 2) + Math.pow((y+newdest[1]), 2));
+    //returns the new coordinates and the distance.
+    return [newdest, dist];
+}
+// selects the position of patient zero one minute before a game starts
+function selectPatientZero(request, status) {
+    //Randomly select 3 names: scramble an array and choose first 3,
+    //place patient zero in the middle.
+    var pos = getRandomCenter(request, status);
+    if (pos == [-1, -1]){
+        status.error("could not get center.");
+    }
+    else{
+        setPatientZeroPosition(pos, request, status);
+    }
 }
 
 //reset all players to Passive.

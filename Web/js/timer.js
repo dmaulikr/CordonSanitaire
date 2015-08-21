@@ -379,11 +379,11 @@ var updateDuration = function (seconds) {
 
 var showIntroduction = function () {
     document.getElementById("intro_container").style.display = 'block';
-}
+};
 
 var hideIntroduction = function () {
     document.getElementById("intro_container").style.display = 'none';
-}
+};
 
 
 var updateLobby = function (present, required) {
