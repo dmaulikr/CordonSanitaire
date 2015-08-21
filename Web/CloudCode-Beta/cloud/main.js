@@ -84,6 +84,10 @@ Parse.Cloud.afterSave("_User", function (request) {
                                     };
                                     sendMessage(message);
                                     console.log("Game is set to " + start_time);
+
+                                    // now set Patient Zero's position
+                                    selectPatientZero(request, null); // null parameter for status
+
                                 }, function(error) {
                                     console.log("Error in the game save with game time: " + start_time);
                                     console.log("Error: " + error.code + " " + error.message);
@@ -295,7 +299,10 @@ function selectPatientZero(request, status) {
             setPatientZeroPosition(pos, request, status);
         }
         else {
-            status.error("Not enough players. Only " + userArray.length + " players present.");
+            if(status)
+                status.error("Not enough players. Only " + userArray.length + " players present.");
+            else
+                console.log("Not enough players. Only " + userArray.length + " players present.");
         }
     });
 }
@@ -337,6 +344,53 @@ function setAllUsersNotPresent(request, status) {
 }
 
 // every day at midnight sets a new game to be started at a given time
+function createEmptyGame(request, status) {
+
+    // Get the game configs from Parse
+    Parse.Config.get().then(function(config) {
+
+        gamePaddingMinutes = config.get("gamePadding");
+
+        var start_time = new Date();
+
+        // set the start time to be 1 minute from when the job is run (for testing purposes)
+        // TODO: set the start time to be random (within... a time range) - set once a day
+        start_time.getTime();
+        var hours = start_time.getUTCHours();
+        var minutes = start_time.getUTCMinutes();
+        var seconds = start_time.getUTCSeconds();
+
+        // set the time ~10 minutes away from now
+        minutes += gamePaddingMinutes;
+        if(minutes  >= 60) {
+            minutes = minutes - 60;
+            hours += 1;
+        }
+        if(hours >= 24) {
+            hours = hours - 24;
+        }
+
+        start_time.setHours(hours, minutes, seconds);
+        console.log("creating an empty game at: " + start_time.toString());
+
+        var Game = Parse.Object.extend("Game");
+        var game = new Game();
+
+        game.save({
+            startTime: start_time,
+            isScheduled: false
+        }, {
+            success: function () {
+                status.success("Game is set to " + start_time);
+            },
+            error: function (error) {
+                status.error("Error: " + error.code + " " + error.message);
+            }
+        });
+    });
+}
+
+// every day at midnight sets a new game to be started at a given time
 function setGame(request, status) {
     var start_time = new Date();
     start_time.setHours(request.params.hours, request.params.minutes, request.params.seconds);
@@ -344,7 +398,8 @@ function setGame(request, status) {
     var game = new Game();
 
     game.save({
-        startTime: start_time
+        startTime: start_time,
+        isScheduled: false
     }, {
         success: function () {
             status.success("Game is set to " + start_time);
@@ -521,7 +576,10 @@ function setPatientZeroPosition(pos, request, status) {
                     pos: pos
                 };
                 sendMessage(message);
-                status.success("Published P0 location");
+                if(status)
+                    status.success("Published P0 location");
+                else
+                    console.log("Published P0 location");
 
             } else {
                 patient_zero = new NPC();
@@ -539,17 +597,26 @@ function setPatientZeroPosition(pos, request, status) {
                         };
 
                         sendMessage(message);
-                        status.success("Published P0 location");
+                        if(status)
+                            status.success("Published P0 location");
+                        else
+                            console.log("Published P0 location");
+
                     },
                     error: function (error) {
-                        status.error("Error: " + error.code + " " + error.message);
-
+                        if(status)
+                            status.error("Error: " + error.code + " " + error.message);
+                        else
+                            console.log("Error: " + error.code + " " + error.message);
                     }
                 });
             }
         },
         error: function (error) {
-            status.error("Error: " + error.code + " " + error.message);
+            if(status)
+                status.error("Error: " + error.code + " " + error.message);
+            else
+                console.log("Error: " + error.code + " " + error.message);
         }
     });
 }
@@ -576,6 +643,10 @@ Parse.Cloud.job("setAllUsersNotPresent", function (request, status) {
 
 Parse.Cloud.job("setAllUsersPassive", function (request, status) {
     setAllUsersPassive(request, status)
+});
+
+Parse.Cloud.job('createEmptyGame', function (request, status) {
+    createEmptyGame(request, status)
 });
 
 Parse.Cloud.job('setGame', function (request, status) {
