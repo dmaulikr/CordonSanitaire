@@ -262,11 +262,11 @@ User.changeUserType = function (id, type) {
     var usr = User.getPersonById(id);
     switch(type){
         case "active":
-            usr.actionLabel("JOIN", settings.color_active_fill, 60, 50, 2000);
+            usr.actionLabel("JOIN", settings.color_active_fill, 40, 50, 2000);
             break;
 
         case "passive":
-            //usr.actionLabel("RELEASE", settings.color_passive_fill, 60, 50, 2000);
+            usr.actionLabel("DROPPED", '#ffffff', 40, 50, 2000);
             break;
 
         case "contained":
