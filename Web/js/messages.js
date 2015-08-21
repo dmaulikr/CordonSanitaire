@@ -13,25 +13,6 @@ var pubnub = PUBNUB.init({
 // Subscribe
 pubnub.subscribe({
     channel: _channel,
-    presence: function (m) {
-        //console.log(m)
-        switch (m.action) {
-            case "join":
-                // set the UUID here
-                console.log("received JOIN message - " + m.uuid);
-                if (m.uuid == _uuid) {
-                    console.log("start setup (after receiving message of myself joining)");
-                    //setup();  // removing this because I believe this is causing major hold ups (sometimes not receiving this message)
-                }
-                break;
-
-            case "leave":
-                // set this user to no longer focussed...
-                console.log("received LEAVE message - " + m.uuid);
-                // updatePopulation();
-                break;
-        }
-    },
     message: function (m) {
         //console.log("received from pubnub:");
         //console.log(m);
@@ -78,7 +59,7 @@ pubnub.subscribe({
                 break;
 
             case "addUser":
-                if (!User.isIdPresent(m.id) && hasReceivedJoinedMessage) {
+                if (!User.isIdPresent(m.id)) {
                     User.addToLocalArray(m.id);
                     // also update the map to include all markers
                     updateBounds();
@@ -136,7 +117,8 @@ pubnub.subscribe({
                 break;
 
             case "setGameTime":
-                timerSetGameStart(m.time);
+                setGameStartTime (m.time);
+                displayCountdown();
                 break;
 
             case "refreshPage":
@@ -164,16 +146,6 @@ pubnub.subscribe({
 
 
 // Publish
-
-// send start message
-function sendStartOfGame() {
-    pubnub.publish({
-        channel: _channel,
-        message: {
-            action: 'start'
-        }
-    });
-}
 
 // send shout message
 function sendShout() {
@@ -209,6 +181,19 @@ function sendEmoji(emojiType) {
     });
 }
 
+function sendChangeUserTypeMessage(id, type) {
+    pubnub.publish({
+        channel: _channel,
+        message: {
+            action: 'changeUserType',
+            id: id,
+            type: type
+        }
+    })
+}
+
+// ADMIN PUBLISH MESSAGES
+// this is for use from admin only to manage the game or players if need be
 function sendAddNPCMessage(id) {
     pubnub.publish({
         channel: _channel,
@@ -250,17 +235,6 @@ function sendAddUserMessage(id) {
     });
 }
 
-function sendChangeUserTypeMessage(id, type) {
-    pubnub.publish({
-        channel: _channel,
-        message: {
-            action: 'changeUserType',
-            id: id,
-            type: type
-        }
-    })
-}
-
 function sendResetPlayersMessage() {
     pubnub.publish({
         channel: _channel,
@@ -288,16 +262,4 @@ function sendSetPatientZeroPositionMessage(pos) {
             pos: pos
         }
     })
-}
-
-function updateLobby(present, required){
-    if(present == 1)
-        document.getElementById("num_present").innerHTML = present.toString() + " person";
-    else
-        document.getElementById("num_present").innerHTML = present.toString() + " people";
-
-    if((required - present) == 1)
-       document.getElementById("num_needed").innerHTML = (required - present).toString() + " person";
-    else
-        document.getElementById("num_needed").innerHTML = (required - present).toString() + " people";
 }

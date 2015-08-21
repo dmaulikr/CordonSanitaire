@@ -118,8 +118,6 @@ function setGameBoard() {
 
 function updateGameBoard() {
 
-    if (!hasReceivedJoinedMessage) return;
-
     console.log("updating population");
 
     center = getCenter(getActivePopulation());

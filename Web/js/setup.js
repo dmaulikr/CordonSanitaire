@@ -79,6 +79,7 @@ Parse.Config.get().then(function(config) {
 
     NUM_REQUIRED_PLAYERS = config.get("numRequiredPlayers");
     DEFAULT_DURATION = config.get("gameDuration");
+    DEFAULT_DELAY_START_GAME = config.get("gameStartDelay");
 
     console.log("loaded configuration from Parse.");
 }, function(error) {
@@ -94,7 +95,6 @@ var _channel = 'development'; // Dev Channel vs. Production Channel
 
 // defines global variables
 var _uuid = PUBNUB.uuid();
-var hasReceivedJoinedMessage = false;
 var people = [];
 var npcs = [];
 var center; // point that represents the center of the population (holding)
@@ -121,11 +121,7 @@ function setup() {
     NPC.getAllFromDatabase(function() { // populate the npc array with the entries in the Database
         User.getAllFromDatabase(function() { // populate the people array with the entries in the Database
             setGameBoard(); // set the game board
-            hasReceivedJoinedMessage = true; // with the game board set, we are allowed to update it.
-            console.log("allowed to update");
-            sendAddUserMessage(myUser.id);
-
-            ping(); // let parse know we just loaded the page
+            sendAddUserMessage(myUser.id);  // let other players know I am here
         });
     });
 }
