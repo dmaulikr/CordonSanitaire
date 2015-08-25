@@ -29,8 +29,6 @@ var pubnub = {
 // var _channel = 'production'; // Dev Channel vs. Production Channel
 var _channel = 'development'; // Dev Channel vs. Production Channel
 
-var _numPlayersRequired = 20;
-
 // update lobby after player has joined
 Parse.Cloud.afterSave("_User", function (request) {
     Parse.Cloud.useMasterKey();
