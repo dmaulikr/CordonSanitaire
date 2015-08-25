@@ -30,7 +30,7 @@
 		     $sms_url = $_GET["sms_url"];
 		}	
 		
-		$message = 'FAKE URGENT. Patient Zero detected - ' . $sms_time . ' - but no one knows where! USE YOUR PHONE to enact quarantine ' . $sms_url;
+		$message = 'PLAYFUL URGENT. Patient Zero detected, no one knows where! USE YOUR PHONE NOW to enact quarantine ' . $sms_url . ' - ' . $sms_time;
 		/*
 		 *	A nice GitHub page with all EZ-Text PHP examples - source code
 		 *	

@@ -1,3 +1,10 @@
+// Twilio integration
+// Require and initialize the Twilio module with your credentials
+var ACCOUNT_SID = 'ACe1411ef11ed3bd884ac1ae80b39ea1af';
+var AUTH_TOKEN = '4e7f5bfd0715adf2a51651523edd7df7';
+var twilio_client = require('twilio')(ACCOUNT_SID, AUTH_TOKEN);
+var twilio_number = '+19495367529';
+
 // set pubnub
 var pubnub = {
     publish_key: 'pub-c-cc12e9c4-752b-4216-872c-12ec350ab404',
@@ -313,11 +320,9 @@ function setAllUsersPassive(request, status) {
     var query = new Parse.Query(Parse.User);
     query.equalTo("type", "active");
     query.each(function (user) {
-        if (!user.get('admin')) {
-            console.log("resetting passivity of " + user.id);
-            user.set("type", "passive");
-            return user.save();
-        }
+        console.log("resetting passivity of " + user.id);
+        user.set("type", "passive");
+        return user.save();
     }).then(function () {
         status.success("Users reset to passive");
     }, function (error) {
@@ -428,24 +433,37 @@ function resetUsersPosition(request, status) {
 
 // send a text message to players of the game
 function sendTextMessage(request, status) {
-    Parse.Cloud.httpRequest({
-        method: 'GET',
-        url: 'http://playful.jonathanbobrow.com/cs_beta/sms/sendTextMessage.php',
-        headers: {
-            'Content-Type': "application/x-www-form-urlencoded" //application/json",
-        },
-        body: {
-            'group': "Personal",
-            'time': "4:30PM EST",
-            'sms_url': "bit.ly/playCSbeta"
-        },
-        success: function (httpResponse) {
-            status.success(httpResponse.text);
-        },
-        error: function (httpResponse) {
-            status.error('Request failed with response code ' + httpResponse.status);
-        }
-    })
+
+    // Query all users that are opted in to text message
+    var query = new Parse.Query(Parse.User);
+    query.equalTo("phoneOptOut", false);
+    query.each(function (user) {
+        var phone_number = user.get('phone');
+        var message_url = 'bit.ly/playCSbeta';
+        var now = new Date();
+        var message_time = now.toDateString();
+        var message = 'PLAYFUL URGENT. Patient Zero detected! USE YOUR PHONE NOW to enact quarantine ' +  message_url + ' ' + message_time;
+
+        // Send an SMS message w/ twilio
+        twilio_client.sendSms({
+                to: phone_number,
+                from: twilio_number,
+                body: message
+            }, function(err, responseData) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    console.log(responseData.from);
+                    console.log(responseData.body);
+                }
+            }
+        );
+
+    }).then(function () {
+        status.success("Users have been texted");
+    }, function (error) {
+        status.error("Error: " + error.code + " " + error.message);
+    });
 }
 
 // Master button function
