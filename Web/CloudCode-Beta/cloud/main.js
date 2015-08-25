@@ -5,6 +5,21 @@ var AUTH_TOKEN = '4e7f5bfd0715adf2a51651523edd7df7';
 var twilio_client = require('twilio')(ACCOUNT_SID, AUTH_TOKEN);
 var twilio_number = '+19495367529';
 
+// handle incoming text messages from Twilio
+var express = require('express');
+var app = express();
+
+// Global app configuration section
+app.use(express.bodyParser());  // Populate req.body
+
+app.post('/receiveSMS',
+    function(req, res) {
+        console.log("Received a new text " + req.From + ": " + req.Body);
+        res.send('Success');
+    });
+
+app.listen();
+
 // set pubnub
 var pubnub = {
     publish_key: 'pub-c-cc12e9c4-752b-4216-872c-12ec350ab404',
@@ -438,7 +453,7 @@ function sendTextMessage(request, status) {
     var query = new Parse.Query(Parse.User);
     query.equalTo("phoneOptOut", false);
     query.each(function (user) {
-        var phone_number = user.get('phone');
+        var phone_number = '+1' + user.get('phone');
         var message_url = 'bit.ly/playCSbeta';
         var now = new Date();
         var message_time = now.toDateString();
