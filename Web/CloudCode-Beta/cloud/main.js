@@ -6,19 +6,20 @@ var twilio_client = require('twilio')(ACCOUNT_SID, AUTH_TOKEN);
 var twilio_number = '+19495367529';
 
 // handle incoming text messages from Twilio
-var express = require('express');
-var app = express();
-
-// Global app configuration section
-app.use(express.bodyParser());  // Populate req.body
-
-app.post('/receiveSMS',
-    function(req, res) {
-        console.log("Received a new text " + req.From + ": " + req.Body);
-        res.send('Success');
-    });
-
-app.listen();
+// NOT YET WORKING
+//var express = require('express');
+//var app = express();
+//
+//// Global app configuration section
+//app.use(express.bodyParser());  // Populate req.body
+//
+//app.post('/receiveSMS',
+//    function(req, res) {
+//        console.log("Received a new text " + req.From + ": " + req.Body);
+//        res.send('Success');
+//    });
+//
+//app.listen();
 
 // set pubnub
 var pubnub = {
@@ -117,7 +118,7 @@ Parse.Cloud.afterSave("_User", function (request) {
                             else {
                                 // scheduled, we are done here
                                 console.log("game already scheduled");
-                                return;
+
                             }
 
                             // create a timer status loop
@@ -652,6 +653,96 @@ function setPatientZeroPosition(pos, request, status) {
     });
 }
 
+// FORCE START
+function forceStart(request, status) {
+
+    Parse.Cloud.useMasterKey();
+
+    var gameStartDelay;
+    var startTime;
+
+// Get the game configs from Parse
+    Parse.Config.get().then(function (config) {
+
+        gameStartDelay = config.get("gameStartDelay");
+
+        // check to see if game is scheduled
+        var game = Parse.Object.extend("Game");
+        var query = new Parse.Query(game);
+        query.descending('createdAt');
+        query.find({
+            success: function (results) {
+                // get the first game object in the results
+                var gameObject = results[0];
+                var bGameScheduled = gameObject.get('isScheduled');
+                var gameId = gameObject.get('objectId');
+                var gameTime = gameObject.get('startTime');
+                console.log("is game scheduled: " + bGameScheduled + " gameId: " + gameId + " gameTime: " + gameTime);
+
+                if (!bGameScheduled) {
+                    // if not yet scheduled, schedule the game
+                    var start_time = new Date();
+
+                    // set the start time to be 1 minute from when the job is run (for testing purposes)
+                    // TODO: set the start time to be random (within... a time range) - set once a day
+                    start_time.getTime();
+                    var hours = start_time.getUTCHours();
+                    var minutes = start_time.getUTCMinutes();
+                    var seconds = start_time.getUTCSeconds();
+
+                    // set the time 10 seconds away from now
+                    seconds += gameStartDelay;
+                    if (seconds >= 60) {
+                        seconds = seconds - 60;
+                        minutes += 1;
+                    }
+                    if (minutes >= 60) {
+                        minutes = minutes - 60;
+                        hours += 1;
+                    }
+                    if (hours >= 24) {
+                        hours = hours - 24;
+                    }
+
+                    start_time.setHours(hours, minutes, seconds);
+                    console.log("setting start time: " + start_time.toString());
+
+                    gameObject.set('startTime', start_time);
+                    gameObject.set('isScheduled', true);
+                    gameObject.save().then(function () {
+                        // then publish a message
+                        var message = {
+                            action: 'setGameTime',
+                            time: start_time
+                        };
+                        sendMessage(message);
+                        console.log("Game is set to " + start_time);
+
+                        // now set Patient Zero's position
+                        selectPatientZero(request, null); // null parameter for status
+
+                    }, function (error) {
+                        console.log("Error in the game save with game time: " + start_time);
+                        console.log("Error: " + error.code + " " + error.message);
+                    });
+                    //saveStartGameAndPublish(start_time);
+                }
+                else {
+                    // scheduled, we are done here
+                    console.log("game already scheduled");
+                }
+            },
+            error: function (object, error) {
+                // The object was not retrieved successfully.
+                console.log("Error: " + error.code + " " + error.message);
+            }
+        });
+    }, function (error) {
+        console.log("failed to load config from Parse.");
+    });
+}
+
+
 /*
  *
  *  JOBS for Cloud Code
@@ -697,5 +788,11 @@ Parse.Cloud.job('launchGameMasterButton', function (request, status) {
 Parse.Cloud.job('sendTextMessage', function (request, status) {
     sendTextMessage(request, status);
 });
+
+//Force Start button
+Parse.Cloud.job('forceStart', function (request, status) {
+    forceStart(request, status);
+});
+
 
 
