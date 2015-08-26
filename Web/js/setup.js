@@ -112,9 +112,11 @@ Parse.User.current().fetch().then( function(current_user){
         current_user.get('type'),
         false // isPatientZero
     );
+});
 
+$(document).ready(function(){
     // run setup after existing :)
-    console.log("setting up after creating my own object from Parse");
+    console.log("setting up after jquery document ready");
     setup();
 });
 

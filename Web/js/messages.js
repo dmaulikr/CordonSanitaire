@@ -103,7 +103,8 @@ pubnub.subscribe({
                 break;
 
             case "setPatientZeroPosition":
-                setPatientZeroPosition(m.pos[0], m.pos[1]);
+                console.log("not setting p0 location for this play test");
+                //setPatientZeroPosition(m.pos[0], m.pos[1]);
                 break;
 
             case "updateLobby":

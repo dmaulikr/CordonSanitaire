@@ -2,15 +2,93 @@
 // Map stuffs
 //----------------------------
 
+// timeDiffs for animation consistency
+var timeLastUpdated;
+
+var locations = [
+    { x: 0.75, y: 0.75 },
+    { x: 0.75, y: 0.25 },
+    { x: 0.25, y: 0.75 },
+    { x: 0.25, y: 0.25 }
+];
+
+var anim_duration = 18000;
+var p0_dest_idx = 1;
+var p0_origin = locations[0];
+var p0_destination = locations[1];
+var travel_threshold = 0.1;
+var bFirstRun = true;
+
+var stepSize = .0005;
+
+// handy function to clone an object
+function clone(obj) {
+    if (null == obj || "object" != typeof obj) return obj;
+    var copy = obj.constructor();
+    for (var attr in obj) {
+        if (obj.hasOwnProperty(attr)) copy[attr] = obj[attr];
+    }
+    return copy;
+}
+
+// update location for patient zero
+function updatePatientZeroLocation() {
+
+    // random travel test
+    //var direction = Math.random() % (2 * Math.PI);
+    //var x_travel = stepSize * Math.cos(direction);
+    //var y_travel = stepSize * Math.sin(direction);
+    //setPatientZeroPosition(patient_zero.x + x_travel, patient_zero.y + y_travel);
+    console.log("p0 location: (" + patient_zero.x + ", " + patient_zero.y + ")");
+
+    if((Math.abs(patient_zero.x - p0_destination.x) <= travel_threshold &&
+        Math.abs(patient_zero.y - p0_destination.y) <= travel_threshold) || bFirstRun) {
+
+        // send message requesting new destination
+        p0_dest_idx = (p0_dest_idx + 1) % locations.length;
+
+        p0_origin = clone(p0_destination);
+        p0_destination = locations[p0_dest_idx];
+
+        console.log("set new destination (" + p0_destination.x + ", " + p0_destination.y + ")");
+
+        if(bFirstRun) {
+            patient_zero.x = p0_origin.x;
+            patient_zero.y = p0_origin.y;
+        }
+        bFirstRun = false;
+    }
+
+    var currentMillis = Date.now();
+    var diffMillis = currentMillis - timeLastUpdated;
+
+    var x_travel = (p0_destination.x - p0_origin.x) * (diffMillis / anim_duration);
+    var y_travel = (p0_destination.y - p0_origin.y) * (diffMillis / anim_duration);
+
+    setPatientZeroPosition(patient_zero.x + x_travel, patient_zero.y + y_travel);
+    timeLastUpdated = currentMillis;
+}
+
 // set Patient Zero location
 function setPatientZeroPosition(x, y) {
-    if (patient_zero.marker != null) {
-        patient_zero.marker.setMap(null);
-        patient_zero.marker = null;
-    }
     patient_zero.x = x;
     patient_zero.y = y;
+    //console.log("patient zero now at (" + patient_zero.x + ", " + patient_zero.y + ")");
     updateGameBoard();  // to show new location of patient zero
+
+    //draw patient zero
+    var patient_zero_coords = getLatLngCoords(patient_zero.x, patient_zero.y);
+
+    if (patient_zero.marker == null) {
+        var marker_obj = new google.maps.Marker({
+            position: patient_zero_coords,
+            icon: getMarkerIcon(patient_zero.type), // depends on the type of the npc
+            map: map
+        });
+        patient_zero.marker = marker_obj;
+    } else {
+        patient_zero.marker.setPosition(patient_zero_coords);
+    }
 }
 
 

@@ -6,6 +6,8 @@ var statusInterval;
 var isRunning = false;
 var total_seconds = 1;
 
+var patientZeroInterval;
+
 var bShouldShowMissedGameMessage = false;
 var bUpdatedDialogText = false;
 var bGameOver = false;
@@ -13,6 +15,7 @@ var bGameOver = false;
 var bAlertedUserOfGameStart = false;
 var bShown10SecondMessage = false;
 var bShown20SecondMessage = false;
+var bIntroductionOverlayShowing = true;
 
 var duration = DEFAULT_DURATION;
 
@@ -184,8 +187,11 @@ var timerLateToGame = function () {
 var timerWaitTilGameStart = function () {
 
     // hide instructions to show countdown
-    console.log("GAME ABOUT TO START: hide overlay for description");
-    hideIntroduction();
+    if(bIntroductionOverlayShowing) {
+        console.log("GAME ABOUT TO START: hide overlay for description");
+        hideIntroduction();
+        bIntroductionOverlayShowing = false;
+    }
 
     // keep track of countdown til game starts
     // only displayed when the game has received a published game start time message
@@ -282,6 +288,9 @@ var timePassedSince = function (start_date) {
         bGameOver = true;
         updateButtonAvailable();	// change button to shout at the end of the game
         showEndGameMessage();
+
+        // stop patient zero's running
+        window.clearInterval(patientZeroInterval);
         revealPatientZero();
     }
 
@@ -359,6 +368,12 @@ var startTheClock = function () {
     countdownTimer = setInterval(function () {
         timePassedSince(synchedTime)
     }, 10);
+
+    // send patient zero on the run
+    timeLastUpdated = Date.now();
+    patientZeroInterval = setInterval(function() {
+        updatePatientZeroLocation();
+    }, 50); // 20 fps
 };
 
 var stopTheClock = function () {

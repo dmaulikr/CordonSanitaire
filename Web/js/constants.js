@@ -6,16 +6,25 @@ var DEFAULT_GAME_PADDING = 10;
 
 // map limits
 // BOSTON
-var LAT_MIN = 42.354485;
-var LAT_MAX = 42.365140;
-var LON_MIN = -71.069870;
-var LON_MAX = -71.051245;
+//var zoomLevel = 14;
+//var LAT_MIN = 42.354485;
+//var LAT_MAX = 42.365140;
+//var LON_MIN = -71.069870;
+//var LON_MAX = -71.051245;
+
+// SPAIN
+//var zoomLevel = 5;
+//var LAT_MIN = 37.666429;
+//var LAT_MAX = 42.650122;
+//var LON_MIN = -8.173828;
+//var LON_MAX = -0.988770;
 
 // NYC
-//40.704204;
-//40.829535;
-//-74.096729;
-//-73.834258;
+var zoomLevel = 12;
+var LAT_MIN = 40.704204;
+var LAT_MAX = 40.829535;
+var LON_MIN = -74.096729;
+var LON_MAX = -73.834258;
 
 var LAT_CENTER = (LAT_MAX + LAT_MIN)/2;
 var LON_CENTER = (LON_MAX + LON_MIN)/2;

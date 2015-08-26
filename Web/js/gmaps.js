@@ -38,7 +38,7 @@ function drawMap() {
     var layer = "toner-background";
 
     var mapOptions = {
-        zoom: 14,
+        zoom: zoomLevel,
         center: centerMap,
         //mapTypeId: google.maps.MapTypeId.ROADMAP,
         mapTypeId: layer,
@@ -118,8 +118,6 @@ function setGameBoard() {
 
 function updateGameBoard() {
 
-    console.log("updating population");
-
     center = getCenter(getActivePopulation());
 
     sortPeople(); // sort the people into the order to hold the rope
@@ -154,7 +152,7 @@ function updateGameBoard() {
     if (bShouldShowMissedGameMessage)
         showMissedGameMessage();
 
-    console.log("board updated");
+    //console.log("board updated");
 }
 
 //Create quarantine polygon based on active quarantiners
@@ -457,29 +455,29 @@ function updateNotifications() {
 
     // if p0 is contained && prev state !contained
     //PATIENT ZERO IS QUARANTINED
-    if (_patientZeroContained && !_prevPatientZeroContained) {
-        ohSnap('PATIENT ZERO IS QUARANTINED', 'green');
-    }
-
-    // if p0 is not contained && prev state is contained
-    //PATIENT ZERO IS ON THE LOOSE
-    else if (!_patientZeroContained) { //{&& _prevPatientZeroContained) {
-        ohSnap('PATIENT ZERO IS ON THE LOOSE', 'red');
-    }
-
-    // if active count < 3 && prev active count >=3
-    //QUARANTINE FORMED
-    if (_numActive >= 3 && _prevNumActive < 3) {
-        ohSnap('QUARANTINE FORMED!', 'yellow');
-        _prevNumActive = _numActive;
-    }
-
-    // if active count >= && prev active count < 3
-    //QUARANTINE BROKEN!
-    else if (_numActive < 3 && _prevNumActive >= 3) {
-        ohSnap('QUARANTINE BROKEN!', 'red');
-        _prevNumActive = _numActive;
-    }
+    //if (_patientZeroContained && !_prevPatientZeroContained) {
+    //    ohSnap('PATIENT ZERO IS QUARANTINED', 'green');
+    //}
+    //
+    //// if p0 is not contained && prev state is contained
+    ////PATIENT ZERO IS ON THE LOOSE
+    //else if (!_patientZeroContained) { //{&& _prevPatientZeroContained) {
+    //    ohSnap('PATIENT ZERO IS ON THE LOOSE', 'red');
+    //}
+    //
+    //// if active count < 3 && prev active count >=3
+    ////QUARANTINE FORMED
+    //if (_numActive >= 3 && _prevNumActive < 3) {
+    //    ohSnap('QUARANTINE FORMED!', 'yellow');
+    //    _prevNumActive = _numActive;
+    //}
+    //
+    //// if active count >= && prev active count < 3
+    ////QUARANTINE BROKEN!
+    //else if (_numActive < 3 && _prevNumActive >= 3) {
+    //    ohSnap('QUARANTINE BROKEN!', 'red');
+    //    _prevNumActive = _numActive;
+    //}
 
     //// if numTrapped == 1 &&  prev numTrapped == 0
     ////HEALTHY PEOPLE ARE INSIDE THE QUARANTINE
