@@ -17,6 +17,7 @@ var twilio_number = '+19495367529';
 //    function(req, res) {
 //        console.log("Received a new text " + req.From + ": " + req.Body);
 //        res.send('Success');
+//          // possible to get array of one for req.From...
 //    });
 //
 //app.listen();
