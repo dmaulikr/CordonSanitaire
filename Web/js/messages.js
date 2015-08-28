@@ -74,7 +74,8 @@ pubnub.subscribe({
                 break;
 
             case "changeUserType":
-                User.changeUserType(m.id, m.type);
+                if(isRunning)   // only during gameplay (avoid end of game inconsistencies)
+                    User.changeUserType(m.id, m.type);
 
                 break;
 
