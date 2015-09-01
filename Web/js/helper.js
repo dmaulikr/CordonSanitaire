@@ -172,8 +172,8 @@ function getCenter(users) {
 
 //return a google maps LatLngBounds object, containing the minimum and maximum latitudes/longitudes, from which 4 boundary points can be extrapolated
 function getBounds(users) {
-    var maxLat = -180;
-    var maxLon = -90;
+    var maxLat = -90;
+    var maxLon = -180;
     var minLat = users[0].coords.lat();
     var minLon = users[0].coords.lng();
 
@@ -193,6 +193,8 @@ function getBounds(users) {
         }
 
     }
+
+    console.log("bounds: lat("+minLat+", "+maxLat+") lon("+minLon+", "+maxLon+")");
 
     // create google lat lng coordinates for bounds
     var sw = new google.maps.LatLng(minLat, minLon);
