@@ -7,9 +7,11 @@ var timeLastUpdated;
 
 var locations = [
     { x: 0.75, y: 0.75 },
-    { x: 0.75, y: 0.25 },
     { x: 0.25, y: 0.75 },
-    { x: 0.25, y: 0.25 }
+    { x: 0.75, y: 0.25 },
+    { x: 0.25, y: 0.25 },
+    { x: 0.6, y: 0.5 },
+    { x: 0.75, y: 0.25 }
 ];
 
 var anim_duration = 18000;

@@ -26,6 +26,14 @@ var LAT_MAX = 40.829535;
 var LON_MIN = -74.096729;
 var LON_MAX = -73.834258;
 
+
+//Salt Lake City, UTAH
+var zoomLevel = 14;
+var LAT_MIN = 40.741535;
+var LAT_MAX = 40.771507;
+var LON_MIN = -111.905365;
+var LON_MAX = -111.876698;
+
 var LAT_CENTER = (LAT_MAX + LAT_MIN)/2;
 var LON_CENTER = (LON_MAX + LON_MIN)/2;
 
