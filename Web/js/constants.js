@@ -20,11 +20,11 @@ var DEFAULT_GAME_PADDING = 10;
 //var LON_MAX = -0.988770;
 
 // NYC
-var zoomLevel = 12;
-var LAT_MIN = 40.704204;
-var LAT_MAX = 40.829535;
-var LON_MIN = -74.096729;
-var LON_MAX = -73.834258;
+//var zoomLevel = 12;
+//var LAT_MIN = 40.704204;
+//var LAT_MAX = 40.829535;
+//var LON_MIN = -74.096729;
+//var LON_MAX = -73.834258;
 
 
 //Salt Lake City, UTAH

@@ -5,19 +5,40 @@
 // timeDiffs for animation consistency
 var timeLastUpdated;
 
-var locations = [
-    { x: 0.75, y: 0.75 },
-    { x: 0.25, y: 0.75 },
-    { x: 0.75, y: 0.25 },
-    { x: 0.25, y: 0.25 },
-    { x: 0.6, y: 0.5 },
-    { x: 0.75, y: 0.25 }
+var p0_coords = [
+    {lon: -111.899700, lat: 40.76065},
+    {lon: -111.899786, lat: 40.769427},
+    {lon: -111.893864, lat: 40.769427},
+    {lon: -111.893864, lat: 40.760716},
+    {lon: -111.888199, lat: 40.760716},
+    {lon: -111.888199, lat: 40.752004},
+    {lon: -111.891375, lat: 40.752004},
+    {lon: -111.891375, lat: 40.749923},
+    {lon: -111.894035, lat: 40.749923},
+    {lon: -111.894035, lat: 40.756230},
+    {lon: -111.882706, lat: 40.756165},
+    {lon: -111.882706, lat: 40.758375},
+    {lon: -111.902704, lat: 40.758375},
+    {lon: -111.902704, lat: 40.752004},
+    {lon: -111.899614, lat: 40.752004}
 ];
 
-var anim_duration = 18000;
+//var locations = [
+//    { x: 0.75, y: 0.75 },
+//    { x: 0.25, y: 0.75 },
+//    { x: 0.75, y: 0.25 },
+//    { x: 0.25, y: 0.25 },
+//    { x: 0.6, y: 0.5 },
+//    { x: 0.75, y: 0.25 }
+//];
+
+var anim_constant = 15000;  //duration to cross from far left to far right // mph ?
+var anim_duration = 3000;
 var p0_dest_idx = 1;
-var p0_origin = locations[0];
-var p0_destination = locations[1];
+var p0_origin_coords = p0_coords[0];
+var p0_destination_coords = p0_coords[1];
+var p0_origin = getNormalizedLocationFromCoord(p0_origin_coords.lat, p0_origin_coords.lon);
+var p0_destination = getNormalizedLocationFromCoord(p0_destination_coords.lat, p0_destination_coords.lon);
 var travel_threshold = 0.1;
 var bFirstRun = true;
 
@@ -33,6 +54,28 @@ function clone(obj) {
     return copy;
 }
 
+// convert coordinates to normalized values
+// temporary since the system uses normalized values still
+function getNormalizedLocationFromCoord(lat, lon) {
+
+    var x_val = (lon-LON_MIN)/(LON_MAX-LON_MIN);
+    var y_val = (lat-LAT_MIN)/(LAT_MAX-LAT_MIN);
+
+    var loc = {
+        x:  x_val,
+        y: y_val
+    };
+    return loc;
+}
+
+// get the animation duration for the current stretch
+// (keep a constant rate along path)
+function getAnimationDuration(origin, destination) {
+    var duration = anim_constant * Math.sqrt((destination.x-origin.x)*(destination.x-origin.x)+(destination.y-origin.y)*(destination.y-origin.y));
+
+    return duration;
+}
+
 // update location for patient zero
 function updatePatientZeroLocation() {
 
@@ -41,18 +84,21 @@ function updatePatientZeroLocation() {
     //var x_travel = stepSize * Math.cos(direction);
     //var y_travel = stepSize * Math.sin(direction);
     //setPatientZeroPosition(patient_zero.x + x_travel, patient_zero.y + y_travel);
-    console.log("p0 location: (" + patient_zero.x + ", " + patient_zero.y + ")");
+
+    //console.log("p0 location: (" + patient_zero.x + ", " + patient_zero.y + ")");
 
     if((Math.abs(patient_zero.x - p0_destination.x) <= travel_threshold &&
         Math.abs(patient_zero.y - p0_destination.y) <= travel_threshold) || bFirstRun) {
 
         // send message requesting new destination
-        p0_dest_idx = (p0_dest_idx + 1) % locations.length;
+        p0_dest_idx = (p0_dest_idx + 1) % p0_coords.length;
 
         p0_origin = clone(p0_destination);
-        p0_destination = locations[p0_dest_idx];
-
+        p0_destination = getNormalizedLocationFromCoord(p0_coords[p0_dest_idx].lat, p0_coords[p0_dest_idx].lon);
         console.log("set new destination (" + p0_destination.x + ", " + p0_destination.y + ")");
+
+        anim_duration = getAnimationDuration(p0_origin, p0_destination);
+        console.log("set new duration: " + anim_duration);
 
         if(bFirstRun) {
             patient_zero.x = p0_origin.x;
@@ -63,6 +109,8 @@ function updatePatientZeroLocation() {
 
     var currentMillis = Date.now();
     var diffMillis = currentMillis - timeLastUpdated;
+
+    //console.log("fps animation: "+ Math.round(1000/diffMillis));
 
     var x_travel = (p0_destination.x - p0_origin.x) * (diffMillis / anim_duration);
     var y_travel = (p0_destination.y - p0_origin.y) * (diffMillis / anim_duration);

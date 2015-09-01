@@ -611,7 +611,7 @@ function revealPatientZero() {
 
 // update the bounds of the map to show all players
 function updateBounds() {
-    console.log("updating bounds for new player added");
+    console.log("updating bounds");
 
     var bounds = getBounds(people);
 
